@@ -1544,6 +1544,9 @@ int                         ScaleBSPMain( int argc, char **argv );
 /* minimap.c */
 int                         MiniMapBSPMain( int argc, char **argv );
 
+/* nav.cpp */
+int             NavMain( int argc, char **argv );
+
 /* convert_bsp.c */
 int                         ConvertBSPMain( int argc, char **argv );
 
