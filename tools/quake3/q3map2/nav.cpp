@@ -715,8 +715,8 @@ void SnapWeldVector( vec3_t a, vec3_t b, vec3_t out ){
 	for ( i = 0; i < 3; i++ )
 	{
 		/* round to integer */
-		ai = Q_rint( a[i] );
-		bi = Q_rint( a[i] );
+		ai = floor( a[i] + 0.5 );
+		bi = floor( b[i] + 0.5 );
 
 		/* prefer exact integer */
 		if ( ai == a[i] ) {
@@ -735,7 +735,7 @@ void SnapWeldVector( vec3_t a, vec3_t b, vec3_t out ){
 		}
 
 		/* snap */
-		outi = Q_rint( out[i] );
+		outi = floor( out[i] + 0.5 );
 		if ( fabs( outi - out[i] ) <= SNAP_EPSILON ) {
 			out[i] = outi;
 		}
