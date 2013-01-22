@@ -2104,6 +2104,23 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 
 
 
+#ifdef SMOKINGUNS
+//added by spoon to get back the changed surfaceflags
+void LoadSurfaceFlags(char *filename){
+	int i;
+
+	for(i=0; i<numBSPShaders;i++){
+		shaderInfo_t	*si;
+
+		si = ShaderInfoForShader( bspShaders[i].shader );
+
+		bspShaders[i].surfaceFlags = si->surfaceFlags;
+	}
+}
+#endif
+
+
+
 /*
    LightMain()
    main routine for light processing

@@ -1181,6 +1181,14 @@ int VisMain( int argc, char **argv ){
 	Sys_Printf( "Loading %s\n", source );
 	LoadBSPFile( source );
 
+#ifdef SMOKINGUNS
+	StripExtension (source);
+	strcat (source, ".tex");
+	LoadSurfaceFlags(source);
+	StripExtension (source);
+	strcat (source, ".bsp");
+#endif
+
 	/* load the portal file */
 	if (!portalFilePath[0]) {
 		sprintf( portalFilePath, "%s%s", inbase, ExpandArg( argv[ i ] ) );
@@ -1222,6 +1230,12 @@ int VisMain( int argc, char **argv ){
 	if ( !saveprt ) {
 		remove( portalFilePath );
 	}
+
+#ifdef SMOKINGUNS
+	StripExtension (source);
+	WriteTexFile(source);
+	DefaultExtension (source, ".bsp");
+#endif
 
 	/* write the bsp file */
 	Sys_Printf( "Writing %s\n", source );

@@ -277,6 +277,9 @@ int main( int argc, char **argv ){
 
 	/* ydnar: otherwise create a bsp */
 	else{
+#ifdef SMOKINGUNS
+		compile_map = qtrue;
+#endif
 		r = BSPMain( argc, argv );
 	}
 
