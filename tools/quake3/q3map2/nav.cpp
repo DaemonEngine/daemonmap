@@ -31,6 +31,10 @@ extern "C" {
 #include "../recast/Recast.h"
 #include "../recast/RecastAlloc.h"
 #include "../recast/RecastAssert.h"
+#include "../detour/DetourCommon.h"
+#include "../detour/DetourNavMesh.h"
+#include "../detour/DetourNavMeshBuilder.h"
+
 #include <vector>
 #include <queue>
 #include "../../engine/botlib/nav.h"
@@ -163,102 +167,73 @@ static void quake2recast( vec3_t vec ) {
 	vec[2] = -temp;
 }
 
-static void WriteRecastData( const char* agentname, const rcPolyMesh *polyMesh, const rcPolyMeshDetail *detailedPolyMesh, const rcConfig *cfg ){
-	FILE *file;
-	NavMeshHeader_t navHeader;
-	char filename[1024];
-	StripExtension( source );
-	strcpy( filename,source );
-	sprintf( filename,"%s-%s",filename,agentname );
+static void WriteNavMeshToDisk( const char* agentname, const dtNavMesh* navMesh ) {
+	int numTiles = 0;
+	FILE *file = NULL;
+	char filename[ 1024 ];
+	NavMeshSetHeader header;
+	qboolean swapEndian = qfalse;
+
+	for ( int i = 0; i < navMesh->getMaxTiles(); i++ )
+	{
+		const dtMeshTile *tile = navMesh->getTile( i );
+		if ( !tile || !tile->header || !tile->dataSize ) {
+			continue;
+		}
+		numTiles++;
+	}
+
+	if ( NAVMESHSET_MAGIC != LittleLong( NAVMESHSET_MAGIC ) ) {
+		swapEndian = qtrue;
+	}
+
+	header.magic = NAVMESHSET_MAGIC;
+	header.version = NAVMESHSET_VERSION;
+	header.numTiles = numTiles;
+	memcpy( &header.params, navMesh->getParams(), sizeof( header.params ) );
+
+	SwapBlock( ( int * ) &header, sizeof( header ) );
+
+	strcpy( filename, source );
+	StripExtension( filename );
+	sprintf( filename, "%s-%s", filename, agentname );
 	DefaultExtension( filename, ".navMesh" );
+	file = fopen( filename, "wb" );
 
-	file = fopen( filename, "w" );
 	if ( !file ) {
-		Error( "Error opening %s: %s", filename, strerror( errno ) );
+		Error( "Error opening %s: %s\n", filename, strerror( errno ) );
 	}
-	memset( &navHeader,0, sizeof( NavMeshHeader_t ) );
 
-	//print header info
-	navHeader.version = 1;
+	fwrite( &header, sizeof( header ), 1, file );
 
-	navHeader.numVerts = polyMesh->nverts;
-
-	navHeader.numPolys = polyMesh->npolys;
-
-	navHeader.numVertsPerPoly = polyMesh->nvp;
-
-	VectorCopy( polyMesh->bmin, navHeader.mins );
-
-	VectorCopy( polyMesh->bmax, navHeader.maxs );
-
-	navHeader.dNumMeshes = detailedPolyMesh->nmeshes;
-
-	navHeader.dNumVerts = detailedPolyMesh->nverts;
-
-	navHeader.dNumTris = detailedPolyMesh->ntris;
-
-	navHeader.cellSize = cfg->cs;
-
-	navHeader.cellHeight = cfg->ch;
-
-	//write header
-	fprintf( file, "%d ", navHeader.version );
-	fprintf( file, "%d %d %d ", navHeader.numVerts,navHeader.numPolys,navHeader.numVertsPerPoly );
-	fprintf( file, "%f %f %f ", navHeader.mins[0],navHeader.mins[1],navHeader.mins[2] );
-	fprintf( file, "%f %f %f ", navHeader.maxs[0], navHeader.maxs[1], navHeader.maxs[2] );
-	fprintf( file, "%d %d %d ",navHeader.dNumMeshes, navHeader.dNumVerts, navHeader.dNumTris );
-	fprintf( file, "%f %f\n", navHeader.cellSize, navHeader.cellHeight );
-
-
-	//write verts
-	for ( int i = 0, j = 0; i < polyMesh->nverts; i++, j += 3 )
+	for ( int i = 0; i < navMesh->getMaxTiles(); i++ )
 	{
-		fprintf( file, "%d %d %d\n", polyMesh->verts[j], polyMesh->verts[j + 1], polyMesh->verts[j + 2] );
-	}
+		const dtMeshTile *tile = navMesh->getTile( i );
 
-	//write polys
-	for ( int i = 0, j = 0; i < polyMesh->npolys; i++, j += polyMesh->nvp * 2 )
-	{
-		fprintf( file, "%d %d %d %d %d %d %d %d %d %d %d %d\n", polyMesh->polys[j], polyMesh->polys[j + 1], polyMesh->polys[j + 2],
-				 polyMesh->polys[j + 3], polyMesh->polys[j + 4], polyMesh->polys[j + 5],
-				 polyMesh->polys[j + 6], polyMesh->polys[j + 7], polyMesh->polys[j + 8],
-				 polyMesh->polys[j + 9], polyMesh->polys[j + 10], polyMesh->polys[j + 11] );
-	}
+		if ( !tile || !tile->header || !tile->dataSize ) {
+			continue;
+		}
 
-	//write areas
-	for ( int i = 0; i < polyMesh->npolys; i++ ) {
-		fprintf( file, "%d ", polyMesh->areas[i] );
-	}
-	fprintf( file, "\n" );
+		NavMeshTileHeader tileHeader;
+		tileHeader.tileRef = navMesh->getTileRef( tile );
+		tileHeader.dataSize = tile->dataSize;
 
-	//write flags
-	for ( int i = 0; i < polyMesh->npolys; i++ )
-	{
-		fprintf( file, "%d ", polyMesh->flags[i] );
-	}
-	fprintf( file, "\n" );
+		SwapBlock( ( int * ) &tileHeader, sizeof( tileHeader ) );
 
-	//write detail meshes
-	for ( int i = 0, j = 0; i < detailedPolyMesh->nmeshes; i++, j += 4 )
-	{
-		fprintf( file, "%d %d %d %d\n", detailedPolyMesh->meshes[j], detailedPolyMesh->meshes[j + 1],
-				 detailedPolyMesh->meshes[j + 2], detailedPolyMesh->meshes[j + 3] );
-	}
+		fwrite( &tileHeader, sizeof( tileHeader ), 1, file );
 
-	//write detail verts
-	for ( int i = 0, j = 0; i < detailedPolyMesh->nverts; i++, j += 3 )
-	{
-		fprintf( file, "%d %d %d\n", (int)detailedPolyMesh->verts[j], (int)detailedPolyMesh->verts[j + 1],
-				 (int)detailedPolyMesh->verts[j + 2] );
-	}
+		unsigned char* data = ( unsigned char * ) malloc( tile->dataSize );
 
-	//write detail tris
-	for ( int i = 0, j = 0; i < detailedPolyMesh->ntris; i++, j += 4 )
-	{
-		fprintf( file, "%d %d %d %d\n", detailedPolyMesh->tris[j], detailedPolyMesh->tris[j + 1],
-				 detailedPolyMesh->tris[j + 2], detailedPolyMesh->tris[j + 3] );
-	}
+		memcpy( data, tile->data, tile->dataSize );
+		if ( swapEndian ) {
+			dtNavMeshDataSwapEndian( data, tile->dataSize );
+			dtNavMeshHeaderSwapEndian( data, tile->dataSize );
+		}
 
+		fwrite( data, tile->dataSize, 1, file );
+
+		free( data );
+	}
 	fclose( file );
 }
 
@@ -1137,12 +1112,15 @@ static void rcFilterGaps( rcContext *ctx, int walkableRadius, int walkableClimb,
 	}
 }
 
-static void buildPolyMesh( int characterNum, vec3_t mapmins, vec3_t mapmaxs, rcPolyMesh *&polyMesh, rcPolyMeshDetail *&detailedPolyMesh, rcConfig &cfg ){
+static unsigned char* buildTile( int characterNum, vec3_t mapmins, vec3_t mapmaxs, int *dataSize ){
 	float agentHeight = tremClasses[ characterNum ].height;
 	float agentRadius = tremClasses[ characterNum ].radius;
 	rcHeightfield *heightField;
 	rcCompactHeightfield *compHeightField;
 	rcContourSet *contours;
+	rcConfig cfg;
+	rcPolyMesh *polyMesh;
+	rcPolyMeshDetail *detailedPolyMesh;
 
 	memset( &cfg, 0, sizeof( cfg ) );
 	VectorCopy( mapmaxs, cfg.bmax );
@@ -1259,18 +1237,59 @@ static void buildPolyMesh( int characterNum, vec3_t mapmins, vec3_t mapmaxs, rcP
 			polyMesh->flags[i] = POLYFLAGS_WALK | POLYFLAGS_DOOR;
 		}
 	}
+
+	dtNavMeshCreateParams params;
+	memset( &params, 0, sizeof( params ) );
+	params.verts = polyMesh->verts;
+	params.vertCount = polyMesh->nverts;
+	params.polys = polyMesh->polys;
+	params.polyAreas = polyMesh->areas;
+	params.polyFlags = polyMesh->flags;
+	params.polyCount = polyMesh->npolys;
+	params.nvp = polyMesh->nvp;
+	params.detailMeshes = detailedPolyMesh->meshes;
+	params.detailVerts = detailedPolyMesh->verts;
+	params.detailVertsCount = detailedPolyMesh->nverts;
+	params.detailTris = detailedPolyMesh->tris;
+	params.detailTriCount = detailedPolyMesh->ntris;
+	params.walkableHeight = cfg.walkableHeight * cfg.ch;
+	params.walkableRadius = cfg.walkableRadius * cfg.cs;
+	params.walkableClimb =  cfg.walkableClimb  * cfg.ch;
+	params.tileX = 0;
+	params.tileY = 0;
+	VectorCopy( polyMesh->bmin, params.bmin );
+	VectorCopy( polyMesh->bmax, params.bmax );
+	params.cs = cfg.cs;
+	params.ch = cfg.ch;
+	params.buildBvTree = true;
+
+	unsigned char* navData = NULL;
+	int navDataSize = 0;
+	if ( !dtCreateNavMeshData( &params, &navData, &navDataSize ) ) {
+		Error( "Could not build Detour navmesh.\n" );
+	}
+	*dataSize = navDataSize;
+	rcFreePolyMesh( polyMesh );
+	rcFreePolyMeshDetail( detailedPolyMesh );
+	return navData;
 }
 
 static void BuildSoloMesh( int characterNum ) {
-	rcConfig cfg;
-	rcPolyMesh *polyMesh = rcAllocPolyMesh();
-	rcPolyMeshDetail *detailedPolyMesh = rcAllocPolyMeshDetail();
+	int dataSize;
+	const char *name = tremClasses[ characterNum ].name;
+	unsigned char *navData = buildTile( characterNum, mapmins, mapmaxs, &dataSize );
 
-	buildPolyMesh( characterNum, mapmins, mapmaxs, polyMesh, detailedPolyMesh, cfg );
-	WriteRecastData( tremClasses[characterNum].name, polyMesh, detailedPolyMesh, &cfg );
+	dtNavMesh *navMesh = dtAllocNavMesh();
+	if ( !navMesh ) {
+		Error( "Could not allocate memory for navmesh for character %s\n", name );
+	}
 
-	rcFreePolyMesh( polyMesh );
-	rcFreePolyMeshDetail( detailedPolyMesh );
+	if ( dtStatusFailed( navMesh->init( navData, dataSize, DT_TILE_FREE_DATA ) ) ) {
+		Error( "Failed to init navmesh for character %s\n", name );
+	}
+
+	WriteNavMeshToDisk( tremClasses[ characterNum ].name, navMesh );
+	dtFreeNavMesh( navMesh );
 }
 
 /*
