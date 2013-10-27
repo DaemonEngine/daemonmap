@@ -1249,7 +1249,7 @@ extern "C" int NavMain( int argc, char **argv ){
 	Sys_Printf( "--- Nav ---\n" );
 
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: owmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <mapname>\n" );
+		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <mapname>\n" );
 		return 0;
 	}
 
