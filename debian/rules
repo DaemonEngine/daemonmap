@@ -1,0 +1,71 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+DEB_HOST_GNU_TYPE := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_HOST_ARCH_CPU := $(shell dpkg-architecture -qDEB_HOST_ARCH_CPU)
+DEB_HOST_GNU_CPU := $(shell dpkg-architecture -qDEB_HOST_GNU_CPU | sed -e 's/i.86/i386/')
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_configure:
+	mkdir -p obj-${DEB_HOST_GNU_TYPE}
+	cd obj-${DEB_HOST_GNU_TYPE} && \
+	cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+		 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		 -DCMAKE_SKIP_RPATH=ON \
+		 -DGAME_QVM=OFF \
+		 -DUSE_OPENAL_DLOPEN=OFF \
+		 -DBUILD_DAEMONMAP=ON \
+		 $(shell test ! -f /usr/include/opus/opus.h || echo -DUSE_INTERNAL_OPUS=OFF) \
+		 $(shell test -f /usr/include/xvid.h || echo -DUSE_CIN_XVID=OFF) \
+		 $(shell test -d /usr/include/webp || echo -DUSE_WEBP=OFF)
+
+override_dh_auto_install:
+
+override_dh_install:
+	dh_install
+	rename "s/daemon/unvanquished/" debian/unvanquished*/usr/lib/games/unvanquished/daemon*
+
+override_dh_strip:
+	dh_strip --dbg-package=unvanquished-dbg
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf CMakeFiles lcc/CMakeFiles src/tests/CMakeFiles
+
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
+
+override_dh_installexamples:
+override_dh_installman:
+override_dh_installcatalogs:
+override_dh_installcron:
+override_dh_installemacsen:
+override_dh_installifupdown:
+override_dh_installinfo:
+override_dh_pysupport:
+override_dh_installmime:
+override_dh_installmodules:
+override_dh_installlogcheck:
+override_dh_installlogrotate:
+override_dh_installpam:
+override_dh_installppp:
+override_dh_installudev:
+override_dh_installwm:
+override_dh_installxfonts:
+override_dh_installgsettings:
+override_dh_bugfiles:
+override_dh_ucf:
+override_dh_gconf:
+override_dh_perl:
+override_dh_usrlocal:
+                                 
