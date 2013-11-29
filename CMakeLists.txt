@@ -91,11 +91,11 @@ set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 
 
 # Options
-option( BUILD_CLIENT         "Build Daemon client"                         1 )
-option( BUILD_SERVER         "Build Daemonded server"                      1 )
-option( GAME_LIB             "Build game logic libraries"                  1 )
-option( GAME_QVM             "Build game logic QVM files"                  1 )
-option( BUILD_DAEMONMAP      "Build Mapping tool"                          0 )
+option( BUILD_CLIENT         "Build Daemon client"                         0 )
+option( BUILD_SERVER         "Build Daemonded server"                      0 )
+option( GAME_LIB             "Build game logic libraries"                  0 )
+option( GAME_QVM             "Build game logic QVM files"                  0 )
+option( BUILD_DAEMONMAP      "Build Mapping tool"                          1 )
 option( BUILD_TTY_CLIENT     "Build Daemon headless client"                0 )
 
 option( ENABLE_W_ALL         "Use -Wall"                                   0 )
