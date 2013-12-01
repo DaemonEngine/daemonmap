@@ -21,26 +21,20 @@ override_dh_auto_configure:
 	cd obj-${DEB_HOST_GNU_TYPE} && \
 	cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
 		 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		 -DCMAKE_SKIP_RPATH=ON \
-		 -DGAME_QVM=OFF \
-		 -DUSE_OPENAL_DLOPEN=OFF \
-		 -DBUILD_DAEMONMAP=ON \
-		 $(shell test ! -f /usr/include/opus/opus.h || echo -DUSE_INTERNAL_OPUS=OFF) \
-		 $(shell test -f /usr/include/xvid.h || echo -DUSE_CIN_XVID=OFF) \
-		 $(shell test -d /usr/include/webp || echo -DUSE_WEBP=OFF)
+		 -DCMAKE_SKIP_RPATH=ON
 
 override_dh_auto_install:
 
 override_dh_install:
 	dh_install
-	rename "s/daemon/unvanquished/" debian/unvanquished*/usr/lib/games/unvanquished/daemon*
+	rename "s/daemon/unvanquished/" debian/unvanquished*/usr/games/daemon*
 
 override_dh_strip:
-	dh_strip --dbg-package=unvanquished-dbg
+	dh_strip --dbg-package=unvanquished-dev-dbg
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf CMakeFiles lcc/CMakeFiles src/tests/CMakeFiles
+	rm -rf CMakeFiles src/tests/CMakeFiles
 
 override_dh_builddeb:
 	dh_builddeb -- -Zxz

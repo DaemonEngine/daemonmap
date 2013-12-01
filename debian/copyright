@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
-Upstream-Name: unvanquished
-Source: http://github.com/Unvanquished/Unvanquished
+Upstream-Name: daemonmap
+Source: http://github.com/Unvanquished/daemonmap
 
 Files: *
 Copyright: 2011-2013 Unvanquished Development (and others)
