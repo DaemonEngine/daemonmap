@@ -1,4 +1,10 @@
-unvanquished-dev (0.22.0-1) unstable; urgency=low
+unvanquished-dev (0.22.0-2) unstable; urgency=low
+
+  * Packaging fixes.
+
+ -- Darren Salt <devspam@moreofthesa.me.uk>  Sun, 01 Dec 2013 17:52:45 +0000
+
+unvanquished-dev (0.22.0-2) unstable; urgency=low
 
   * Forked from unvanquished since daemonmap is currently not present there.
 
