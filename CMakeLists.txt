@@ -208,7 +208,7 @@ endif()
 
 if( USE_INTERNAL_JPEG )
   add_subdirectory( ${JPEG_DIR} ${OBJ_DIR}/libjpeg )
-  set( JPEG_LIBRARY INTERNAL_JPEG CACHE STRING "JPEG library" FORCE )
+  set( JPEG_LIBRARIES INTERNAL_JPEG CACHE STRING "JPEG library" FORCE )
   set( JPEG_INCLUDE_DIR ${JPEG_DIR} CACHE STRING "JPEG include directory" FORCE )
 endif()
 
