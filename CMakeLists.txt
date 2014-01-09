@@ -208,7 +208,7 @@ endif()
 
 if( USE_INTERNAL_JPEG )
   add_subdirectory( ${JPEG_DIR} ${OBJ_DIR}/libjpeg )
-  set( JPEG_LIBRARIES INTERNAL_JPEG CACHE STRING "JPEG library" FORCE )
+  set( JPEG_LIBRARY INTERNAL_JPEG CACHE STRING "JPEG library" FORCE )
   set( JPEG_INCLUDE_DIR ${JPEG_DIR} CACHE STRING "JPEG include directory" FORCE )
 endif()
 
@@ -546,5 +546,5 @@ endmacro()
     target_link_libraries( daemonMap pthread )
   endif()
 
-  target_link_libraries( daemonMap ${OPENGL_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${GLIB_LIBRARIES} )
+  target_link_libraries( daemonMap ${OPENGL_LIBRARIES} ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${GLIB_LIBRARIES} )
   include_directories( ${OPENGL_INCLUDE_DIR} ${JPEG_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${GLIB_INCLUDE_DIRS} )
