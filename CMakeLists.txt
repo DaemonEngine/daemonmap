@@ -97,7 +97,7 @@ option( ENABLE_HARDENING     "Enable security hardening options"           1 )
 
 option( USE_SDL2             "Enable SDL 2.0 support (incompatible with SDL 1.2)"    1 )
 
-option( USE_INTERNAL_JPEG    "Use JPEG files included with Unvanquished"             0 )
+option( USE_INTERNAL_JPEG    "Use JPEG files included with Unvanquished"             1 )
 
 cmake_dependent_option( ENABLE_W_EXTRA       "Use -Wextra"                                 0 ENABLE_W_ALL     0 )
 cmake_dependent_option( ENABLE_FSTACKPROT    "Enable stack protection if available"        1 ENABLE_HARDENING 0 )
@@ -510,7 +510,7 @@ macro( find_and_use_SDL TARGET )
     target_link_libraries( ${TARGET} ${SDL_LIBRARY} )
   endif()
   if( NOT SDL2_FOUND AND NOT SDL_LIBRARY)
-    # shouldn't get here – should fail above if 1.2 isn't found
+    # shouldn't get here ï¿½ should fail above if 1.2 isn't found
     message( FATAL_ERROR "Neither SDL 1.2 nor SDL 2 were found" )
   endif()
 endmacro()
