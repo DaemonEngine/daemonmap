@@ -1,8 +1,9 @@
-unvanquished-dev (0.22.0-2) unstable; urgency=low
+daemonmap (0.22.0-2) unstable; urgency=low
 
+  * Rename source package to ‘daemonmap’, matching the repository name.
   * Packaging fixes.
 
- -- Darren Salt <devspam@moreofthesa.me.uk>  Sun, 01 Dec 2013 17:52:45 +0000
+ -- Darren Salt <devspam@moreofthesa.me.uk>  Mon, 20 Jan 2014 14:24:27 +0000
 
 unvanquished-dev (0.22.0-1) unstable; urgency=low
 

@@ -21,7 +21,8 @@ override_dh_auto_configure:
 	cd obj-${DEB_HOST_GNU_TYPE} && \
 	cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
 		 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		 -DCMAKE_SKIP_RPATH=ON
+		 -DCMAKE_SKIP_RPATH=ON \
+		 -DUSE_INTERNAL_JPEG=OFF
 
 override_dh_auto_install:
 
