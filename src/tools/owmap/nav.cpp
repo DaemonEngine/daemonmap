@@ -197,7 +197,7 @@ static void LoadBrushTris(std::vector<float> &verts, std::vector<int> &tris) {
 	if(model->numBSPBrushes == 0)
 	{
 		std::cout << "0 Brushes Found Exiting..." << std::endl;
-		std::cout << "If your trying to generate navMeshes rebuild map with final settings" << std::endl;
+		std::cout << "If you're trying to generate navMeshes rebuild map with final settings" << std::endl;
 		exit(0);
 	}
 	//go through the brushes
