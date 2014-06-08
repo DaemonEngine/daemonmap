@@ -35,7 +35,8 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 
 /* dependencies */
 #include "q3map2.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 convertType_t   convertType = CONVERT_NOTHING;
 
 
@@ -1814,8 +1815,10 @@ q3map mojo...
 
 int main(int argc, char **argv)
 {
-	int             i, r = 0;
-	double          start, end;
+	int             i;
+	int 		r = 0;
+	double          start;
+	double 		end;
 	int             help = 0;
 
 	/* we want consistent 'randomness' */
@@ -1823,7 +1826,19 @@ int main(int argc, char **argv)
 
 	/* start timer */
 	start = I_FloatTime();
-
+	
+	if(argc <= 1 )
+	{
+		printf("Use --help or -h or -? for more info\n");
+		return 0;
+	}
+	if(argv[1] = "-hn")
+	{
+		printf("Nav Mesh Generation Steps: \n");
+		printf("Step 1: compile map with final build settings\n");
+		printf("Step 2:./daemonmap -nav -threads 1 -game unv <mapname>.bsp\n");
+		return 0;
+	}
 	if(!strcmp(argv[1], "-?") || !strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
 	{
 		if (argc == 2)

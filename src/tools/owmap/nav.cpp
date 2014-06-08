@@ -27,6 +27,8 @@ extern "C" {
 
 #include <vector>
 #include <queue>
+#include <iostream>
+#include <cstdlib>
 #include "navgen.h"
 
 Geometry geo;
@@ -192,7 +194,12 @@ static void LoadBrushTris(std::vector<float> &verts, std::vector<int> &tris) {
 
 	/* get model, index 0 is worldspawn entity */
 	bspModel_t *model = &bspModels[0];
-
+	if(model->numBSPBrushes == 0)
+	{
+		std::cout << "0 Brushes Found Exiting..." << std::endl;
+		std::cout << "If your trying to generate navMeshes rebuild map with final settings" << std::endl;
+		exit(0);
+	}
 	//go through the brushes
 	for(int i=model->firstBSPBrush,m=0;m<model->numBSPBrushes;i++,m++) {
 		int numSides = bspBrushes[i].numSides;
