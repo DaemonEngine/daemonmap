@@ -25,6 +25,7 @@ extern "C" {
 #include "q3map2.h"
 }
 
+#include <iostream>
 #include <vector>
 #include <queue>
 #include "navgen.h"
@@ -187,6 +188,11 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 
 	/* get model, index 0 is worldspawn entity */
 	bspModel_t *model = &bspModels[0];
+
+	if ( model->numBSPBrushes <= 0 ) {
+		std::cerr << "No brushes found. Aborting." << std::endl;
+		exit( 2 );
+	}
 
 	//go through the brushes
 	for ( int i = model->firstBSPBrush,m = 0; m < model->numBSPBrushes; i++,m++ ) {
