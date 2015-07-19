@@ -347,6 +347,15 @@ void HelpMinimap()
 	HelpOptions("MiniMap", 0, 80, minimap, sizeof(minimap)/sizeof(struct HelpOption));
 }
 
+void HelpNavMesh()
+{
+	struct HelpOption navmesh[] = {
+		{"-nav <filename.bsp>", "Creates navmeshes from BSP file"},
+	};
+
+	HelpOptions("NavMesh", 0, 80, navmesh, sizeof(navmesh)/sizeof(struct HelpOption));
+}
+
 void HelpCommon()
 {
 	struct HelpOption common[] = {
@@ -390,6 +399,7 @@ void HelpMain(const char* arg)
 		{"-info", "Get info about BSP file"},
 		{"-import", "Importing lightmaps"},
 		{"-minimap", "MiniMap"},
+		{"-nav", "NavMesh"},
 	};
 	void(*help_funcs[])() = {
 		HelpBsp,
@@ -404,6 +414,7 @@ void HelpMain(const char* arg)
 		HelpInfo,
 		HelpImport,
 		HelpMinimap,
+		HelpNavMesh,
 	};
 
 	if ( arg && strlen(arg) > 0 )
