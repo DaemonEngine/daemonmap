@@ -101,6 +101,7 @@ radiant_tool(q3map2
         q3map2/mesh.c
         q3map2/minimap.c
         q3map2/model.c
+        q3map2/nav.cpp
         q3map2/patch.c
         q3map2/path_init.c
         q3map2/portals.c
@@ -127,11 +128,14 @@ target_link_libraries(q3map2
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ddslib
+        detour
         etclib
+        fastlz
         filematch
         l_net
         mathlib
         picomodel
+        recast
         )
 
 radiant_tool(q3data

@@ -527,6 +527,7 @@ $(INSTALLDIR)/q3map2.$(EXE): \
 	tools/quake3/q3map2/minimap.o \
 	tools/quake3/q3map2/mesh.o \
 	tools/quake3/q3map2/model.o \
+	tools/quake3/q3map2/nav.o \
 	tools/quake3/q3map2/patch.o \
 	tools/quake3/q3map2/path_init.o \
 	tools/quake3/q3map2/portals.o \
@@ -548,7 +549,42 @@ $(INSTALLDIR)/q3map2.$(EXE): \
 	libl_net.$(A) \
 	libmathlib.$(A) \
 	libpicomodel.$(A) \
+	libdetour.$(A) \
+	librecast.$(A) \
+	libfastlz.$(A) \
 	$(if $(findstring $(OS),Win32),icons/q3map2.o,) \
+
+libdetour.$(A): CPPFLAGS_EXTRA := -Ilibs
+libdetour.$(A): \
+	libs/detour/DetourAlloc.o \
+	libs/detour/DetourNavMeshQuery.o \
+	libs/detour/DetourDebugDraw.o \
+	libs/detour/DetourNode.o \
+	libs/detour/DetourPathCorridor.o \
+	libs/detour/DetourNavMeshBuilder.o \
+	libs/detour/DebugDraw.o \
+	libs/detour/DetourCommon.o \
+	libs/detour/DetourNavMesh.o \
+	libs/detour/DetourTileCacheBuilder.o \
+	libs/detour/DetourTileCache.o \
+
+libfastlz.$(A): CPPFLAGS_EXTRA := -Ilibs
+libfastlz.$(A): \
+	libs/fastlz/fastlz.o \
+
+librecast.$(A): CPPFLAGS_EXTRA := -Ilibs
+librecast.$(A): \
+	libs/recast/ChunkyTriMesh.o \
+	libs/recast/RecastMesh.o \
+	libs/recast/RecastRegion.o \
+	libs/recast/RecastRasterization.o \
+	libs/recast/RecastMeshDetail.o \
+	libs/recast/RecastLayers.o \
+	libs/recast/RecastContour.o \
+	libs/recast/RecastAlloc.o \
+	libs/recast/RecastFilter.o \
+	libs/recast/RecastArea.o \
+	libs/recast/Recast.o \
 
 libmathlib.$(A): CPPFLAGS_EXTRA := -Ilibs
 libmathlib.$(A): \

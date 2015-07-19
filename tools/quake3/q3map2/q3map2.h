@@ -34,6 +34,11 @@
 
 #include "globaldefs.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /* version */
 #ifndef Q3MAP_VERSION
 #error no Q3MAP_VERSION defined
@@ -77,7 +82,18 @@
 #include "polylib.h"
 #include "imagelib.h"
 #include "qthreads.h"
+
+#ifdef __cplusplus
+}
+#endif
+
 #include "inout.h"
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include "vfs.h"
 #include "png.h"
 #include "md4.h"
@@ -1000,26 +1016,7 @@ typedef enum
 }
 surfaceType_t;
 
-char            *surfaceTypes[ NUM_SURFACE_TYPES ]
-#ifndef MAIN_C
-;
-#else
-	=
-	{
-	"SURFACE_BAD",
-	"SURFACE_FACE",
-	"SURFACE_PATCH",
-	"SURFACE_TRIANGLES",
-	"SURFACE_FLARE",
-	"SURFACE_FOLIAGE",
-	"SURFACE_FORCED_META",
-	"SURFACE_META",
-	"SURFACE_FOGHULL",
-	"SURFACE_DECAL",
-	"SURFACE_SHADER"
-	};
-#endif
-
+extern char      *surfaceTypes[ NUM_SURFACE_TYPES ];
 
 /* ydnar: this struct needs an overhaul (again, heh) */
 typedef struct mapDrawSurface_s
@@ -1560,6 +1557,9 @@ int                         ConvertBSPToASE( char *bspName );
 
 /* convert_obj.c */
 int                         ConvertBSPToOBJ( char *bspName );
+
+/* nav.cpp */
+int                         NavMain(int argc, char **argv);
 
 /* brush.c */
 sideRef_t                   *AllocSideRef( side_t *side, sideRef_t *next );
@@ -2581,6 +2581,10 @@ Q_EXTERN bspAdvertisement_t bspAds[ MAX_MAP_ADVERTISEMENTS ];
 
 #define Image_LinearFloatFromsRGBFloat( c ) ( ( ( c ) <= 0.04045f ) ? ( c ) * ( 1.0f / 12.92f ) : (float)pow( ( ( c ) + 0.055f ) * ( 1.0f / 1.055f ), 2.4f ) )
 #define Image_sRGBFloatFromLinearFloat( c ) ( ( ( c ) < 0.0031308f ) ? ( c ) * 12.92f : 1.055f * (float)pow( ( c ), 1.0f / 2.4f ) - 0.055f )
+
+#ifdef __cplusplus
+}
+#endif
 
 /* end marker */
 #endif

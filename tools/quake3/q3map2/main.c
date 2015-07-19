@@ -37,6 +37,21 @@
 #include "q3map2.h"
 #include <glib.h>
 
+char *surfaceTypes[ NUM_SURFACE_TYPES ] =
+{
+	"SURFACE_BAD",
+	"SURFACE_FACE",
+	"SURFACE_PATCH",
+	"SURFACE_TRIANGLES",
+	"SURFACE_FLARE",
+	"SURFACE_FOLIAGE",
+	"SURFACE_FORCED_META",
+	"SURFACE_META",
+	"SURFACE_FOGHULL",
+	"SURFACE_DECAL",
+	"SURFACE_SHADER"
+};
+
 /*
    Random()
    returns a pseudorandom number between 0 and 1
@@ -79,7 +94,6 @@ char *Q_strncat( char *dst, size_t dlen, const char *src, size_t slen ) {
 	return Q_strncpyz( dst + n, src, MIN( slen, dlen - n ) );
 }
 
-
 /*
    ExitQ3Map()
    cleanup routine
@@ -91,7 +105,6 @@ static void ExitQ3Map( void ){
 		free( mapDrawSurfs );
 	}
 }
-
 
 /*
    main()
@@ -272,6 +285,7 @@ int main( int argc, char **argv ){
 	else if ( !strcmp( argv[1], "-nav" ) ) {
 		r = NavMain( argc - 1, argv + 1 );
 	}
+
 	/* ydnar: otherwise create a bsp */
 	else{
 		r = BSPMain( argc, argv );

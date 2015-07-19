@@ -21,10 +21,7 @@
  */
 // nav.cpp -- navigation mesh generator interface
 
-extern "C" {
 #include "q3map2.h"
-}
-
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -43,7 +40,7 @@ struct Character
 	float height; //height of agents (BBox maxs[2] - BBox mins[2])
 };
 
-static const Character characters[] = {
+static const Character characterArray[] = {
 	{ "builder",     20, 40 },
 //	{ "builderupg",  20, 40 },
 	{ "human_naked", 15, 56 },
@@ -1132,7 +1129,7 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 }
 
 static void BuildNavMesh( int characterNum ){
-	const Character &agent = characters[ characterNum ];
+	const Character &agent = characterArray[ characterNum ];
 
 	dtTileCache *tileCache;
 	const float *bmin = geo.getMins();
@@ -1254,13 +1251,13 @@ extern "C" int NavMain( int argc, char **argv ){
 	float temp;
 	int i;
 
-	/* note it */
-	Sys_Printf( "--- Nav ---\n" );
-
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <mapname>\n" );
+		Sys_Printf( "Usage: q3map2 -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <mapname>\n" );
 		return 0;
 	}
+
+	/* note it */
+	Sys_Printf( "--- Nav ---\n" );
 
 	/* process arguments */
 	for ( i = 1; i < ( argc - 1 ); i++ )
@@ -1333,7 +1330,7 @@ extern "C" int NavMain( int argc, char **argv ){
 		Sys_Printf( "New cellheight: %f\n", cellHeight );
 	}
 
-	RunThreadsOnIndividual( sizeof( characters ) / sizeof( characters[ 0 ] ), qtrue, BuildNavMesh );
+	RunThreadsOnIndividual( sizeof( characterArray ) / sizeof( characterArray[ 0 ] ), qtrue, BuildNavMesh );
 
 	return 0;
 }
