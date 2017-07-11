@@ -81,6 +81,7 @@ MapModules& ReferenceAPI_getMapModules();
 #include "xywindow.h"
 #include "mainframe.h"
 #include "preferences.h"
+#include "preferencesystem.h"
 #include "referencecache.h"
 #include "mru.h"
 #include "commands.h"
@@ -922,6 +923,8 @@ ScopeTimer( const char* message )
 }
 };
 
+CopiedString g_strLastFolder = "";
+
 /*
    ================
    Map_LoadFile
@@ -933,6 +936,7 @@ void Map_LoadFile( const char *filename ){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Map" );
 
 	MRU_AddFile( filename );
+	g_strLastFolder = g_path_get_dirname( filename );
 
 	{
 		ScopeTimer timer( "map load" );
@@ -1493,6 +1497,8 @@ void Map_RegionBrush( void ){
 bool Map_ImportFile( const char* filename ){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Map" );
 
+	g_strLastFolder = g_path_get_dirname( filename );
+
 	bool success = false;
 
 	if ( extension_equal( path_get_extension( filename ), "bsp" ) ) {
@@ -1795,16 +1801,26 @@ const char* getMapsPath(){
 	return g_mapsPath.c_str();
 }
 
+const char* getLastFolderPath(){
+	if (g_strLastFolder.empty()) {
+		GlobalPreferenceSystem().registerPreference( "LastFolder", CopiedStringImportStringCaller( g_strLastFolder ), CopiedStringExportStringCaller( g_strLastFolder ) );
+		if (g_strLastFolder.empty()) {
+			g_strLastFolder = g_qeglobals.m_userGamePath;
+		}
+	}
+	return g_strLastFolder.c_str();
+}
+
 const char* map_open( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getMapsPath(), MapFormat::Name(), true, false, false );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 const char* map_import( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getMapsPath(), MapFormat::Name(), false, true, false );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 const char* map_save( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), FALSE, title, getMapsPath(), MapFormat::Name(), false, false, true );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 void OpenMap(){
@@ -1814,7 +1830,8 @@ void OpenMap(){
 
 	const char* filename = map_open( "Open Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		MRU_AddFile( filename );
 		Map_RegionOff();
 		Map_Free();
 		Map_LoadFile( filename );
@@ -1824,7 +1841,7 @@ void OpenMap(){
 void ImportMap(){
 	const char* filename = map_import( "Import Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
 		UndoableCommand undo( "mapImport" );
 		Map_ImportFile( filename );
 	}
@@ -1833,7 +1850,8 @@ void ImportMap(){
 bool Map_SaveAs(){
 	const char* filename = map_save( "Save Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		MRU_AddFile( filename );
 		Map_Rename( filename );
 		return Map_Save();
@@ -1857,7 +1875,8 @@ void SaveMap(){
 void ExportMap(){
 	const char* filename = map_save( "Export Selection" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		Map_SaveSelected( filename );
 	}
 }
@@ -1865,7 +1884,8 @@ void ExportMap(){
 void SaveRegion(){
 	const char* filename = map_save( "Export Region" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		Map_SaveRegion( filename );
 	}
 }
@@ -2159,8 +2179,6 @@ void unrealise(){
 };
 
 MapModuleObserver g_MapModuleObserver;
-
-#include "preferencesystem.h"
 
 CopiedString g_strLastMap;
 bool g_bLoadLastMap = false;
