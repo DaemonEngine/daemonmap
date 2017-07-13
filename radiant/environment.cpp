@@ -292,15 +292,7 @@ void environment_init( int argc, char const* argv[] ){
     if ( !portable_app_setup() ) {
         char *appdata = getenv( "APPDATA" );
         StringOutputStream home( 256 );
-        if ( !appdata || string_empty( appdata ) ) {
-            ERROR_MESSAGE( "Application Data folder not available.\n"
-                           "Radiant will use C:\\ for user preferences.\n" );
-            home << "C:";
-        }
-        else
-        {
-            home << PathCleaned( appdata );
-        }
+        home << PathCleaned( appdata );
         home << "/NetRadiantSettings/";
         Q_mkdir( home.c_str() );
         home_path = home.c_str();
