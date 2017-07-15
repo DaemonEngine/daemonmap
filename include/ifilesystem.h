@@ -50,6 +50,10 @@ virtual void initDirectory( const char *path ) = 0;
 /// \brief Initialises the filesystem.
 /// Called after all root search paths have been added.
 virtual void initialise() = 0;
+/// \brief Clear the filesystem if supported
+virtual void clear() = 0;
+/// \brief Reload the filesystem if supported
+virtual void refresh() = 0;
 /// \brief Shuts down the filesystem.
 virtual void shutdown() = 0;
 

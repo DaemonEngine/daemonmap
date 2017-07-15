@@ -848,6 +848,12 @@ void initDirectory( const char *path ){
 	InitDirectory( path, FileSystemQ3API_getArchiveModules() );
 }
 void initialise(){
+	load();
+	globalOutputStream() << "filesystem initialised\n";
+	g_observers.realise();
+}
+
+void load(){
 	ArchiveModules& archiveModules = FileSystemQ3API_getArchiveModules();
 	bool is_dpk_vfs = GetArchiveTable( archiveModules, "dpk" );
 
@@ -873,10 +879,19 @@ void initialise(){
 		g_pakfile_paths.clear();
 		g_loaded_dpk_paks.clear();
 	}
-
-	globalOutputStream() << "filesystem initialised\n";
-	g_observers.realise();
 }
+
+void clear() {
+	// like shutdown() but does not unrealise (keep map etc.)
+	Shutdown();
+}
+
+void refresh(){
+	// like initialise() but does not realise (keep map etc.)
+	load();
+	globalOutputStream() << "filesystem refreshed\n";
+}
+
 void shutdown(){
 	g_observers.unrealise();
 	globalOutputStream() << "filesystem shutdown\n";
