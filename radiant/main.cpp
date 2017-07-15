@@ -558,8 +558,38 @@ int main( int argc, char* argv[] ){
 	}
 #endif
 
+	static GOptionEntry entries[] = {
+		{ NULL }
+	};
+	GError *error = NULL;
+	const char* mapname = NULL;
+
 	gtk_disable_setlocale();
-	gtk_init( &argc, &argv );
+	if ( !gtk_init_with_args( &argc, &argv, "<filename.map>", entries, NULL, &error) ) {
+		g_print( "%s\n", error->message );
+		return -1;
+	}
+
+	// Gtk already removed parsed `--options`
+	if (argc == 2) {
+		if ( strlen( argv[1] ) > 1 ) {
+			if ( g_str_has_suffix( argv[1], ".map" ) ) {
+				if ( g_path_is_absolute( argv[1] ) ) {
+					mapname = argv[1];
+				}
+				else {
+					mapname = g_build_filename( g_get_current_dir(), argv[1], NULL );
+				}
+			}
+			else {
+				g_print( "bad file name, will not load: %s\n", argv[1] );
+			}
+		}
+	}
+	else if (argc > 2) {
+		g_print ( "%s\n", "too many arguments" );
+		return -1;
+	}
 
 	// redirect Gtk warnings to the console
 	g_log_set_handler( "Gdk", (GLogLevelFlags)( G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING |
@@ -620,7 +650,10 @@ int main( int argc, char* argv[] ){
 
 	hide_splash();
 
-	if ( g_bLoadLastMap && !g_strLastMap.empty() ) {
+	if ( mapname != NULL ) {
+		Map_LoadFile( mapname );
+	}
+	else if ( g_bLoadLastMap && !g_strLastMap.empty() ) {
 		Map_LoadFile( g_strLastMap.c_str() );
 	}
 	else

@@ -932,6 +932,8 @@ void Map_LoadFile( const char *filename ){
 	globalOutputStream() << "Loading map from " << filename << "\n";
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Map" );
 
+	MRU_AddFile( filename );
+
 	{
 		ScopeTimer timer( "map load" );
 
@@ -1813,7 +1815,6 @@ void OpenMap(){
 	const char* filename = map_open( "Open Map" );
 
 	if ( filename != 0 ) {
-		MRU_AddFile( filename );
 		Map_RegionOff();
 		Map_Free();
 		Map_LoadFile( filename );
