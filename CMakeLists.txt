@@ -23,9 +23,9 @@ set(RADIANT_BIN_SUBDIR . CACHE INTERNAL "...")
 set(RADIANT_DATA_SUBDIR . CACHE INTERNAL "...")
 
 if (STANDARD_INSTALL)
-	set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
-	set(RADIANT_BIN_SUBDIR bin)
-	set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
+    set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
+    set(RADIANT_BIN_SUBDIR bin)
+    set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
 endif ()
 
 #-----------------------------------------------------------------------
@@ -281,8 +281,7 @@ endif()
 # Install
 #-----------------------------------------------------------------------
 
-install(
-        DIRECTORY
+install(DIRECTORY
         setup/data/tools/
         docs
         DESTINATION ${RADIANT_DATA_SUBDIR}/.
@@ -290,5 +289,20 @@ install(
 
 install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}/${RADIANT_DATA_SUBDIR}\" --install)"
 )
+
+if(NOT WIN32 AND NOT APPLE AND STANDARD_INSTALL)
+    install(FILES
+        ${PROJECT_SOURCE_DIR}/icons/netradiant.png
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
+    )
+    install(FILES
+        ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+    )
+    install(FILES
+        ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
+    )
+endif()
 
 include(cmake/scripts/package.cmake)
