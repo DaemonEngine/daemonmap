@@ -255,7 +255,7 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server 
 void about_plugin_window(){
 	GtkWidget *window, *vbox, *label, *button;
 
-	window = gtk_window_new( GTK_WINDOW_TOPLEVEL ); // create a window
+	window = ui::Window( ui::window_type::TOP ); // create a window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
 	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
 	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
@@ -264,14 +264,14 @@ void about_plugin_window(){
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
-	vbox = gtk_vbox_new( FALSE, 10 ); // create a box to arrange new objects vertically
+	vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
 	gtk_container_add( GTK_CONTAINER( window ), vbox ); // add the box to the window
 
-	label = gtk_label_new( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
+	label = ui::Label( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
 	gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
 
-	button = gtk_button_new_with_label( "OK" ); // create a button with text
+	button = ui::Button( "OK" ); // create a button with text
 	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), window ); // connect the click event to close the window
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
 
@@ -315,13 +315,12 @@ void GetOptimalCoordinates( AABB *levelBoundingBox ){
 // MapCoordinator dialog window
 void MapCoordinator(){
 	GtkWidget *window, *vbox, *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY, *button;
-	GtkAdjustment *spinner_adj_MinX, *spinner_adj_MinY, *spinner_adj_MaxX, *spinner_adj_MaxY;
 	Entity *theWorldspawn = NULL;
 	const char *buffer;
 	char line[20];
 
 	// in any case we need a window to show the user what to do
-	window = gtk_window_new( GTK_WINDOW_TOPLEVEL ); // create the window
+	window = ui::Window( ui::window_type::TOP ); // create the window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
 	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event for the window
 	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
@@ -330,7 +329,7 @@ void MapCoordinator(){
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
-	vbox = gtk_vbox_new( FALSE, 10 ); // create a box to arrange new objects vertically
+	vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
 	gtk_container_add( GTK_CONTAINER( window ), vbox ); // add the box to the window
 
 	scene::Path path = makeReference( GlobalSceneGraph().root() ); // get the path to the root element of the graph
@@ -366,48 +365,48 @@ void MapCoordinator(){
 		globalOutputStream() << "SunPlug: adviced mapcoordsmins=" << minX << " " << maxY << "\n"; // console info about mapcoordsmins
 		globalOutputStream() << "SunPlug: adviced mapcoordsmaxs=" << maxX << " " << minY << "\n"; // console info about mapcoordsmaxs
 
-		spinner_adj_MinX = (GtkAdjustment *)gtk_adjustment_new( map_minX, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of minimum x value
-		spinner_adj_MinY = (GtkAdjustment *)gtk_adjustment_new( map_minY, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of minimum y value
-		spinner_adj_MaxX = (GtkAdjustment *)gtk_adjustment_new( map_maxX, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum x value
-		spinner_adj_MaxY = (GtkAdjustment *)gtk_adjustment_new( map_maxY, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum y value
+		auto spinner_adj_MinX = ui::Adjustment( map_minX, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of minimum x value
+		auto spinner_adj_MinY = ui::Adjustment( map_minY, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of minimum y value
+		auto spinner_adj_MaxX = ui::Adjustment( map_maxX, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum x value
+		auto spinner_adj_MaxY = ui::Adjustment( map_maxY, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum y value
 
-		button = gtk_button_new_with_label( "Get optimal mapcoords" ); // create button with text
+		button = ui::Button( "Get optimal mapcoords" ); // create button with text
 		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( input_optimal ), NULL ); // connect button with callback function
 		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert button into vbox
 
 		gtk_box_pack_start( GTK_BOX( vbox ), gtk_hseparator_new(), FALSE, FALSE, 2 ); // insert separator into vbox
 
-		table = gtk_table_new( 4, 3, TRUE ); // create table
+		table = ui::Table( 4, 3, TRUE ); // create table
 		gtk_table_set_row_spacings( GTK_TABLE( table ), 8 ); // set row spacings
 		gtk_table_set_col_spacings( GTK_TABLE( table ), 8 ); // set column spacings
 		gtk_box_pack_start( GTK_BOX( vbox ), table, FALSE, FALSE, 2 ); // insert table into vbox
 
-		label = gtk_label_new( "x" ); // create label
+		label = ui::Label( "x" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
 		gtk_table_attach_defaults( GTK_TABLE( table ), label, 1, 2, 0, 1 ); // insert label into table
 
-		label = gtk_label_new( "y" ); // create label
+		label = ui::Label( "y" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
 		gtk_table_attach_defaults( GTK_TABLE( table ), label, 2, 3, 0, 1 ); // insert label into table
 
-		label = gtk_label_new( "mapcoordsmins" ); // create label
+		label = ui::Label( "mapcoordsmins" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
 		gtk_table_attach_defaults( GTK_TABLE( table ), label, 0, 1, 1, 2 ); // insert label into table
 
-		spinnerMinX = gtk_spin_button_new( spinner_adj_MinX, 1.0, 0 ); // create textbox wiht value spin, value and value range
+		spinnerMinX = ui::SpinButton( spinner_adj_MinX, 1.0, 0 ); // create textbox wiht value spin, value and value range
 		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMinX, 1, 2, 1, 2 ); // insert spinbox into table
 
-		spinnerMinY = gtk_spin_button_new( spinner_adj_MinY, 1.0, 0 ); // create textbox wiht value spin, value and value range
+		spinnerMinY = ui::SpinButton( spinner_adj_MinY, 1.0, 0 ); // create textbox wiht value spin, value and value range
 		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMinY, 2, 3, 1, 2 ); // insert spinbox into table
 
-		label = gtk_label_new( "mapcoordsmaxs" ); // create label
+		label = ui::Label( "mapcoordsmaxs" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
 		gtk_table_attach_defaults( GTK_TABLE( table ), label, 0, 1, 2, 3 ); // insert label into table
 
-		spinnerMaxX = gtk_spin_button_new( spinner_adj_MaxX, 1.0, 0 ); // create textbox wiht value spin, value and value range
+		spinnerMaxX = ui::SpinButton( spinner_adj_MaxX, 1.0, 0 ); // create textbox wiht value spin, value and value range
 		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMaxX, 1, 2, 2, 3 ); // insert spinbox into table
 
-		spinnerMaxY = gtk_spin_button_new( spinner_adj_MaxY, 1.0, 0 ); // create textbox wiht value spin, value and value range
+		spinnerMaxY = ui::SpinButton( spinner_adj_MaxY, 1.0, 0 ); // create textbox wiht value spin, value and value range
 		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMaxY, 2, 3, 2, 3 ); // insert spinbox into table
 
 		// put the references to the spinboxes and the worldspawn into the global exchange
@@ -417,22 +416,22 @@ void MapCoordinator(){
 		msp.spinner4 = GTK_SPIN_BUTTON( spinnerMaxY );
 		msp.worldspawn = theWorldspawn;
 
-		button = gtk_button_new_with_label( "Set" ); // create button with text
+		button = ui::Button( "Set" ); // create button with text
 		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( set_coordinates ), NULL ); // connect button with callback function
 		gtk_table_attach_defaults( GTK_TABLE( table ), button, 1, 2, 3, 4 ); // insert button into table
 
-		button = gtk_button_new_with_label( "Cancel" ); // create button with text
+		button = ui::Button( "Cancel" ); // create button with text
 		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( close_window ), NULL ); // connect button with callback function
 		gtk_table_attach_defaults( GTK_TABLE( table ), button, 2, 3, 3, 4 ); // insert button into table
 	}
 	else {
 		globalOutputStream() << "SunPlug: no worldspawn found!\n"; // output error to console
 
-		label = gtk_label_new( "ERROR: No worldspawn was found in the map!\nIn order to use this tool the map must have at least one brush in the worldspawn. " ); // create a label
+		label = ui::Label( "ERROR: No worldspawn was found in the map!\nIn order to use this tool the map must have at least one brush in the worldspawn. " ); // create a label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
 		gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
 
-		button = gtk_button_new_with_label( "OK" ); // create a button with text
+		button = ui::Button( "OK" ); // create a button with text
 		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( close_window ), NULL ); // connect the click event to close the window
 		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
 	}

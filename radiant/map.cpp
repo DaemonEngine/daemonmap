@@ -42,15 +42,9 @@ MapModules& ReferenceAPI_getMapModules();
 
 #include <set>
 
-#include <gtk/gtkmain.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtktreemodel.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkliststore.h>
-#include <gtk/gtkcellrenderertext.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+#include "uilib/uilib.h"
 
 #include "scenelib.h"
 #include "transformlib.h"
@@ -772,7 +766,7 @@ void DoMapInfo(){
 	GtkEntry* entities_entry;
 	GtkListStore* EntityBreakdownWalker;
 
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Map Info", G_CALLBACK( dialog_delete_callback ), &dialog );
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Map Info", G_CALLBACK(dialog_delete_callback ), &dialog );
 
 	window_set_position( window, g_posMapInfoWnd );
 
@@ -789,27 +783,27 @@ void DoMapInfo(){
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 
 				{
-					GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+					GtkEntry* entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					gtk_entry_set_editable( entry, FALSE );
+					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
 
 					brushes_entry = entry;
 				}
 				{
-					GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+					GtkEntry* entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					gtk_entry_set_editable( entry, FALSE );
+					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
 
 					entities_entry = entry;
 				}
 				{
-					GtkWidget* label = gtk_label_new( "Total Brushes" );
+					ui::Widget label = ui::Label( "Total Brushes" );
 					gtk_widget_show( label );
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -817,7 +811,7 @@ void DoMapInfo(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkWidget* label = gtk_label_new( "Total Entities" );
+					ui::Widget label = ui::Label( "Total Entities" );
 					gtk_widget_show( label );
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -836,7 +830,7 @@ void DoMapInfo(){
 			}
 		}
 		{
-			GtkWidget* label = gtk_label_new( "Entity breakdown" );
+			ui::Widget label = ui::Label( "Entity breakdown" );
 			gtk_widget_show( label );
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, TRUE, 0 );
 			gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -848,19 +842,19 @@ void DoMapInfo(){
 			{
 				GtkListStore* store = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
 
-				GtkWidget* view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
+				ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 				gtk_tree_view_set_headers_clickable( GTK_TREE_VIEW( view ), TRUE );
 
 				{
-					GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
-					GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "Entity", renderer, "text", 0, 0 );
+					auto renderer = ui::CellRendererText();
+					GtkTreeViewColumn* column = ui::TreeViewColumn( "Entity", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 					gtk_tree_view_column_set_sort_column_id( column, 0 );
 				}
 
 				{
-					GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
-					GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "Count", renderer, "text", 1, 0 );
+					auto renderer = ui::CellRendererText();
+					GtkTreeViewColumn* column = ui::TreeViewColumn( "Count", renderer, {{"text", 1}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 					gtk_tree_view_column_set_sort_column_id( column, 1 );
 				}
@@ -1812,15 +1806,15 @@ const char* getLastFolderPath(){
 }
 
 const char* map_open( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
+	return MainFrame_getWindow().file_dialog( TRUE, title, getLastFolderPath(), MapFormat::Name(), true, false, false );
 }
 
 const char* map_import( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
+	return MainFrame_getWindow().file_dialog( TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 const char* map_save( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), FALSE, title, getLastFolderPath(), MapFormat::Name(), false, false, true );
+	return MainFrame_getWindow().file_dialog( FALSE, title, getLastFolderPath(), MapFormat::Name(), false, false, true );
 }
 
 void OpenMap(){
@@ -2044,9 +2038,9 @@ void DoFind(){
 	GtkEntry* entity;
 	GtkEntry* brush;
 
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Find Brush", G_CALLBACK( dialog_delete_callback ), &dialog );
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Find Brush", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	GtkAccelGroup* accel = gtk_accel_group_new();
+	GtkAccelGroup* accel = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel );
 
 	{
@@ -2056,21 +2050,21 @@ void DoFind(){
 			GtkTable* table = create_dialog_table( 2, 2, 4, 4 );
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 			{
-				GtkWidget* label = gtk_label_new( "Entity number" );
+				ui::Widget label = ui::Label( "Entity number" );
 				gtk_widget_show( label );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 								  (GtkAttachOptions) ( 0 ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkWidget* label = gtk_label_new( "Brush number" );
+				ui::Widget label = ui::Label( "Brush number" );
 				gtk_widget_show( label );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 								  (GtkAttachOptions) ( 0 ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+				GtkEntry* entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -2079,7 +2073,7 @@ void DoFind(){
 				entity = entry;
 			}
 			{
-				GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+				GtkEntry* entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -2095,12 +2089,12 @@ void DoFind(){
 				GtkButton* button = create_dialog_button( "Find", G_CALLBACK( dialog_button_ok ), &dialog );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( GTK_WIDGET( button ) );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
 				GtkButton* button = create_dialog_button( "Close", G_CALLBACK( dialog_button_cancel ), &dialog );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}

@@ -41,7 +41,8 @@
 
 #include <map>
 
-#include <gtk/gtktearoffmenuitem.h>
+#include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "stream/textfilestream.h"
 #include "cmdlib.h"
@@ -140,11 +141,11 @@ bool ConfirmModified( const char* title ){
 		return true;
 	}
 
-	EMessageBoxReturn result = gtk_MessageBox( GTK_WIDGET( MainFrame_getWindow() ), "The current map has changed since it was last saved.\nDo you want to save the current map before continuing?", title, eMB_YESNOCANCEL, eMB_ICONQUESTION );
-	if ( result == eIDCANCEL ) {
+	auto result = MainFrame_getWindow().alert( "The current map has changed since it was last saved.\nDo you want to save the current map before continuing?", title, ui::alert_type::YESNOCANCEL, ui::alert_icon::Question );
+	if ( result == ui::alert_response::CANCEL ) {
 		return false;
 	}
-	if ( result == eIDYES ) {
+	if ( result == ui::alert_response::YES ) {
 		if ( Map_Unnamed( g_map ) ) {
 			return Map_SaveAs();
 		}
@@ -324,7 +325,7 @@ void Sys_SetTitle( const char *text, bool modified ){
 		title << " *";
 	}
 
-	gtk_window_set_title( MainFrame_getWindow(), title.c_str() );
+	gtk_window_set_title(MainFrame_getWindow(), title.c_str() );
 }
 
 bool g_bWaitCursor = false;
@@ -332,14 +333,14 @@ bool g_bWaitCursor = false;
 void Sys_BeginWait( void ){
 	ScreenUpdates_Disable( "Processing...", "Please Wait" );
 	GdkCursor *cursor = gdk_cursor_new( GDK_WATCH );
-	gdk_window_set_cursor( GTK_WIDGET( MainFrame_getWindow() )->window, cursor );
+	gdk_window_set_cursor( gtk_widget_get_window(MainFrame_getWindow()), cursor );
 	gdk_cursor_unref( cursor );
 	g_bWaitCursor = true;
 }
 
 void Sys_EndWait( void ){
 	ScreenUpdates_Enable();
-	gdk_window_set_cursor( GTK_WIDGET( MainFrame_getWindow() )->window, 0 );
+	gdk_window_set_cursor(gtk_widget_get_window(MainFrame_getWindow()), 0 );
 	g_bWaitCursor = false;
 }
 

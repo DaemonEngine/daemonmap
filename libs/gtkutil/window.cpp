@@ -21,7 +21,8 @@
 
 #include "window.h"
 
-#include <gtk/gtkscrolledwindow.h>
+#include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "pointer.h"
 #include "accelerator.h"
@@ -33,7 +34,7 @@ inline void CHECK_RESTORE( GtkWidget* w ){
 }
 
 inline void CHECK_MINIMIZE( GtkWidget* w ){
-	g_object_set_data( G_OBJECT( w ), "was_mapped", gint_to_pointer( GTK_WIDGET_VISIBLE( w ) ) );
+	g_object_set_data( G_OBJECT( w ), "was_mapped", gint_to_pointer( gtk_widget_get_visible( w ) ) );
 	gtk_widget_hide( w );
 }
 
@@ -82,7 +83,7 @@ guint connect_floating_window_destroy_present( GtkWindow* floating, GtkWindow* m
 }
 
 GtkWindow* create_floating_window( const char* title, GtkWindow* parent ){
-	GtkWindow* window = GTK_WINDOW( gtk_window_new( GTK_WINDOW_TOPLEVEL ) );
+	GtkWindow* window = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( window, title );
 
 	if ( parent != 0 ) {
@@ -100,7 +101,7 @@ void destroy_floating_window( GtkWindow* window ){
 }
 
 gint window_realize_remove_sysmenu( GtkWidget* widget, gpointer data ){
-	gdk_window_set_decorations( widget->window, (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MENU ) );
+	gdk_window_set_decorations( gtk_widget_get_window(widget), (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MENU ) );
 	return FALSE;
 }
 
@@ -127,7 +128,7 @@ GtkWindow* create_persistent_floating_window( const char* title, GtkWindow* main
 }
 
 gint window_realize_remove_minmax( GtkWidget* widget, gpointer data ){
-	gdk_window_set_decorations( widget->window, (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MINIMIZE | GDK_DECOR_MAXIMIZE ) );
+	gdk_window_set_decorations( gtk_widget_get_window(widget), (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MINIMIZE | GDK_DECOR_MAXIMIZE ) );
 	return FALSE;
 }
 
@@ -137,7 +138,7 @@ void window_remove_minmax( GtkWindow* window ){
 
 
 GtkScrolledWindow* create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border ){
-	GtkScrolledWindow* scr = GTK_SCROLLED_WINDOW( gtk_scrolled_window_new( 0, 0 ) );
+	GtkScrolledWindow* scr = ui::ScrolledWindow();
 	gtk_widget_show( GTK_WIDGET( scr ) );
 	gtk_scrolled_window_set_policy( scr, hscrollbar_policy, vscrollbar_policy );
 	gtk_scrolled_window_set_shadow_type( scr, GTK_SHADOW_IN );

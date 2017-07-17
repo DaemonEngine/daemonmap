@@ -34,8 +34,8 @@
 
 #include "gtkmisc.h"
 
-#include <gtk/gtkcolorseldialog.h>
-#include <gtk/gtkentry.h>
+#include <gtk/gtk.h>
+#include "uilib/uilib.h"
 
 #include "math/vector.h"
 #include "os/path.h"
@@ -86,47 +86,40 @@ GtkMenuItem* create_menu_item_with_mnemonic( GtkMenu* menu, const char *mnemonic
 	return create_menu_item_with_mnemonic( menu, mnemonic, command );
 }
 
-GtkButton* toolbar_append_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName ){
+GtkToolButton* toolbar_append_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName ){
 	return toolbar_append_button( toolbar, description, icon, GlobalCommands_find( commandName ) );
 }
 
-GtkToggleButton* toolbar_append_toggle_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName ){
+GtkToggleToolButton* toolbar_append_toggle_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName ){
 	return toolbar_append_toggle_button( toolbar, description, icon, GlobalToggles_find( commandName ) );
 }
 
 // =============================================================================
 // File dialog
 
-bool color_dialog( GtkWidget *parent, Vector3& color, const char* title ){
-	GtkWidget* dlg;
-	double clr[3];
+bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
+	ui::Widget dlg;
+	GdkColor clr = { 0, guint16(color[0] * 65535), guint16(color[1] * 65535), guint16(color[2] * 65535) };
 	ModalDialog dialog;
 
-	clr[0] = color[0];
-	clr[1] = color[1];
-	clr[2] = color[2];
-
-	dlg = gtk_color_selection_dialog_new( title );
-	gtk_color_selection_set_color( GTK_COLOR_SELECTION( GTK_COLOR_SELECTION_DIALOG( dlg )->colorsel ), clr );
+	dlg = ui::Widget(gtk_color_selection_dialog_new( title ));
+	gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
 	g_signal_connect( G_OBJECT( dlg ), "delete_event", G_CALLBACK( dialog_delete_callback ), &dialog );
-	g_signal_connect( G_OBJECT( GTK_COLOR_SELECTION_DIALOG( dlg )->ok_button ), "clicked", G_CALLBACK( dialog_button_ok ), &dialog );
-	g_signal_connect( G_OBJECT( GTK_COLOR_SELECTION_DIALOG( dlg )->cancel_button ), "clicked", G_CALLBACK( dialog_button_cancel ), &dialog );
+	GtkWidget *ok_button, *cancel_button;
+	g_object_get(dlg, "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
+	g_signal_connect( ok_button, "clicked", G_CALLBACK( dialog_button_ok ), &dialog );
+	g_signal_connect( cancel_button, "clicked", G_CALLBACK( dialog_button_cancel ), &dialog );
 
-	if ( parent != 0 ) {
+	if ( parent ) {
 		gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( parent ) );
 	}
 
 	bool ok = modal_dialog_show( GTK_WINDOW( dlg ), dialog ) == eIDOK;
 	if ( ok ) {
-		GdkColor gdkcolor;
-		gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( GTK_COLOR_SELECTION_DIALOG( dlg )->colorsel ), &gdkcolor );
-		clr[0] = gdkcolor.red / 65535.0;
-		clr[1] = gdkcolor.green / 65535.0;
-		clr[2] = gdkcolor.blue / 65535.0;
-
-		color[0] = (float)clr[0];
-		color[1] = (float)clr[1];
-		color[2] = (float)clr[2];
+		gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
+		color[0] = clr.red / 65535.0f;
+		color[1] = clr.green / 65535.0f;
+		color[2] = clr.blue / 65535.0f;
 	}
 
 	gtk_widget_destroy( dlg );
@@ -134,17 +127,17 @@ bool color_dialog( GtkWidget *parent, Vector3& color, const char* title ){
 	return ok;
 }
 
-void button_clicked_entry_browse_file( GtkWidget* widget, GtkEntry* entry ){
-	const char *filename = file_dialog( gtk_widget_get_toplevel( widget ), TRUE, "Choose File", gtk_entry_get_text( entry ) );
+void button_clicked_entry_browse_file( ui::Widget widget, GtkEntry* entry ){
+	const char *filename = ui::Widget(gtk_widget_get_toplevel( widget )).file_dialog( TRUE, "Choose File", gtk_entry_get_text( entry ) );
 
 	if ( filename != 0 ) {
 		gtk_entry_set_text( entry, filename );
 	}
 }
 
-void button_clicked_entry_browse_directory( GtkWidget* widget, GtkEntry* entry ){
+void button_clicked_entry_browse_directory( ui::Widget widget, GtkEntry* entry ){
 	const char* text = gtk_entry_get_text( entry );
-	char *dir = dir_dialog( gtk_widget_get_toplevel( widget ), "Choose Directory", path_is_absolute( text ) ? text : "" );
+	char *dir = dir_dialog( ui::Widget(gtk_widget_get_toplevel( widget )), "Choose Directory", path_is_absolute( text ) ? text : "" );
 
 	if ( dir != 0 ) {
 		gchar* converted = g_filename_to_utf8( dir, -1, 0, 0, 0 );

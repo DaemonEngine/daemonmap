@@ -19,6 +19,7 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <gdk/gdkkeysyms.h>
 #include "patchmanip.h"
 
 #include "debugging/debugging.h"
@@ -723,13 +724,13 @@ void Patch_registerCommands(){
 	GlobalCommands_insert( "PatchCone", FreeCaller<Patch_Cone>() );
 	GlobalCommands_insert( "PatchSphere", FreeCaller<Patch_Sphere>() );
 	GlobalCommands_insert( "SimplePatchMesh", FreeCaller<Patch_Plane>(), Accelerator( 'P', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "PatchInsertInsertColumn", FreeCaller<Patch_InsertInsertColumn>(), Accelerator( GDK_KP_Add, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "PatchInsertInsertColumn", FreeCaller<Patch_InsertInsertColumn>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 	GlobalCommands_insert( "PatchInsertAddColumn", FreeCaller<Patch_InsertAddColumn>() );
-	GlobalCommands_insert( "PatchInsertInsertRow", FreeCaller<Patch_InsertInsertRow>(), Accelerator( GDK_KP_Add, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PatchInsertInsertRow", FreeCaller<Patch_InsertInsertRow>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "PatchInsertAddRow", FreeCaller<Patch_InsertAddRow>() );
 	GlobalCommands_insert( "PatchDeleteFirstColumn", FreeCaller<Patch_DeleteFirstColumn>() );
-	GlobalCommands_insert( "PatchDeleteLastColumn", FreeCaller<Patch_DeleteLastColumn>(), Accelerator( GDK_KP_Subtract, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "PatchDeleteFirstRow", FreeCaller<Patch_DeleteFirstRow>(), Accelerator( GDK_KP_Subtract, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PatchDeleteLastColumn", FreeCaller<Patch_DeleteLastColumn>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "PatchDeleteFirstRow", FreeCaller<Patch_DeleteFirstRow>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "PatchDeleteLastRow", FreeCaller<Patch_DeleteLastRow>() );
 	GlobalCommands_insert( "InvertCurve", FreeCaller<Patch_Invert>(), Accelerator( 'I', (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "RedisperseRows", FreeCaller<Patch_RedisperseRows>(), Accelerator( 'E', (GdkModifierType)GDK_CONTROL_MASK ) );
@@ -837,12 +838,7 @@ void Patch_constructMenu( GtkMenu* menu ){
 }
 
 
-#include <gtk/gtkbox.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtktogglebutton.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtklabel.h>
+#include <gtk/gtk.h>
 #include "gtkutil/dialog.h"
 #include "gtkutil/widget.h"
 
@@ -851,9 +847,9 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 	GtkComboBox* width;
 	GtkComboBox* height;
 
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Patch density", G_CALLBACK( dialog_delete_callback ), &dialog );
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Patch density", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	GtkAccelGroup* accel = gtk_accel_group_new();
+	GtkAccelGroup* accel = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel );
 
 	{
@@ -863,7 +859,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			GtkTable* table = create_dialog_table( 2, 2, 4, 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "Width:" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "Width:" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -871,7 +867,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 			}
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "Height:" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "Height:" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -880,8 +876,8 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			}
 
 			{
-				GtkComboBox* combo = GTK_COMBO_BOX( gtk_combo_box_new_text() );
-#define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_append_text( combo, # x )
+				auto combo = ui::ComboBoxText();
+#define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_text_append_text( combo, # x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
 				D_ITEM( 7 );
@@ -906,8 +902,8 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				width = combo;
 			}
 			{
-				GtkComboBox* combo = GTK_COMBO_BOX( gtk_combo_box_new_text() );
-#define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_append_text( combo, # x )
+				auto combo = ui::ComboBoxText();
+#define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_text_append_text( combo, # x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
 				D_ITEM( 7 );
@@ -972,15 +968,15 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
-	GtkWidget* bevel;
-	GtkWidget* ibevel;
-	GtkWidget* endcap;
-	GtkWidget* iendcap;
-	GtkWidget* cylinder;
+	ui::Widget bevel;
+	ui::Widget ibevel;
+	ui::Widget endcap;
+	ui::Widget iendcap;
+	ui::Widget cylinder;
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), "Cap", dialog );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window( "Cap", dialog );
 
-	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	GtkAccelGroup *accel_group = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel_group );
 
 	{
@@ -993,7 +989,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 			gtk_container_add( GTK_CONTAINER( hbox ), GTK_WIDGET( radio_vbox ) );
 
 			{
-				GtkTable* table = GTK_TABLE( gtk_table_new( 5, 2, FALSE ) );
+				GtkTable* table = ui::Table( 5, 2, FALSE );
 				gtk_widget_show( GTK_WIDGET( table ) );
 				gtk_box_pack_start( GTK_BOX( radio_vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				gtk_table_set_row_spacings( table, 5 );
@@ -1037,52 +1033,52 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 
 				GSList* group = 0;
 				{
-					GtkWidget* button = gtk_radio_button_new_with_label( group, "Bevel" );
+					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Bevel" ));
 					gtk_widget_show( button );
 					gtk_table_attach( table, button, 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					group = gtk_radio_button_group( GTK_RADIO_BUTTON( button ) );
+					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					bevel = button;
 				}
 				{
-					GtkWidget* button = gtk_radio_button_new_with_label( group, "Endcap" );
+					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Endcap" ));
 					gtk_widget_show( button );
 					gtk_table_attach( table, button, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					group = gtk_radio_button_group( GTK_RADIO_BUTTON( button ) );
+					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					endcap = button;
 				}
 				{
-					GtkWidget* button = gtk_radio_button_new_with_label( group, "Inverted Bevel" );
+					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Bevel" ));
 					gtk_widget_show( button );
 					gtk_table_attach( table, button, 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					group = gtk_radio_button_group( GTK_RADIO_BUTTON( button ) );
+					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					ibevel = button;
 				}
 				{
-					GtkWidget* button = gtk_radio_button_new_with_label( group, "Inverted Endcap" );
+					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Endcap" ));
 					gtk_widget_show( button );
 					gtk_table_attach( table, button, 1, 2, 3, 4,
 									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					group = gtk_radio_button_group( GTK_RADIO_BUTTON( button ) );
+					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					iendcap = button;
 				}
 				{
-					GtkWidget* button = gtk_radio_button_new_with_label( group, "Cylinder" );
+					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Cylinder" ));
 					gtk_widget_show( button );
 					gtk_table_attach( table, button, 1, 2, 4, 5,
 									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					group = gtk_radio_button_group( GTK_RADIO_BUTTON( button ) );
+					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					cylinder = button;
 				}

@@ -37,6 +37,7 @@
 #include "archivelib.h"
 #include "fs_path.h"
 
+
 class DirectoryArchive : public Archive
 {
 CopiedString m_root;

@@ -25,8 +25,7 @@
 
 #include <map>
 #include <set>
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkaccelgroup.h>
+#include <gtk/gtk.h>
 
 #include "generic/callback.h"
 #include "generic/bitfield.h"
@@ -240,7 +239,7 @@ bool Buttons_press( ButtonMask& buttons, guint button, guint state ){
 		{
 			GtkWindow* toplevel = *i;
 			ASSERT_MESSAGE( window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( GTK_WIDGET_TOPLEVEL( toplevel ), "disabling accel for non-toplevel window" );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "disabling accel for non-toplevel window" );
 			gtk_window_remove_accel_group( toplevel,  global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": disabled global accelerators\n";
@@ -266,7 +265,7 @@ bool Buttons_release( ButtonMask& buttons, guint button, guint state ){
 		{
 			GtkWindow* toplevel = *i;
 			ASSERT_MESSAGE( !window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( GTK_WIDGET_TOPLEVEL( toplevel ), "enabling accel for non-toplevel window" );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "enabling accel for non-toplevel window" );
 			gtk_window_add_accel_group( toplevel, global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": enabled global accelerators\n";
@@ -327,6 +326,7 @@ PressedButtons g_pressedButtons;
 
 
 #include <set>
+#include <uilib/uilib.h>
 
 struct PressedKeys
 {
@@ -484,7 +484,7 @@ void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerat
 GtkAccelGroup* global_accel = 0;
 
 void global_accel_init(){
-	global_accel = gtk_accel_group_new();
+	global_accel = ui::AccelGroup();
 }
 
 void global_accel_destroy(){

@@ -28,7 +28,6 @@
 #include <memory>
 #include "debugging/debugging.h"
 
-
 namespace HashTableDetail
 {
 inline std::size_t next_power_of_two( std::size_t size ){

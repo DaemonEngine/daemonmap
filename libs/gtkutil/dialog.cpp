@@ -21,43 +21,34 @@
 
 #include "dialog.h"
 
-#include <gtk/gtkmain.h>
-#include <gtk/gtkalignment.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkbutton.h>
-#include <gtk/gtklabel.h>
+#include <gtk/gtk.h>
 
 #include "button.h"
 #include "window.h"
 
 GtkVBox* create_dialog_vbox( int spacing, int border ){
-	GtkVBox* vbox = GTK_VBOX( gtk_vbox_new( FALSE, spacing ) );
+	GtkVBox* vbox = ui::VBox( FALSE, spacing );
 	gtk_widget_show( GTK_WIDGET( vbox ) );
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), border );
 	return vbox;
 }
 
 GtkHBox* create_dialog_hbox( int spacing, int border ){
-	GtkHBox* hbox = GTK_HBOX( gtk_hbox_new( FALSE, spacing ) );
+	GtkHBox* hbox = ui::HBox( FALSE, spacing );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), border );
 	return hbox;
 }
 
 GtkFrame* create_dialog_frame( const char* label, GtkShadowType shadow ){
-	GtkFrame* frame = GTK_FRAME( gtk_frame_new( label ) );
+	GtkFrame* frame = ui::Frame( label );
 	gtk_widget_show( GTK_WIDGET( frame ) );
 	gtk_frame_set_shadow_type( frame, shadow );
 	return frame;
 }
 
 GtkTable* create_dialog_table( unsigned int rows, unsigned int columns, unsigned int row_spacing, unsigned int col_spacing, int border ){
-	GtkTable* table = GTK_TABLE( gtk_table_new( rows, columns, FALSE ) );
+	GtkTable* table = ui::Table( rows, columns, FALSE );
 	gtk_widget_show( GTK_WIDGET( table ) );
 	gtk_table_set_row_spacings( table, row_spacing );
 	gtk_table_set_col_spacings( table, col_spacing );
@@ -66,7 +57,7 @@ GtkTable* create_dialog_table( unsigned int rows, unsigned int columns, unsigned
 }
 
 GtkButton* create_dialog_button( const char* label, GCallback func, gpointer data ){
-	GtkButton* button = GTK_BUTTON( gtk_button_new_with_label( label ) );
+	GtkButton* button = ui::Button( label );
 	gtk_widget_set_size_request( GTK_WIDGET( button ), 64, -1 );
 	gtk_widget_show( GTK_WIDGET( button ) );
 	g_signal_connect( G_OBJECT( button ), "clicked", func, data );
@@ -174,7 +165,7 @@ GtkWindow* create_simple_modal_dialog_window( const char* title, ModalDialog& di
 
 	gtk_container_add( GTK_CONTAINER( vbox1 ), contents );
 
-	GtkAlignment* alignment = GTK_ALIGNMENT( gtk_alignment_new( 0.5, 0.0, 0.0, 0.0 ) );
+	ui::Alignment alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
 	gtk_widget_show( GTK_WIDGET( alignment ) );
 	gtk_box_pack_start( GTK_BOX( vbox1 ), GTK_WIDGET( alignment ), FALSE, FALSE, 0 );
 
@@ -185,7 +176,7 @@ GtkWindow* create_simple_modal_dialog_window( const char* title, ModalDialog& di
 }
 
 RadioHBox RadioHBox_new( StringArrayRange names ){
-	GtkHBox* hbox = GTK_HBOX( gtk_hbox_new( TRUE, 4 ) );
+	GtkHBox* hbox = ui::HBox( TRUE, 4 );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
 	GSList* group = 0;
@@ -204,21 +195,21 @@ RadioHBox RadioHBox_new( StringArrayRange names ){
 
 
 PathEntry PathEntry_new(){
-	GtkFrame* frame = GTK_FRAME( gtk_frame_new( NULL ) );
+	GtkFrame* frame = ui::Frame();
 	gtk_widget_show( GTK_WIDGET( frame ) );
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 	// path entry
-	GtkHBox* hbox = GTK_HBOX( gtk_hbox_new( FALSE, 0 ) );
+	GtkHBox* hbox = ui::HBox( FALSE, 0 );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
-	GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+	GtkEntry* entry = ui::Entry();
 	gtk_entry_set_has_frame( entry, FALSE );
 	gtk_widget_show( GTK_WIDGET( entry ) );
 	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
 	// browse button
-	GtkButton* button = GTK_BUTTON( gtk_button_new() );
+	GtkButton* button = ui::Button();
 	button_set_icon( button, "ellipsis.bmp" );
 	gtk_widget_show( GTK_WIDGET( button ) );
 	gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
@@ -245,8 +236,8 @@ BrowsedPathEntry::BrowsedPathEntry( const BrowseCallback& browse ) :
 
 
 GtkLabel* DialogLabel_new( const char* name ){
-	GtkLabel* label = GTK_LABEL( gtk_label_new( name ) );
-	gtk_widget_show( GTK_WIDGET( label ) );
+	ui::Label label = ui::Label( name );
+	gtk_widget_show(label);
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 
@@ -254,7 +245,7 @@ GtkLabel* DialogLabel_new( const char* name ){
 }
 
 GtkTable* DialogRow_new( const char* name, GtkWidget* widget ){
-	GtkTable* table = GTK_TABLE( gtk_table_new( 1, 3, TRUE ) );
+	GtkTable* table = ui::Table( 1, 3, TRUE );
 	gtk_widget_show( GTK_WIDGET( table ) );
 
 	gtk_table_set_col_spacings( table, 4 );

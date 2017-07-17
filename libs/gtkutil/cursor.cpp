@@ -24,34 +24,21 @@
 #include "stream/textstream.h"
 
 #include <string.h>
-#include <gdk/gdkcursor.h>
-#include <gdk/gdkpixmap.h>
+#include <gdk/gdk.h>
 
 
 GdkCursor* create_blank_cursor(){
-	GdkPixmap *pixmap;
-	GdkBitmap *mask;
-	char buffer [( 32 * 32 ) / 8];
-	memset( buffer, 0, ( 32 * 32 ) / 8 );
-	GdkColor white = {0, 0xffff, 0xffff, 0xffff};
-	GdkColor black = {0, 0x0000, 0x0000, 0x0000};
-	pixmap = gdk_bitmap_create_from_data( 0, buffer, 32, 32 );
-	mask   = gdk_bitmap_create_from_data( 0, buffer, 32, 32 );
-	GdkCursor *cursor = gdk_cursor_new_from_pixmap( pixmap, mask, &white, &black, 1, 1 );
-	gdk_drawable_unref( pixmap );
-	gdk_drawable_unref( mask );
-
-	return cursor;
+	return gdk_cursor_new(GDK_BLANK_CURSOR);
 }
 
 void blank_cursor( GtkWidget* widget ){
 	GdkCursor* cursor = create_blank_cursor();
-	gdk_window_set_cursor( widget->window, cursor );
+	gdk_window_set_cursor( gtk_widget_get_window(widget), cursor );
 	gdk_cursor_unref( cursor );
 }
 
 void default_cursor( GtkWidget* widget ){
-	gdk_window_set_cursor( widget->window, 0 );
+	gdk_window_set_cursor( gtk_widget_get_window(widget), 0 );
 }
 
 

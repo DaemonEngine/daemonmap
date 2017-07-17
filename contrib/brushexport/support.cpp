@@ -1,8 +1,9 @@
 #include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "support.h"
 
-GtkWidget*
+ui::Widget
 lookup_widget( GtkWidget       *widget,
 			   const gchar     *widget_name ){
 	GtkWidget *parent, *found_widget;
@@ -13,7 +14,7 @@ lookup_widget( GtkWidget       *widget,
 			parent = gtk_menu_get_attach_widget( GTK_MENU( widget ) );
 		}
 		else{
-			parent = widget->parent;
+			parent = gtk_widget_get_parent(widget);
 		}
 		if ( !parent ) {
 			parent = (GtkWidget*) g_object_get_data( G_OBJECT( widget ), "GladeParentKey" );
@@ -29,5 +30,5 @@ lookup_widget( GtkWidget       *widget,
 	if ( !found_widget ) {
 		g_warning( "Widget not found: %s", widget_name );
 	}
-	return found_widget;
+	return ui::Widget(found_widget);
 }

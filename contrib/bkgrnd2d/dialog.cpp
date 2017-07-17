@@ -183,45 +183,45 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	switch ( m_vt )
 	{
 	case XY:
-		m_pTabLabel = gtk_label_new( "X/Y" );
+		m_pTabLabel = ui::Label( "X/Y" );
 		m_pImage = &backgroundXY;
 		break;
 	case XZ:
-		m_pTabLabel = gtk_label_new( "X/Z" );
+		m_pTabLabel = ui::Label( "X/Z" );
 		m_pImage = &backgroundXZ;
 		break;
 	case YZ:
-		m_pTabLabel = gtk_label_new( "Y/Z" );
+		m_pTabLabel = ui::Label( "Y/Z" );
 		m_pImage = &backgroundYZ;
 		break;
 	}
 // A vbox to hold everything
-	m_pWidget = gtk_vbox_new( FALSE,0 );
+	m_pWidget = ui::VBox( FALSE,0 );
 // Frame for file row
-	frame = gtk_frame_new( "File" );
+	frame = ui::Frame( "File" );
 	gtk_box_pack_start( GTK_BOX( m_pWidget ),frame, FALSE, FALSE, 2 );
 
 // hbox for first row
-	hbox = gtk_hbox_new( FALSE,5 );
+	hbox = ui::HBox( FALSE,5 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
 	gtk_container_add( GTK_CONTAINER( frame ), hbox );
 
 // label to display filename
-	m_pFileLabel  = gtk_label_new( NO_FILE_MSG );
+	m_pFileLabel  = ui::Label( NO_FILE_MSG );
 	gtk_label_set_selectable( GTK_LABEL( m_pFileLabel ),TRUE );
 //TODO set min size ? done with spaces right now
 	gtk_box_pack_start( GTK_BOX( hbox ),m_pFileLabel, TRUE, TRUE, 5 );
 
 	gtk_widget_show( m_pFileLabel );
 
-	w = gtk_button_new_with_label( "Browse..." );
+	w = ui::Button( "Browse..." );
 	g_signal_connect( G_OBJECT( w ), "clicked", G_CALLBACK( browse_callback ),
 					  ( gpointer ) this );
 	gtk_box_pack_start( GTK_BOX( hbox ),w, FALSE, FALSE, 5 );
 	gtk_tooltips_set_tip( pTooltips, w, "Select a file", NULL );
 	gtk_widget_show( w );
 
-	w = gtk_button_new_with_label( "Reload" );
+	w = ui::Button( "Reload" );
 	g_signal_connect( G_OBJECT( w ), "clicked", G_CALLBACK( reload_callback ),
 					  ( gpointer ) this );
 	// TODO disable until we have file
@@ -234,18 +234,18 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	gtk_widget_show( frame );
 
 // second row (rendering options)
-	frame = gtk_frame_new( "Rendering" );
+	frame = ui::Frame( "Rendering" );
 	gtk_box_pack_start( GTK_BOX( m_pWidget ),frame, FALSE, FALSE, 2 );
 
-	hbox = gtk_hbox_new( FALSE,5 );
+	hbox = ui::HBox( FALSE,5 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
 	gtk_container_add( GTK_CONTAINER( frame ), hbox );
 
-	w = gtk_label_new( "Vertex alpha:" );
+	w = ui::Label( "Vertex alpha:" );
 	gtk_box_pack_start( GTK_BOX( hbox ),w, FALSE, FALSE, 5 );
 	gtk_widget_show( w );
 
-	w = gtk_hscale_new_with_range( 0.0,1.0,0.01 );
+	w = ui::HScale( 0.0, 1.0, 0.01 );
 	gtk_range_set_value( GTK_RANGE( w ),0.5 );
 	gtk_scale_set_value_pos( GTK_SCALE( w ),GTK_POS_LEFT );
 	g_signal_connect( G_OBJECT( w ), "value-changed",
@@ -257,15 +257,15 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	gtk_widget_show( hbox );
 	gtk_widget_show( frame );
 // Third row (size and position)
-	frame = gtk_frame_new( "Size/Position (undefined)" );
+	frame = ui::Frame( "Size/Position (undefined)" );
 	m_pPosLabel = gtk_frame_get_label_widget( GTK_FRAME( frame ) );
 	gtk_box_pack_start( GTK_BOX( m_pWidget ), frame, FALSE, FALSE, 2 );
 
-	hbox = gtk_hbox_new( FALSE,5 );
+	hbox = ui::HBox( FALSE,5 );
 	gtk_container_add( GTK_CONTAINER( frame ), hbox );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
 
-	w = gtk_button_new_with_label( "from selection" );
+	w = ui::Button( "from selection" );
 	gtk_box_pack_start( GTK_BOX( hbox ),w, TRUE, FALSE, 5 );
 	g_signal_connect( G_OBJECT( w ), "clicked", G_CALLBACK( size_sel_callback ),
 					  ( gpointer ) this );
@@ -273,7 +273,7 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	gtk_widget_show( w );
 
 	if ( m_vt == XY ) {
-		w = gtk_button_new_with_label( "from map mins/maxs" );
+		w = ui::Button( "from map mins/maxs" );
 		gtk_box_pack_start( GTK_BOX( hbox ),w, TRUE, FALSE, 2 );
 		g_signal_connect( G_OBJECT( w ), "clicked", G_CALLBACK( size_mm_callback ),
 						  ( gpointer ) this );
@@ -320,11 +320,11 @@ void InitBackgroundDialog(){
 	                                          //										  GTK_STOCK_CLOSE,
 	                                          //										  GTK_RESPONSE_CLOSE,
 											  NULL );
-	gtk_signal_connect( GTK_OBJECT( pDialogWnd ), "delete_event",
-						GTK_SIGNAL_FUNC( close_callback ), NULL );
-	gtk_signal_connect( GTK_OBJECT( pDialogWnd ), "response",
-						GTK_SIGNAL_FUNC( response_callback ), NULL );
-//  gtk_signal_connect( GTK_OBJECT (pDialogWnd), "expose_event", GTK_SIGNAL_FUNC( ci_expose ), NULL );
+	g_signal_connect( GTK_OBJECT( pDialogWnd ), "delete_event",
+						G_CALLBACK( close_callback ), NULL );
+	g_signal_connect( GTK_OBJECT( pDialogWnd ), "response",
+						G_CALLBACK( response_callback ), NULL );
+//  g_signal_connect( GTK_OBJECT (pDialogWnd), "expose_event", G_CALLBACK( ci_expose ), NULL );
 
 	pTooltips = gtk_tooltips_new();
 

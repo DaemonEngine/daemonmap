@@ -45,22 +45,8 @@
 #include "iselection.h"
 
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkbutton.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtkscrolledwindow.h>
-#include <gtk/gtktextview.h>
-#include <gtk/gtktextbuffer.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkcellrenderertext.h>
-#include <gtk/gtktreeselection.h>
-#include <gtk/gtkliststore.h>
+#include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "os/path.h"
 #include "math/aabb.h"
@@ -167,11 +153,11 @@ inline void path_copy_clean( char* destination, const char* source ){
 
 struct GameCombo
 {
-	GtkComboBox* game_select;
+	ui::ComboBoxText game_select;
 	GtkEntry* fsgame_entry;
 };
 
-gboolean OnSelchangeComboWhatgame( GtkWidget *widget, GameCombo* combo ){
+gboolean OnSelchangeComboWhatgame( ui::Widget widget, GameCombo* combo ){
 	const char *gamename;
 	{
 		GtkTreeIter iter;
@@ -214,8 +200,8 @@ GameCombo game_combo;
 GtkComboBox* gamemode_combo;
 };
 
-GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, ModalDialog& modal ){
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Project Settings", G_CALLBACK( dialog_delete_callback ), &modal );
+ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, ModalDialog& modal ){
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Project Settings", G_CALLBACK(dialog_delete_callback ), &modal );
 
 	{
 		GtkTable* table1 = create_dialog_table( 1, 2, 4, 4, 4 );
@@ -244,7 +230,7 @@ GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( table2 ) );
 
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Select mod" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Select mod" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -252,13 +238,13 @@ GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
-					dialog.game_combo.game_select = GTK_COMBO_BOX( gtk_combo_box_new_text() );
+					dialog.game_combo.game_select = ui::ComboBoxText();
 
-					gtk_combo_box_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().basegame );
+					gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().basegame );
 					if ( globalGameComboConfiguration().known[0] != '\0' ) {
-						gtk_combo_box_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().known );
+						gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().known );
 					}
-					gtk_combo_box_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().custom );
+					gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().custom );
 
 					gtk_widget_show( GTK_WIDGET( dialog.game_combo.game_select ) );
 					gtk_table_attach( table2, GTK_WIDGET( dialog.game_combo.game_select ), 1, 2, 0, 1,
@@ -269,7 +255,7 @@ GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				}
 
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "fs_game" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "fs_game" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -277,7 +263,7 @@ GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
-					GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+					GtkEntry* entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table2, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -287,16 +273,16 @@ GtkWindow* ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				}
 
 				if ( globalMappingMode().do_mapping_mode ) {
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Mapping mode" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Mapping mode" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 3, 4,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
-					GtkComboBox* combo = GTK_COMBO_BOX( gtk_combo_box_new_text() );
-					gtk_combo_box_append_text( combo, globalMappingMode().sp_mapping_mode );
-					gtk_combo_box_append_text( combo, globalMappingMode().mp_mapping_mode );
+					auto combo = ui::ComboBoxText();
+					gtk_combo_box_text_append_text( combo, globalMappingMode().sp_mapping_mode );
+					gtk_combo_box_text_append_text( combo, globalMappingMode().mp_mapping_mode );
 
 					gtk_widget_show( GTK_WIDGET( combo ) );
 					gtk_table_attach( table2, GTK_WIDGET( combo ), 1, 2, 3, 4,
@@ -366,7 +352,7 @@ void DoProjectSettings(){
 		ModalDialog modal;
 		ProjectSettingsDialog dialog;
 
-		GtkWindow* window = ProjectSettingsDialog_construct( dialog, modal );
+		ui::Window window = ProjectSettingsDialog_construct( dialog, modal );
 
 		if ( modal_dialog_show( window, modal ) == eIDOK ) {
 			ProjectSettingsDialog_ok( dialog );
@@ -383,21 +369,21 @@ void DoSides( int type, int axis ){
 	ModalDialog dialog;
 	GtkEntry* sides_entry;
 
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Arbitrary sides", G_CALLBACK( dialog_delete_callback ), &dialog );
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Arbitrary sides", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	GtkAccelGroup* accel = gtk_accel_group_new();
+	GtkAccelGroup* accel = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
 		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( hbox ) );
 		{
-			GtkLabel* label = GTK_LABEL( gtk_label_new( "Sides:" ) );
+			GtkLabel* label = GTK_LABEL( ui::Label( "Sides:" ) );
 			gtk_widget_show( GTK_WIDGET( label ) );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 		}
 		{
-			GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+			GtkEntry* entry = ui::Entry();
 			gtk_widget_show( GTK_WIDGET( entry ) );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), FALSE, FALSE, 0 );
 			sides_entry = entry;
@@ -432,13 +418,13 @@ void DoSides( int type, int axis ){
 // =============================================================================
 // About dialog (no program is complete without one)
 
-void about_button_changelog( GtkWidget *widget, gpointer data ){
+void about_button_changelog( ui::Widget widget, gpointer data ){
 	StringOutputStream log( 256 );
 	log << "https://gitlab.com/xonotic/netradiant/commits/master";
 	OpenURL( log.c_str() );
 }
 
-void about_button_credits( GtkWidget *widget, gpointer data ){
+void about_button_credits( ui::Widget widget, gpointer data ){
 	StringOutputStream cred( 256 );
 	cred << "https://gitlab.com/xonotic/netradiant/graphs/master";
 	OpenURL( cred.c_str() );
@@ -454,7 +440,7 @@ void DoAbout(){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), "About NetRadiant", dialog );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("About NetRadiant", dialog );
 
 	{
 		GtkVBox* vbox = create_dialog_vbox( 4, 4 );
@@ -479,15 +465,16 @@ void DoAbout(){
 			}
 
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "NetRadiant " RADIANT_VERSION "\n"
-															__DATE__ "\n\n"
-															RADIANT_ABOUTMSG "\n\n"
-																			 "By xonotic.org\n\n"
-																			 "This program is free software\n"
-																			 "licensed under the GNU GPL.\n\n"
-																			 "NetRadiant is unsupported, however\n"
-																			 "you may report your problems on issue tracker.\n"
-															) );
+				char const *label_text = "NetRadiant " RADIANT_VERSION "\n"
+										__DATE__ "\n\n"
+                                        RADIANT_ABOUTMSG "\n\n"
+										"This program is free software\n"
+										"licensed under the GNU GPL.\n\n"
+										"NetRadiant is unsupported, however\n"
+										"you may report your problems at\n"
+										"https://gitlab.com/xonotic/netradiant/issues";
+
+				GtkLabel* label = GTK_LABEL( ui::Label( label_text ) );
 
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
@@ -523,7 +510,7 @@ void DoAbout(){
 				GtkTable* table = create_dialog_table( 3, 2, 4, 4, 4 );
 				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( table ) );
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Vendor:" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Vendor:" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -531,7 +518,7 @@ void DoAbout(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Version:" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Version:" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -539,7 +526,7 @@ void DoAbout(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Renderer:" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Renderer:" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -547,7 +534,7 @@ void DoAbout(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( reinterpret_cast<const char*>( glGetString( GL_VENDOR ) ) ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( reinterpret_cast<const char*>( glGetString( GL_VENDOR ) ) ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -555,7 +542,7 @@ void DoAbout(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( reinterpret_cast<const char*>( glGetString( GL_VERSION ) ) ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( reinterpret_cast<const char*>( glGetString( GL_VERSION ) ) ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -563,7 +550,7 @@ void DoAbout(){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( reinterpret_cast<const char*>( glGetString( GL_RENDERER ) ) ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( reinterpret_cast<const char*>( glGetString( GL_RENDERER ) ) ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -578,7 +565,7 @@ void DoAbout(){
 					GtkScrolledWindow* sc_extensions = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS, 4 );
 					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( sc_extensions ) );
 					{
-						GtkWidget* text_extensions = gtk_text_view_new();
+						ui::Widget text_extensions = ui::TextView();
 						gtk_text_view_set_editable( GTK_TEXT_VIEW( text_extensions ), FALSE );
 						gtk_container_add( GTK_CONTAINER( sc_extensions ), text_extensions );
 						GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( text_extensions ) );
@@ -610,9 +597,9 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 	GtkEntry* x;
 	GtkEntry* y;
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), "Patch texture layout", dialog );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Patch texture layout", dialog );
 
-	GtkAccelGroup* accel = gtk_accel_group_new();
+	GtkAccelGroup* accel = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel );
 
 	{
@@ -622,7 +609,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "Texture will be fit across the patch based\n"
+				GtkLabel* label = GTK_LABEL( ui::Label( "Texture will be fit across the patch based\n"
 															"on the x and y values given. Values of 1x1\n"
 															"will \"fit\" the texture. 2x2 will repeat\n"
 															"it twice, etc." ) );
@@ -635,7 +622,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				gtk_widget_show( GTK_WIDGET( table ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Texture x:" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Texture x:" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -643,7 +630,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkLabel* label = GTK_LABEL( gtk_label_new( "Texture y:" ) );
+					GtkLabel* label = GTK_LABEL( ui::Label( "Texture y:" ) );
 					gtk_widget_show( GTK_WIDGET( label ) );
 					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
@@ -651,7 +638,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+					GtkEntry* entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -660,7 +647,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 					x = entry;
 				}
 				{
-					GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+					GtkEntry* entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -718,11 +705,11 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 // Text Editor dialog
 
 // master window widget
-static GtkWidget *text_editor = 0;
-static GtkWidget *text_widget; // slave, text widget from the gtk editor
+static ui::Widget text_editor;
+static ui::Widget text_widget; // slave, text widget from the gtk editor
 
-static gint editor_delete( GtkWidget *widget, gpointer data ){
-	if ( gtk_MessageBox( widget, "Close the shader editor ?", "Radiant", eMB_YESNO, eMB_ICONQUESTION ) == eIDNO ) {
+static gint editor_delete( ui::Widget widget, gpointer data ){
+	if ( widget.alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return TRUE;
 	}
 
@@ -731,12 +718,12 @@ static gint editor_delete( GtkWidget *widget, gpointer data ){
 	return TRUE;
 }
 
-static void editor_save( GtkWidget *widget, gpointer data ){
+static void editor_save( ui::Widget widget, gpointer data ){
 	FILE *f = fopen( (char*)g_object_get_data( G_OBJECT( data ), "filename" ), "w" );
 	gpointer text = g_object_get_data( G_OBJECT( data ), "text" );
 
 	if ( f == 0 ) {
-		gtk_MessageBox( GTK_WIDGET( data ), "Error saving file !" );
+		ui::Widget(GTK_WIDGET( data )).alert( "Error saving file !" );
 		return;
 	}
 
@@ -745,8 +732,8 @@ static void editor_save( GtkWidget *widget, gpointer data ){
 	fclose( f );
 }
 
-static void editor_close( GtkWidget *widget, gpointer data ){
-	if ( gtk_MessageBox( text_editor, "Close the shader editor ?", "Radiant", eMB_YESNO, eMB_ICONQUESTION ) == eIDNO ) {
+static void editor_close( ui::Widget widget, gpointer data ){
+	if ( text_editor.alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return;
 	}
 
@@ -754,49 +741,49 @@ static void editor_close( GtkWidget *widget, gpointer data ){
 }
 
 static void CreateGtkTextEditor(){
-	GtkWidget *dlg;
-	GtkWidget *vbox, *hbox, *button, *scr, *text;
+	ui::Widget dlg;
+	ui::Widget vbox, hbox, button, scr, text;
 
-	dlg = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+	dlg = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( G_OBJECT( dlg ), "delete_event",
 					  G_CALLBACK( editor_delete ), 0 );
 	gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 300 );
 
-	vbox = gtk_vbox_new( FALSE, 5 );
+	vbox = ui::VBox( FALSE, 5 );
 	gtk_widget_show( vbox );
 	gtk_container_add( GTK_CONTAINER( dlg ), GTK_WIDGET( vbox ) );
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
-	scr = gtk_scrolled_window_new( 0, 0 );
+	scr = ui::ScrolledWindow();
 	gtk_widget_show( scr );
 	gtk_box_pack_start( GTK_BOX( vbox ), scr, TRUE, TRUE, 0 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
-	text = gtk_text_view_new();
+	text = ui::TextView();
 	gtk_container_add( GTK_CONTAINER( scr ), text );
 	gtk_widget_show( text );
-	g_object_set_data( G_OBJECT( dlg ), "text", text );
+	g_object_set_data( G_OBJECT( dlg ), "text", (gpointer) text );
 	gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), TRUE );
 
-	hbox = gtk_hbox_new( FALSE, 5 );
+	hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
 
-	button = gtk_button_new_with_label( "Close" );
+	button = ui::Button( "Close" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
 	g_signal_connect( G_OBJECT( button ), "clicked",
 					  G_CALLBACK( editor_close ), dlg );
-	gtk_widget_set_usize( button, 60, -2 );
+	gtk_widget_set_size_request( button, 60, -1 );
 
-	button = gtk_button_new_with_label( "Save" );
+	button = ui::Button( "Save" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
 	g_signal_connect( G_OBJECT( button ), "clicked",
 					  G_CALLBACK( editor_save ), dlg );
-	gtk_widget_set_usize( button, 60, -2 );
+	gtk_widget_set_size_request( button, 60, -1 );
 
 	text_editor = dlg;
 	text_widget = text;
@@ -871,9 +858,9 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), "Light intensity", dialog, -1, -1 );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Light intensity", dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	GtkAccelGroup *accel_group = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel_group );
 
 	{
@@ -883,12 +870,12 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "ESC for default, ENTER to validate" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "ESC for default, ENTER to validate" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+				GtkEntry* entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
@@ -938,9 +925,9 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, char* title ){
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), title, dialog, -1, -1 );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	GtkAccelGroup *accel_group = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel_group );
 
 	{
@@ -951,12 +938,12 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, char* title ){
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 			{
 				//GtkLabel* label = GTK_LABEL(gtk_label_new("Enter one ore more tags separated by spaces"));
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "ESC to cancel, ENTER to validate" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "ESC to cancel, ENTER to validate" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkEntry* entry = GTK_ENTRY( gtk_entry_new() );
+				GtkEntry* entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
@@ -997,9 +984,9 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, char*
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), title, dialog, -1, -1 );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	GtkAccelGroup *accel_group = ui::AccelGroup();
 	gtk_window_add_accel_group( window, accel_group );
 
 	{
@@ -1009,22 +996,22 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, char*
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "The selected shader" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "The selected shader" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( name ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( name ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( "is located in file" ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( "is located in file" ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkLabel* label = GTK_LABEL( gtk_label_new( filename ) );
+				GtkLabel* label = GTK_LABEL( ui::Label( filename ) );
 				gtk_widget_show( GTK_WIDGET( label ) );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
@@ -1063,7 +1050,7 @@ void DoTextEditor( const char* filename, int cursorpos ){
 #ifdef WIN32
 	if ( g_TextEditor_useWin32Editor ) {
 		globalOutputStream() << "opening file '" << filename << "' (line " << cursorpos << " info ignored)\n";
-		ShellExecute( (HWND)GDK_WINDOW_HWND( GTK_WIDGET( MainFrame_getWindow() )->window ), "open", filename, 0, 0, SW_SHOW );
+		ShellExecute( (HWND)GDK_WINDOW_HWND( gtk_widget_get_window( MainFrame_getWindow() ) ), "open", filename, 0, 0, SW_SHOW );
 		return;
 	}
 #else
