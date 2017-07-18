@@ -254,7 +254,6 @@ const char* Left( std::size_t n ){
 	}
 	else
 	{
-		g_pStrWork = "";
 		g_pStrWork = new char[1];
 		g_pStrWork[0] = '\0';
 	}
@@ -290,7 +289,6 @@ const char* Mid( std::size_t first, std::size_t n ) const {
 	}
 	else
 	{
-		g_pStrWork = "";
 		g_pStrWork = new char[1];
 		g_pStrWork[0] = '\0';
 	}
