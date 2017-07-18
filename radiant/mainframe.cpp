@@ -160,6 +160,13 @@ void VFS_Shutdown(){
 	GlobalFileSystem().shutdown();
 	g_vfsInitialized = false;
 }
+void VFS_Refresh(){
+	if ( !g_vfsInitialized ) return;
+	GlobalFileSystem().clear();
+	QE_InitVFS();
+	GlobalFileSystem().refresh();
+	g_vfsInitialized = true;
+}
 void VFS_Restart(){
 	VFS_Shutdown();
 	VFS_Init();

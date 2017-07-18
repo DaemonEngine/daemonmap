@@ -413,9 +413,9 @@ ModuleObservers g_mapPathObservers;
 class MapFileObserver : public ModuleObserver
 {
 void realise() {
-		// Restart VFS to apply new pak filtering based on mapname
+		// Refresh VFS to apply new pak filtering based on mapname
 		// needed for daemon dpk vfs
-		VFS_Restart();
+		VFS_Refresh();
 }
 void unrealise() { }
 };

@@ -2361,6 +2361,7 @@ void TextureBrowser_pasteTag(){
 
 void RefreshShaders(){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Shaders" );
+	VFS_Refresh();
 	GlobalShaderSystem().refresh();
 	UpdateAllWindows();
 	GtkTreeSelection* selection = gtk_tree_view_get_selection((GtkTreeView*)GlobalTextureBrowser().m_treeViewTree);
