@@ -114,7 +114,7 @@ bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
 		gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( parent ) );
 	}
 
-	bool ok = modal_dialog_show( GTK_WINDOW( dlg ), dialog ) == eIDOK;
+	bool ok = modal_dialog_show( ui::Window(GTK_WINDOW( dlg )), dialog ) == eIDOK;
 	if ( ok ) {
 		gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
 		color[0] = clr.red / 65535.0f;

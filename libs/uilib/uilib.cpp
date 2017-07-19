@@ -61,7 +61,7 @@ namespace ui {
             type == window_type::TOP ? GTK_WINDOW_TOPLEVEL :
             type == window_type::POPUP ? GTK_WINDOW_POPUP :
             GTK_WINDOW_TOPLEVEL)))
-    { };
+    {};
 
     Window Window::create_dialog_window(const char *title, void func(), void *data, int default_w, int default_h)
     {
@@ -95,8 +95,13 @@ namespace ui {
         return g_signal_connect_closure(G_OBJECT(*this), "key-press-event", clos, false);
     }
 
+    void Window::add_accel_group(AccelGroup group)
+    {
+        gtk_window_add_accel_group(*this, group);
+    }
+
     AccelGroup::AccelGroup() : AccelGroup(GTK_ACCEL_GROUP(gtk_accel_group_new()))
-    { }
+    {}
 
     Adjustment::Adjustment(double value,
                            double lower, double upper,
@@ -104,29 +109,29 @@ namespace ui {
                            double page_size)
             : Adjustment(
             GTK_ADJUSTMENT(gtk_adjustment_new(value, lower, upper, step_increment, page_increment, page_size)))
-    { }
+    {}
 
     Alignment::Alignment(float xalign, float yalign, float xscale, float yscale)
             : Alignment(GTK_ALIGNMENT(gtk_alignment_new(xalign, yalign, xscale, yscale)))
-    { }
+    {}
 
     Button::Button() : Button(GTK_BUTTON(gtk_button_new()))
-    { }
+    {}
 
     Button::Button(const char *label) : Button(GTK_BUTTON(gtk_button_new_with_label(label)))
-    { }
+    {}
 
     CellRendererText::CellRendererText() : CellRendererText(GTK_CELL_RENDERER_TEXT(gtk_cell_renderer_text_new()))
-    { }
+    {}
 
     ComboBoxText::ComboBoxText() : ComboBoxText(GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new()))
-    { }
+    {}
 
     CheckButton::CheckButton(const char *label) : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_label(label)))
-    { }
+    {}
 
     Entry::Entry() : Entry(GTK_ENTRY(gtk_entry_new()))
-    { }
+    {}
 
     Entry::Entry(std::size_t max_length) : Entry()
     {
@@ -134,61 +139,61 @@ namespace ui {
     }
 
     Frame::Frame(const char *label) : Frame(GTK_FRAME(gtk_frame_new(label)))
-    { }
+    {}
 
     HBox::HBox(bool homogenous, int spacing) : HBox(GTK_HBOX(gtk_hbox_new(homogenous, spacing)))
-    { }
+    {}
 
     HScale::HScale(Adjustment adjustment) : HScale(GTK_HSCALE(gtk_hscale_new(adjustment)))
-    { }
+    {}
 
     HScale::HScale(double min, double max, double step) : HScale(GTK_HSCALE(gtk_hscale_new_with_range(min, max, step)))
-    { }
+    {}
 
     Image::Image() : Image(GTK_IMAGE(gtk_image_new()))
-    { }
+    {}
 
     Label::Label(const char *label) : Label(GTK_LABEL(gtk_label_new(label)))
-    { }
+    {}
 
     Menu::Menu() : Menu(GTK_MENU(gtk_menu_new()))
-    { }
+    {}
 
     MenuItem::MenuItem(const char *label, bool mnemonic) : MenuItem(
             GTK_MENU_ITEM((mnemonic ? gtk_menu_item_new_with_mnemonic : gtk_menu_item_new_with_label)(label)))
-    { }
+    {}
 
     HPaned::HPaned() : HPaned(GTK_HPANED(gtk_hpaned_new()))
-    { }
+    {}
 
     VPaned::VPaned() : VPaned(GTK_VPANED(gtk_vpaned_new()))
-    { }
+    {}
 
     ScrolledWindow::ScrolledWindow() : ScrolledWindow(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(nullptr, nullptr)))
-    { }
+    {}
 
     SpinButton::SpinButton(Adjustment adjustment, double climb_rate, std::size_t digits) : SpinButton(
             GTK_SPIN_BUTTON(gtk_spin_button_new(adjustment, climb_rate, digits)))
-    { }
+    {}
 
     Table::Table(std::size_t rows, std::size_t columns, bool homogenous) : Table(
             GTK_TABLE(gtk_table_new(rows, columns, homogenous)))
-    { }
+    {}
 
     TextView::TextView() : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))
-    { }
+    {}
 
     TreePath::TreePath() : TreePath(gtk_tree_path_new())
-    { }
+    {}
 
     TreePath::TreePath(const char *path) : TreePath(gtk_tree_path_new_from_string(path))
-    { }
+    {}
 
     TreeView::TreeView() : TreeView(GTK_TREE_VIEW(gtk_tree_view_new()))
-    { }
+    {}
 
     TreeView::TreeView(TreeModel model) : TreeView(GTK_TREE_VIEW(gtk_tree_view_new_with_model(model)))
-    { }
+    {}
 
     TreeViewColumn::TreeViewColumn(const char *title, CellRenderer renderer,
                                    std::initializer_list<TreeViewColumnAttribute> attributes)
@@ -200,6 +205,6 @@ namespace ui {
     };
 
     VBox::VBox(bool homogenous, int spacing) : VBox(GTK_VBOX(gtk_vbox_new(homogenous, spacing)))
-    { }
+    {}
 
 }

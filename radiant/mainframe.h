@@ -38,7 +38,6 @@ class CamWnd;
 class ZWnd;
 
 typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
 
 const int c_command_status = 0;
 const int c_position_status = 1;

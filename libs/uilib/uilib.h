@@ -134,6 +134,7 @@ namespace ui {
             explicit name(impl *h) : super(reinterpret_cast<super::native *>(h)) {} \
         methods \
     }; \
+    inline bool operator<(name self, name other) { return self._handle < other._handle; } \
     static_assert(sizeof(name) == sizeof(super), "object slicing")
 
     WRAP(AccelGroup, Object, ui_accelgroup,
@@ -272,6 +273,8 @@ namespace ui {
 
          std::uint64_t on_key_press(bool (*f)(Widget widget, ui_evkey *event, void *extra),
                                     void *extra = nullptr);
+
+         void add_accel_group(AccelGroup group);
     );
 
 #undef WRAP

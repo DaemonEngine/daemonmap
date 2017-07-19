@@ -23,18 +23,7 @@
 #include "iscenegraph.h"
 
 #include <gtk/gtk.h>
-
-/**
- * GTK callback functions
- */
-
-class UFOAIGtk
-{
-GtkWindow* m_gtk_window;
-public:
-UFOAIGtk( void* gtk_window ) : m_gtk_window( ( GtkWindow* )gtk_window ){
-}
-};
+#include <uilib/uilib.h>
 
 /**
  * @brief If you return FALSE in the "delete_event" signal handler,

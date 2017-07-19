@@ -64,8 +64,8 @@ GtkButton* create_dialog_button( const char* label, GCallback func, gpointer dat
 	return button;
 }
 
-GtkWindow* create_dialog_window( GtkWindow* parent, const char* title, GCallback func, gpointer data, int default_w, int default_h ){
-	GtkWindow* window = create_floating_window( title, parent );
+ui::Window create_dialog_window( ui::Window parent, const char* title, GCallback func, gpointer data, int default_w, int default_h ){
+	ui::Window window = create_floating_window( title, parent );
 	gtk_window_set_default_size( window, default_w, default_h );
 	gtk_window_set_position( window, GTK_WIN_POS_CENTER_ON_PARENT );
 	g_signal_connect( G_OBJECT( window ), "delete_event", func, data );
@@ -85,7 +85,7 @@ gboolean modal_dialog_delete( GtkWidget *widget, GdkEvent* event, ModalDialog* d
 	return TRUE;
 }
 
-EMessageBoxReturn modal_dialog_show( GtkWindow* window, ModalDialog& dialog ){
+EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog ){
 	gtk_grab_add( GTK_WIDGET( window ) );
 	gtk_widget_show( GTK_WIDGET( window ) );
 
@@ -105,12 +105,12 @@ GtkButton* create_modal_dialog_button( const char* label, ModalDialogButton& but
 	return create_dialog_button( label, G_CALLBACK( modal_dialog_button_clicked ), &button );
 }
 
-GtkWindow* create_modal_dialog_window( GtkWindow* parent, const char* title, ModalDialog& dialog, int default_w, int default_h ){
+ui::Window create_modal_dialog_window( ui::Window parent, const char* title, ModalDialog& dialog, int default_w, int default_h ){
 	return create_dialog_window( parent, title, G_CALLBACK( modal_dialog_delete ), &dialog, default_w, default_h );
 }
 
-GtkWindow* create_fixedsize_modal_dialog_window( GtkWindow* parent, const char* title, ModalDialog& dialog, int width, int height ){
-	GtkWindow* window = create_modal_dialog_window( parent, title, dialog, width, height );
+ui::Window create_fixedsize_modal_dialog_window( ui::Window parent, const char* title, ModalDialog& dialog, int width, int height ){
+	ui::Window window = create_modal_dialog_window( parent, title, dialog, width, height );
 
 	gtk_window_set_resizable( window, FALSE );
 	gtk_window_set_modal( window, TRUE );
@@ -157,8 +157,8 @@ gboolean dialog_delete_callback( GtkWidget *widget, GdkEventAny* event, ModalDia
 	return TRUE;
 }
 
-GtkWindow* create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, GtkWidget* contents ){
-	GtkWindow* window = create_fixedsize_modal_dialog_window( 0, title, dialog );
+ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, GtkWidget* contents ){
+	ui::Window window = create_fixedsize_modal_dialog_window(ui::Window(), title, dialog );
 
 	GtkVBox* vbox1 = create_dialog_vbox( 8, 4 );
 	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox1 ) );

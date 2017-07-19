@@ -22,6 +22,7 @@
 #if !defined( INCLUDED_GTKUTIL_ACCELERATOR_H )
 #define INCLUDED_GTKUTIL_ACCELERATOR_H
 
+#include <uilib/uilib.h>
 #include <gdk/gdk.h>
 
 #include "generic/callback.h"
@@ -85,16 +86,12 @@ void keyup_accelerators_add( Accelerator accelerator, const Callback& callback )
 void keyup_accelerators_remove( Accelerator accelerator );
 
 typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
-void global_accel_connect_window( GtkWindow* window );
-void global_accel_disconnect_window( GtkWindow* window );
+void global_accel_connect_window( ui::Window window );
+void global_accel_disconnect_window( ui::Window window );
 
 void GlobalPressedKeys_releaseAll();
 
-typedef struct _GtkAccelGroup GtkAccelGroup;
-extern GtkAccelGroup* global_accel;
-void global_accel_init();
-void global_accel_destroy();
+extern ui::AccelGroup global_accel;
 
 GClosure* global_accel_group_find( Accelerator accelerator );
 

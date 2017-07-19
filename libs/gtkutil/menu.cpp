@@ -225,7 +225,7 @@ void accelerator_name( const Accelerator& accelerator, GString* gstring ){
 }
 
 void menu_item_add_accelerator( GtkMenuItem* item, Accelerator accelerator ){
-	if ( accelerator.key != 0 ) {
+	if ( accelerator.key != 0 && gtk_accelerator_valid( accelerator.key, accelerator.modifiers )) {
 		GClosure* closure = global_accel_group_find( accelerator );
 		ASSERT_NOTNULL(closure);
 		menu_item_set_accelerator( item, closure );

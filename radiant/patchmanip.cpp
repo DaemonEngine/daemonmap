@@ -849,8 +849,8 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Patch density", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	GtkAccelGroup* accel = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel );
+	auto accel = ui::AccelGroup();
+	window.add_accel_group( accel );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
@@ -976,8 +976,8 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window( "Cap", dialog );
 
-	GtkAccelGroup *accel_group = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel_group );
+	auto accel_group = ui::AccelGroup();
+	window.add_accel_group( accel_group );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );

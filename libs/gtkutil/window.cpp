@@ -51,42 +51,42 @@ static gboolean main_window_iconified( GtkWidget* widget, GdkEventWindowState* e
 	return FALSE;
 }
 
-unsigned int connect_floating( GtkWindow* main_window, GtkWindow* floating ){
+unsigned int connect_floating( ui::Window main_window, ui::Window floating ){
 	return g_signal_connect( G_OBJECT( main_window ), "window_state_event", G_CALLBACK( main_window_iconified ), floating );
 }
 
-gboolean destroy_disconnect_floating( GtkWindow* widget, gpointer data ){
+gboolean destroy_disconnect_floating( ui::Window widget, gpointer data ){
 	g_signal_handler_disconnect( G_OBJECT( data ), gpointer_to_int( g_object_get_data( G_OBJECT( widget ), "floating_handler" ) ) );
 	return FALSE;
 }
 
-gboolean floating_window_delete_present( GtkWindow* floating, GdkEventFocus *event, GtkWindow* main_window ){
+gboolean floating_window_delete_present( ui::Window floating, GdkEventFocus *event, ui::Window main_window ){
 	if ( gtk_window_is_active( floating ) || gtk_window_is_active( main_window ) ) {
 		gtk_window_present( main_window );
 	}
 	return FALSE;
 }
 
-guint connect_floating_window_delete_present( GtkWindow* floating, GtkWindow* main_window ){
+guint connect_floating_window_delete_present( ui::Window floating, ui::Window main_window ){
 	return g_signal_connect( G_OBJECT( floating ), "delete_event", G_CALLBACK( floating_window_delete_present ), main_window );
 }
 
-gboolean floating_window_destroy_present( GtkWindow* floating, GtkWindow* main_window ){
+gboolean floating_window_destroy_present( ui::Window floating, ui::Window main_window ){
 	if ( gtk_window_is_active( floating ) || gtk_window_is_active( main_window ) ) {
 		gtk_window_present( main_window );
 	}
 	return FALSE;
 }
 
-guint connect_floating_window_destroy_present( GtkWindow* floating, GtkWindow* main_window ){
+guint connect_floating_window_destroy_present( ui::Window floating, ui::Window main_window ){
 	return g_signal_connect( G_OBJECT( floating ), "destroy", G_CALLBACK( floating_window_destroy_present ), main_window );
 }
 
-GtkWindow* create_floating_window( const char* title, GtkWindow* parent ){
-	GtkWindow* window = ui::Window( ui::window_type::TOP );
+ui::Window create_floating_window( const char* title, ui::Window parent ){
+	ui::Window window = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( window, title );
 
-	if ( parent != 0 ) {
+	if ( parent ) {
 		gtk_window_set_transient_for( window, parent );
 		connect_floating_window_destroy_present( window, parent );
 		g_object_set_data( G_OBJECT( window ), "floating_handler", gint_to_pointer( connect_floating( parent, window ) ) );
@@ -96,7 +96,7 @@ GtkWindow* create_floating_window( const char* title, GtkWindow* parent ){
 	return window;
 }
 
-void destroy_floating_window( GtkWindow* window ){
+void destroy_floating_window( ui::Window window ){
 	gtk_widget_destroy( GTK_WIDGET( window ) );
 }
 
@@ -105,13 +105,13 @@ gint window_realize_remove_sysmenu( GtkWidget* widget, gpointer data ){
 	return FALSE;
 }
 
-gboolean persistent_floating_window_delete( GtkWindow* floating, GdkEvent *event, GtkWindow* main_window ){
+gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event, ui::Window main_window ){
 	gtk_widget_hide( GTK_WIDGET( floating ) );
 	return TRUE;
 }
 
-GtkWindow* create_persistent_floating_window( const char* title, GtkWindow* main_window ){
-	GtkWindow* window = GTK_WINDOW( create_floating_window( title, main_window ) );
+ui::Window create_persistent_floating_window( const char* title, ui::Window main_window ){
+	ui::Window window = ui::Window(GTK_WINDOW( create_floating_window( title, main_window ) ));
 
 	gtk_widget_set_events( GTK_WIDGET( window ), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK );
 
@@ -132,7 +132,7 @@ gint window_realize_remove_minmax( GtkWidget* widget, gpointer data ){
 	return FALSE;
 }
 
-void window_remove_minmax( GtkWindow* window ){
+void window_remove_minmax( ui::Window window ){
 	g_signal_connect( G_OBJECT( window ), "realize", G_CALLBACK( window_realize_remove_minmax ), 0 );
 }
 

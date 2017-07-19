@@ -371,8 +371,8 @@ void DoSides( int type, int axis ){
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Arbitrary sides", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	GtkAccelGroup* accel = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel );
+	auto accel = ui::AccelGroup();
+	window.add_accel_group( accel );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
@@ -599,8 +599,8 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Patch texture layout", dialog );
 
-	GtkAccelGroup* accel = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel );
+	auto accel = ui::AccelGroup();
+	window.add_accel_group( accel );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
@@ -860,8 +860,8 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Light intensity", dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel_group );
+	auto accel_group = ui::AccelGroup();
+	window.add_accel_group( accel_group );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
@@ -927,8 +927,8 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, char* title ){
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel_group );
+	auto accel_group = ui::AccelGroup();
+	window.add_accel_group( accel_group );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
@@ -986,8 +986,8 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, char*
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	GtkAccelGroup *accel_group = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel_group );
+	auto accel_group = ui::AccelGroup();
+	window.add_accel_group( accel_group );
 
 	{
 		GtkHBox* hbox = create_dialog_hbox( 4, 4 );

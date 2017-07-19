@@ -93,7 +93,6 @@ struct DLG_DATA
 	virtual void exportData() const = 0;
 };
 
-typedef struct _GtkWindow GtkWindow;
 typedef struct _GtkToggleButton GtkToggleButton;
 typedef struct _GtkRadioButton GtkRadioButton;
 typedef struct _GtkSpinButton GtkSpinButton;

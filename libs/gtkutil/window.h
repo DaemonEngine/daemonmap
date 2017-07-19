@@ -23,6 +23,7 @@
 #define INCLUDED_GTKUTIL_WINDOW_H
 
 #include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "debugging/debugging.h"
 #include "generic/callback.h"
@@ -33,19 +34,19 @@ inline gboolean window_focus_in_clear_focus_widget( GtkWidget* widget, GdkEventK
 	return FALSE;
 }
 
-inline guint window_connect_focus_in_clear_focus_widget( GtkWindow* window ){
+inline guint window_connect_focus_in_clear_focus_widget( ui::Window window ){
 	return g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( window_focus_in_clear_focus_widget ), NULL );
 }
 
 
-unsigned int connect_floating( GtkWindow* main_window, GtkWindow* floating );
-GtkWindow* create_floating_window( const char* title, GtkWindow* parent );
-void destroy_floating_window( GtkWindow* window );
+unsigned int connect_floating( ui::Window main_window, ui::Window floating );
+ui::Window create_floating_window( const char* title, ui::Window parent );
+void destroy_floating_window( ui::Window window );
 
-GtkWindow* create_persistent_floating_window( const char* title, GtkWindow* main_window );
-gboolean persistent_floating_window_delete( GtkWindow* floating, GdkEvent *event, GtkWindow* main_window );
+ui::Window create_persistent_floating_window( const char* title, ui::Window main_window );
+gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event, ui::Window main_window );
 
-void window_remove_minmax( GtkWindow* window );
+void window_remove_minmax( ui::Window window );
 
 typedef struct _GtkScrolledWindow GtkScrolledWindow;
 GtkScrolledWindow* create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border = 0 );
@@ -64,14 +65,14 @@ struct WindowPosition
 
 const WindowPosition c_default_window_pos( 50, 25, 400, 300 );
 
-inline void window_get_position( GtkWindow* window, WindowPosition& position ){
-	ASSERT_MESSAGE( window != 0, "error saving window position" );
+inline void window_get_position( ui::Window window, WindowPosition& position ){
+	ASSERT_MESSAGE( window , "error saving window position" );
 
 	gtk_window_get_position( window, &position.x, &position.y );
 	gtk_window_get_size( window, &position.w, &position.h );
 }
 
-inline void window_set_position( GtkWindow* window, const WindowPosition& position ){
+inline void window_set_position( ui::Window window, const WindowPosition& position ){
 	gtk_window_set_gravity( window, GDK_GRAVITY_STATIC );
 
 	GdkScreen* screen = gdk_screen_get_default();
@@ -119,11 +120,11 @@ WindowPositionTracker()
 	: m_position( c_default_window_pos ){
 }
 
-void sync( GtkWindow* window ){
+void sync( ui::Window window ){
 	window_set_position( window, m_position );
 }
 
-void connect( GtkWindow* window ){
+void connect( ui::Window window ){
 	sync( window );
 	g_signal_connect( G_OBJECT( window ), "configure_event", G_CALLBACK( configure ), this );
 }

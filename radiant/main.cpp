@@ -642,8 +642,6 @@ int main( int argc, char* argv[] ){
 
 	Radiant_Initialise();
 
-	global_accel_init();
-
 	user_shortcuts_init();
 
 	g_pParentWnd = 0;
@@ -686,8 +684,6 @@ int main( int argc, char* argv[] ){
 	delete g_pParentWnd;
 
 	user_shortcuts_save();
-
-	global_accel_destroy();
 
 	Radiant_Shutdown();
 

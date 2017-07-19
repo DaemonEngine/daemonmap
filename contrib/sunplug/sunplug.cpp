@@ -184,11 +184,11 @@ SunPlugPluginDependencies() :
 //  *************************
 namespace SunPlug
 {
-GtkWindow* main_window;
+ui::Window main_window;
 char MenuList[100] = "";
 
 const char* init( void* hApp, void* pMainWidget ){
-	main_window = GTK_WINDOW( pMainWidget );
+	main_window = ui::Window(GTK_WINDOW( pMainWidget ));
 	return "Initializing SunPlug for GTKRadiant";
 }
 const char* getName(){

@@ -285,7 +285,7 @@ void EntityList_constructWindow( ui::Window main_window ){
 
 	ui::Window window = ui::Window(create_persistent_floating_window( "Entity List", main_window ));
 
-	gtk_window_add_accel_group( window, global_accel );
+	window.add_accel_group(global_accel);
 
 	getEntityList().m_positionTracker.connect( window );
 

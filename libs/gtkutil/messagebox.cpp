@@ -58,17 +58,17 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	ModalDialogButton yes_button( dialog, eIDYES );
 	ModalDialogButton no_button( dialog, eIDNO );
 
-	GtkWindow* parentWindow = parent ? GTK_WINDOW( parent ) : 0;
+	ui::Window parentWindow = ui::Window(parent ? GTK_WINDOW( parent ) : 0);
 
-	GtkWindow* window = create_fixedsize_modal_dialog_window( parentWindow, title, dialog, 400, 100 );
+	ui::Window window = create_fixedsize_modal_dialog_window( parentWindow, title, dialog, 400, 100 );
 
-	if ( parentWindow != 0 ) {
+	if ( parentWindow ) {
 		//g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(floating_window_delete_present), parent);
 		gtk_window_deiconify( parentWindow );
 	}
 
-	GtkAccelGroup* accel = ui::AccelGroup();
-	gtk_window_add_accel_group( window, accel );
+	auto accel = ui::AccelGroup();
+	window.add_accel_group( accel );
 
 	GtkVBox* vbox = create_dialog_vbox( 8, 8 );
 	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );

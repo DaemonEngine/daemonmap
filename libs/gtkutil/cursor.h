@@ -24,18 +24,18 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
 #include "debugging/debugging.h"
 
 typedef struct _GdkCursor GdkCursor;
 typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
 
 GdkCursor* create_blank_cursor();
 void blank_cursor( GtkWidget* widget );
 void default_cursor( GtkWidget* widget );
-void Sys_GetCursorPos( GtkWindow* window, int *x, int *y );
-void Sys_SetCursorPos( GtkWindow* window, int x, int y );
+void Sys_GetCursorPos( ui::Window window, int *x, int *y );
+void Sys_SetCursorPos( ui::Window window, int x, int y );
 
 
 
@@ -121,7 +121,7 @@ FreezePointer() : handle_motion( 0 ), m_function( 0 ), m_data( 0 ){
 }
 static gboolean motion_delta( GtkWidget *widget, GdkEventMotion *event, FreezePointer* self ){
 	int current_x, current_y;
-	Sys_GetCursorPos( GTK_WINDOW( widget ), &current_x, &current_y );
+	Sys_GetCursorPos( ui::Window(GTK_WINDOW( widget )), &current_x, &current_y );
 	int dx = current_x - self->last_x;
 	int dy = current_y - self->last_y;
 	int ddx = current_x - self->recorded_x;
@@ -131,7 +131,7 @@ static gboolean motion_delta( GtkWidget *widget, GdkEventMotion *event, FreezePo
 	if ( dx != 0 || dy != 0 ) {
 		//globalOutputStream() << "motion x: " << dx << ", y: " << dy << "\n";
 		if (ddx < -32 || ddx > 32 || ddy < -32 || ddy > 32) {
-			Sys_SetCursorPos( GTK_WINDOW( widget ), self->recorded_x, self->recorded_y );
+			Sys_SetCursorPos( ui::Window(GTK_WINDOW( widget )), self->recorded_x, self->recorded_y );
 			self->last_x = self->recorded_x;
 			self->last_y = self->recorded_y;
 		}
@@ -140,7 +140,7 @@ static gboolean motion_delta( GtkWidget *widget, GdkEventMotion *event, FreezePo
 	return FALSE;
 }
 
-void freeze_pointer( GtkWindow* window, MotionDeltaFunction function, void* data ){
+void freeze_pointer( ui::Window window, MotionDeltaFunction function, void* data ){
 	ASSERT_MESSAGE( m_function == 0, "can't freeze pointer" );
 
 	const GdkEventMask mask = static_cast<GdkEventMask>( GDK_POINTER_MOTION_MASK
@@ -171,7 +171,7 @@ void freeze_pointer( GtkWindow* window, MotionDeltaFunction function, void* data
 	handle_motion = g_signal_connect( G_OBJECT( window ), "motion_notify_event", G_CALLBACK( motion_delta ), this );
 }
 
-void unfreeze_pointer( GtkWindow* window ){
+void unfreeze_pointer( ui::Window window ){
 	g_signal_handler_disconnect( G_OBJECT( window ), handle_motion );
 
 	m_function = 0;
