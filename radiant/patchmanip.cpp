@@ -744,7 +744,7 @@ void Patch_registerCommands(){
 	GlobalCommands_insert( "ClearPatchOverlays", FreeCaller<Patch_OverlayOff>(), Accelerator( 'L', (GdkModifierType)GDK_CONTROL_MASK ) );
 }
 
-void Patch_constructToolbar( GtkToolbar* toolbar ){
+void Patch_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "Put caps on the current patch (SHIFT + C)", "cap_curve.png", "CapCurrentCurve" );
 }
 

@@ -26,9 +26,7 @@
 #include "string/stringfwd.h"
 
 void Patch_registerCommands();
-typedef struct _GtkToolbar GtkToolbar;
-typedef struct _GtkMenu GtkMenu;
-void Patch_constructToolbar( GtkToolbar* toolbar );
+void Patch_constructToolbar( ui::Toolbar toolbar );
 void Patch_constructMenu( ui::Menu menu );
 
 namespace scene

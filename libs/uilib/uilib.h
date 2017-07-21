@@ -48,6 +48,7 @@ struct _GtkTearoffMenuItem;
 struct _GtkTextView;
 struct _GtkToggleButton;
 struct _GtkToggleToolButton;
+struct _GtkToolbar;
 struct _GtkToolButton;
 struct _GtkToolItem;
 struct _GtkTreeModel;
@@ -378,6 +379,10 @@ namespace ui {
 
     WRAP(TextView, Widget, _GtkTextView, (),
          TextView();
+    ,
+    );
+
+    WRAP(Toolbar, Widget, _GtkToolbar, (),
     ,
     );
 

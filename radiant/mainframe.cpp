@@ -2265,17 +2265,17 @@ void register_shortcuts(){
 	SelectByType_registerShortcuts();
 }
 
-void File_constructToolbar( GtkToolbar* toolbar ){
+void File_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "Open an existing map (CTRL + O)", "file_open.png", "OpenMap" );
 	toolbar_append_button( toolbar, "Save the active map (CTRL + S)", "file_save.png", "SaveMap" );
 }
 
-void UndoRedo_constructToolbar( GtkToolbar* toolbar ){
+void UndoRedo_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "Undo (CTRL + Z)", "undo.png", "Undo" );
 	toolbar_append_button( toolbar, "Redo (CTRL + Y)", "redo.png", "Redo" );
 }
 
-void RotateFlip_constructToolbar( GtkToolbar* toolbar ){
+void RotateFlip_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "x-axis Flip", "brush_flipx.png", "MirrorSelectionX" );
 	toolbar_append_button( toolbar, "x-axis Rotate", "brush_rotatex.png", "RotateSelectionX" );
 	toolbar_append_button( toolbar, "y-axis Flip", "brush_flipy.png", "MirrorSelectionY" );
@@ -2284,33 +2284,33 @@ void RotateFlip_constructToolbar( GtkToolbar* toolbar ){
 	toolbar_append_button( toolbar, "z-axis Rotate", "brush_rotatez.png", "RotateSelectionZ" );
 }
 
-void Select_constructToolbar( GtkToolbar* toolbar ){
+void Select_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "Select touching", "selection_selecttouching.png", "SelectTouching" );
 	toolbar_append_button( toolbar, "Select inside", "selection_selectinside.png", "SelectInside" );
 }
 
-void CSG_constructToolbar( GtkToolbar* toolbar ){
+void CSG_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "CSG Subtract (SHIFT + U)", "selection_csgsubtract.png", "CSGSubtract" );
 	toolbar_append_button( toolbar, "CSG Merge (CTRL + U)", "selection_csgmerge.png", "CSGMerge" );
 	toolbar_append_button( toolbar, "Hollow", "selection_makehollow.png", "CSGHollow" );
 }
 
-void ComponentModes_constructToolbar( GtkToolbar* toolbar ){
+void ComponentModes_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_toggle_button( toolbar, "Select Vertices (V)", "modify_vertices.png", "DragVertices" );
 	toolbar_append_toggle_button( toolbar, "Select Edges (E)", "modify_edges.png", "DragEdges" );
 	toolbar_append_toggle_button( toolbar, "Select Faces (F)", "modify_faces.png", "DragFaces" );
 }
 
-void Clipper_constructToolbar( GtkToolbar* toolbar ){
+void Clipper_constructToolbar( ui::Toolbar toolbar ){
 
 	toolbar_append_toggle_button( toolbar, "Clipper (X)", "view_clipper.png", "ToggleClipper" );
 }
 
-void XYWnd_constructToolbar( GtkToolbar* toolbar ){
+void XYWnd_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_button( toolbar, "Change views", "view_change.png", "NextView" );
 }
 
-void Manipulators_constructToolbar( GtkToolbar* toolbar ){
+void Manipulators_constructToolbar( ui::Toolbar toolbar ){
 	toolbar_append_toggle_button( toolbar, "Translate (W)", "select_mousetranslate.png", "MouseTranslate" );
 	toolbar_append_toggle_button( toolbar, "Rotate (R)", "select_mouserotate.png", "MouseRotate" );
 	toolbar_append_toggle_button( toolbar, "Scale", "select_mousescale.png", "MouseScale" );
@@ -2319,8 +2319,8 @@ void Manipulators_constructToolbar( GtkToolbar* toolbar ){
 	Clipper_constructToolbar( toolbar );
 }
 
-GtkToolbar* create_main_toolbar( MainFrame::EViewStyle style ){
-	GtkToolbar* toolbar = GTK_TOOLBAR( gtk_toolbar_new() );
+ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
+	auto toolbar = ui::Toolbar(GTK_TOOLBAR( gtk_toolbar_new() ));
 	gtk_orientable_set_orientation( GTK_ORIENTABLE(toolbar), GTK_ORIENTATION_HORIZONTAL );
 	gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS );
 
