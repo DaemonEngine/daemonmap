@@ -48,7 +48,7 @@
 
 
 GtkEntry* DialogEntry_new(){
-	GtkEntry* entry = ui::Entry();
+	auto entry = ui::Entry();
 	gtk_widget_show( GTK_WIDGET( entry ) );
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
 	return entry;
@@ -159,7 +159,7 @@ typedef ImportExport<GtkEntry, const char*, TextEntryImport, TextEntryExport> Te
 
 
 void IntEntryImport( GtkEntry& widget, int value ){
-	entry_set_int( &widget, value );
+	entry_set_int( ui::Entry(&widget), value );
 }
 void IntEntryExport( GtkEntry& widget, const IntImportCallback& importCallback ){
 	importCallback( atoi( gtk_entry_get_text( &widget ) ) );
@@ -168,7 +168,7 @@ typedef ImportExport<GtkEntry, int, IntEntryImport, IntEntryExport> IntEntryImpo
 
 
 void SizeEntryImport( GtkEntry& widget, std::size_t value ){
-	entry_set_int( &widget, int(value) );
+	entry_set_int( ui::Entry(&widget), int(value) );
 }
 void SizeEntryExport( GtkEntry& widget, const SizeImportCallback& importCallback ){
 	int value = atoi( gtk_entry_get_text( &widget ) );
@@ -181,7 +181,7 @@ typedef ImportExport<GtkEntry, std::size_t, SizeEntryImport, SizeEntryExport> Si
 
 
 void FloatEntryImport( GtkEntry& widget, float value ){
-	entry_set_float( &widget, value );
+	entry_set_float( ui::Entry(&widget), value );
 }
 void FloatEntryExport( GtkEntry& widget, const FloatImportCallback& importCallback ){
 	importCallback( (float)atof( gtk_entry_get_text( &widget ) ) );

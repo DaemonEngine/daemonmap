@@ -783,7 +783,7 @@ void DoMapInfo(){
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 
 				{
-					GtkEntry* entry = ui::Entry();
+					auto entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -793,7 +793,7 @@ void DoMapInfo(){
 					brushes_entry = entry;
 				}
 				{
-					GtkEntry* entry = ui::Entry();
+					auto entry = ui::Entry();
 					gtk_widget_show( GTK_WIDGET( entry ) );
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -2064,7 +2064,7 @@ void DoFind(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkEntry* entry = ui::Entry();
+				auto entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -2073,7 +2073,7 @@ void DoFind(){
 				entity = entry;
 			}
 			{
-				GtkEntry* entry = ui::Entry();
+				auto entry = ui::Entry();
 				gtk_widget_show( GTK_WIDGET( entry ) );
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),

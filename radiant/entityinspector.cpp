@@ -64,9 +64,9 @@
 #include "textureentry.h"
 #include "groupdialog.h"
 
-GtkEntry* numeric_entry_new(){
-	GtkEntry* entry = ui::Entry();
-	gtk_widget_show( GTK_WIDGET( entry ) );
+ui::Entry numeric_entry_new(){
+	auto entry = ui::Entry();
+	entry.show();
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
 	return entry;
 }
@@ -167,7 +167,7 @@ StringAttribute( const char* key ) :
 	m_key( key ),
 	m_entry( 0 ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
-	GtkEntry* entry = ui::Entry();
+	auto entry = ui::Entry();
 	gtk_widget_show( GTK_WIDGET( entry ) );
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 50, -1 );
 
@@ -319,14 +319,14 @@ inline double angle_normalised( double angle ){
 class AngleAttribute : public EntityAttribute
 {
 CopiedString m_key;
-GtkEntry* m_entry;
+ui::Entry m_entry;
 NonModalEntry m_nonModal;
 public:
 AngleAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( 0 ),
+	m_entry( nullptr ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
-	GtkEntry* entry = numeric_entry_new();
+	auto entry = numeric_entry_new();
 	m_entry = entry;
 	m_nonModal.connect( m_entry );
 }
@@ -367,7 +367,7 @@ const String buttons[] = { "up", "down", "z-axis" };
 class DirectionAttribute : public EntityAttribute
 {
 CopiedString m_key;
-GtkEntry* m_entry;
+ui::Entry m_entry;
 NonModalEntry m_nonModal;
 RadioHBox m_radio;
 NonModalRadio m_nonModalRadio;
@@ -375,11 +375,11 @@ GtkHBox* m_hbox;
 public:
 DirectionAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( 0 ),
+	m_entry( nullptr ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ),
 	m_radio( RadioHBox_new( STRING_ARRAY_RANGE( buttons ) ) ),
 	m_nonModalRadio( ApplyRadioCaller( *this ) ){
-	GtkEntry* entry = numeric_entry_new();
+	auto entry = numeric_entry_new();
 	m_entry = entry;
 	m_nonModal.connect( m_entry );
 
@@ -453,10 +453,10 @@ typedef MemberCaller<DirectionAttribute, &DirectionAttribute::applyRadio> ApplyR
 class AnglesEntry
 {
 public:
-GtkEntry* m_roll;
-GtkEntry* m_pitch;
-GtkEntry* m_yaw;
-AnglesEntry() : m_roll( 0 ), m_pitch( 0 ), m_yaw( 0 ){
+ui::Entry m_roll;
+ui::Entry m_pitch;
+ui::Entry m_yaw;
+AnglesEntry() : m_roll( nullptr ), m_pitch( nullptr ), m_yaw( nullptr ){
 }
 };
 
@@ -476,19 +476,19 @@ AnglesAttribute( const char* key ) :
 {
 	gtk_widget_show( GTK_WIDGET( m_hbox ) );
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_angles.m_pitch = entry;
 		m_nonModal.connect( m_angles.m_pitch );
 	}
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_angles.m_yaw = entry;
 		m_nonModal.connect( m_angles.m_yaw );
 	}
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_angles.m_roll = entry;
 		m_nonModal.connect( m_angles.m_roll );
@@ -543,10 +543,10 @@ typedef MemberCaller<AnglesAttribute, &AnglesAttribute::update> UpdateCaller;
 class Vector3Entry
 {
 public:
-GtkEntry* m_x;
-GtkEntry* m_y;
-GtkEntry* m_z;
-Vector3Entry() : m_x( 0 ), m_y( 0 ), m_z( 0 ){
+ui::Entry m_x;
+ui::Entry m_y;
+ui::Entry m_z;
+Vector3Entry() : m_x( nullptr ), m_y( nullptr ), m_z( nullptr ){
 }
 };
 
@@ -563,19 +563,19 @@ Vector3Attribute( const char* key ) :
 	m_hbox = ui::HBox( TRUE, 4 );
 	gtk_widget_show( GTK_WIDGET( m_hbox ) );
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_vector3.m_x = entry;
 		m_nonModal.connect( m_vector3.m_x );
 	}
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_vector3.m_y = entry;
 		m_nonModal.connect( m_vector3.m_y );
 	}
 	{
-		GtkEntry* entry = numeric_entry_new();
+		auto entry = numeric_entry_new();
 		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 		m_vector3.m_z = entry;
 		m_nonModal.connect( m_vector3.m_z );
@@ -1444,7 +1444,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					gtk_table_set_col_spacings( table, 5 );
 
 					{
-						GtkEntry* entry = ui::Entry();
+						auto entry = ui::Entry();
 						gtk_widget_show( GTK_WIDGET( entry ) );
 						gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
@@ -1455,7 +1455,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					}
 
 					{
-						GtkEntry* entry = ui::Entry();
+						auto entry = ui::Entry();
 						gtk_widget_show( GTK_WIDGET( entry ) );
 						gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),

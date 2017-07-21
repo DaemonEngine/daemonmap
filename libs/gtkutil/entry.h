@@ -26,31 +26,31 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
-inline void entry_set_string( GtkEntry* entry, const char* string ){
+inline void entry_set_string( ui::Entry entry, const char* string ){
 	gtk_entry_set_text( entry, string );
 }
 
-inline void entry_set_int( GtkEntry* entry, int i ){
+inline void entry_set_int( ui::Entry entry, int i ){
 	char buf[32];
 	sprintf( buf, "%d", i );
 	entry_set_string( entry, buf );
 }
 
-inline void entry_set_float( GtkEntry* entry, float f ){
+inline void entry_set_float( ui::Entry entry, float f ){
 	char buf[32];
 	sprintf( buf, "%g", f );
 	entry_set_string( entry, buf );
 }
 
-inline const char* entry_get_string( GtkEntry* entry ){
+inline const char* entry_get_string( ui::Entry entry ){
 	return gtk_entry_get_text( entry );
 }
 
-inline int entry_get_int( GtkEntry* entry ){
+inline int entry_get_int( ui::Entry entry ){
 	return atoi( entry_get_string( entry ) );
 }
 
-inline double entry_get_float( GtkEntry* entry ){
+inline double entry_get_float( ui::Entry entry ){
 	return atof( entry_get_string( entry ) );
 }
 

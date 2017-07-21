@@ -159,9 +159,9 @@ class Subdivisions
 {
 public:
 ui::CheckButton m_enabled;
-GtkEntry* m_horizontal;
-GtkEntry* m_vertical;
-Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( 0 ), m_vertical( 0 ){
+ui::Entry m_horizontal;
+ui::Entry m_vertical;
+Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( nullptr ), m_vertical( nullptr ){
 }
 void update(){
 	PatchFixedSubdivisions subdivisions;
@@ -765,7 +765,7 @@ ui::Window PatchInspector::BuildDialog(){
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
-								GtkEntry* entry = ui::Entry();
+								auto entry = ui::Entry();
 								gtk_widget_show( GTK_WIDGET( entry ) );
 								gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
@@ -774,14 +774,14 @@ ui::Window PatchInspector::BuildDialog(){
 								m_horizontalSubdivisionsEntry.connect( entry );
 							}
 							{
-								GtkLabel* label = GTK_LABEL( ui::Label( "Vertical" ) );
+								auto label = GTK_LABEL( ui::Label( "Vertical" ) );
 								gtk_widget_show( GTK_WIDGET( label ) );
 								gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 2, 3,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
-								GtkEntry* entry = ui::Entry();
+								auto entry = ui::Entry();
 								gtk_widget_show( GTK_WIDGET( entry ) );
 								gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 2, 3,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
@@ -883,7 +883,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
+							auto entry = ui::Entry();
 							gtk_widget_show( GTK_WIDGET( entry ) );
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 0, 1,
 											  (GtkAttachOptions)( GTK_FILL ),
@@ -907,7 +907,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
+							auto entry = ui::Entry();
 							gtk_widget_show( GTK_WIDGET( entry ) );
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 1, 2,
 											  (GtkAttachOptions)( GTK_FILL ),
@@ -928,7 +928,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
+							auto entry = ui::Entry();
 							gtk_widget_show( GTK_WIDGET( entry ) );
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 2, 3,
 											  (GtkAttachOptions)( GTK_FILL ),
@@ -949,7 +949,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
+							auto entry = ui::Entry();
 							gtk_widget_show( GTK_WIDGET( entry ) );
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 3, 4,
 											  (GtkAttachOptions)( GTK_FILL ),
@@ -970,7 +970,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
+							auto entry = ui::Entry();
 							gtk_widget_show( GTK_WIDGET( entry ) );
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 4, 5,
 											  (GtkAttachOptions)( GTK_FILL ),
