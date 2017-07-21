@@ -29,7 +29,7 @@
 #include "generic/callback.h"
 #include "widget.h"
 
-inline gboolean window_focus_in_clear_focus_widget( GtkWidget* widget, GdkEventKey* event, gpointer data ){
+inline gboolean window_focus_in_clear_focus_widget( ui::Widget widget, GdkEventKey* event, gpointer data ){
 	gtk_window_set_focus( GTK_WINDOW( widget ), NULL );
 	return FALSE;
 }
@@ -48,8 +48,7 @@ gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event
 
 void window_remove_minmax( ui::Window window );
 
-typedef struct _GtkScrolledWindow GtkScrolledWindow;
-GtkScrolledWindow* create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border = 0 );
+ui::ScrolledWindow create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border = 0 );
 
 
 struct WindowPosition
@@ -110,7 +109,7 @@ class WindowPositionTracker
 {
 WindowPosition m_position;
 
-static gboolean configure( GtkWidget* widget, GdkEventConfigure *event, WindowPositionTracker* self ){
+static gboolean configure( ui::Widget widget, GdkEventConfigure *event, WindowPositionTracker* self ){
 	self->m_position = WindowPosition( event->x, event->y, event->width, event->height );
 	return FALSE;
 }

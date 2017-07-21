@@ -27,25 +27,25 @@
 #include "pointer.h"
 #include "accelerator.h"
 
-inline void CHECK_RESTORE( GtkWidget* w ){
+inline void CHECK_RESTORE( ui::Widget w ){
 	if ( gpointer_to_int( g_object_get_data( G_OBJECT( w ), "was_mapped" ) ) != 0 ) {
 		gtk_widget_show( w );
 	}
 }
 
-inline void CHECK_MINIMIZE( GtkWidget* w ){
+inline void CHECK_MINIMIZE( ui::Widget w ){
 	g_object_set_data( G_OBJECT( w ), "was_mapped", gint_to_pointer( gtk_widget_get_visible( w ) ) );
 	gtk_widget_hide( w );
 }
 
-static gboolean main_window_iconified( GtkWidget* widget, GdkEventWindowState* event, gpointer data ){
+static gboolean main_window_iconified( ui::Widget widget, GdkEventWindowState* event, gpointer data ){
 	if ( ( event->changed_mask & ( GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_WITHDRAWN ) ) != 0 ) {
 		if ( ( event->new_window_state & ( GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_WITHDRAWN ) ) != 0 ) {
-			CHECK_MINIMIZE( GTK_WIDGET( data ) );
+			CHECK_MINIMIZE( ui::Widget(GTK_WIDGET( data )) );
 		}
 		else
 		{
-			CHECK_RESTORE( GTK_WIDGET( data ) );
+			CHECK_RESTORE( ui::Widget(GTK_WIDGET( data )) );
 		}
 	}
 	return FALSE;
@@ -100,7 +100,7 @@ void destroy_floating_window( ui::Window window ){
 	gtk_widget_destroy( GTK_WIDGET( window ) );
 }
 
-gint window_realize_remove_sysmenu( GtkWidget* widget, gpointer data ){
+gint window_realize_remove_sysmenu( ui::Widget widget, gpointer data ){
 	gdk_window_set_decorations( gtk_widget_get_window(widget), (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MENU ) );
 	return FALSE;
 }
@@ -127,7 +127,7 @@ ui::Window create_persistent_floating_window( const char* title, ui::Window main
 	return window;
 }
 
-gint window_realize_remove_minmax( GtkWidget* widget, gpointer data ){
+gint window_realize_remove_minmax( ui::Widget widget, gpointer data ){
 	gdk_window_set_decorations( gtk_widget_get_window(widget), (GdkWMDecoration)( GDK_DECOR_ALL | GDK_DECOR_MINIMIZE | GDK_DECOR_MAXIMIZE ) );
 	return FALSE;
 }
@@ -137,8 +137,8 @@ void window_remove_minmax( ui::Window window ){
 }
 
 
-GtkScrolledWindow* create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border ){
-	GtkScrolledWindow* scr = ui::ScrolledWindow();
+ui::ScrolledWindow create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border ){
+	auto scr = ui::ScrolledWindow();
 	gtk_widget_show( GTK_WIDGET( scr ) );
 	gtk_scrolled_window_set_policy( scr, hscrollbar_policy, vscrollbar_policy );
 	gtk_scrolled_window_set_shadow_type( scr, GTK_SHADOW_IN );
