@@ -56,8 +56,8 @@ ui::Image new_plugin_image( const char* filename ){
 
 void toolbar_insert( GtkToolbar *toolbar, const char* icon, const char* text, const char* tooltip, IToolbarButton::EType type, GCallback handler, gpointer data ){
 	if (type == IToolbarButton::eSpace) {
-		auto it = gtk_separator_tool_item_new();
-		gtk_widget_show(GTK_WIDGET(it));
+		auto it = ui::Widget(GTK_WIDGET(gtk_separator_tool_item_new()));
+		it.show();
 		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(it));
 		return;
 	}

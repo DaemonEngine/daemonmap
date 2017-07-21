@@ -55,7 +55,7 @@ void Create( ui::Window parent );
 void Show(){
 	// workaround for strange gtk behaviour - modifying the contents of a window while it is not visible causes the window position to change without sending a configure_event
 	m_position_tracker.sync( m_window );
-	gtk_widget_show( GTK_WIDGET( m_window ) );
+	m_window.show();
 }
 void Hide(){
 	gtk_widget_hide( GTK_WIDGET( m_window ) );
@@ -111,7 +111,7 @@ void GroupDlg::Create( ui::Window parent ){
 
 	{
 		ui::Widget notebook = ui::Widget(gtk_notebook_new());
-		gtk_widget_show( notebook );
+		notebook.show();
 		gtk_container_add( GTK_CONTAINER( window ), notebook );
 		gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), GTK_POS_BOTTOM );
 		m_pNotebook = notebook;
@@ -123,7 +123,7 @@ void GroupDlg::Create( ui::Window parent ){
 
 ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const StringExportCallback& title ){
 	ui::Widget w = ui::Label( tabLabel );
-	gtk_widget_show( w );
+	w.show();
 	ui::Widget page = ui::Widget(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gtk_notebook_insert_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), widget, w, -1 ) ));
 	g_pages.push_back( title );
 
@@ -173,7 +173,7 @@ void GroupDialog_showPage( ui::Widget page ){
 	}
 	else
 	{
-		gtk_widget_show( GTK_WIDGET( g_GroupDlg.m_window ) );
+		g_GroupDlg.m_window.show();
 		GroupDialog_setPage( page );
 	}
 }

@@ -421,7 +421,7 @@ void DoCommandListDlg(){
 				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 			}
 
-			gtk_widget_show( view );
+			view.show();
 			gtk_container_add( GTK_CONTAINER( scr ), view );
 
 			{
@@ -473,7 +473,7 @@ public:
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( clearbutton ), FALSE, FALSE, 0 );
 
 		ui::Widget spacer = ui::Image();
-		gtk_widget_show( spacer );
+		spacer.show();
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( spacer ), TRUE, TRUE, 0 );
 
 		auto button = create_modal_dialog_button( "Close", dialog.m_close_button );

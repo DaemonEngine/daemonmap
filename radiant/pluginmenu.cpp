@@ -47,7 +47,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 	std::stack<ui::Menu> menuStack;
 
 	parent = ui::MenuItem( pPlugIn->getMenuName() );
-	gtk_widget_show( parent );
+	parent.show();
 	gtk_container_add( GTK_CONTAINER( plugin_menu ), parent );
 
 	std::size_t nCount = pPlugIn->getCommandCount();
@@ -75,7 +75,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 					}
 
 					item = ui::MenuItem( menuText );
-					gtk_widget_show( item );
+					item.show();
 					gtk_container_add( GTK_CONTAINER( menu ), item );
 
 					subMenu = ui::Menu();
@@ -101,7 +101,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 					g_object_set_data( G_OBJECT( item ),"command", const_cast<gpointer>( static_cast<const void*>( menuCommand ) ) );
 					g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
 				}
-				gtk_widget_show( item );
+				item.show();
 				gtk_container_add( GTK_CONTAINER( menu ), item );
 				pPlugIn->addMenuID( m_nNextPlugInID++ );
 			}

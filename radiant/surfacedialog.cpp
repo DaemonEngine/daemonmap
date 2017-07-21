@@ -592,23 +592,23 @@ ui::Window SurfaceInspector::BuildDialog(){
 	{
 		// replaced by only the vbox:
 		ui::Widget vbox = ui::VBox( FALSE, 5 );
-		gtk_widget_show( vbox );
+		vbox.show();
 		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
 		gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 		{
 			ui::Widget hbox2 = ui::HBox( FALSE, 5 );
-			gtk_widget_show( hbox2 );
+			hbox2.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
 
 			{
 				ui::Widget label = ui::Label( "Texture" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_box_pack_start( GTK_BOX( hbox2 ), label, FALSE, TRUE, 0 );
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_box_pack_start( GTK_BOX( hbox2 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 				m_texture = entry;
 				m_textureEntry.connect( entry );
@@ -619,7 +619,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 
 		{
 			ui::Widget table = ui::Table( 6, 4, FALSE );
-			gtk_widget_show( table );
+			table.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, FALSE, 0 );
 			gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 			gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
@@ -661,7 +661,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Vertical shift" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -671,7 +671,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
 				m_vshiftIncrement.m_spin = spin;
 				m_vshiftSpinner.connect( spin );
-				gtk_widget_show( GTK_WIDGET( spin ) );
+				spin.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( spin ), 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -679,7 +679,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -687,7 +687,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( entry ), 3, 4, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -697,7 +697,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Horizontal stretch" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 2, 3,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -707,7 +707,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
 				m_hscaleIncrement.m_spin = spin;
 				m_hscaleSpinner.connect( spin );
-				gtk_widget_show( GTK_WIDGET( spin ) );
+				spin.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( spin ), 1, 2, 2, 3,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -715,7 +715,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 2, 3,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -723,7 +723,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( entry ), 3, 4, 2, 3,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 2, 3 );
@@ -733,7 +733,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Vertical stretch" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 3, 4,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -743,7 +743,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
 				m_vscaleIncrement.m_spin = spin;
 				m_vscaleSpinner.connect( spin );
-				gtk_widget_show( GTK_WIDGET( spin ) );
+				spin.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( spin ), 1, 2, 3, 4,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -751,7 +751,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 3, 4,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -759,7 +759,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( entry ), 3, 4, 3, 4,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -769,7 +769,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Rotate" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 4, 5,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -779,7 +779,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
 				m_rotateIncrement.m_spin = spin;
 				m_rotateSpinner.connect( spin );
-				gtk_widget_show( GTK_WIDGET( spin ) );
+				spin.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( spin ), 1, 2, 4, 5,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -788,7 +788,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 4, 5,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -796,7 +796,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( entry ), 3, 4, 4, 5,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -807,7 +807,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			{
 				// match grid button
 				ui::Widget button = ui::Button( "Match Grid" );
-				gtk_widget_show( button );
+				button.show();
 				gtk_table_attach( GTK_TABLE( table ), button, 2, 4, 5, 6,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -817,46 +817,46 @@ ui::Window SurfaceInspector::BuildDialog(){
 
 		{
 			ui::Widget frame = ui::Frame( "Texturing" );
-			gtk_widget_show( frame );
+			frame.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
 			{
 				ui::Widget table = ui::Table( 4, 4, FALSE );
-				gtk_widget_show( table );
+				table.show();
 				gtk_container_add( GTK_CONTAINER( frame ), table );
 				gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 				gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 				gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 				{
 					ui::Widget label = ui::Label( "Brush" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "Patch" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "Width" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "Height" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 3, 4, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget button = ui::Button( "Axial" );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -866,7 +866,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget button = ui::Button( "Fit" );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -876,7 +876,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget button = ui::Button( "CAP" );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -886,7 +886,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget button = ui::Button( "Set..." );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -896,7 +896,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget button = ui::Button( "Natural" );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 2, 3, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -906,7 +906,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget button = ui::Button( "Fit" );
-					gtk_widget_show( button );
+					button.show();
 					gtk_table_attach( GTK_TABLE( table ), button, 3, 4, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -916,7 +916,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget spin = ui::SpinButton( ui::Adjustment( 1, 0, 1 << 16, 1, 10, 0 ), 0, 6 );
-					gtk_widget_show( spin );
+					spin.show();
 					gtk_table_attach( GTK_TABLE( table ), spin, 2, 3, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -925,7 +925,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 				{
 					ui::Widget spin = ui::SpinButton( ui::Adjustment( 1, 0, 1 << 16, 1, 10, 0 ), 0, 6 );
-					gtk_widget_show( spin );
+					spin.show();
 					gtk_table_attach( GTK_TABLE( table ), spin, 3, 4, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -936,17 +936,17 @@ ui::Window SurfaceInspector::BuildDialog(){
 		}
 		if ( !string_empty( g_pGameDescription->getKeyValue( "si_flags" ) ) ) {
 			{
-				GtkFrame* frame = ui::Frame( "Surface Flags" );
-				gtk_widget_show( GTK_WIDGET( frame ) );
+				auto frame = ui::Frame( "Surface Flags" );
+				frame.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 				{
-					GtkVBox* vbox3 = ui::VBox( FALSE, 4 );
+					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
-					gtk_widget_show( GTK_WIDGET( vbox3 ) );
+					vbox3.show();
 					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
 					{
-						GtkTable* table = ui::Table( 8, 4, FALSE );
-						gtk_widget_show( GTK_WIDGET( table ) );
+						auto table = ui::Table( 8, 4, FALSE );
+						table.show();
 						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 0 );
 						gtk_table_set_col_spacings( table, 0 );
@@ -957,8 +957,8 @@ ui::Window SurfaceInspector::BuildDialog(){
 						{
 							for ( int r = 0; r != 8; ++r )
 							{
-								GtkCheckButton* check = ui::CheckButton( getSurfaceFlagName( c * 8 + r ) );
-								gtk_widget_show( GTK_WIDGET( check ) );
+								auto check = ui::CheckButton( getSurfaceFlagName( c * 8 + r ) );
+								check.show();
 								gtk_table_attach( table, GTK_WIDGET( check ), c, c + 1, r, r + 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -971,18 +971,18 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 			}
 			{
-				GtkFrame* frame = ui::Frame( "Content Flags" );
-				gtk_widget_show( GTK_WIDGET( frame ) );
+				auto frame = ui::Frame( "Content Flags" );
+				frame.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 				{
-					GtkVBox* vbox3 = ui::VBox( FALSE, 4 );
+					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
-					gtk_widget_show( GTK_WIDGET( vbox3 ) );
+					vbox3.show();
 					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
 					{
 
-						GtkTable* table = ui::Table( 8, 4, FALSE );
-						gtk_widget_show( GTK_WIDGET( table ) );
+						auto table = ui::Table( 8, 4, FALSE );
+						table.show();
 						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 0 );
 						gtk_table_set_col_spacings( table, 0 );
@@ -993,8 +993,8 @@ ui::Window SurfaceInspector::BuildDialog(){
 						{
 							for ( int r = 0; r != 8; ++r )
 							{
-								GtkCheckButton* check = ui::CheckButton( getContentFlagName( c * 8 + r ) );
-								gtk_widget_show( GTK_WIDGET( check ) );
+								auto check = ui::CheckButton( getContentFlagName( c * 8 + r ) );
+								check.show();
 								gtk_table_attach( table, GTK_WIDGET( check ), c, c + 1, r, r + 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -1010,18 +1010,18 @@ ui::Window SurfaceInspector::BuildDialog(){
 				}
 			}
 			{
-				GtkFrame* frame = ui::Frame( "Value" );
-				gtk_widget_show( GTK_WIDGET( frame ) );
+				auto frame = ui::Frame( "Value" );
+				frame.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 				{
-					GtkVBox* vbox3 = ui::VBox( FALSE, 4 );
+					auto vbox3 = ui::VBox( FALSE, 4 );
 					gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 4 );
-					gtk_widget_show( GTK_WIDGET( vbox3 ) );
+					vbox3.show();
 					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
 
 					{
 						auto entry = ui::Entry();
-						gtk_widget_show( GTK_WIDGET( entry ) );
+						entry.show();
 						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 						m_valueEntryWidget = entry;
 						m_valueEntry.connect( entry );
@@ -1034,7 +1034,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 		if ( g_bp_globals.m_texdefTypeId == TEXDEFTYPEID_BRUSHPRIMITIVES ) {
 // Shamus: Textool goodies...
 			ui::Widget frame = ui::Frame( "Textool" );
-			gtk_widget_show( frame );
+			frame.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
 			{
 				//Prolly should make this a member or global var, so the SI can draw on it...
@@ -1044,7 +1044,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				gtk_widget_set_events( TexTool::g_textoolWin, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK );
 				gtk_widget_set_can_focus( TexTool::g_textoolWin, true );
 				// <-- end stuff...
-				gtk_widget_show( TexTool::g_textoolWin );
+				TexTool::g_textoolWin.show();
 				gtk_widget_set_size_request( TexTool::g_textoolWin, -1, 240 ); //Yeah!
 				gtk_container_add( GTK_CONTAINER( frame ), TexTool::g_textoolWin );
 
@@ -1056,13 +1056,13 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget hbox = ui::HBox( FALSE, 5 );
-				gtk_widget_show( hbox );
+				hbox.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, FALSE, 0 );
 				// Checkboxes go here... (Flip X/Y)
 				ui::Widget flipX = ui::CheckButton( "Flip X axis" );
 				ui::Widget flipY = ui::CheckButton( "Flip Y axis" );
-				gtk_widget_show( flipX );
-				gtk_widget_show( flipY );
+				flipX.show();
+				flipY.show();
 				gtk_box_pack_start( GTK_BOX( hbox ), flipX, FALSE, FALSE, 0 );
 				gtk_box_pack_start( GTK_BOX( hbox ), flipY, FALSE, FALSE, 0 );
 

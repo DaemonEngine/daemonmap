@@ -921,29 +921,29 @@ void DoRotateDlg(){
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				{
 					ui::Widget label = ui::Label( "  X  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "  Y  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "  Z  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 2, 3,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
-					GtkSpinButton* spin = ui::SpinButton( adj, 1, 0 );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -956,8 +956,8 @@ void DoRotateDlg(){
 				}
 				{
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
-					GtkSpinButton* spin = ui::SpinButton( adj, 1, 0 );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -968,8 +968,8 @@ void DoRotateDlg(){
 				}
 				{
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
-					GtkSpinButton* spin = ui::SpinButton( adj, 1, 0 );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1001,7 +1001,7 @@ void DoRotateDlg(){
 		}
 	}
 
-	gtk_widget_show( GTK_WIDGET( g_rotate_dialog.window ) );
+	g_rotate_dialog.window.show();
 }
 
 
@@ -1074,21 +1074,21 @@ void DoScaleDlg(){
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				{
 					ui::Widget label = ui::Label( "  X  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "  Y  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					ui::Widget label = ui::Label( "  Z  " );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 2, 3,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1096,7 +1096,7 @@ void DoScaleDlg(){
 				{
 					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1106,7 +1106,7 @@ void DoScaleDlg(){
 				{
 					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1116,7 +1116,7 @@ void DoScaleDlg(){
 				{
 					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1146,5 +1146,5 @@ void DoScaleDlg(){
 		}
 	}
 
-	gtk_widget_show( GTK_WIDGET( g_scale_dialog.window ) );
+	g_scale_dialog.window.show();
 }

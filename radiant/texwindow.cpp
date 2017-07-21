@@ -1364,7 +1364,7 @@ gboolean TextureBrowser_button_press( ui::Widget widget, GdkEventButton* event, 
 				BuildStoreAssignedTags( textureBrowser->m_assigned_store, textureBrowser->shader.c_str(), textureBrowser );
 				BuildStoreAvailableTags( textureBrowser->m_available_store, textureBrowser->m_assigned_store, textureBrowser->m_all_tags, textureBrowser );
 				textureBrowser->m_heightChanged = true;
-				gtk_widget_show( textureBrowser->m_tag_frame );
+				textureBrowser->m_tag_frame.show();
 
 				process_gui();
 
@@ -2009,7 +2009,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	ui::Widget frame_table;
 	ui::Widget vbox = ui::VBox( FALSE, 0 );
 	gtk_table_attach( GTK_TABLE( table ), vbox, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_widget_show( vbox );
+	vbox.show();
 
 	ui::Widget menu_bar;
 
@@ -2026,7 +2026,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		gtk_menu_shell_append( GTK_MENU_SHELL( menu_bar ), tools_item );
 
 		gtk_table_attach( GTK_TABLE( table ), menu_bar, 0, 3, 0, 1, GTK_FILL, GTK_SHRINK, 0, 0 );
-		gtk_widget_show( menu_bar );
+		menu_bar.show();
 	}
 	{ // Texture TreeView
 		g_TextureBrowser.m_scr_win_tree = ui::ScrolledWindow();
@@ -2035,17 +2035,17 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		// vertical only scrolling for treeview
 		gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tree ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-		gtk_widget_show( g_TextureBrowser.m_scr_win_tree );
+		g_TextureBrowser.m_scr_win_tree.show();
 
 		TextureBrowser_createTreeViewTree();
 
 		gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tree ), GTK_WIDGET( g_TextureBrowser.m_treeViewTree ) );
-		gtk_widget_show( GTK_WIDGET( g_TextureBrowser.m_treeViewTree ) );
+		g_TextureBrowser.m_treeViewTree.show();
 	}
 	{ // gl_widget scrollbar
 		ui::Widget w = ui::Widget(gtk_vscrollbar_new( ui::Adjustment( 0,0,0,1,1,0 ) ));
 		gtk_table_attach( GTK_TABLE( table ), w, 2, 3, 1, 2, GTK_SHRINK, GTK_FILL, 0, 0 );
-		gtk_widget_show( w );
+		w.show();
 		g_TextureBrowser.m_texture_scroll = w;
 
 		GtkAdjustment *vadjustment = gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) );
@@ -2061,7 +2061,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		gtk_widget_set_can_focus( g_TextureBrowser.m_gl_widget, true );
 
 		gtk_table_attach_defaults( GTK_TABLE( table ), g_TextureBrowser.m_gl_widget, 1, 2, 1, 2 );
-		gtk_widget_show( g_TextureBrowser.m_gl_widget );
+		g_TextureBrowser.m_gl_widget.show();
 
 		g_TextureBrowser.m_sizeHandler = g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
 		g_TextureBrowser.m_exposeHandler = g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "expose_event", G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
@@ -2101,7 +2101,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tags ), GTK_WIDGET( g_TextureBrowser.m_treeViewTags ) );
-			gtk_widget_show( GTK_WIDGET( g_TextureBrowser.m_treeViewTags ) );
+			g_TextureBrowser.m_treeViewTags.show();
 		}
 		{ // Texture/Tag notebook
 			TextureBrowser_constructTagNotebook();
@@ -2120,7 +2120,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			gtk_table_attach( GTK_TABLE( table ), g_TextureBrowser.m_tag_frame, 1, 3, 2, 3, GTK_FILL, GTK_SHRINK, 0, 0 );
 
-			gtk_widget_show( frame_table );
+			frame_table.show();
 
 			gtk_container_add( GTK_CONTAINER( g_TextureBrowser.m_tag_frame ), frame_table );
 		}
@@ -2146,9 +2146,9 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
 			gtk_tree_view_append_column( GTK_TREE_VIEW( g_TextureBrowser.m_assigned_tree ), column );
-			gtk_widget_show( g_TextureBrowser.m_assigned_tree );
+			g_TextureBrowser.m_assigned_tree.show();
 
-			gtk_widget_show( scrolled_win );
+			scrolled_win.show();
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_WIDGET( g_TextureBrowser.m_assigned_tree ) );
 
 			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
@@ -2174,9 +2174,9 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
 			gtk_tree_view_append_column( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ), column );
-			gtk_widget_show( g_TextureBrowser.m_available_tree );
+			g_TextureBrowser.m_available_tree.show();
 
-			gtk_widget_show( scrolled_win );
+			scrolled_win.show();
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_WIDGET( g_TextureBrowser.m_available_tree ) );
 
 			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 2, 3, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
@@ -2199,10 +2199,10 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			g_signal_connect( G_OBJECT( m_btn_left ), "clicked", G_CALLBACK( TextureBrowser_assignTags ), NULL );
 			g_signal_connect( G_OBJECT( m_btn_right ), "clicked", G_CALLBACK( TextureBrowser_removeTags ), NULL );
 
-			gtk_widget_show( m_btn_left );
-			gtk_widget_show( m_btn_right );
-			gtk_widget_show( m_arrow_left );
-			gtk_widget_show( m_arrow_right );
+			m_btn_left.show();
+			m_btn_right.show();
+			m_arrow_left.show();
+			m_arrow_right.show();
 		}
 		{ // tag fram labels
 			ui::Widget m_lbl_assigned = ui::Label( "Assigned" );
@@ -2211,8 +2211,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_table_attach( GTK_TABLE( frame_table ), m_lbl_assigned, 0, 1, 0, 1, GTK_EXPAND, GTK_SHRINK, 0, 0 );
 			gtk_table_attach( GTK_TABLE( frame_table ), m_lbl_unassigned, 2, 3, 0, 1, GTK_EXPAND, GTK_SHRINK, 0, 0 );
 
-			gtk_widget_show( m_lbl_assigned );
-			gtk_widget_show( m_lbl_unassigned );
+			m_lbl_assigned.show();
+			m_lbl_unassigned.show();
 		}
 	}
 	else { // no tag support, show the texture tree only

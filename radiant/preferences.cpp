@@ -639,14 +639,14 @@ GtkTreeIter PreferenceTree_appendPage( GtkTreeStore* store, GtkTreeIter* parent,
 
 ui::Widget PreferencePages_addPage( ui::Widget notebook, const char* name ){
 	ui::Widget preflabel = ui::Label( name );
-	gtk_widget_show( preflabel );
+	preflabel.show();
 
 	ui::Widget pageframe = ui::Frame( name );
 	gtk_container_set_border_width( GTK_CONTAINER( pageframe ), 4 );
-	gtk_widget_show( pageframe );
+	pageframe.show();
 
 	ui::Widget vbox = ui::VBox( FALSE, 4 );
-	gtk_widget_show( vbox );
+	vbox.show();
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
 	gtk_container_add( GTK_CONTAINER( pageframe ), vbox );
 
@@ -686,11 +686,11 @@ ui::Window PrefsDlg::BuildDialog(){
 		ui::Widget mainvbox = ui::VBox( FALSE, 5 );
 		gtk_container_add( GTK_CONTAINER( dialog ), mainvbox );
 		gtk_container_set_border_width( GTK_CONTAINER( mainvbox ), 5 );
-		gtk_widget_show( mainvbox );
+		mainvbox.show();
 
 		{
 			ui::Widget hbox = ui::HBox( FALSE, 5 );
-			gtk_widget_show( hbox );
+			hbox.show();
 			gtk_box_pack_end( GTK_BOX( mainvbox ), hbox, FALSE, TRUE, 0 );
 
 			{
@@ -710,13 +710,13 @@ ui::Window PrefsDlg::BuildDialog(){
 		{
 			ui::Widget hbox = ui::HBox( FALSE, 5 );
 			gtk_box_pack_start( GTK_BOX( mainvbox ), hbox, TRUE, TRUE, 0 );
-			gtk_widget_show( hbox );
+			hbox.show();
 
 			{
 				ui::Widget sc_win = ui::ScrolledWindow();
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( sc_win ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 				gtk_box_pack_start( GTK_BOX( hbox ), sc_win, FALSE, FALSE, 0 );
-				gtk_widget_show( sc_win );
+				sc_win.show();
 				gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( sc_win ), GTK_SHADOW_IN );
 
 				// prefs pages notebook
@@ -724,7 +724,7 @@ ui::Window PrefsDlg::BuildDialog(){
 				// hide the notebook tabs since its not supposed to look like a notebook
 				gtk_notebook_set_show_tabs( GTK_NOTEBOOK( m_notebook ), FALSE );
 				gtk_box_pack_start( GTK_BOX( hbox ), m_notebook, TRUE, TRUE, 0 );
-				gtk_widget_show( m_notebook );
+				m_notebook.show();
 
 
 				{
@@ -744,7 +744,7 @@ ui::Window PrefsDlg::BuildDialog(){
 						g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( treeSelection ), this );
 					}
 
-					gtk_widget_show( view );
+					view.show();
 
 					gtk_container_add( GTK_CONTAINER( sc_win ), view );
 

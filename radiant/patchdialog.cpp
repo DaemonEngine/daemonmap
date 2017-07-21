@@ -563,44 +563,44 @@ ui::Window PatchInspector::BuildDialog(){
 
 
 	{
-		GtkVBox* vbox = ui::VBox( FALSE, 5 );
+		auto vbox = ui::VBox( FALSE, 5 );
 		gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
-		gtk_widget_show( GTK_WIDGET( vbox ) );
+		vbox.show();
 		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
 		{
-			GtkHBox* hbox = ui::HBox( FALSE, 5 );
-			gtk_widget_show( GTK_WIDGET( hbox ) );
+			auto hbox = ui::HBox( FALSE, 5 );
+			hbox.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), TRUE, TRUE, 0 );
 			{
-				GtkVBox* vbox2 = ui::VBox( FALSE, 0 );
+				auto vbox2 = ui::VBox( FALSE, 0 );
 				gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 0 );
-				gtk_widget_show( GTK_WIDGET( vbox2 ) );
+				vbox2.show();
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox2 ), TRUE, TRUE, 0 );
 				{
-					GtkFrame* frame = ui::Frame( "Details" );
-					gtk_widget_show( GTK_WIDGET( frame ) );
+					auto frame = ui::Frame( "Details" );
+					frame.show();
 					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 					{
-						GtkVBox* vbox3 = ui::VBox( FALSE, 5 );
+						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
-						gtk_widget_show( GTK_WIDGET( vbox3 ) );
+						vbox3.show();
 						gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
 						{
-							GtkTable* table = ui::Table( 2, 2, FALSE );
-							gtk_widget_show( GTK_WIDGET( table ) );
+							auto table = ui::Table( 2, 2, FALSE );
+							table.show();
 							gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 							gtk_table_set_row_spacings( table, 5 );
 							gtk_table_set_col_spacings( table, 5 );
 							{
-								GtkLabel* label = GTK_LABEL( ui::Label( "Row:" ) );
-								gtk_widget_show( GTK_WIDGET( label ) );
+								auto label = ui::Label( "Row:" );
+								label.show();
 								gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
-								GtkLabel* label = GTK_LABEL( ui::Label( "Column:" ) );
-								gtk_widget_show( GTK_WIDGET( label ) );
+								auto label = ui::Label( "Column:" );
+								label.show();
 								gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 0, 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -610,7 +610,7 @@ ui::Window PatchInspector::BuildDialog(){
 								g_signal_connect( G_OBJECT( combo ), "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
 								AddDialogData( *GTK_COMBO_BOX(combo), m_nRow );
 
-								gtk_widget_show( GTK_WIDGET( combo ) );
+								combo.show();
 								gtk_table_attach( table, GTK_WIDGET( combo ), 0, 1, 1, 2,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -623,7 +623,7 @@ ui::Window PatchInspector::BuildDialog(){
 								g_signal_connect( G_OBJECT( combo ), "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
 								AddDialogData( *GTK_COMBO_BOX(combo), m_nCol );
 
-								gtk_widget_show( GTK_WIDGET( combo ) );
+								combo.show();
 								gtk_table_attach( table, GTK_WIDGET( combo ), 1, 2, 1, 2,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -631,123 +631,123 @@ ui::Window PatchInspector::BuildDialog(){
 								m_pColCombo = combo;
 							}
 						}
-						GtkTable* table = ui::Table( 5, 2, FALSE );
-						gtk_widget_show( GTK_WIDGET( table ) );
+						auto table = ui::Table( 5, 2, FALSE );
+						table.show();
 						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 5 );
 						gtk_table_set_col_spacings( table, 5 );
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "X:" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "X:" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Y:" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Y:" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Z:" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Z:" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 2, 3,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "S:" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "S:" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 3, 4,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "T:" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "T:" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 4, 5,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							auto entry = ui::Entry();
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							AddDialogData( *entry, m_fX );
+							AddDialogData( *GTK_ENTRY(entry), m_fX );
 
 							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							auto entry = ui::Entry();
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							AddDialogData( *entry, m_fY );
+							AddDialogData( *GTK_ENTRY(entry), m_fY );
 
 							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							auto entry = ui::Entry();
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 2, 3,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							AddDialogData( *entry, m_fZ );
+							AddDialogData( *GTK_ENTRY(entry), m_fZ );
 
 							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							auto entry = ui::Entry();
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 3, 4,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							AddDialogData( *entry, m_fS );
+							AddDialogData( *GTK_ENTRY(entry), m_fS );
 
 							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
-							GtkEntry* entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							auto entry = ui::Entry();
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 4, 5,
 											  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							AddDialogData( *entry, m_fT );
+							AddDialogData( *GTK_ENTRY(entry), m_fT );
 
 							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 					}
 				}
 				if ( g_pGameDescription->mGameType == "doom3" ) {
-					GtkFrame* frame = ui::Frame( "Tesselation" );
-					gtk_widget_show( GTK_WIDGET( frame ) );
+					auto frame = ui::Frame( "Tesselation" );
+					frame.show();
 					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 					{
-						GtkVBox* vbox3 = ui::VBox( FALSE, 5 );
+						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
-						gtk_widget_show( GTK_WIDGET( vbox3 ) );
+						vbox3.show();
 						gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
 						{
-							GtkTable* table = ui::Table( 3, 2, FALSE );
-							gtk_widget_show( GTK_WIDGET( table ) );
+							auto table = ui::Table( 3, 2, FALSE );
+							table.show();
 							gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 							gtk_table_set_row_spacings( table, 5 );
 							gtk_table_set_col_spacings( table, 5 );
 							{
-								GtkLabel* label = GTK_LABEL( ui::Label( "Fixed" ) );
-								gtk_widget_show( GTK_WIDGET( label ) );
+								auto label = ui::Label( "Fixed" );
+								label.show();
 								gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
 								auto check = ui::CheckButton(GTK_CHECK_BUTTON( gtk_check_button_new() ));
-								gtk_widget_show( GTK_WIDGET( check ) );
+								check.show();
 								gtk_table_attach( table, GTK_WIDGET( check ), 1, 2, 0, 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -756,15 +756,15 @@ ui::Window PatchInspector::BuildDialog(){
 								g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( handler_id ) );
 							}
 							{
-								GtkLabel* label = GTK_LABEL( ui::Label( "Horizontal" ) );
-								gtk_widget_show( GTK_WIDGET( label ) );
+								auto label = ui::Label( "Horizontal" );
+								label.show();
 								gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
 								auto entry = ui::Entry();
-								gtk_widget_show( GTK_WIDGET( entry ) );
+								entry.show();
 								gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -772,15 +772,15 @@ ui::Window PatchInspector::BuildDialog(){
 								m_horizontalSubdivisionsEntry.connect( entry );
 							}
 							{
-								auto label = GTK_LABEL( ui::Label( "Vertical" ) );
-								gtk_widget_show( GTK_WIDGET( label ) );
+								auto label = ui::Label( "Vertical" );
+								label.show();
 								gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 2, 3,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
 								auto entry = ui::Entry();
-								gtk_widget_show( GTK_WIDGET( entry ) );
+								entry.show();
 								gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 2, 3,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -792,63 +792,63 @@ ui::Window PatchInspector::BuildDialog(){
 				}
 			}
 			{
-				GtkFrame* frame = ui::Frame( "Texturing" );
-				gtk_widget_show( GTK_WIDGET( frame ) );
+				auto frame = ui::Frame( "Texturing" );
+				frame.show();
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 				{
-					GtkVBox* vbox2 = ui::VBox( FALSE, 5 );
-					gtk_widget_show( GTK_WIDGET( vbox2 ) );
+					auto vbox2 = ui::VBox( FALSE, 5 );
+					vbox2.show();
 					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox2 ) );
 					gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 					{
-						GtkLabel* label = GTK_LABEL( ui::Label( "Name:" ) );
-						gtk_widget_show( GTK_WIDGET( label ) );
+						auto label = ui::Label( "Name:" );
+						label.show();
 						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( label ), TRUE, TRUE, 0 );
 						gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 						gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 					}
 					{
-						GtkEntry* entry = ui::Entry();
+						auto entry = ui::Entry();
 						//  gtk_editable_set_editable (GTK_ENTRY (entry), false);
-						gtk_widget_show( GTK_WIDGET( entry ) );
+						entry.show();
 						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
-						AddDialogData( *entry, m_strName );
+						AddDialogData( *GTK_ENTRY(entry), m_strName );
 
 						g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 					}
 					{
-						GtkTable* table = ui::Table( 5, 4, FALSE );
-						gtk_widget_show( GTK_WIDGET( table ) );
+						auto table = ui::Table( 5, 4, FALSE );
+						table.show();
 						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 5 );
 						gtk_table_set_col_spacings( table, 5 );
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Horizontal Shift Step" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Horizontal Shift Step" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 2, 4, 0, 1,
 											  (GtkAttachOptions)( GTK_FILL|GTK_EXPAND ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Vertical Shift Step" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Vertical Shift Step" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 2, 4, 1, 2,
 											  (GtkAttachOptions)( GTK_FILL|GTK_EXPAND ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Horizontal Stretch Step" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Horizontal Stretch Step" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 2, 3, 2, 3,
 											  (GtkAttachOptions)( GTK_FILL|GTK_EXPAND ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 						}
 						{
-							GtkButton* button = ui::Button( "Flip" );
-							gtk_widget_show( GTK_WIDGET( button ) );
+							auto button = ui::Button( "Flip" );
+							button.show();
 							gtk_table_attach( table, GTK_WIDGET( button ), 3, 4, 2, 3,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -856,16 +856,16 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Vertical Stretch Step" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Vertical Stretch Step" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 2, 3, 3, 4,
 											  (GtkAttachOptions)( GTK_FILL|GTK_EXPAND ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 						}
 						{
-							GtkButton* button = ui::Button( "Flip" );
-							gtk_widget_show( GTK_WIDGET( button ) );
+							auto button = ui::Button( "Flip" );
+							button.show();
 							gtk_table_attach( table, GTK_WIDGET( button ), 3, 4, 3, 4,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -873,8 +873,8 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 						}
 						{
-							GtkLabel* label = GTK_LABEL( ui::Label( "Rotate Step" ) );
-							gtk_widget_show( GTK_WIDGET( label ) );
+							auto label = ui::Label( "Rotate Step" );
+							label.show();
 							gtk_table_attach( table, GTK_WIDGET( label ), 2, 4, 4, 5,
 											  (GtkAttachOptions)( GTK_FILL|GTK_EXPAND ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -882,7 +882,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						{
 							auto entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 0, 1,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -897,7 +897,7 @@ ui::Window PatchInspector::BuildDialog(){
 							g_object_set_data( G_OBJECT( window ), "hshift_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
-							gtk_widget_show( GTK_WIDGET( spin ) );
+							spin.show();
 							gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 0, 1,
 											  (GtkAttachOptions)( 0 ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -906,7 +906,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						{
 							auto entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 1, 2,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -918,7 +918,7 @@ ui::Window PatchInspector::BuildDialog(){
 							g_object_set_data( G_OBJECT( window ), "vshift_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
-							gtk_widget_show( GTK_WIDGET( spin ) );
+							spin.show();
 							gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 1, 2,
 											  (GtkAttachOptions)( 0 ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -927,7 +927,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						{
 							auto entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 2, 3,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -939,7 +939,7 @@ ui::Window PatchInspector::BuildDialog(){
 							g_object_set_data( G_OBJECT( window ), "hscale_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
-							gtk_widget_show( GTK_WIDGET( spin ) );
+							spin.show();
 							gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 2, 3,
 											  (GtkAttachOptions)( 0 ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -948,7 +948,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						{
 							auto entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 3, 4,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -960,7 +960,7 @@ ui::Window PatchInspector::BuildDialog(){
 							g_object_set_data( G_OBJECT( window ), "vscale_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
-							gtk_widget_show( GTK_WIDGET( spin ) );
+							spin.show();
 							gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 3, 4,
 											  (GtkAttachOptions)( 0 ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -969,7 +969,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						{
 							auto entry = ui::Entry();
-							gtk_widget_show( GTK_WIDGET( entry ) );
+							entry.show();
 							gtk_table_attach( table, GTK_WIDGET( entry ), 0, 1, 4, 5,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -981,7 +981,7 @@ ui::Window PatchInspector::BuildDialog(){
 							g_object_set_data( G_OBJECT( window ), "rotate_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
-							gtk_widget_show( GTK_WIDGET( spin ) );
+							spin.show();
 							gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 4, 5,
 											  (GtkAttachOptions)( 0 ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
@@ -989,40 +989,40 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_widget_set_can_focus( spin, false );
 						}
 					}
-					GtkHBox* hbox2 = ui::HBox( TRUE, 5 );
-					gtk_widget_show( GTK_WIDGET( hbox2 ) );
+					auto hbox2 = ui::HBox( TRUE, 5 );
+					hbox2.show();
 					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( hbox2 ), TRUE, FALSE, 0 );
 					{
-						GtkButton* button = ui::Button( "Auto Cap" );
-						gtk_widget_show( GTK_WIDGET( button ) );
+						auto button = ui::Button( "Auto Cap" );
+						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
 						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchAutoCap ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
-						GtkButton* button = ui::Button( "CAP" );
-						gtk_widget_show( GTK_WIDGET( button ) );
+						auto button = ui::Button( "CAP" );
+						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
 						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchdetails ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
-						GtkButton* button = ui::Button( "Set..." );
-						gtk_widget_show( GTK_WIDGET( button ) );
+						auto button = ui::Button( "Set..." );
+						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
 						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchreset ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
-						GtkButton* button = ui::Button( "Natural" );
-						gtk_widget_show( GTK_WIDGET( button ) );
+						auto button = ui::Button( "Natural" );
+						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
 						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchnatural ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
-						GtkButton* button = ui::Button( "Fit" );
-						gtk_widget_show( GTK_WIDGET( button ) );
+						auto button = ui::Button( "Fit" );
+						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
 						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchfit ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );

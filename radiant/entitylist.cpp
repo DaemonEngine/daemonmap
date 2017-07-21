@@ -312,7 +312,7 @@ void EntityList_constructWindow( ui::Window main_window ){
 
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 
-			gtk_widget_show( view );
+			view.show();
 			gtk_container_add( GTK_CONTAINER( scr ), view );
 			getEntityList().m_tree_view = GTK_TREE_VIEW( view );
 		}

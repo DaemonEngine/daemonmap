@@ -292,7 +292,7 @@ ui::Window CDbgDlg::BuildDialog(){
 	ui::Window window = MainFrame_getWindow().create_floating_window("Q3Map debug window" );
 
 	ui::Widget scr = ui::ScrolledWindow();
-	gtk_widget_show( scr );
+	scr.show();
 	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( scr ) );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
@@ -315,7 +315,7 @@ ui::Window CDbgDlg::BuildDialog(){
 			g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( feedback_selection_changed ), NULL );
 		}
 
-		gtk_widget_show( view );
+		view.show();
 
 		gtk_container_add( GTK_CONTAINER( scr ), view );
 

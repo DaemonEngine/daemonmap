@@ -92,7 +92,7 @@ void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user
 
 	ui::Widget item(ui::MenuItem( "Clear" ));
 	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( console_clear ), 0 );
-	gtk_widget_show( item );
+	item.show();
 	container_add_widget( menu, item );
 }
 
@@ -107,7 +107,7 @@ ui::Widget Console_constructWindow( ui::Window toplevel ){
 	ui::Widget scr = ui::ScrolledWindow();
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
-	gtk_widget_show( scr );
+	scr.show();
 
 	{
 		ui::Widget text = ui::TextView();
@@ -115,7 +115,7 @@ ui::Widget Console_constructWindow( ui::Window toplevel ){
 		gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text ), GTK_WRAP_WORD );
 		gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), FALSE );
 		gtk_container_add( GTK_CONTAINER( scr ), text );
-		gtk_widget_show( text );
+		text.show();
 		g_console = text;
 
 		//globalExtendedASCIICharacterSet().print();

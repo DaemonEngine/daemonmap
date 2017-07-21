@@ -1618,7 +1618,7 @@ class WaitDialog
 {
 public:
 ui::Window m_window;
-GtkLabel* m_label;
+ui::Label m_label{(GtkLabel *) nullptr};
 };
 
 WaitDialog create_wait_dialog( const char* title, const char* text ){
@@ -1632,10 +1632,10 @@ WaitDialog create_wait_dialog( const char* title, const char* text ){
 	g_signal_connect( G_OBJECT( dialog.m_window ), "realize", G_CALLBACK( window_realize_remove_decoration ), 0 );
 
 	{
-		dialog.m_label = GTK_LABEL( ui::Label( text ) );
+		dialog.m_label = ui::Label( text );
 		gtk_misc_set_alignment( GTK_MISC( dialog.m_label ), 0.0, 0.5 );
 		gtk_label_set_justify( dialog.m_label, GTK_JUSTIFY_LEFT );
-		gtk_widget_show( GTK_WIDGET( dialog.m_label ) );
+		dialog.m_label.show();
 		gtk_widget_set_size_request( GTK_WIDGET( dialog.m_label ), 200, -1 );
 
 		gtk_container_add( GTK_CONTAINER( dialog.m_window ), GTK_WIDGET( dialog.m_label ) );
@@ -1700,7 +1700,7 @@ void ScreenUpdates_Disable( const char* message, const char* title ){
 		gtk_grab_add( GTK_WIDGET( g_wait.m_window ) );
 
 		if ( isActiveApp ) {
-			gtk_widget_show( GTK_WIDGET( g_wait.m_window ) );
+			g_wait.m_window.show();
 			ScreenUpdates_process();
 		}
 	}
@@ -2172,21 +2172,21 @@ GtkMenuItem* create_help_menu(){
 }
 
 GtkMenuBar* create_main_menu( MainFrame::EViewStyle style ){
-	GtkMenuBar* menu_bar = GTK_MENU_BAR( gtk_menu_bar_new() );
-	gtk_widget_show( GTK_WIDGET( menu_bar ) );
+	auto menu_bar = ui::MenuBar(GTK_MENU_BAR( gtk_menu_bar_new() ));
+	menu_bar.show();
 
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_file_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_edit_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_view_menu( style ) ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_selection_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_bsp_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_grid_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_misc_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_entity_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_brush_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_patch_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_plugins_menu() ) );
-	gtk_container_add( GTK_CONTAINER( menu_bar ), GTK_WIDGET( create_help_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_file_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_edit_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_view_menu( style ) ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_selection_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_bsp_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_grid_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_misc_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_entity_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_brush_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_patch_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_plugins_menu() ) );
+	gtk_container_add( menu_bar, GTK_WIDGET( create_help_menu() ) );
 
 	return menu_bar;
 }
@@ -2323,12 +2323,12 @@ ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
 	gtk_orientable_set_orientation( GTK_ORIENTABLE(toolbar), GTK_ORIENTATION_HORIZONTAL );
 	gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS );
 
-	gtk_widget_show( GTK_WIDGET( toolbar ) );
+	toolbar.show();
 
 	auto space = [&]() {
-		auto btn = gtk_separator_tool_item_new();
-		gtk_widget_show(GTK_WIDGET(btn));
-		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(btn));
+		auto btn = ui::Widget(GTK_WIDGET(gtk_separator_tool_item_new()));
+		btn.show();
+		gtk_container_add(toolbar, btn);
 	};
 
 	File_constructToolbar( toolbar );
@@ -2399,30 +2399,30 @@ ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
 }
 
 ui::Widget create_main_statusbar( ui::Widget pStatusLabel[c_count_status] ){
-	GtkTable* table = ui::Table( 1, c_count_status, FALSE );
-	gtk_widget_show( GTK_WIDGET( table ) );
+	auto table = ui::Table( 1, c_count_status, FALSE );
+	table.show();
 
 	{
-		GtkLabel* label = GTK_LABEL( ui::Label( "Label" ) );
+		auto label = ui::Label( "Label" );
 		gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		gtk_misc_set_padding( GTK_MISC( label ), 4, 2 );
-		gtk_widget_show( GTK_WIDGET( label ) );
+		label.show();
 		gtk_table_attach_defaults( table, GTK_WIDGET( label ), 0, 1, 0, 1 );
 		pStatusLabel[c_command_status] = ui::Widget(GTK_WIDGET( label ));
 	}
 
 	for ( int i = 1; i < c_count_status; ++i )
 	{
-		GtkFrame* frame = ui::Frame();
-		gtk_widget_show( GTK_WIDGET( frame ) );
+		auto frame = ui::Frame();
+		frame.show();
 		gtk_table_attach_defaults( table, GTK_WIDGET( frame ), i, i + 1, 0, 1 );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
-		GtkLabel* label = GTK_LABEL( ui::Label( "Label" ) );
+		auto label = ui::Label( "Label" );
 		gtk_label_set_ellipsize( label, PANGO_ELLIPSIZE_END );
 		gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		gtk_misc_set_padding( GTK_MISC( label ), 4, 2 );
-		gtk_widget_show( GTK_WIDGET( label ) );
+		label.show();
 		gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( label ) );
 		pStatusLabel[i] = ui::Widget(GTK_WIDGET( label ));
 	}
@@ -2476,7 +2476,7 @@ class MainWindowActive
 {
 static gboolean notify( ui::Window window, gpointer dummy, MainWindowActive* self ){
 	if ( g_wait.m_window && gtk_window_is_active( window ) && !gtk_widget_get_visible( g_wait.m_window ) ) {
-		gtk_widget_show( GTK_WIDGET( g_wait.m_window ) );
+		g_wait.m_window.show();
 	}
 
 	return FALSE;
@@ -2676,12 +2676,12 @@ ui::Window create_splash(){
 	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 0 );
 
-	GtkImage* image = new_local_image( "splash.png" );
-	gtk_widget_show( GTK_WIDGET( image ) );
+	auto image = new_local_image( "splash.png" );
+	image.show();
 	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( image ) );
 
 	gtk_widget_set_size_request( GTK_WIDGET( window ), -1, -1 );
-	gtk_widget_show( GTK_WIDGET( window ) );
+	window.show();
 
 	return window;
 }
@@ -2744,7 +2744,7 @@ void MainFrame::Create(){
 
 	ui::Widget vbox = ui::VBox( FALSE, 0 );
 	gtk_container_add( GTK_CONTAINER( window ), vbox );
-	gtk_widget_show( vbox );
+	vbox.show();
 
 	global_accel_connect_window( window );
 
@@ -2793,14 +2793,14 @@ void MainFrame::Create(){
 
 	m_window = window;
 
-	gtk_widget_show( GTK_WIDGET( window ) );
+	window.show();
 
 	if ( CurrentStyle() == eRegular || CurrentStyle() == eRegularLeft ) {
 		{
 			ui::Widget vsplit = ui::VPaned();
 			m_vSplit = vsplit;
 			gtk_box_pack_start( GTK_BOX( vbox ), vsplit, TRUE, TRUE, 0 );
-			gtk_widget_show( vsplit );
+			vsplit.show();
 
 			// console
 			ui::Widget console_window = Console_constructWindow( window );
@@ -2808,7 +2808,7 @@ void MainFrame::Create(){
 
 			{
 				ui::Widget hsplit = ui::HPaned();
-				gtk_widget_show( hsplit );
+				hsplit.show();
 				m_hSplit = hsplit;
 				gtk_paned_add1( GTK_PANED( vsplit ), hsplit );
 
@@ -2819,7 +2819,7 @@ void MainFrame::Create(){
 
 				{
 					ui::Widget vsplit2 = ui::VPaned();
-					gtk_widget_show( vsplit2 );
+					vsplit2.show();
 					m_vSplit2 = vsplit2;
 
 					if ( CurrentStyle() == eRegular ) {
@@ -2867,7 +2867,7 @@ void MainFrame::Create(){
 			global_accel_connect_window( window );
 			g_posCamWnd.connect( window );
 
-			gtk_widget_show( GTK_WIDGET( window ) );
+			window.show();
 
 			m_pCamWnd = NewCamWnd();
 			GlobalCamera_setCamWnd( *m_pCamWnd );

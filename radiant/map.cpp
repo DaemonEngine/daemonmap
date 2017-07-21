@@ -783,7 +783,7 @@ void DoMapInfo(){
 
 				{
 					auto entry = ui::Entry();
-					gtk_widget_show( GTK_WIDGET( entry ) );
+					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -793,7 +793,7 @@ void DoMapInfo(){
 				}
 				{
 					auto entry = ui::Entry();
-					gtk_widget_show( GTK_WIDGET( entry ) );
+					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -803,7 +803,7 @@ void DoMapInfo(){
 				}
 				{
 					ui::Widget label = ui::Label( "Total Brushes" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -811,7 +811,7 @@ void DoMapInfo(){
 				}
 				{
 					ui::Widget label = ui::Label( "Total Entities" );
-					gtk_widget_show( label );
+					label.show();
 					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -830,7 +830,7 @@ void DoMapInfo(){
 		}
 		{
 			ui::Widget label = ui::Label( "Entity breakdown" );
-			gtk_widget_show( label );
+			label.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, TRUE, 0 );
 			gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		}
@@ -858,7 +858,7 @@ void DoMapInfo(){
 					gtk_tree_view_column_set_sort_column_id( column, 1 );
 				}
 
-				gtk_widget_show( view );
+				view.show();
 
 				gtk_container_add( GTK_CONTAINER( scr ), view );
 
@@ -2050,21 +2050,21 @@ void DoFind(){
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 			{
 				ui::Widget label = ui::Label( "Entity number" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 								  (GtkAttachOptions) ( 0 ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
 				ui::Widget label = ui::Label( "Brush number" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 								  (GtkAttachOptions) ( 0 ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -2073,7 +2073,7 @@ void DoFind(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );

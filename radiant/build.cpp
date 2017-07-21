@@ -883,7 +883,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
-					gtk_widget_show( view );
+					view.show();
 
 					buildView = view;
 					projectList.m_store = store;
@@ -920,7 +920,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
-					gtk_widget_show( view );
+					view.show();
 
 					gtk_container_add( GTK_CONTAINER( scr ), view );
 

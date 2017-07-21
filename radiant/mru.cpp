@@ -121,7 +121,7 @@ void MRU_AddFile( const char *str ){
 
 	MRU_SetText( 0, str );
 	gtk_widget_set_sensitive( GTK_WIDGET( MRU_items[0] ), TRUE );
-	gtk_widget_show( GTK_WIDGET( MRU_items[MRU_used - 1] ) );
+	ui::Widget(GTK_WIDGET( MRU_items[MRU_used - 1] )).show();
 }
 
 void MRU_Init(){
@@ -136,7 +136,7 @@ void MRU_AddWidget( GtkMenuItem *widget, std::size_t pos ){
 		if ( pos < MRU_used ) {
 			MRU_updateWidget( pos, MRU_GetText( pos ) );
 			gtk_widget_set_sensitive( GTK_WIDGET( MRU_items[0] ), TRUE );
-			gtk_widget_show( GTK_WIDGET( MRU_items[pos] ) );
+			ui::Widget(GTK_WIDGET( MRU_items[pos] )).show();
 		}
 	}
 }

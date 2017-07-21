@@ -47,7 +47,7 @@
 
 GtkEntry* DialogEntry_new(){
 	auto entry = ui::Entry();
-	gtk_widget_show( GTK_WIDGET( entry ) );
+	entry.show();
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
 	return entry;
 }
@@ -63,7 +63,7 @@ GtkEntry* m_entry;
 
 DialogEntryRow DialogEntryRow_new( const char* name ){
 	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
-	gtk_widget_show( alignment );
+	alignment.show();
 
 	GtkEntry* entry = DialogEntry_new();
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( entry ) );
@@ -79,8 +79,8 @@ GtkSpinButton* DialogSpinner_new( double value, double lower, double upper, int 
 	{
 		++digits;
 	}
-	GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( value, lower, upper, step, 10, 0 ), step, digits );
-	gtk_widget_show( GTK_WIDGET( spin ) );
+	auto spin = ui::SpinButton( ui::Adjustment( value, lower, upper, step, 10, 0 ), step, digits );
+	spin.show();
 	gtk_widget_set_size_request( GTK_WIDGET( spin ), 64, -1 );
 	return spin;
 }
@@ -96,7 +96,7 @@ GtkSpinButton* m_spin;
 
 DialogSpinnerRow DialogSpinnerRow_new( const char* name, double value, double lower, double upper, int fraction ){
 	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
-	gtk_widget_show( alignment );
+	alignment.show();
 
 	GtkSpinButton* spin = DialogSpinner_new( value, lower, upper, fraction );
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( spin ) );
@@ -311,7 +311,7 @@ Dialog::~Dialog(){
 void Dialog::ShowDlg(){
 	ASSERT_MESSAGE( m_window, "dialog was not constructed" );
 	importData();
-	gtk_widget_show( GTK_WIDGET( m_window ) );
+	m_window.show();
 }
 
 void Dialog::HideDlg(){
@@ -453,7 +453,7 @@ EMessageBoxReturn Dialog::DoModal(){
 
 ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const char* flag, const BoolImportCallback& importViewer, const BoolExportCallback& exportViewer ){
 	auto check = ui::CheckButton( flag );
-	gtk_widget_show( check );
+	check.show();
 	AddBoolToggleData( *GTK_TOGGLE_BUTTON( check ), importViewer, exportViewer );
 
 	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), ui::Widget(GTK_WIDGET( DialogRow_new( name, check ) ) ));
@@ -466,7 +466,7 @@ ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const ch
 
 void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange values, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
-	gtk_widget_show( alignment );
+	alignment.show();
 	{
 		ui::Widget combo = ui::ComboBoxText();
 
@@ -477,7 +477,7 @@ void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange value
 
 		AddIntComboData( *GTK_COMBO_BOX( combo ), importViewer, exportViewer );
 
-		gtk_widget_show( combo );
+		combo.show();
 		gtk_container_add( GTK_CONTAINER( alignment ), combo );
 	}
 
@@ -493,16 +493,16 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 #if 0
 	if ( draw_value == FALSE ) {
 		ui::Widget hbox2 = ui::HBox( FALSE, 0 );
-		gtk_widget_show( hbox2 );
+		hbox2.show();
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
 		{
 			ui::Widget label = ui::Label( low );
-			gtk_widget_show( label );
+			label.show();
 			gtk_box_pack_start( GTK_BOX( hbox2 ), label, FALSE, FALSE, 0 );
 		}
 		{
 			ui::Widget label = ui::Label( high );
-			gtk_widget_show( label );
+			label.show();
 			gtk_box_pack_end( GTK_BOX( hbox2 ), label, FALSE, FALSE, 0 );
 		}
 	}
@@ -514,11 +514,11 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 
 	// scale
 	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 1.0, 0.0 );
-	gtk_widget_show( alignment );
+	alignment.show();
 
 	ui::Widget scale = ui::HScale( adj );
 	gtk_scale_set_value_pos( GTK_SCALE( scale ), GTK_POS_LEFT );
-	gtk_widget_show( scale );
+	scale.show();
 	gtk_container_add( GTK_CONTAINER( alignment ), scale );
 
 	gtk_scale_set_draw_value( GTK_SCALE( scale ), draw_value );
@@ -530,7 +530,7 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 
 void Dialog::addRadio( ui::Widget vbox, const char* name, StringArrayRange names, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
-	gtk_widget_show( alignment );
+	alignment.show();;
 	{
 		RadioHBox radioBox = RadioHBox_new( names );
 		gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( radioBox.m_hbox ) );
@@ -547,7 +547,7 @@ void Dialog::addRadio( ui::Widget vbox, const char* name, int& data, StringArray
 
 void Dialog::addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange icons, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	ui::Widget table = ui::Table( 2, icons.last - icons.first, FALSE );
-	gtk_widget_show( table );
+	table.show();;
 
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
@@ -557,14 +557,14 @@ void Dialog::addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange 
 	for ( StringArrayRange::Iterator icon = icons.first; icon != icons.last; ++icon )
 	{
 		guint pos = static_cast<guint>( icon - icons.first );
-		GtkImage* image = new_local_image( *icon );
-		gtk_widget_show( GTK_WIDGET( image ) );
+		auto image = new_local_image( *icon );
+		image.show();
 		gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( image ), pos, pos + 1, 0, 1,
 						  (GtkAttachOptions) ( 0 ),
 						  (GtkAttachOptions) ( 0 ), 0, 0 );
 
 		radio = ui::Widget(gtk_radio_button_new( group ));
-		gtk_widget_show( radio );
+		radio.show();
 		gtk_table_attach( GTK_TABLE( table ), radio, pos, pos + 1, 1, 2,
 						  (GtkAttachOptions) ( 0 ),
 						  (GtkAttachOptions) ( 0 ), 0, 0 );
