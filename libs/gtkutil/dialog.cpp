@@ -176,14 +176,14 @@ ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& di
 }
 
 RadioHBox RadioHBox_new( StringArrayRange names ){
-	GtkHBox* hbox = ui::HBox( TRUE, 4 );
+	auto hbox = ui::HBox( TRUE, 4 );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
 	GSList* group = 0;
-	GtkRadioButton* radio = 0;
+	auto radio = ui::RadioButton{nullptr};
 	for ( StringArrayRange::Iterator i = names.first; i != names.last; ++i )
 	{
-		radio = GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) );
+		radio = ui::RadioButton(GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) ));
 		gtk_widget_show( GTK_WIDGET( radio ) );
 		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( radio ), FALSE, FALSE, 0 );
 
@@ -195,8 +195,8 @@ RadioHBox RadioHBox_new( StringArrayRange names ){
 
 
 PathEntry PathEntry_new(){
-	GtkFrame* frame = ui::Frame();
-	gtk_widget_show( GTK_WIDGET( frame ) );
+	auto frame = ui::Frame();
+	frame.show();
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 	// path entry

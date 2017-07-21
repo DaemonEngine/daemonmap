@@ -30,15 +30,6 @@
 typedef int gint;
 typedef gint gboolean;
 typedef struct _GdkEventAny GdkEventAny;
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkHBox GtkHBox;
-typedef struct _GtkVBox GtkVBox;
-typedef struct _GtkRadioButton GtkRadioButton;
-typedef struct _GtkFrame GtkFrame;
-typedef struct _GtkEntry GtkEntry;
-typedef struct _GtkButton GtkButton;
-typedef struct _GtkLabel GtkLabel;
-typedef struct _GtkTable GtkTable;
 
 
 struct ModalDialog
@@ -61,11 +52,6 @@ struct ModalDialogButton
 
 typedef void ( *GCallback )( void );
 typedef void* gpointer;
-typedef struct _GtkTable GtkTable;
-typedef struct _GtkButton GtkButton;
-typedef struct _GtkVBox GtkVBox;
-typedef struct _GtkHBox GtkHBox;
-typedef struct _GtkFrame GtkFrame;
 
 ui::Window create_fixedsize_modal_window( ui::Window parent, const char* title, int width, int height );
 
@@ -93,9 +79,9 @@ ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& di
 class RadioHBox
 {
 public:
-GtkHBox* m_hbox;
+ui::HBox m_hbox;
 ui::RadioButton m_radio;
-RadioHBox( GtkHBox* hbox, GtkRadioButton* radio ) :
+RadioHBox( ui::HBox hbox, ui::RadioButton radio ) :
 	m_hbox( hbox ),
 	m_radio( radio ){
 }
@@ -107,10 +93,10 @@ RadioHBox RadioHBox_new( StringArrayRange names );
 class PathEntry
 {
 public:
-GtkFrame* m_frame;
+ui::Frame m_frame;
 ui::Entry m_entry;
-GtkButton* m_button;
-PathEntry( GtkFrame* frame, GtkEntry* entry, GtkButton* button ) :
+ui::Button m_button;
+PathEntry( ui::Frame frame, ui::Entry entry, ui::Button button ) :
 	m_frame( frame ),
 	m_entry( entry ),
 	m_button( button ){
