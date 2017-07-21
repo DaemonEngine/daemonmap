@@ -14,6 +14,7 @@ struct _GtkCellEditable;
 struct _GtkCellRenderer;
 struct _GtkCellRendererText;
 struct _GtkCheckButton;
+struct _GtkCheckMenuItem;
 struct _GtkComboBox;
 struct _GtkComboBoxText;
 struct _GtkContainer;
@@ -29,12 +30,14 @@ struct _GtkItem;
 struct _GtkLabel;
 struct _GtkListStore;
 struct _GtkMenu;
+struct _GtkMenuBar;
 struct _GtkMenuItem;
 struct _GtkMenuShell;
 struct _GtkMisc;
 struct _GtkObject;
 struct _GtkPaned;
 struct _GtkRadioButton;
+struct _GtkRadioMenuItem;
 struct _GtkRadioToolButton;
 struct _GtkRange;
 struct _GtkScale;
@@ -283,6 +286,15 @@ namespace ui {
          MenuItem(const char *label, bool mnemonic = false);
     ,
     );
+
+    WRAP(CheckMenuItem, MenuItem, _GtkCheckMenuItem, (),
+    ,
+    );
+
+    WRAP(RadioMenuItem, CheckMenuItem, _GtkRadioMenuItem, (),
+    ,
+    );
+
     WRAP(TearoffMenuItem, MenuItem, _GtkTearoffMenuItem, (),
          TearoffMenuItem();
     ,
@@ -350,7 +362,11 @@ namespace ui {
     ,
     );
 
-    WRAP(Menu, Widget, _GtkMenu, (),
+    WRAP(MenuBar, MenuShell, _GtkMenuBar, (),
+    ,
+    );
+
+    WRAP(Menu, MenuShell, _GtkMenu, (),
          Menu();
     ,
     );

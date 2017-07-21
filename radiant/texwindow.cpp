@@ -1655,7 +1655,7 @@ void TextureBrowser_createTreeViewTags(){
 	TextureBrowser_constructTreeStoreTags();
 }
 
-ui::MenuItem TextureBrowser_constructViewMenu( GtkMenu* menu ){
+ui::MenuItem TextureBrowser_constructViewMenu( ui::Menu menu ){
 	ui::MenuItem textures_menu_item = ui::MenuItem(new_sub_menu_item_with_mnemonic( "_View" ));
 
 	if ( g_Layout_enableDetachableMenus.m_value ) {
@@ -1704,7 +1704,7 @@ ui::MenuItem TextureBrowser_constructViewMenu( GtkMenu* menu ){
 	return textures_menu_item;
 }
 
-ui::MenuItem TextureBrowser_constructToolsMenu( GtkMenu* menu ){
+ui::MenuItem TextureBrowser_constructToolsMenu( ui::Menu menu ){
 	ui::MenuItem textures_menu_item = ui::MenuItem(new_sub_menu_item_with_mnemonic( "_Tools" ));
 
 	if ( g_Layout_enableDetachableMenus.m_value ) {
@@ -1717,7 +1717,7 @@ ui::MenuItem TextureBrowser_constructToolsMenu( GtkMenu* menu ){
 	return textures_menu_item;
 }
 
-ui::MenuItem TextureBrowser_constructTagsMenu( GtkMenu* menu ){
+ui::MenuItem TextureBrowser_constructTagsMenu( ui::Menu menu ){
 	ui::MenuItem textures_menu_item = ui::MenuItem(new_sub_menu_item_with_mnemonic( "T_ags" ));
 
 	if ( g_Layout_enableDetachableMenus.m_value ) {
@@ -2016,13 +2016,13 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 	{ // menu bar
 		menu_bar = ui::Widget(gtk_menu_bar_new());
-		ui::Widget menu_view = ui::Menu();
-		auto view_item = TextureBrowser_constructViewMenu( GTK_MENU( menu_view ) );
+		auto menu_view = ui::Menu();
+		auto view_item = TextureBrowser_constructViewMenu( menu_view );
 		gtk_menu_item_set_submenu( GTK_MENU_ITEM( view_item ), menu_view );
 		gtk_menu_shell_append( GTK_MENU_SHELL( menu_bar ), view_item );
 
-		ui::Widget menu_tools = ui::Menu();
-		auto tools_item = TextureBrowser_constructToolsMenu( GTK_MENU( menu_tools ) );
+		auto menu_tools = ui::Menu();
+		auto tools_item = TextureBrowser_constructToolsMenu( menu_tools );
 		gtk_menu_item_set_submenu( GTK_MENU_ITEM( tools_item ), menu_tools );
 		gtk_menu_shell_append( GTK_MENU_SHELL( menu_bar ), tools_item );
 
@@ -2084,8 +2084,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			TextureBrowser_buildTagList();
 		}
 		{ // tag menu bar
-			ui::Widget menu_tags = ui::Menu();
-			auto tags_item = TextureBrowser_constructTagsMenu( GTK_MENU( menu_tags ) );
+			auto menu_tags = ui::Menu();
+			auto tags_item = TextureBrowser_constructTagsMenu( menu_tags );
 			gtk_menu_item_set_submenu( GTK_MENU_ITEM( tags_item ), menu_tags );
 			gtk_menu_shell_append( GTK_MENU_SHELL( menu_bar ), tags_item );
 		}

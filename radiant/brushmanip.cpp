@@ -1376,14 +1376,14 @@ void Brush_registerCommands(){
 	GlobalCommands_insert( "MakeStructural", FreeCaller<Select_MakeStructural>(), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 }
 
-void Brush_constructMenu( GtkMenu* menu ){
+void Brush_constructMenu( ui::Menu menu ){
 	create_menu_item_with_mnemonic( menu, "Prism...", "BrushPrism" );
 	create_menu_item_with_mnemonic( menu, "Cone...", "BrushCone" );
 	create_menu_item_with_mnemonic( menu, "Sphere...", "BrushSphere" );
 	create_menu_item_with_mnemonic( menu, "Rock...", "BrushRock" );
 	menu_separator( menu );
 	{
-		GtkMenu* menu_in_menu = create_sub_menu_with_mnemonic( menu, "CSG" );
+		auto menu_in_menu = create_sub_menu_with_mnemonic( menu, "CSG" );
 		if ( g_Layout_enableDetachableMenus.m_value ) {
 			menu_tearoff( menu_in_menu );
 		}
@@ -1393,7 +1393,7 @@ void Brush_constructMenu( GtkMenu* menu ){
 	}
 	menu_separator( menu );
 	{
-		GtkMenu* menu_in_menu = create_sub_menu_with_mnemonic( menu, "Clipper" );
+		auto menu_in_menu = create_sub_menu_with_mnemonic( menu, "Clipper" );
 		if ( g_Layout_enableDetachableMenus.m_value ) {
 			menu_tearoff( menu_in_menu );
 		}

@@ -19,13 +19,14 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_MRU_H )
 #define INCLUDED_MRU_H
 
 void MRU_AddFile( const char *str );
 
-typedef struct _GtkMenu GtkMenu;
-void MRU_constructMenu( GtkMenu* menu );
+void MRU_constructMenu( ui::Menu menu );
 
 void MRU_Construct();
 void MRU_Destroy();

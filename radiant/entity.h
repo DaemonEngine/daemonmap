@@ -34,8 +34,7 @@ void Scene_EntitySetClassname_Selected( const char* classname );
 
 const char* misc_model_dialog( ui::Widget parent );
 
-typedef struct _GtkMenu GtkMenu;
-void Entity_constructMenu( GtkMenu* menu );
+void Entity_constructMenu( ui::Menu menu );
 
 void Entity_Construct();
 void Entity_Destroy();

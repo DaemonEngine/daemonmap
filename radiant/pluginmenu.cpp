@@ -41,12 +41,12 @@ void plugin_activated( ui::Widget widget, gpointer data ){
 }
 
 #include <stack>
-typedef std::stack<ui::Widget> WidgetStack;
 
 void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
-	ui::Widget menu, item, parent, subMenu;
+	ui::Widget item, parent;
+	ui::Menu menu{nullptr}, subMenu{nullptr};
 	const char *menuText, *menuCommand;
-	WidgetStack menuStack;
+	std::stack<ui::Menu> menuStack;
 
 	parent = ui::MenuItem( pPlugIn->getMenuName() );
 	gtk_widget_show( parent );
@@ -56,7 +56,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 	if ( nCount > 0 ) {
 		menu = ui::Menu();
 		if ( g_Layout_enableDetachableMenus.m_value ) {
-			menu_tearoff( GTK_MENU( menu ) );
+			menu_tearoff( menu );
 		}
 		while ( nCount > 0 )
 		{
@@ -157,7 +157,7 @@ void PluginsMenu_clear(){
 GtkMenuItem* create_plugins_menu(){
 	// Plugins menu
 	GtkMenuItem* plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
-	GtkMenu* menu = GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) );
+	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) ));
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}

@@ -191,7 +191,7 @@ LoadMRU g_load_mru2( 2 );
 LoadMRU g_load_mru3( 3 );
 LoadMRU g_load_mru4( 4 );
 
-void MRU_constructMenu( GtkMenu* menu ){
+void MRU_constructMenu( ui::Menu menu ){
 	{
 		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_1", LoadMRUCaller( g_load_mru1 ) );
 		gtk_widget_set_sensitive( GTK_WIDGET( item ), FALSE );

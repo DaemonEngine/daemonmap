@@ -33,55 +33,55 @@
 #include "container.h"
 #include "pointer.h"
 
-void menu_add_item( GtkMenu* menu, GtkMenuItem* item ){
+void menu_add_item( ui::Menu menu, ui::MenuItem item ){
 	gtk_container_add( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
 }
 
-GtkMenuItem* menu_separator( GtkMenu* menu ){
-	GtkMenuItem* menu_item = GTK_MENU_ITEM( gtk_menu_item_new() );
+ui::MenuItem menu_separator( ui::Menu menu ){
+	auto menu_item = ui::MenuItem(GTK_MENU_ITEM( gtk_menu_item_new() ));
 	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( menu_item ) );
 	gtk_widget_set_sensitive( GTK_WIDGET( menu_item ), FALSE );
-	gtk_widget_show( GTK_WIDGET( menu_item ) );
+	menu_item.show();
 	return menu_item;
 }
 
-GtkTearoffMenuItem* menu_tearoff( GtkMenu* menu ){
-	GtkTearoffMenuItem* menu_item = GTK_TEAROFF_MENU_ITEM( gtk_tearoff_menu_item_new() );
+ui::TearoffMenuItem menu_tearoff( ui::Menu menu ){
+	auto menu_item = ui::TearoffMenuItem(GTK_TEAROFF_MENU_ITEM( gtk_tearoff_menu_item_new() ));
 	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( menu_item ) );
 // gtk_widget_set_sensitive(GTK_WIDGET(menu_item), FALSE); -- controls whether menu is detachable
-	gtk_widget_show( GTK_WIDGET( menu_item ) );
+	menu_item.show();
 	return menu_item;
 }
 
-GtkMenuItem* new_sub_menu_item_with_mnemonic( const char* mnemonic ){
-	GtkMenuItem* item = ui::MenuItem( mnemonic, true );
-	gtk_widget_show( GTK_WIDGET( item ) );
+ui::MenuItem new_sub_menu_item_with_mnemonic( const char* mnemonic ){
+	auto item = ui::MenuItem( mnemonic, true );
+	item.show();
 
-	GtkWidget* sub_menu = ui::Menu();
+	auto sub_menu = ui::Menu();
 	gtk_menu_item_set_submenu( item, sub_menu );
 
 	return item;
 }
 
-GtkMenu* create_sub_menu_with_mnemonic( GtkMenuShell* parent, const char* mnemonic ){
-	GtkMenuItem* item = new_sub_menu_item_with_mnemonic( mnemonic );
+ui::Menu create_sub_menu_with_mnemonic( ui::MenuShell parent, const char* mnemonic ){
+	auto item = new_sub_menu_item_with_mnemonic( mnemonic );
 	container_add_widget( GTK_CONTAINER( parent ), GTK_WIDGET( item ) );
-	return GTK_MENU( gtk_menu_item_get_submenu( item ) );
+	return ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( item ) ));
 }
 
-GtkMenu* create_sub_menu_with_mnemonic( GtkMenuBar* bar, const char* mnemonic ){
-	return create_sub_menu_with_mnemonic( GTK_MENU_SHELL( bar ), mnemonic );
+ui::Menu create_sub_menu_with_mnemonic( ui::MenuBar bar, const char* mnemonic ){
+	return create_sub_menu_with_mnemonic( ui::MenuShell(GTK_MENU_SHELL( bar )), mnemonic );
 }
 
-GtkMenu* create_sub_menu_with_mnemonic( GtkMenu* parent, const char* mnemonic ){
-	return create_sub_menu_with_mnemonic( GTK_MENU_SHELL( parent ), mnemonic );
+ui::Menu create_sub_menu_with_mnemonic( ui::Menu parent, const char* mnemonic ){
+	return create_sub_menu_with_mnemonic( ui::MenuShell(GTK_MENU_SHELL( parent )), mnemonic );
 }
 
-void activate_closure_callback( GtkWidget* widget, gpointer data ){
+void activate_closure_callback( ui::Widget widget, gpointer data ){
 	( *reinterpret_cast<Callback*>( data ) )( );
 }
 
-guint menu_item_connect_callback( GtkMenuItem* item, const Callback& callback ){
+guint menu_item_connect_callback( ui::MenuItem item, const Callback& callback ){
 #if 1
 	return g_signal_connect_swapped( G_OBJECT( item ), "activate", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -89,7 +89,7 @@ guint menu_item_connect_callback( GtkMenuItem* item, const Callback& callback ){
 #endif
 }
 
-guint check_menu_item_connect_callback( GtkCheckMenuItem* item, const Callback& callback ){
+guint check_menu_item_connect_callback( ui::CheckMenuItem item, const Callback& callback ){
 #if 1
 	guint handler = g_signal_connect_swapped( G_OBJECT( item ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -99,50 +99,50 @@ guint check_menu_item_connect_callback( GtkCheckMenuItem* item, const Callback& 
 	return handler;
 }
 
-GtkMenuItem* new_menu_item_with_mnemonic( const char *mnemonic, const Callback& callback ){
-	GtkMenuItem* item = ui::MenuItem( mnemonic, true );
-	gtk_widget_show( GTK_WIDGET( item ) );
+ui::MenuItem new_menu_item_with_mnemonic( const char *mnemonic, const Callback& callback ){
+	auto item = ui::MenuItem( mnemonic, true );
+	item.show();
 	menu_item_connect_callback( item, callback );
 	return item;
 }
 
-GtkMenuItem* create_menu_item_with_mnemonic( GtkMenu* menu, const char *mnemonic, const Callback& callback ){
-	GtkMenuItem* item = new_menu_item_with_mnemonic( mnemonic, callback );
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const Callback& callback ){
+	auto item = new_menu_item_with_mnemonic( mnemonic, callback );
 	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
 	return item;
 }
 
-GtkCheckMenuItem* new_check_menu_item_with_mnemonic( const char* mnemonic, const Callback& callback ){
-	GtkCheckMenuItem* item = GTK_CHECK_MENU_ITEM( gtk_check_menu_item_new_with_mnemonic( mnemonic ) );
-	gtk_widget_show( GTK_WIDGET( item ) );
+ui::CheckMenuItem new_check_menu_item_with_mnemonic( const char* mnemonic, const Callback& callback ){
+	auto item = ui::CheckMenuItem(GTK_CHECK_MENU_ITEM( gtk_check_menu_item_new_with_mnemonic( mnemonic ) ));
+	item.show();
 	check_menu_item_connect_callback( item, callback );
 	return item;
 }
 
-GtkCheckMenuItem* create_check_menu_item_with_mnemonic( GtkMenu* menu, const char* mnemonic, const Callback& callback ){
-	GtkCheckMenuItem* item = new_check_menu_item_with_mnemonic( mnemonic, callback );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback& callback ){
+	auto item = new_check_menu_item_with_mnemonic( mnemonic, callback );
 	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
 	return item;
 }
 
-GtkRadioMenuItem* new_radio_menu_item_with_mnemonic( GSList** group, const char* mnemonic, const Callback& callback ){
-	GtkRadioMenuItem* item = GTK_RADIO_MENU_ITEM( gtk_radio_menu_item_new_with_mnemonic( *group, mnemonic ) );
+ui::RadioMenuItem new_radio_menu_item_with_mnemonic( GSList** group, const char* mnemonic, const Callback& callback ){
+	auto item = ui::RadioMenuItem(GTK_RADIO_MENU_ITEM( gtk_radio_menu_item_new_with_mnemonic( *group, mnemonic ) ));
 	if ( *group == 0 ) {
 		gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ), TRUE );
 	}
 	*group = gtk_radio_menu_item_get_group( item );
-	gtk_widget_show( GTK_WIDGET( item ) );
-	check_menu_item_connect_callback( GTK_CHECK_MENU_ITEM( item ), callback );
+	item.show();
+	check_menu_item_connect_callback( item, callback );
 	return item;
 }
 
-GtkRadioMenuItem* create_radio_menu_item_with_mnemonic( GtkMenu* menu, GSList** group, const char* mnemonic, const Callback& callback ){
-	GtkRadioMenuItem* item = new_radio_menu_item_with_mnemonic( group, mnemonic, callback );
+ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback& callback ){
+	auto item = new_radio_menu_item_with_mnemonic( group, mnemonic, callback );
 	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
 	return item;
 }
 
-void check_menu_item_set_active_no_signal( GtkCheckMenuItem* item, gboolean active ){
+void check_menu_item_set_active_no_signal( ui::CheckMenuItem item, gboolean active ){
 	guint handler_id = gpointer_to_int( g_object_get_data( G_OBJECT( item ), "handler" ) );
 	g_signal_handler_block( G_OBJECT( item ), handler_id );
 	gtk_check_menu_item_set_active( item, active );
@@ -151,7 +151,7 @@ void check_menu_item_set_active_no_signal( GtkCheckMenuItem* item, gboolean acti
 
 
 
-void radio_menu_item_set_active_no_signal( GtkRadioMenuItem* item, gboolean active ){
+void radio_menu_item_set_active_no_signal( ui::RadioMenuItem item, gboolean active ){
 	{
 		for ( GSList* l = gtk_radio_menu_item_get_group( item ); l != 0; l = g_slist_next( l ) )
 		{
@@ -168,7 +168,7 @@ void radio_menu_item_set_active_no_signal( GtkRadioMenuItem* item, gboolean acti
 }
 
 
-void menu_item_set_accelerator( GtkMenuItem* item, GClosure* closure ){
+void menu_item_set_accelerator( ui::MenuItem item, GClosure* closure ){
 	GtkAccelLabel* accel_label = GTK_ACCEL_LABEL( gtk_bin_get_child( GTK_BIN( item ) ) );
 	gtk_accel_label_set_accel_closure( accel_label, closure );
 }
@@ -224,7 +224,7 @@ void accelerator_name( const Accelerator& accelerator, GString* gstring ){
 	}
 }
 
-void menu_item_add_accelerator( GtkMenuItem* item, Accelerator accelerator ){
+void menu_item_add_accelerator( ui::MenuItem item, Accelerator accelerator ){
 	if ( accelerator.key != 0 && gtk_accelerator_valid( accelerator.key, accelerator.modifiers )) {
 		GClosure* closure = global_accel_group_find( accelerator );
 		ASSERT_NOTNULL(closure);
@@ -232,20 +232,21 @@ void menu_item_add_accelerator( GtkMenuItem* item, Accelerator accelerator ){
 	}
 }
 
-GtkMenuItem* create_menu_item_with_mnemonic( GtkMenu* menu, const char* mnemonic, const Command& command ){
-	GtkMenuItem* item = create_menu_item_with_mnemonic( menu, mnemonic, command.m_callback );
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Command& command ){
+	auto item = create_menu_item_with_mnemonic( menu, mnemonic, command.m_callback );
 	menu_item_add_accelerator( item, command.m_accelerator );
 	return item;
 }
 
-void check_menu_item_set_active_callback( GtkCheckMenuItem& item, bool enabled ){
-	check_menu_item_set_active_no_signal( &item, enabled );
+void check_menu_item_set_active_callback( GtkCheckMenuItem &item, bool enabled ){
+	check_menu_item_set_active_no_signal( ui::CheckMenuItem(&item), enabled );
 }
 typedef ReferenceCaller1<GtkCheckMenuItem, bool, check_menu_item_set_active_callback> CheckMenuItemSetActiveCaller;
 
-GtkCheckMenuItem* create_check_menu_item_with_mnemonic( GtkMenu* menu, const char* mnemonic, const Toggle& toggle ){
-	GtkCheckMenuItem* item = create_check_menu_item_with_mnemonic( menu, mnemonic, toggle.m_command.m_callback );
-	menu_item_add_accelerator( GTK_MENU_ITEM( item ), toggle.m_command.m_accelerator );
-	toggle.m_exportCallback( CheckMenuItemSetActiveCaller( *item ) );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Toggle& toggle ){
+	auto item = create_check_menu_item_with_mnemonic( menu, mnemonic, toggle.m_command.m_callback );
+	menu_item_add_accelerator( item, toggle.m_command.m_accelerator );
+	GtkCheckMenuItem *item_ = item;
+	toggle.m_exportCallback( CheckMenuItemSetActiveCaller( *item_ ) );
 	return item;
 }

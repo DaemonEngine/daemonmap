@@ -51,9 +51,9 @@ typedef struct _GtkMenuItem GtkMenuItem;
 typedef struct _GtkCheckMenuItem GtkCheckMenuItem;
 
 // this also sets up the shortcut using command_connect_accelerator
-GtkMenuItem* create_menu_item_with_mnemonic( GtkMenu *menu, const char *mnemonic, const char* commandName );
+GtkMenuItem* create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const char* commandName );
 // this also sets up the shortcut using command_connect_accelerator
-GtkCheckMenuItem* create_check_menu_item_with_mnemonic( GtkMenu* menu, const char* mnemonic, const char* commandName );
+GtkCheckMenuItem* create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const char* commandName );
 
 typedef struct _GtkButton GtkButton;
 typedef struct _GtkToggleButton GtkToggleButton;

@@ -23,6 +23,7 @@
 #define INCLUDED_BRUSHWRAPPER_H
 
 #include <cstddef>
+#include <uilib/uilib.h>
 #include "string/stringfwd.h"
 #include "generic/callbackfwd.h"
 
@@ -71,8 +72,7 @@ void Scene_BrushSelectByShader_Component( scene::Graph& graph, const char* name 
 void Scene_BrushFitTexture_Selected( scene::Graph& graph, float s_repeat, float t_repeat );
 void Scene_BrushFitTexture_Component_Selected( scene::Graph& graph, float s_repeat, float t_repeat );
 
-typedef struct _GtkMenu GtkMenu;
-void Brush_constructMenu( GtkMenu* menu );
+void Brush_constructMenu( ui::Menu menu );
 
 extern Callback g_texture_lock_status_changed;
 

@@ -88,7 +88,7 @@ void console_clear(){
 	gtk_text_buffer_set_text( buffer, "", -1 );
 }
 
-void console_populate_popup( GtkTextView* textview, GtkMenu* menu, gpointer user_data ){
+void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user_data ){
 	menu_separator( menu );
 
 	ui::Widget item(ui::MenuItem( "Clear" ));

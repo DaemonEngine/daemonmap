@@ -537,7 +537,7 @@ VIEWTYPE GlobalXYWnd_getCurrentViewType(){
 
 bool g_bCrossHairs = false;
 
-GtkMenu* XYWnd::m_mnuDrop = 0;
+ui::Menu XYWnd::m_mnuDrop{nullptr};
 
 // this is disabled, and broken
 // http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=394
@@ -819,7 +819,7 @@ XYWnd::XYWnd() :
 
 	m_entityCreate = false;
 
-	m_mnuDrop = 0;
+	m_mnuDrop = ui::Menu{nullptr};
 
 	GlobalWindowObservers_add( m_window_observer );
 	GlobalWindowObservers_connectWidget( m_gl_widget );
@@ -858,9 +858,9 @@ XYWnd::XYWnd() :
 XYWnd::~XYWnd(){
 	onDestroyed();
 
-	if ( m_mnuDrop != 0 ) {
+	if ( m_mnuDrop ) {
 		gtk_widget_destroy( GTK_WIDGET( m_mnuDrop ) );
-		m_mnuDrop = 0;
+		m_mnuDrop = ui::Menu{nullptr};
 	}
 
 	g_signal_handler_disconnect( G_OBJECT( m_gl_widget ), m_sizeHandler );
@@ -1075,21 +1075,21 @@ void entitycreate_activated( ui::Widget item ){
 	}
 }
 
-void EntityClassMenu_addItem( GtkMenu* menu, const char* name ){
-	GtkMenuItem* item = ui::MenuItem( name );
+void EntityClassMenu_addItem( ui::Menu menu, const char* name ){
+	auto item = ui::MenuItem( name );
 	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( entitycreate_activated ), item );
-	gtk_widget_show( GTK_WIDGET( item ) );
+	item.show();
 	menu_add_item( menu, item );
 }
 
 class EntityClassMenuInserter : public EntityClassVisitor
 {
-typedef std::pair<GtkMenu*, CopiedString> MenuPair;
+typedef std::pair<ui::Menu, CopiedString> MenuPair;
 typedef std::vector<MenuPair> MenuStack;
 MenuStack m_stack;
 CopiedString m_previous;
 public:
-EntityClassMenuInserter( GtkMenu* menu ){
+EntityClassMenuInserter( ui::Menu menu ){
 	m_stack.reserve( 2 );
 	m_stack.push_back( MenuPair( menu, "" ) );
 }
@@ -1106,11 +1106,11 @@ void visit( EntityClass* e ){
 	m_previous = e->name();
 }
 void pushMenu( const CopiedString& name ){
-	GtkMenuItem* item = ui::MenuItem( name.c_str() );
-	gtk_widget_show( GTK_WIDGET( item ) );
+	auto item = ui::MenuItem( name.c_str() );
+	item.show();
 	container_add_widget( GTK_CONTAINER( m_stack.back().first ), GTK_WIDGET( item ) );
 
-	GtkMenu* submenu = ui::Menu();
+	auto submenu = ui::Menu();
 	gtk_menu_item_set_submenu( item, GTK_WIDGET( submenu ) );
 
 	m_stack.push_back( MenuPair( submenu, name ) );
@@ -1152,8 +1152,8 @@ void XYWnd::OnContextMenu(){
 		return;
 	}
 
-	if ( m_mnuDrop == 0 ) { // first time, load it up
-		GtkMenu* menu = m_mnuDrop = ui::Menu();
+	if ( !m_mnuDrop ) { // first time, load it up
+		auto menu = m_mnuDrop = ui::Menu();
 
 		EntityClassMenuInserter inserter( menu );
 		GlobalEntityClassManager().forEach( inserter );
@@ -2567,9 +2567,9 @@ void realise(){
 }
 void unrealise(){
 	if ( ++m_unrealised == 1 ) {
-		if ( XYWnd::m_mnuDrop != 0 ) {
+		if ( XYWnd::m_mnuDrop ) {
 			gtk_widget_destroy( GTK_WIDGET( XYWnd::m_mnuDrop ) );
-			XYWnd::m_mnuDrop = 0;
+			XYWnd::m_mnuDrop = ui::Menu(nullptr);
 		}
 	}
 }

@@ -22,6 +22,7 @@
 #if !defined( INCLUDED_GRID_H )
 #define INCLUDED_GRID_H
 
+#include <uilib/uilib.h>
 #include "signal/signalfwd.h"
 
 float GetSnapGridSize();
@@ -31,8 +32,7 @@ int Grid_getPower();
 void AddGridChangeCallback( const SignalHandler& handler );
 
 void Grid_registerCommands();
-typedef struct _GtkMenu GtkMenu;
-void Grid_constructMenu( GtkMenu* menu );
+void Grid_constructMenu( ui::Menu menu );
 
 void Grid_registerShortcuts();
 

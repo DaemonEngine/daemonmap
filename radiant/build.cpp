@@ -640,7 +640,7 @@ void build_commands_write( const char* filename ){
 #include "gtkutil/window.h"
 #include "gtkdlgs.h"
 
-void Build_refreshMenu( GtkMenu* menu );
+void Build_refreshMenu( ui::Menu menu );
 
 
 void BSPCommandList_Construct( ui::ListStore store, Project& project ){
@@ -994,9 +994,9 @@ typedef std::list<BuildMenuItem> BuildMenuItems;
 BuildMenuItems g_BuildMenuItems;
 
 
-GtkMenu* g_bsp_menu;
+ui::Menu g_bsp_menu{nullptr};
 
-void Build_constructMenu( GtkMenu* menu ){
+void Build_constructMenu( ui::Menu menu ){
 	for ( Project::iterator i = g_build_project.begin(); i != g_build_project.end(); ++i )
 	{
 		g_BuildMenuItems.push_back( BuildMenuItem( ( *i ).first.c_str(), 0 ) );
@@ -1011,10 +1011,10 @@ void Build_constructMenu( GtkMenu* menu ){
 }
 
 
-void Build_refreshMenu( GtkMenu* menu ){
+void Build_refreshMenu( ui::Menu menu ){
 	for ( BuildMenuItems::iterator i = g_BuildMenuItems.begin(); i != g_BuildMenuItems.end(); ++i )
 	{
-		gtk_container_remove( GTK_CONTAINER( menu ), GTK_WIDGET( ( *i ).m_item ) );
+		gtk_container_remove( menu, GTK_WIDGET( ( *i ).m_item ) );
 	}
 
 	g_BuildMenuItems.clear();

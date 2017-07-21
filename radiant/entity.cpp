@@ -569,7 +569,7 @@ void Entity_registerPreferencesPage(){
 
 
 
-void Entity_constructMenu( GtkMenu* menu ){
+void Entity_constructMenu( ui::Menu menu ){
 	create_menu_item_with_mnemonic( menu, "_Regroup", "GroupSelection" );
 	create_menu_item_with_mnemonic( menu, "_Ungroup", "UngroupSelection" );
 	create_menu_item_with_mnemonic( menu, "_Connect", "ConnectSelection" );

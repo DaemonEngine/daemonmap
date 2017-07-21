@@ -18,6 +18,8 @@
    along with GtkRadiant; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_BUILD_H )
 #define INCLUDED_BUILD_H
 
@@ -36,9 +38,8 @@ void DoBuildMenu();
 void BuildMenu_Construct();
 void BuildMenu_Destroy();
 
-typedef struct _GtkMenu GtkMenu;
-void Build_constructMenu( GtkMenu* menu );
-extern GtkMenu* g_bsp_menu;
+void Build_constructMenu( ui::Menu menu );
+extern ui::Menu g_bsp_menu;
 
 
 #endif

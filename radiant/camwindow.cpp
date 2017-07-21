@@ -1602,7 +1602,7 @@ void CamWnd::BenchMark(){
 }
 
 
-void fill_view_camera_menu( GtkMenu* menu ){
+void fill_view_camera_menu( ui::Menu menu ){
 	create_check_menu_item_with_mnemonic( menu, "Camera View", "ToggleCamera" );
 }
 
