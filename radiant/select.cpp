@@ -984,9 +984,9 @@ void DoRotateDlg(){
 				GtkVBox* vbox = create_dialog_vbox( 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 				{
-					GtkButton* button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
+					auto button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					widget_make_default( GTK_WIDGET( button ) );
+					widget_make_default( button );
 					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
@@ -1129,9 +1129,9 @@ void DoScaleDlg(){
 				GtkVBox* vbox = create_dialog_vbox( 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 				{
-					GtkButton* button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
+					auto button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					widget_make_default( GTK_WIDGET( button ) );
+					widget_make_default( button );
 					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{

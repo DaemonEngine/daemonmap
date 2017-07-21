@@ -28,9 +28,9 @@
 #include "warnings.h"
 #include "debugging/debugging.h"
 
-inline void widget_set_visible( GtkWidget* widget, bool shown ){
+inline void widget_set_visible( ui::Widget widget, bool shown ){
 	if ( shown ) {
-		gtk_widget_show( widget );
+		widget.show();
 	}
 	else
 	{
@@ -38,11 +38,11 @@ inline void widget_set_visible( GtkWidget* widget, bool shown ){
 	}
 }
 
-inline bool widget_is_visible( GtkWidget* widget ){
+inline bool widget_is_visible( ui::Widget widget ){
 	return gtk_widget_get_visible( widget ) != FALSE;
 }
 
-inline void widget_toggle_visible( GtkWidget* widget ){
+inline void widget_toggle_visible( ui::Widget widget ){
 	widget_set_visible( widget, !widget_is_visible( widget ) );
 }
 
@@ -76,17 +76,17 @@ bool m_shownDeferred;
 ToggleShown( const ToggleShown& other ); // NOT COPYABLE
 ToggleShown& operator=( const ToggleShown& other ); // NOT ASSIGNABLE
 
-static gboolean notify_visible( GtkWidget* widget, gpointer dummy, ToggleShown* self ){
+static gboolean notify_visible( ui::Widget widget, gpointer dummy, ToggleShown* self ){
 	self->update();
 	return FALSE;
 }
-static gboolean destroy( GtkWidget* widget, ToggleShown* self ){
+static gboolean destroy( ui::Widget widget, ToggleShown* self ){
 	self->m_shownDeferred = gtk_widget_get_visible( self->m_widget ) != FALSE;
-	self->m_widget = 0;
+	self->m_widget = ui::Widget(nullptr);
 	return FALSE;
 }
 public:
-GtkWidget* m_widget;
+ui::Widget m_widget;
 ToggleItem m_item;
 
 ToggleShown( bool shown )
@@ -96,7 +96,7 @@ void update(){
 	m_item.update();
 }
 bool active() const {
-	if ( m_widget == 0 ) {
+	if ( !m_widget ) {
 		return m_shownDeferred;
 	}
 	else
@@ -109,7 +109,7 @@ void exportActive( const BoolImportCallback& importCallback ){
 }
 typedef MemberCaller1<ToggleShown, const BoolImportCallback&, &ToggleShown::exportActive> ActiveCaller;
 void set( bool shown ){
-	if ( m_widget == 0 ) {
+	if ( !m_widget ) {
 		m_shownDeferred = shown;
 	}
 	else
@@ -121,7 +121,7 @@ void toggle(){
 	widget_toggle_visible( m_widget );
 }
 typedef MemberCaller<ToggleShown, &ToggleShown::toggle> ToggleCaller;
-void connect( GtkWidget* widget ){
+void connect( ui::Widget widget ){
 	m_widget = widget;
 	widget_set_visible( m_widget, m_shownDeferred );
 	g_signal_connect( G_OBJECT( m_widget ), "notify::visible", G_CALLBACK( notify_visible ), this );
@@ -137,7 +137,7 @@ inline void widget_queue_draw( GtkWidget& widget ){
 typedef ReferenceCaller<GtkWidget, widget_queue_draw> WidgetQueueDrawCaller;
 
 
-inline void widget_make_default( GtkWidget* widget ){
+inline void widget_make_default( ui::Widget widget ){
 	gtk_widget_set_can_default( widget, true );
 	gtk_widget_grab_default( widget );
 }
@@ -146,18 +146,18 @@ class WidgetFocusPrinter
 {
 const char* m_name;
 
-static gboolean focus_in( GtkWidget *widget, GdkEventFocus *event, WidgetFocusPrinter* self ){
+static gboolean focus_in( ui::Widget widget, GdkEventFocus *event, WidgetFocusPrinter* self ){
 	globalOutputStream() << self->m_name << " takes focus\n";
 	return FALSE;
 }
-static gboolean focus_out( GtkWidget *widget, GdkEventFocus *event, WidgetFocusPrinter* self ){
+static gboolean focus_out( ui::Widget widget, GdkEventFocus *event, WidgetFocusPrinter* self ){
 	globalOutputStream() << self->m_name << " loses focus\n";
 	return FALSE;
 }
 public:
 WidgetFocusPrinter( const char* name ) : m_name( name ){
 }
-void connect( GtkWidget* widget ){
+void connect( ui::Widget widget ){
 	g_signal_connect( G_OBJECT( widget ), "focus_in_event", G_CALLBACK( focus_in ), this );
 	g_signal_connect( G_OBJECT( widget ), "focus_out_event", G_CALLBACK( focus_out ), this );
 }

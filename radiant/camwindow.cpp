@@ -769,7 +769,7 @@ ToggleShown g_camera_shown( true );
 
 void CamWnd_setParent( CamWnd& camwnd, ui::Window parent ){
 	camwnd.m_parent = parent;
-	g_camera_shown.connect( GTK_WIDGET( camwnd.m_parent ) );
+	g_camera_shown.connect( camwnd.m_parent );
 }
 
 void CamWnd_Update( CamWnd& camwnd ){

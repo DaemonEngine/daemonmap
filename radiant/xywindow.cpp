@@ -2539,19 +2539,19 @@ void ToggleShowGrid(){
 ToggleShown g_xy_top_shown( true );
 
 void XY_Top_Shown_Construct( ui::Window parent ){
-	g_xy_top_shown.connect( GTK_WIDGET( parent ) );
+	g_xy_top_shown.connect( parent );
 }
 
 ToggleShown g_yz_side_shown( false );
 
 void YZ_Side_Shown_Construct( ui::Window parent ){
-	g_yz_side_shown.connect( GTK_WIDGET( parent ) );
+	g_yz_side_shown.connect( parent );
 }
 
 ToggleShown g_xz_front_shown( false );
 
 void XZ_Front_Shown_Construct( ui::Window parent ){
-	g_xz_front_shown.connect( GTK_WIDGET( parent ) );
+	g_xz_front_shown.connect( parent );
 }
 
 

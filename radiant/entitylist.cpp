@@ -245,7 +245,7 @@ void entitylist_treeview_row_expanded( GtkTreeView* view, GtkTreeIter* iter, Gtk
 
 
 void EntityList_SetShown( bool shown ){
-	widget_set_visible( GTK_WIDGET( getEntityList().m_window ), shown );
+	widget_set_visible( getEntityList().m_window, shown );
 }
 
 void EntityList_toggleShown(){

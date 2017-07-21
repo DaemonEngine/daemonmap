@@ -393,9 +393,9 @@ void DoSides( int type, int axis ){
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 			{
-				GtkButton* button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
+				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				widget_make_default( GTK_WIDGET( button ) );
+				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
@@ -661,9 +661,9 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
 			{
-				GtkButton* button = create_modal_dialog_button( "OK", ok_button );
+				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				widget_make_default( GTK_WIDGET( button ) );
+				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
@@ -889,9 +889,9 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
 
 			{
-				GtkButton* button = create_modal_dialog_button( "OK", ok_button );
+				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				widget_make_default( GTK_WIDGET( button ) );
+				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
@@ -957,9 +957,9 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, char* title ){
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
 
 			{
-				GtkButton* button = create_modal_dialog_button( "OK", ok_button );
+				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				widget_make_default( GTK_WIDGET( button ) );
+				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
@@ -1016,9 +1016,9 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, char*
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				GtkButton* button = create_modal_dialog_button( "OK", ok_button );
+				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				widget_make_default( GTK_WIDGET( button ) );
+				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}

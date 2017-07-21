@@ -134,7 +134,7 @@ ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const S
 
 
 bool GroupDialog_isShown(){
-	return widget_is_visible( GTK_WIDGET( g_GroupDlg.m_window ) );
+	return widget_is_visible( g_GroupDlg.m_window );
 }
 void GroupDialog_setShown( bool shown ){
 	shown ? g_GroupDlg.Show() : g_GroupDlg.Hide();
