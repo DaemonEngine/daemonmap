@@ -29,11 +29,10 @@
 #include "debugging/debugging.h"
 
 typedef struct _GdkCursor GdkCursor;
-typedef struct _GtkWidget GtkWidget;
 
 GdkCursor* create_blank_cursor();
-void blank_cursor( GtkWidget* widget );
-void default_cursor( GtkWidget* widget );
+void blank_cursor( ui::Widget widget );
+void default_cursor( ui::Widget widget );
 void Sys_GetCursorPos( ui::Window window, int *x, int *y );
 void Sys_SetCursorPos( ui::Window window, int x, int y );
 
@@ -65,7 +64,7 @@ void motion( gdouble x, gdouble y, guint state ){
 		m_handler = g_idle_add( (GSourceFunc)deferred, this );
 	}
 }
-static gboolean gtk_motion( GtkWidget *widget, GdkEventMotion *event, DeferredMotion* self ){
+static gboolean gtk_motion( ui::Widget widget, GdkEventMotion *event, DeferredMotion* self ){
 	self->motion( event->x, event->y, event->state );
 	return FALSE;
 }
@@ -119,7 +118,7 @@ void* m_data;
 public:
 FreezePointer() : handle_motion( 0 ), m_function( 0 ), m_data( 0 ){
 }
-static gboolean motion_delta( GtkWidget *widget, GdkEventMotion *event, FreezePointer* self ){
+static gboolean motion_delta( ui::Widget widget, GdkEventMotion *event, FreezePointer* self ){
 	int current_x, current_y;
 	Sys_GetCursorPos( ui::Window(GTK_WINDOW( widget )), &current_x, &current_y );
 	int dx = current_x - self->last_x;
