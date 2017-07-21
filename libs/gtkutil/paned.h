@@ -19,11 +19,11 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_GTKUTIL_PANED_H )
 #define INCLUDED_GTKUTIL_PANED_H
 
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkHPaned GtkHPaned;
-GtkHPaned* create_split_views( GtkWidget* topleft, GtkWidget* topright, GtkWidget* botleft, GtkWidget* botright );
+ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widget botleft, ui::Widget botright );
 
 #endif

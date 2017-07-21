@@ -61,9 +61,9 @@ PanedState g_hpaned = { 0.5f, -1, };
 PanedState g_vpaned1 = { 0.5f, -1, };
 PanedState g_vpaned2 = { 0.5f, -1, };
 
-GtkHPaned* create_split_views( GtkWidget* topleft, GtkWidget* topright, GtkWidget* botleft, GtkWidget* botright ){
-	GtkHPaned* hsplit = ui::HPaned();
-	gtk_widget_show( GTK_WIDGET( hsplit ) );
+ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widget botleft, ui::Widget botright ){
+	auto hsplit = ui::HPaned();
+	hsplit.show();
 
 	g_signal_connect( G_OBJECT( hsplit ), "size_allocate", G_CALLBACK( hpaned_allocate ), &g_hpaned );
 	g_signal_connect( G_OBJECT( hsplit ), "notify::position", G_CALLBACK( paned_position ), &g_hpaned );
