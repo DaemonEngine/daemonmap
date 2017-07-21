@@ -3,48 +3,64 @@
 
 #include <string>
 
-using ui_accelgroup = struct _GtkAccelGroup;
-using ui_adjustment = struct _GtkAdjustment;
-using ui_alignment = struct _GtkAlignment;
-using ui_box = struct _GtkBox;
-using ui_button = struct _GtkButton;
-using ui_checkbutton = struct _GtkCheckButton;
-using ui_combobox = struct _GtkComboBox;
-using ui_comboboxtext = struct _GtkComboBoxText;
-using ui_cellrenderer = struct _GtkCellRenderer;
-using ui_cellrenderertext = struct _GtkCellRendererText;
-using ui_entry = struct _GtkEntry;
-using ui_evkey = struct _GdkEventKey;
-using ui_frame = struct _GtkFrame;
-using ui_hbox = struct _GtkHBox;
-using ui_hscale = struct _GtkHScale;
-using ui_hpaned = struct _GtkHPaned;
-using ui_image = struct _GtkImage;
-using ui_label = struct _GtkLabel;
-using ui_menu = struct _GtkMenu;
-using ui_menuitem = struct _GtkMenuItem;
-using ui_modal = struct ModalDialog;
-using ui_object = struct _GtkObject;
-using ui_paned = struct _GtkPaned;
-using ui_scrolledwindow = struct _GtkScrolledWindow;
-using ui_spinbutton = struct _GtkSpinButton;
-using ui_table = struct _GtkTable;
-using ui_textview = struct _GtkTextView;
-using ui_treemodel = struct _GtkTreeModel;
-using ui_treepath = struct _GtkTreePath;
-using ui_treeview = struct _GtkTreeView;
-using ui_treeviewcolumn = struct _GtkTreeViewColumn;
-using ui_typeinst = struct _GTypeInstance;
-using ui_vbox = struct _GtkVBox;
-using ui_vpaned = struct _GtkVPaned;
-using ui_widget = struct _GtkWidget;
-using ui_window = struct _GtkWindow;
+struct _GdkEventKey;
+struct _GtkAccelGroup;
+struct _GtkAdjustment;
+struct _GtkAlignment;
+struct _GtkBin;
+struct _GtkBox;
+struct _GtkButton;
+struct _GtkCellEditable;
+struct _GtkCellRenderer;
+struct _GtkCellRendererText;
+struct _GtkCheckButton;
+struct _GtkComboBox;
+struct _GtkComboBoxText;
+struct _GtkContainer;
+struct _GtkDialog;
+struct _GtkEditable;
+struct _GtkEntry;
+struct _GtkFrame;
+struct _GtkHBox;
+struct _GtkHPaned;
+struct _GtkHScale;
+struct _GtkImage;
+struct _GtkItem;
+struct _GtkLabel;
+struct _GtkListStore;
+struct _GtkMenu;
+struct _GtkMenuShell;
+struct _GtkMenuItem;
+struct _GtkMisc;
+struct _GtkObject;
+struct _GtkPaned;
+struct _GtkRange;
+struct _GtkScale;
+struct _GtkScrolledWindow;
+struct _GtkSpinButton;
+struct _GtkTable;
+struct _GtkTearoffMenuItem;
+struct _GtkTextView;
+struct _GtkToggleButton;
+struct _GtkTreeModel;
+struct _GtkTreePath;
+struct _GtkTreeView;
+struct _GtkTreeViewColumn;
+struct _GtkVBox;
+struct _GtkVPaned;
+struct _GtkWidget;
+struct _GtkWindow;
+struct _GTypeInstance;
+
+struct ModalDialog;
 
 namespace ui {
 
     void init(int argc, char *argv[]);
 
     void main();
+
+    extern class Widget root;
 
     enum class alert_type {
         OK,
@@ -74,207 +90,345 @@ namespace ui {
         POPUP
     };
 
-    template<class Self, class T, bool implicit = true>
-    struct Convertible;
+    namespace details {
 
-    template<class Self, class T>
-    struct Convertible<Self, T, true> {
-        operator T *() const
-        { return reinterpret_cast<T *>(static_cast<const Self *>(this)->_handle); }
-    };
+        enum class Convert {
+            Implicit, Explicit
+        };
 
-    template<class Self, class T>
-    struct Convertible<Self, T, false> {
-        explicit operator T *() const
-        { return reinterpret_cast<T *>(static_cast<const Self *>(this)->_handle); }
-    };
+        template<class Self, class T, Convert mode>
+        struct Convertible;
 
-    class Object : public Convertible<Object, ui_object, false> {
+        template<class Self, class T>
+        struct Convertible<Self, T, Convert::Implicit> {
+            operator T() const
+            { return reinterpret_cast<T>(static_cast<Self const *>(this)->_handle); }
+        };
+
+        template<class Self, class T>
+        struct Convertible<Self, T, Convert::Explicit> {
+            explicit operator T() const
+            { return reinterpret_cast<T>(static_cast<Self const *>(this)->_handle); }
+        };
+
+        template<class Self, class... T>
+        struct All : T ... {
+            All()
+            {};
+        };
+
+        template<class Self, class Interfaces>
+        struct Mixin;
+        template<class Self>
+        struct Mixin<Self, void()> {
+            using type = All<Self>;
+        };
+        template<class Self, class... Interfaces>
+        struct Mixin<Self, void(Interfaces...)> {
+            using type = All<Self, Interfaces...>;
+        };
+    }
+
+    class Object :
+            public details::Convertible<Object, _GtkObject *, details::Convert::Explicit>,
+            public details::Convertible<Object, _GTypeInstance *, details::Convert::Explicit> {
     public:
-        using native = ui_object;
-        void *_handle;
+        using native = _GtkObject *;
+        native _handle;
 
-        Object(void *h) : _handle(h)
-        { }
+        Object(native h) : _handle(h)
+        {}
 
         explicit operator bool() const
         { return _handle != nullptr; }
 
-        explicit operator ui_typeinst *() const
-        { return (ui_typeinst *) _handle; }
-
         explicit operator void *() const
         { return _handle; }
     };
+    static_assert(sizeof(Object) == sizeof(Object::native), "object slicing");
 
-    static_assert(sizeof(Object) == sizeof(ui_widget *), "object slicing");
-
-    class Widget : public Object, public Convertible<Widget, ui_widget> {
-    public:
-        using native = ui_widget;
-        explicit Widget(ui_widget *h = nullptr) : Object((void *) h)
-        { }
-
-        alert_response alert(std::string text, std::string title = "NetRadiant",
-                             alert_type type = alert_type::OK, alert_icon icon = alert_icon::Default);
-
-        const char *file_dialog(bool open, const char *title, const char *path = nullptr,
-                                const char *pattern = nullptr, bool want_load = false, bool want_import = false,
-                                bool want_save = false);
-    };
-
-    static_assert(sizeof(Widget) == sizeof(Object), "object slicing");
-
-    extern Widget root;
-
-#define WRAP(name, super, impl, methods) \
-    class name : public super, public Convertible<name, impl> { \
-        public: \
-            using native = impl; \
-            explicit name(impl *h) : super(reinterpret_cast<super::native *>(h)) {} \
+#define WRAP(name, super, T, interfaces, ctors, methods) \
+    class name; \
+    class I##name { \
+    public: \
+        using self = name *; \
         methods \
+    }; \
+    class name : public super, public details::Convertible<name, T *, details::Convert::Implicit>, public I##name, public details::Mixin<name, void interfaces>::type { \
+    public: \
+        using self = name *; \
+        using native = T *; \
+        explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
+        ctors \
     }; \
     inline bool operator<(name self, name other) { return self._handle < other._handle; } \
     static_assert(sizeof(name) == sizeof(super), "object slicing")
 
-    WRAP(AccelGroup, Object, ui_accelgroup,
-         AccelGroup();
+    // https://developer.gnome.org/gtk2/stable/ch01.html
+
+    WRAP(CellEditable, Object, _GtkCellEditable, (),
+    ,
     );
 
-    WRAP(Adjustment, Widget, ui_adjustment,
+    WRAP(Editable, Object, _GtkEditable, (),
+         Editable();
+    ,
+         void editable(bool value);
+    );
+
+    WRAP(Widget, Object, _GtkWidget, (),
+         Widget();
+    ,
+         alert_response alert(
+                 std::string text,
+                 std::string title = "NetRadiant",
+                 alert_type type = alert_type::OK,
+                 alert_icon icon = alert_icon::Default
+         );
+         const char *file_dialog(
+                 bool open,
+                 const char *title,
+                 const char *path = nullptr,
+                 const char *pattern = nullptr,
+                 bool want_load = false,
+                 bool want_import = false,
+                 bool want_save = false
+         );
+    );
+
+    WRAP(Container, Widget, _GtkContainer, (),
+    ,
+    );
+
+    WRAP(Bin, Container, _GtkBin, (),
+    ,
+    );
+
+    class AccelGroup;
+    WRAP(Window, Bin, _GtkWindow, (),
+         Window();
+         Window(window_type type);
+    ,
+         Window create_dialog_window(
+                 const char *title,
+                 void func(),
+                 void *data,
+                 int default_w = -1,
+                 int default_h = -1
+         );
+
+         Window create_modal_dialog_window(
+                 const char *title,
+                 ModalDialog &dialog,
+                 int default_w = -1,
+                 int default_h = -1
+         );
+
+         Window create_floating_window(const char *title);
+
+         std::uint64_t on_key_press(
+                 bool (*f)(Widget widget, _GdkEventKey *event, void *extra),
+                 void *extra = nullptr
+         );
+
+         void add_accel_group(AccelGroup group);
+    );
+
+    WRAP(Dialog, Window, _GtkDialog, (),
+    ,
+    );
+
+    WRAP(Alignment, Bin, _GtkAlignment, (),
+         Alignment(float xalign, float yalign, float xscale, float yscale);
+    ,
+    );
+
+    WRAP(Frame, Bin, _GtkFrame, (),
+         Frame(const char *label = nullptr);
+    ,
+    );
+
+    WRAP(Button, Bin, _GtkButton, (),
+         Button();
+         Button(const char *label);
+    ,
+    );
+
+    WRAP(ToggleButton, Button, _GtkToggleButton, (),
+    ,
+         bool active();
+    );
+
+    WRAP(CheckButton, ToggleButton, _GtkCheckButton, (),
+         CheckButton(const char *label);
+    ,
+    );
+
+    WRAP(Item, Bin, _GtkItem, (),
+    ,
+    );
+
+    WRAP(MenuItem, Item, _GtkMenuItem, (),
+         MenuItem();
+         MenuItem(const char *label, bool mnemonic = false);
+    ,
+    );
+    WRAP(TearoffMenuItem, MenuItem, _GtkTearoffMenuItem, (),
+         TearoffMenuItem();
+    ,
+    );
+
+    WRAP(ComboBox, Bin, _GtkComboBox, (),
+    ,
+    );
+
+    WRAP(ComboBoxText, ComboBox, _GtkComboBoxText, (),
+         ComboBoxText();
+    ,
+    );
+
+    WRAP(ScrolledWindow, Bin, _GtkScrolledWindow, (),
+         ScrolledWindow();
+    ,
+    );
+
+    WRAP(Box, Container, _GtkBox, (),
+    ,
+    );
+
+    WRAP(VBox, Box, _GtkVBox, (),
+         VBox(bool homogenous, int spacing);
+    ,
+    );
+
+    WRAP(HBox, Box, _GtkHBox, (),
+         HBox(bool homogenous, int spacing);
+    ,
+    );
+
+    WRAP(Paned, Container, _GtkPaned, (),
+    ,
+    );
+
+    WRAP(HPaned, Paned, _GtkHPaned, (),
+         HPaned();
+    ,
+    );
+
+    WRAP(VPaned, Paned, _GtkVPaned, (),
+         VPaned();
+    ,
+    );
+
+    WRAP(MenuShell, Container, _GtkMenuShell, (),
+    ,
+    );
+
+    WRAP(Menu, Widget, _GtkMenu, (),
+         Menu();
+    ,
+    );
+
+    WRAP(Table, Widget, _GtkTable, (),
+         Table(std::size_t rows, std::size_t columns, bool homogenous);
+    ,
+    );
+
+    WRAP(TextView, Widget, _GtkTextView, (),
+         TextView();
+    ,
+    );
+
+    class TreeModel;
+    WRAP(TreeView, Widget, _GtkTreeView, (),
+         TreeView();
+         TreeView(TreeModel model);
+    ,
+    );
+
+    WRAP(Misc, Widget, _GtkMisc, (),
+    ,
+    );
+
+    WRAP(Label, Widget, _GtkLabel, (),
+         Label(const char *label);
+    ,
+    );
+
+    WRAP(Image, Widget, _GtkImage, (),
+         Image();
+    ,
+    );
+
+    WRAP(Entry, Widget, _GtkEntry, (IEditable, ICellEditable),
+         Entry();
+         Entry(std::size_t max_length);
+    ,
+    );
+
+    class Adjustment;
+    WRAP(SpinButton, Entry, _GtkSpinButton, (),
+         SpinButton(Adjustment adjustment, double climb_rate, std::size_t digits);
+    ,
+    );
+
+    WRAP(Range, Widget, _GtkRange, (),
+    ,
+    );
+
+    WRAP(Scale, Range, _GtkScale, (),
+    ,
+    );
+
+    WRAP(HScale, Scale, _GtkHScale, (),
+         HScale(Adjustment adjustment);
+         HScale(double min, double max, double step);
+    ,
+    );
+
+    WRAP(Adjustment, Object, _GtkAdjustment, (),
          Adjustment(double value,
                     double lower, double upper,
                     double step_increment, double page_increment,
                     double page_size);
+    ,
     );
 
-    WRAP(Alignment, Widget, ui_alignment,
-         Alignment(float xalign, float yalign, float xscale, float yscale);
+    WRAP(CellRenderer, Object, _GtkCellRenderer, (),
+    ,
     );
 
-    WRAP(Box, Widget, ui_box,);
-
-    WRAP(Button, Widget, ui_button,
-         Button();
-         Button(const char *label);
-    );
-
-    WRAP(CellRenderer, Object, ui_cellrenderer,);
-
-    WRAP(CellRendererText, CellRenderer, ui_cellrenderertext,
+    WRAP(CellRendererText, CellRenderer, _GtkCellRendererText, (),
          CellRendererText();
-    );
-
-    WRAP(CheckButton, Widget, ui_checkbutton,
-         CheckButton(const char *label);
-    );
-
-    WRAP(ComboBox, Widget, ui_combobox,);
-
-    WRAP(ComboBoxText, ComboBox, ui_comboboxtext,
-         ComboBoxText();
-    );
-
-    WRAP(Entry, Widget, ui_entry,
-         Entry();
-         Entry(std::size_t max_length);
-    );
-
-    WRAP(Frame, Widget, ui_frame,
-         Frame(const char *label = nullptr);
-    );
-
-    WRAP(HBox, Box, ui_hbox,
-         HBox(bool homogenous, int spacing);
-    );
-
-    WRAP(HScale, Widget, ui_hscale,
-         HScale(Adjustment adjustment);
-         HScale(double min, double max, double step);
-    );
-
-    WRAP(Image, Widget, ui_image,
-         Image();
-    );
-
-    WRAP(Label, Widget, ui_label,
-         Label(const char *label);
-    );
-
-    WRAP(Menu, Widget, ui_menu,
-         Menu();
-    );
-
-    WRAP(MenuItem, Widget, ui_menuitem,
-         MenuItem(const char *label, bool mnemonic = false);
-    );
-
-    WRAP(Paned, Widget, ui_paned,);
-
-        WRAP(HPaned, Paned, ui_hpaned,
-             HPaned();
-        );
-
-        WRAP(VPaned, Paned, ui_vpaned,
-             VPaned();
-        );
-
-    WRAP(ScrolledWindow, Widget, ui_scrolledwindow,
-         ScrolledWindow();
-    );
-
-    WRAP(SpinButton, Widget, ui_spinbutton,
-         SpinButton(Adjustment adjustment, double climb_rate, std::size_t digits);
-    );
-
-    WRAP(Table, Widget, ui_table,
-         Table(std::size_t rows, std::size_t columns, bool homogenous);
-    );
-
-    WRAP(TextView, Widget, ui_textview,
-         TextView();
-    );
-
-    WRAP(TreeModel, Widget, ui_treemodel,);
-
-    WRAP(TreePath, Object, ui_treepath,
-         TreePath();
-         TreePath(const char *path);
-    );
-
-    WRAP(TreeView, Widget, ui_treeview,
-         TreeView();
-         TreeView(TreeModel model);
+    ,
     );
 
     struct TreeViewColumnAttribute {
         const char *attribute;
         int column;
     };
-    WRAP(TreeViewColumn, Widget, ui_treeviewcolumn,
+    WRAP(TreeViewColumn, Object, _GtkTreeViewColumn, (),
          TreeViewColumn(const char *title, CellRenderer renderer, std::initializer_list<TreeViewColumnAttribute> attributes);
+    ,
     );
 
-    WRAP(VBox, Box, ui_vbox,
-         VBox(bool homogenous, int spacing);
+    WRAP(AccelGroup, Object, _GtkAccelGroup, (),
+         AccelGroup();
+    ,
     );
 
-    WRAP(Window, Widget, ui_window,
-         Window() : Window(nullptr) {};
-         Window(window_type type);
+    WRAP(ListStore, Object, _GtkListStore, (),
+    ,
+    );
 
-         Window create_dialog_window(const char *title, void func(), void *data, int default_w = -1,
-                                     int default_h = -1);
+    WRAP(TreeModel, Widget, _GtkTreeModel, (),
+    ,
+    );
 
-         Window create_modal_dialog_window(const char *title, ui_modal &dialog, int default_w = -1,
-                                           int default_h = -1);
-
-         Window create_floating_window(const char *title);
-
-         std::uint64_t on_key_press(bool (*f)(Widget widget, ui_evkey *event, void *extra),
-                                    void *extra = nullptr);
-
-         void add_accel_group(AccelGroup group);
+    WRAP(TreePath, Object, _GtkTreePath, (),
+         TreePath();
+         TreePath(const char *path);
+    ,
     );
 
 #undef WRAP
