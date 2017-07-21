@@ -372,17 +372,17 @@ namespace ui {
     ,
     );
 
-    WRAP(Table, Widget, _GtkTable, (),
+    WRAP(Table, Container, _GtkTable, (),
          Table(std::size_t rows, std::size_t columns, bool homogenous);
     ,
     );
 
-    WRAP(TextView, Widget, _GtkTextView, (),
+    WRAP(TextView, Container, _GtkTextView, (),
          TextView();
     ,
     );
 
-    WRAP(Toolbar, Widget, _GtkToolbar, (),
+    WRAP(Toolbar, Container, _GtkToolbar, (),
     ,
     );
 

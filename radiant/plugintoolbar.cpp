@@ -32,7 +32,7 @@
 #include "mainframe.h"
 #include "plugin.h"
 
-GtkImage* new_plugin_image( const char* filename ){
+ui::Image new_plugin_image( const char* filename ){
 	{
 		StringOutputStream fullpath( 256 );
 		fullpath << GameToolsPath_get() << g_pluginsDir << "bitmaps/" << filename;
@@ -90,7 +90,7 @@ void PlugInToolbar_AddButton( GtkToolbar* toolbar, const IToolbarButton* button 
 	toolbar_insert( toolbar, button->getImage(), button->getText(), button->getTooltip(), button->getType(), G_CALLBACK( ActivateToolbarButton ), reinterpret_cast<gpointer>( const_cast<IToolbarButton*>( button ) ) );
 }
 
-GtkToolbar* g_plugin_toolbar = 0;
+ui::Toolbar g_plugin_toolbar{nullptr};
 
 void PluginToolbar_populate(){
 	class AddToolbarItemVisitor : public ToolbarModules::Visitor
@@ -114,16 +114,15 @@ public:
 }
 
 void PluginToolbar_clear(){
-	container_remove_all( GTK_CONTAINER( g_plugin_toolbar ) );
+	container_remove_all( g_plugin_toolbar );
 }
 
-GtkToolbar* create_plugin_toolbar(){
-	GtkToolbar *toolbar;
+ui::Toolbar create_plugin_toolbar(){
 
-	toolbar = GTK_TOOLBAR( gtk_toolbar_new() );
+	auto toolbar = ui::Toolbar(GTK_TOOLBAR( gtk_toolbar_new() ));
 	gtk_orientable_set_orientation( GTK_ORIENTABLE(toolbar), GTK_ORIENTATION_HORIZONTAL );
 	gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS );
-	gtk_widget_show( GTK_WIDGET( toolbar ) );
+	toolbar.show();
 
 	g_plugin_toolbar = toolbar;
 

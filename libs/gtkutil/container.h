@@ -24,17 +24,18 @@
 
 #include <gtk/gtk.h>
 
-inline GtkWidget* container_add_widget( GtkContainer* container, GtkWidget* widget ){
+inline ui::Widget container_add_widget( ui::Container container, ui::Widget widget ){
 	gtk_container_add( container, widget );
 	return widget;
 }
 
-inline void container_remove( GtkWidget* item, gpointer data ){
-	gtk_container_remove( GTK_CONTAINER( data ), item );
+inline void container_remove( ui::Widget item, gpointer data ){
+	auto container = ui::Container(GTK_CONTAINER( data ));
+	gtk_container_remove( container, item );
 }
 
-inline void container_remove_all( GtkContainer* container ){
-	gtk_container_foreach( container, container_remove, container );
+inline void container_remove_all( ui::Container container ){
+	gtk_container_foreach(container, (GtkCallback) container_remove, container );
 }
 
 #endif

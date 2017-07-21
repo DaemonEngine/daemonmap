@@ -39,7 +39,7 @@ void menu_add_item( ui::Menu menu, ui::MenuItem item ){
 
 ui::MenuItem menu_separator( ui::Menu menu ){
 	auto menu_item = ui::MenuItem(GTK_MENU_ITEM( gtk_menu_item_new() ));
-	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( menu_item ) );
+	container_add_widget( menu, menu_item );
 	gtk_widget_set_sensitive( GTK_WIDGET( menu_item ), FALSE );
 	menu_item.show();
 	return menu_item;
@@ -47,7 +47,7 @@ ui::MenuItem menu_separator( ui::Menu menu ){
 
 ui::TearoffMenuItem menu_tearoff( ui::Menu menu ){
 	auto menu_item = ui::TearoffMenuItem(GTK_TEAROFF_MENU_ITEM( gtk_tearoff_menu_item_new() ));
-	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( menu_item ) );
+	container_add_widget( menu, menu_item );
 // gtk_widget_set_sensitive(GTK_WIDGET(menu_item), FALSE); -- controls whether menu is detachable
 	menu_item.show();
 	return menu_item;
@@ -65,7 +65,7 @@ ui::MenuItem new_sub_menu_item_with_mnemonic( const char* mnemonic ){
 
 ui::Menu create_sub_menu_with_mnemonic( ui::MenuShell parent, const char* mnemonic ){
 	auto item = new_sub_menu_item_with_mnemonic( mnemonic );
-	container_add_widget( GTK_CONTAINER( parent ), GTK_WIDGET( item ) );
+	container_add_widget( parent, item );
 	return ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( item ) ));
 }
 
@@ -108,7 +108,7 @@ ui::MenuItem new_menu_item_with_mnemonic( const char *mnemonic, const Callback& 
 
 ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const Callback& callback ){
 	auto item = new_menu_item_with_mnemonic( mnemonic, callback );
-	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
+	container_add_widget( menu, item );
 	return item;
 }
 
@@ -121,7 +121,7 @@ ui::CheckMenuItem new_check_menu_item_with_mnemonic( const char* mnemonic, const
 
 ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback& callback ){
 	auto item = new_check_menu_item_with_mnemonic( mnemonic, callback );
-	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
+	container_add_widget( menu, item );
 	return item;
 }
 
@@ -138,7 +138,7 @@ ui::RadioMenuItem new_radio_menu_item_with_mnemonic( GSList** group, const char*
 
 ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback& callback ){
 	auto item = new_radio_menu_item_with_mnemonic( group, mnemonic, callback );
-	container_add_widget( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
+	container_add_widget( menu, item );
 	return item;
 }
 

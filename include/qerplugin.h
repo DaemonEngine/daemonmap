@@ -86,7 +86,7 @@ typedef bool ( *PFN_QERAPP_COLORDIALOG )( ui::Widget parent, Vector3& color,
 // load a .bmp file and create a GtkImage widget from it
 // NOTE: 'filename' is relative to <radiant_path>/plugins/bitmaps/
 typedef struct _GtkImage GtkImage;
-typedef GtkImage* ( *PFN_QERAPP_NEWIMAGE )( const char* filename );
+typedef ui::Image ( *PFN_QERAPP_NEWIMAGE )( const char* filename );
 
 // ========================================
 

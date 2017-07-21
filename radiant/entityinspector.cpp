@@ -730,7 +730,7 @@ int spawn_table[MAX_FLAGS];
 // the table is a 4x4 in which we need to put the comment box g_entityClassComment and the spawn flags..
 GtkTable* g_spawnflagsTable;
 
-GtkVBox* g_attributeBox = 0;
+ui::VBox g_attributeBox{nullptr};
 typedef std::vector<EntityAttribute*> EntityAttributes;
 EntityAttributes g_entityAttributes;
 }
@@ -967,7 +967,7 @@ void EntityInspector_setEntityClass( EntityClass *eclass ){
 	if ( eclass != g_current_attributes ) {
 		g_current_attributes = eclass;
 
-		container_remove_all( GTK_CONTAINER( g_attributeBox ) );
+		container_remove_all( g_attributeBox );
 		GlobalEntityAttributes_clear();
 
 		for ( EntityClassAttributes::const_iterator i = eclass->m_attributes.begin(); i != eclass->m_attributes.end(); ++i )
