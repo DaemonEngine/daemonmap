@@ -24,7 +24,6 @@
 
 // standard headers
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 
