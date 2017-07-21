@@ -300,7 +300,7 @@ ui::Window CDbgDlg::BuildDialog(){
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 	{
-		GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+		ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
 		ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 		gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );

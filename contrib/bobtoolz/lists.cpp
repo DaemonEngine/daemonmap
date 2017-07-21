@@ -55,7 +55,7 @@ bool LoadExclusionList( char* filename, std::list<Str>* exclusionList ){
 	return FALSE;
 }
 
-bool LoadGList( char* filename, GtkListStore* loadlist ){
+bool LoadGList( char* filename, ui::ListStore loadlist ){
 	FILE* eFile = fopen( filename, "r" );
 	if ( eFile ) {
 		char buffer[256];

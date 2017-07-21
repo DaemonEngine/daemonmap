@@ -226,6 +226,10 @@ namespace ui {
     AccelGroup::AccelGroup() : AccelGroup(GTK_ACCEL_GROUP(gtk_accel_group_new()))
     {}
 
+    void IListStore::clear() {
+        gtk_list_store_clear(this);
+    }
+
     TreePath::TreePath() : TreePath(gtk_tree_path_new())
     {}
 

@@ -869,8 +869,8 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	gtk_widget_realize( window );
 
 	char buffer[256];
-	GtkListStore *listMainTextures = gtk_list_store_new( 1, G_TYPE_STRING );
-	GtkListStore *listTrimTextures = gtk_list_store_new( 1, G_TYPE_STRING );
+	ui::ListStore listMainTextures = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+	ui::ListStore listTrimTextures = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex.txt" ), listMainTextures );
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex-trim.txt" ), listTrimTextures );
 

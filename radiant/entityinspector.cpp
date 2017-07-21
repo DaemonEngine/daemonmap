@@ -717,8 +717,8 @@ GtkCheckButton* g_entitySpawnflagsCheck[MAX_FLAGS];
 GtkEntry* g_entityKeyEntry;
 GtkEntry* g_entityValueEntry;
 
-GtkListStore* g_entlist_store;
-GtkListStore* g_entprops_store;
+ui::ListStore g_entlist_store{nullptr};
+ui::ListStore g_entprops_store{nullptr};
 const EntityClass* g_current_flags = 0;
 const EntityClass* g_current_comment = 0;
 const EntityClass* g_current_attributes = 0;
@@ -804,9 +804,9 @@ const char* keyvalues_valueforkey( KeyValues& keyvalues, const char* key ){
 
 class EntityClassListStoreAppend : public EntityClassVisitor
 {
-GtkListStore* store;
+ui::ListStore store;
 public:
-EntityClassListStoreAppend( GtkListStore* store_ ) : store( store_ ){
+EntityClassListStoreAppend( ui::ListStore store_ ) : store( store_ ){
 }
 void visit( EntityClass* e ){
 	GtkTreeIter iter;
@@ -1034,7 +1034,7 @@ void EntityInspector_updateKeyValues(){
 
 	EntityInspector_updateSpawnflags();
 
-	GtkListStore* store = g_entprops_store;
+	ui::ListStore store = g_entprops_store;
 
 	// save current key/val pair around filling epair box
 	// row_select wipes it and sets to first in list
@@ -1318,7 +1318,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 				gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 				{
-					GtkListStore* store = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER );
+					ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
 
 					GtkTreeView* view = ui::TreeView( ui::TreeModel( GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
@@ -1402,7 +1402,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 					{
-						GtkListStore* store = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
+						ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
 						ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 						gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );

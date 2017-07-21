@@ -35,15 +35,15 @@
 template<typename StringList>
 class EntryCompletion
 {
-GtkListStore* m_store;
+ui::ListStore m_store;
 IdleDraw m_idleUpdate;
 public:
 EntryCompletion() : m_store( 0 ), m_idleUpdate( UpdateCaller( *this ) ){
 }
 
 void connect( GtkEntry* entry ){
-	if ( m_store == 0 ) {
-		m_store = gtk_list_store_new( 1, G_TYPE_STRING );
+	if ( !m_store ) {
+		m_store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
 		fill();
 

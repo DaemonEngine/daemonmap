@@ -419,6 +419,7 @@ namespace ui {
 
     WRAP(ListStore, Object, _GtkListStore, (),
     ,
+         void clear();
     );
 
     WRAP(TreeModel, Widget, _GtkTreeModel, (),

@@ -403,7 +403,7 @@ void DoCommandListDlg(){
 		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 		{
-			GtkListStore* store = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT );
+			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
 
 			ui::Widget view = ui::TreeView(ui::TreeModel(GTK_TREE_MODEL(store)));
 			dialog.m_list = GTK_TREE_VIEW( view );
@@ -433,9 +433,9 @@ void DoCommandListDlg(){
 				class BuildCommandList : public CommandVisitor
 				{
 				TextFileOutputStream m_commandList;
-				GtkListStore* m_store;
+				ui::ListStore m_store;
 public:
-				BuildCommandList( const char* filename, GtkListStore* store ) : m_commandList( filename ), m_store( store ){
+				BuildCommandList( const char* filename, ui::ListStore store ) : m_commandList( filename ), m_store( store ){
 				}
 				void visit( const char* name, Accelerator& accelerator ){
 					StringOutputStream modifiers;

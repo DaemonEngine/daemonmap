@@ -149,7 +149,7 @@ class CDbgDlg : public Dialog
 {
 GPtrArray *m_pFeedbackElements;
 // the list widget we use in the dialog
-GtkListStore* m_clist;
+ui::ListStore m_clist{nullptr};
 ISAXHandler *m_pHighlight;
 IGL2DWindow* m_pDraw2D;
 public:

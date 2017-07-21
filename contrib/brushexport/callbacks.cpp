@@ -31,7 +31,7 @@ void OnExportClicked( GtkButton* button, gpointer user_data ){
 	std::set<std::string> ignore;
 
 	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( GTK_WIDGET( button ), "t_materialist" ) );
-	GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
+	ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( view ) ));
 
 	GtkTreeIter iter;
 	gboolean valid = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter );
@@ -113,7 +113,7 @@ void OnAddMaterial( GtkButton* button, gpointer user_data ){
 
 	const gchar* name = gtk_entry_get_text( edit );
 	if ( g_utf8_strlen( name, -1 ) > 0 ) {
-		GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( GTK_WIDGET( button ), "t_materialist" ) ) ) );
+		ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( GTK_WIDGET( button ), "t_materialist" ) ) ) ));
 		GtkTreeIter iter;
 		gtk_list_store_append( list, &iter );
 		gtk_list_store_set( list, &iter, 0, name, -1 );
@@ -123,7 +123,7 @@ void OnAddMaterial( GtkButton* button, gpointer user_data ){
 
 void OnRemoveMaterial( GtkButton* button, gpointer user_data ){
 	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( GTK_WIDGET( button ), "t_materialist" ) );
-	GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
+	ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( view ) ));
 	GtkTreeSelection* sel = gtk_tree_view_get_selection( view );
 
 	GtkTreeIter iter;

@@ -643,8 +643,8 @@ void build_commands_write( const char* filename ){
 void Build_refreshMenu( GtkMenu* menu );
 
 
-void BSPCommandList_Construct( GtkListStore* store, Project& project ){
-	gtk_list_store_clear( store );
+void BSPCommandList_Construct( ui::ListStore store, Project& project ){
+	store.clear();
 
 	for ( Project::iterator i = project.begin(); i != project.end(); ++i )
 	{
@@ -663,7 +663,7 @@ class ProjectList
 {
 public:
 Project& m_project;
-GtkListStore* m_store;
+ui::ListStore m_store{nullptr};
 bool m_changed;
 ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 }
@@ -735,7 +735,7 @@ gboolean project_key_press( ui::Widget widget, GdkEventKey* event, ProjectList* 
 
 Build* g_current_build = 0;
 
-gboolean project_selection_changed( GtkTreeSelection* selection, GtkListStore* store ){
+gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore store ){
 	Project& project = g_build_project;
 
 	gtk_list_store_clear( store );
@@ -773,7 +773,7 @@ gboolean project_selection_changed( GtkTreeSelection* selection, GtkListStore* s
 	return FALSE;
 }
 
-gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, GtkListStore* store ){
+gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
@@ -810,7 +810,7 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 	return FALSE;
 }
 
-gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, GtkListStore* store ){
+gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
@@ -869,7 +869,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
 
 				{
-					GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
 					ui::Widget view = ui::TreeView( ui::TreeModel(GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
@@ -906,7 +906,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
 
 				{
-					GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+					ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
 					ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );

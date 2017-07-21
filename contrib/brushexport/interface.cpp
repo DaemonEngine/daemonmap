@@ -215,7 +215,7 @@ void CreateWindow( void ){
 	gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), -1, "", renderer, "text", 0, NULL );
 
 	// list store
-	GtkListStore* ignorelist = gtk_list_store_new( 1, G_TYPE_STRING );
+	ui::ListStore ignorelist = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 	gtk_tree_view_set_model( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), GTK_TREE_MODEL( ignorelist ) );
 	g_object_unref( ignorelist );
 

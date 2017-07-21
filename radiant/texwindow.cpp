@@ -261,8 +261,8 @@ ui::Widget m_texture_scroll;
 ui::Widget m_treeViewTree;
 ui::Widget m_treeViewTags;
 ui::Widget m_tag_frame;
-GtkListStore* m_assigned_store;
-GtkListStore* m_available_store;
+ui::ListStore m_assigned_store{nullptr};
+ui::ListStore m_available_store{nullptr};
 ui::Widget m_assigned_tree;
 ui::Widget m_available_tree;
 ui::Widget m_scr_win_tree;
@@ -272,7 +272,7 @@ ui::Widget m_search_button;
 ui::Widget m_shader_info_item;
 
 std::set<CopiedString> m_all_tags;
-GtkListStore* m_all_tags_list;
+ui::ListStore m_all_tags_list{nullptr};
 std::vector<CopiedString> m_copied_tags;
 std::set<CopiedString> m_found_shaders;
 
@@ -1295,7 +1295,7 @@ enum
 	N_COLUMNS
 };
 
-void BuildStoreAssignedTags( GtkListStore* store, const char* shader, TextureBrowser* textureBrowser ){
+void BuildStoreAssignedTags( ui::ListStore store, const char* shader, TextureBrowser* textureBrowser ){
 	GtkTreeIter iter;
 
 	gtk_list_store_clear( store );
@@ -1310,8 +1310,8 @@ void BuildStoreAssignedTags( GtkListStore* store, const char* shader, TextureBro
 	}
 }
 
-void BuildStoreAvailableTags(   GtkListStore* storeAvailable,
-								GtkListStore* storeAssigned,
+void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
+								ui::ListStore storeAssigned,
 								const std::set<CopiedString>& allTags,
 								TextureBrowser* textureBrowser ){
 	GtkTreeIter iterAssigned;
@@ -2076,7 +2076,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	// tag stuff
 	if ( g_TextureBrowser.m_tags ) {
 		{ // fill tag GtkListStore
-			g_TextureBrowser.m_all_tags_list = gtk_list_store_new( N_COLUMNS, G_TYPE_STRING );
+			g_TextureBrowser.m_all_tags_list = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
 			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_all_tags_list );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
@@ -2130,7 +2130,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_container_set_border_width( GTK_CONTAINER( scrolled_win ), 0 );
 			gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-			g_TextureBrowser.m_assigned_store = gtk_list_store_new( N_COLUMNS, G_TYPE_STRING );
+			g_TextureBrowser.m_assigned_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
 
 			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_assigned_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
@@ -2159,7 +2159,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_container_set_border_width( GTK_CONTAINER( scrolled_win ), 0 );
 			gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-			g_TextureBrowser.m_available_store = gtk_list_store_new( N_COLUMNS, G_TYPE_STRING );
+			g_TextureBrowser.m_available_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
 			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_available_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 

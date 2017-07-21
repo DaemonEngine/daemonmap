@@ -764,7 +764,7 @@ void DoMapInfo(){
 	ModalDialog dialog;
 	GtkEntry* brushes_entry;
 	GtkEntry* entities_entry;
-	GtkListStore* EntityBreakdownWalker;
+	ui::ListStore EntityBreakdownWalker{nullptr};
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Map Info", G_CALLBACK(dialog_delete_callback ), &dialog );
 
@@ -840,7 +840,7 @@ void DoMapInfo(){
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 			{
-				GtkListStore* store = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
+				ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
 				ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 				gtk_tree_view_set_headers_clickable( GTK_TREE_VIEW( view ), TRUE );
