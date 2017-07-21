@@ -41,7 +41,6 @@
 
 #include <map>
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "stream/textfilestream.h"

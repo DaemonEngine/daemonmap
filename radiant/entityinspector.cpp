@@ -33,7 +33,6 @@
 #include <map>
 #include <set>
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 

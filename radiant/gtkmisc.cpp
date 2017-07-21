@@ -34,7 +34,6 @@
 
 #include "gtkmisc.h"
 
-#include <gtk/gtk.h>
 #include "uilib/uilib.h"
 
 #include "math/vector.h"

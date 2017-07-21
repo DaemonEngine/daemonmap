@@ -30,8 +30,6 @@
 
 #include "debugging/debugging.h"
 
-#include <gtk/gtk.h>
-
 #include "generic/callback.h"
 #include "math/vector.h"
 #include "string/string.h"

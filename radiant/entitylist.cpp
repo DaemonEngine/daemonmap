@@ -23,7 +23,6 @@
 
 #include "iselection.h"
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "string/string.h"

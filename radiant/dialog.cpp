@@ -35,8 +35,6 @@
 
 #include <stdlib.h>
 
-#include <gtk/gtk.h>
-
 #include "stream/stringstream.h"
 #include "convert.h"
 #include "gtkutil/dialog.h"

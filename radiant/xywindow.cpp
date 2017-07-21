@@ -39,7 +39,6 @@
 #include "image.h"
 #include "gtkutil/messagebox.h"
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 #include <gdk/gdkkeysyms.h>
 

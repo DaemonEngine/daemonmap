@@ -31,8 +31,6 @@
 
 #include "debugging/debugging.h"
 
-#include <gtk/gtk.h>
-
 #include "gtkutil/idledraw.h"
 #include "gtkutil/entry.h"
 #include "gtkutil/button.h"

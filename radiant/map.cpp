@@ -42,7 +42,6 @@ MapModules& ReferenceAPI_getMapModules();
 
 #include <set>
 
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include "uilib/uilib.h"
 

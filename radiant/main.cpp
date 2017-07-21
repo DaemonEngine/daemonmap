@@ -70,7 +70,6 @@
 #include "iundo.h"
 
 #include "uilib/uilib.h"
-#include <gtk/gtk.h>
 
 #include "cmdlib.h"
 #include "os/file.h"

@@ -838,7 +838,6 @@ void Patch_constructMenu( ui::Menu menu ){
 }
 
 
-#include <gtk/gtk.h>
 #include "gtkutil/dialog.h"
 #include "gtkutil/widget.h"
 

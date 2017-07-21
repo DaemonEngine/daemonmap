@@ -45,7 +45,6 @@
 #include "iselection.h"
 
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "os/path.h"

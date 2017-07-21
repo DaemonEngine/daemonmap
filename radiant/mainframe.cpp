@@ -43,7 +43,6 @@
 #include <ctime>
 
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 
 
 #include "cmdlib.h"

@@ -40,7 +40,6 @@
 #include <string>
 #include <vector>
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "signal/signal.h"

@@ -32,8 +32,6 @@
 #include "igl.h"
 #include "iselection.h"
 
-#include <gtk/gtk.h>
-
 #include "map.h"
 #include "dialog.h"
 #include "mainframe.h"

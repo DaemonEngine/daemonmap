@@ -633,7 +633,6 @@ void build_commands_write( const char* filename ){
 
 
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 
 #include "gtkutil/dialog.h"
 #include "gtkutil/closure.h"

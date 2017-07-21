@@ -31,8 +31,6 @@
 
 #include "ishaders.h"
 
-#include <gtk/gtk.h>
-
 #include "gtkutil/window.h"
 #include "stream/stringstream.h"
 

@@ -830,7 +830,6 @@ void Selection_destroy(){
 
 
 #include "gtkdlgs.h"
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
 

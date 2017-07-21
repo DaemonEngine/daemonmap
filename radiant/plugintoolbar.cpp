@@ -25,8 +25,6 @@
 #include "itoolbar.h"
 #include "modulesystem.h"
 
-#include <gtk/gtk.h>
-
 #include "stream/stringstream.h"
 #include "gtkutil/image.h"
 #include "gtkutil/container.h"

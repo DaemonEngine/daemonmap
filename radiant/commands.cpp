@@ -28,7 +28,6 @@
 #include "string/string.h"
 #include "versionlib.h"
 #include "gtkutil/messagebox.h"
-#include <gtk/gtk.h>
 #include "gtkmisc.h"
 
 typedef std::pair<Accelerator, int> ShortcutValue; // accelerator, isRegistered

@@ -22,7 +22,6 @@
 #include "console.h"
 
 #include <time.h>
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "gtkutil/accelerator.h"
