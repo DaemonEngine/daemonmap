@@ -108,7 +108,7 @@ class PathEntry
 {
 public:
 GtkFrame* m_frame;
-GtkEntry* m_entry;
+ui::Entry m_entry;
 GtkButton* m_button;
 PathEntry( GtkFrame* frame, GtkEntry* entry, GtkButton* button ) :
 	m_frame( frame ),

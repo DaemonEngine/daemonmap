@@ -160,12 +160,12 @@ typedef MemberCaller<BooleanAttribute, &BooleanAttribute::update> UpdateCaller;
 class StringAttribute : public EntityAttribute
 {
 CopiedString m_key;
-GtkEntry* m_entry;
+ui::Entry m_entry;
 NonModalEntry m_nonModal;
 public:
 StringAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( 0 ),
+	m_entry( nullptr ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
 	auto entry = ui::Entry();
 	gtk_widget_show( GTK_WIDGET( entry ) );

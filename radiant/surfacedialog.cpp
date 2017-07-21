@@ -626,17 +626,17 @@ ui::Window SurfaceInspector::BuildDialog(){
 			gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 			{
 				ui::Widget label = ui::Label( "Horizontal shift" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
+				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
 				m_hshiftIncrement.m_spin = spin;
 				m_hshiftSpinner.connect( spin );
-				gtk_widget_show( GTK_WIDGET( spin ) );
+				spin.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( spin ), 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -644,7 +644,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
-				gtk_widget_show( label );
+				label.show();
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 0, 1,
 								  (GtkAttachOptions) ( GTK_FILL ),
@@ -652,7 +652,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			}
 			{
 				auto entry = ui::Entry();
-				gtk_widget_show( GTK_WIDGET( entry ) );
+				entry.show();
 				gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( entry ), 3, 4, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -669,7 +669,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
+				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
 				m_vshiftIncrement.m_spin = spin;
 				m_vshiftSpinner.connect( spin );
 				gtk_widget_show( GTK_WIDGET( spin ) );
@@ -705,7 +705,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
+				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
 				m_hscaleIncrement.m_spin = spin;
 				m_hscaleSpinner.connect( spin );
 				gtk_widget_show( GTK_WIDGET( spin ) );
@@ -741,7 +741,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
+				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 5 );
 				m_vscaleIncrement.m_spin = spin;
 				m_vscaleSpinner.connect( spin );
 				gtk_widget_show( GTK_WIDGET( spin ) );
@@ -777,7 +777,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				GtkSpinButton* spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
+				auto spin = ui::SpinButton( ui::Adjustment( 0, -8192, 8192, 2, 8, 0 ), 0, 2 );
 				m_rotateIncrement.m_spin = spin;
 				m_rotateSpinner.connect( spin );
 				gtk_widget_show( GTK_WIDGET( spin ) );
