@@ -911,8 +911,8 @@ void EntityClassList_selectEntityClass( EntityClass* eclass ){
 }
 
 void EntityInspector_appendAttribute( const char* name, EntityAttribute& attribute ){
-	GtkTable* row = DialogRow_new( name, attribute.getWidget() );
-	DialogVBox_packRow( g_attributeBox, GTK_WIDGET( row ) );
+	auto row = DialogRow_new( name, attribute.getWidget() );
+	DialogVBox_packRow( ui::VBox(g_attributeBox), row );
 }
 
 

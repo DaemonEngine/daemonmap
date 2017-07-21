@@ -70,25 +70,25 @@ typedef struct _GtkFrame GtkFrame;
 ui::Window create_fixedsize_modal_window( ui::Window parent, const char* title, int width, int height );
 
 ui::Window create_dialog_window( ui::Window parent, const char* title, GCallback func, gpointer data, int default_w = -1, int default_h = -1 );
-GtkTable* create_dialog_table( unsigned int rows, unsigned int columns, unsigned int row_spacing, unsigned int col_spacing, int border = 0 );
-GtkButton* create_dialog_button( const char* label, GCallback func, gpointer data );
-GtkVBox* create_dialog_vbox( int spacing, int border = 0 );
-GtkHBox* create_dialog_hbox( int spacing, int border = 0 );
-GtkFrame* create_dialog_frame( const char* label, GtkShadowType shadow = GTK_SHADOW_ETCHED_IN );
+ui::Table create_dialog_table( unsigned int rows, unsigned int columns, unsigned int row_spacing, unsigned int col_spacing, int border = 0 );
+ui::Button create_dialog_button( const char* label, GCallback func, gpointer data );
+ui::VBox create_dialog_vbox( int spacing, int border = 0 );
+ui::HBox create_dialog_hbox( int spacing, int border = 0 );
+ui::Frame create_dialog_frame( const char* label, GtkShadowType shadow = GTK_SHADOW_ETCHED_IN );
 
-GtkButton* create_modal_dialog_button( const char* label, ModalDialogButton& button );
+ui::Button create_modal_dialog_button( const char* label, ModalDialogButton& button );
 ui::Window create_modal_dialog_window( ui::Window parent, const char* title, ModalDialog& dialog, int default_w = -1, int default_h = -1 );
 ui::Window create_fixedsize_modal_dialog_window( ui::Window parent, const char* title, ModalDialog& dialog, int width = -1, int height = -1 );
 EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog );
 
 
-gboolean dialog_button_ok( GtkWidget *widget, ModalDialog* data );
-gboolean dialog_button_cancel( GtkWidget *widget, ModalDialog* data );
-gboolean dialog_button_yes( GtkWidget *widget, ModalDialog* data );
-gboolean dialog_button_no( GtkWidget *widget, ModalDialog* data );
-gboolean dialog_delete_callback( GtkWidget *widget, GdkEventAny* event, ModalDialog* data );
+gboolean dialog_button_ok( ui::Widget widget, ModalDialog* data );
+gboolean dialog_button_cancel( ui::Widget widget, ModalDialog* data );
+gboolean dialog_button_yes( ui::Widget widget, ModalDialog* data );
+gboolean dialog_button_no( ui::Widget widget, ModalDialog* data );
+gboolean dialog_delete_callback( ui::Widget widget, GdkEventAny* event, ModalDialog* data );
 
-ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, GtkWidget* contents );
+ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, ui::Widget contents );
 
 class RadioHBox
 {
@@ -131,10 +131,9 @@ BrowseCallback m_browse;
 BrowsedPathEntry( const BrowseCallback& browse );
 };
 
-GtkLabel* DialogLabel_new( const char* name );
-GtkTable* DialogRow_new( const char* name, GtkWidget* widget );
-typedef struct _GtkVBox GtkVBox;
-void DialogVBox_packRow( GtkVBox* vbox, GtkWidget* row );
+ui::Label DialogLabel_new( const char* name );
+ui::Table DialogRow_new( const char* name, ui::Widget widget );
+void DialogVBox_packRow( ui::VBox vbox, ui::Widget row );
 
 
 #endif
