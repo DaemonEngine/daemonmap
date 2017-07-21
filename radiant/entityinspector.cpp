@@ -146,11 +146,11 @@ typedef MemberCaller<BooleanAttribute, &BooleanAttribute::apply> ApplyCaller;
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
 	if ( !string_empty( value ) ) {
-		toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( m_check ), atoi( value ) != 0 );
+		toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( m_check )), atoi( value ) != 0 );
 	}
 	else
 	{
-		toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( m_check ), false );
+		toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( m_check )), false );
 	}
 }
 typedef MemberCaller<BooleanAttribute, &BooleanAttribute::update> UpdateCaller;
@@ -989,14 +989,14 @@ void EntityInspector_updateSpawnflags(){
 		{
 			int v = !!( f & ( 1 << spawn_table[i] ) );
 
-			toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] ), v );
+			toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] )), v );
 		}
 	}
 	{
 		// take care of the remaining ones
 		for ( int i = g_spawnflag_count; i < MAX_FLAGS; ++i )
 		{
-			toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] ), FALSE );
+			toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] )), FALSE );
 		}
 	}
 }

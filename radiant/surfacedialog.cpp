@@ -1171,12 +1171,12 @@ void SurfaceInspector::Update(){
 
 		for ( GtkCheckButton** p = m_surfaceFlags; p != m_surfaceFlags + 32; ++p )
 		{
-			toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( *p ), flags.m_surfaceFlags & ( 1 << ( p - m_surfaceFlags ) ) );
+			toggle_button_set_active_no_signal( ui::CheckButton( *p ), flags.m_surfaceFlags & ( 1 << ( p - m_surfaceFlags ) ) );
 		}
 
 		for ( GtkCheckButton** p = m_contentFlags; p != m_contentFlags + 32; ++p )
 		{
-			toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( *p ), flags.m_contentFlags & ( 1 << ( p - m_contentFlags ) ) );
+			toggle_button_set_active_no_signal( ui::CheckButton( *p ), flags.m_contentFlags & ( 1 << ( p - m_contentFlags ) ) );
 		}
 	}
 }

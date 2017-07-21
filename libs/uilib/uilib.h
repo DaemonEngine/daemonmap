@@ -29,11 +29,13 @@ struct _GtkItem;
 struct _GtkLabel;
 struct _GtkListStore;
 struct _GtkMenu;
-struct _GtkMenuShell;
 struct _GtkMenuItem;
+struct _GtkMenuShell;
 struct _GtkMisc;
 struct _GtkObject;
 struct _GtkPaned;
+struct _GtkRadioButton;
+struct _GtkRadioToolButton;
 struct _GtkRange;
 struct _GtkScale;
 struct _GtkScrolledWindow;
@@ -42,6 +44,9 @@ struct _GtkTable;
 struct _GtkTearoffMenuItem;
 struct _GtkTextView;
 struct _GtkToggleButton;
+struct _GtkToggleToolButton;
+struct _GtkToolButton;
+struct _GtkToolItem;
 struct _GtkTreeModel;
 struct _GtkTreePath;
 struct _GtkTreeView;
@@ -194,6 +199,7 @@ namespace ui {
                  bool want_import = false,
                  bool want_save = false
          );
+         void show();
     );
 
     WRAP(Container, Widget, _GtkContainer, (),
@@ -264,6 +270,10 @@ namespace ui {
     ,
     );
 
+    WRAP(RadioButton, CheckButton, _GtkRadioButton, (),
+    ,
+    );
+
     WRAP(Item, Bin, _GtkItem, (),
     ,
     );
@@ -284,6 +294,22 @@ namespace ui {
 
     WRAP(ComboBoxText, ComboBox, _GtkComboBoxText, (),
          ComboBoxText();
+    ,
+    );
+
+    WRAP(ToolItem, Bin, _GtkToolItem, (),
+    ,
+    );
+
+    WRAP(ToolButton, ToolItem, _GtkToolButton, (),
+    ,
+    );
+
+    WRAP(ToggleToolButton, ToolButton, _GtkToggleToolButton, (),
+    ,
+    );
+
+    WRAP(RadioToolButton, ToggleToolButton, _GtkRadioToolButton, (),
     ,
     );
 

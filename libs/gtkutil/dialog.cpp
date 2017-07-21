@@ -209,7 +209,7 @@ PathEntry PathEntry_new(){
 	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
 	// browse button
-	GtkButton* button = ui::Button();
+	auto button = ui::Button();
 	button_set_icon( button, "ellipsis.bmp" );
 	gtk_widget_show( GTK_WIDGET( button ) );
 	gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );

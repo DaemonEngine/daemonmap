@@ -24,12 +24,24 @@ namespace ui {
 
     Widget root{nullptr};
 
-#define this (*static_cast<self>(this))
+#define IMPL(T, F) template<> _IMPL(T, F)
+#define _IMPL(T, F) struct verify<T *> { using self = T; static self test(self it) { return self(F(it)); } }
+
+    template<class T>
+    struct verify;
+
+    template<class T> _IMPL(T,);
+
+#define this verify<self>::test(*static_cast<self>(this))
+
+    IMPL(Editable, GTK_EDITABLE);
 
     void IEditable::editable(bool value)
     {
         gtk_editable_set_editable(GTK_EDITABLE(this), value);
     }
+
+    IMPL(Widget, GTK_WIDGET);
 
     Widget::Widget() : Widget(nullptr)
     {}
@@ -65,6 +77,13 @@ namespace ui {
     {
         return ::file_dialog(this, open, title, path, pattern, want_load, want_import, want_save);
     }
+
+    void IWidget::show()
+    {
+        gtk_widget_show(this);
+    }
+
+    IMPL(Window, GTK_WINDOW);
 
     Window::Window() : Window(nullptr)
     {}
@@ -113,12 +132,18 @@ namespace ui {
         gtk_window_add_accel_group(this, group);
     }
 
+    IMPL(Alignment, GTK_ALIGNMENT);
+
     Alignment::Alignment(float xalign, float yalign, float xscale, float yscale)
             : Alignment(GTK_ALIGNMENT(gtk_alignment_new(xalign, yalign, xscale, yscale)))
     {}
 
+    IMPL(Frame, GTK_FRAME);
+
     Frame::Frame(const char *label) : Frame(GTK_FRAME(gtk_frame_new(label)))
     {}
+
+    IMPL(Button, GTK_BUTTON);
 
     Button::Button() : Button(GTK_BUTTON(gtk_button_new()))
     {}
@@ -126,13 +151,19 @@ namespace ui {
     Button::Button(const char *label) : Button(GTK_BUTTON(gtk_button_new_with_label(label)))
     {}
 
+    IMPL(ToggleButton, GTK_TOGGLE_BUTTON);
+
     bool IToggleButton::active()
     {
         return gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(this)) != 0;
     }
 
+    IMPL(CheckButton, GTK_CHECK_BUTTON);
+
     CheckButton::CheckButton(const char *label) : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_label(label)))
     {}
+
+    IMPL(MenuItem, GTK_MENU_ITEM);
 
     MenuItem::MenuItem() : MenuItem(GTK_MENU_ITEM(gtk_menu_item_new()))
     {}
@@ -141,34 +172,54 @@ namespace ui {
             GTK_MENU_ITEM((mnemonic ? gtk_menu_item_new_with_mnemonic : gtk_menu_item_new_with_label)(label)))
     {}
 
+    IMPL(TearoffMenuItem, GTK_TEAROFF_MENU_ITEM);
+
     TearoffMenuItem::TearoffMenuItem() : TearoffMenuItem(GTK_TEAROFF_MENU_ITEM(gtk_tearoff_menu_item_new()))
     {}
+
+    IMPL(ComboBoxText, GTK_COMBO_BOX_TEXT);
 
     ComboBoxText::ComboBoxText() : ComboBoxText(GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new()))
     {}
 
+    IMPL(ScrolledWindow, GTK_SCROLLED_WINDOW);
+
     ScrolledWindow::ScrolledWindow() : ScrolledWindow(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(nullptr, nullptr)))
     {}
+
+    IMPL(VBox, GTK_VBOX);
 
     VBox::VBox(bool homogenous, int spacing) : VBox(GTK_VBOX(gtk_vbox_new(homogenous, spacing)))
     {}
 
+    IMPL(HBox, GTK_HBOX);
+
     HBox::HBox(bool homogenous, int spacing) : HBox(GTK_HBOX(gtk_hbox_new(homogenous, spacing)))
     {}
+
+    IMPL(HPaned, GTK_HPANED);
 
     HPaned::HPaned() : HPaned(GTK_HPANED(gtk_hpaned_new()))
     {}
 
+    IMPL(VPaned, GTK_VPANED);
+
     VPaned::VPaned() : VPaned(GTK_VPANED(gtk_vpaned_new()))
     {}
 
+    IMPL(Menu, GTK_MENU);
+
     Menu::Menu() : Menu(GTK_MENU(gtk_menu_new()))
     {}
+
+    IMPL(Table, GTK_TABLE);
 
     Table::Table(std::size_t rows, std::size_t columns, bool homogenous) : Table(
             GTK_TABLE(gtk_table_new(rows, columns, homogenous))
     )
     {}
+
+    IMPL(TextView, GTK_TEXT_VIEW);
 
     TextView::TextView() : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))
     {}
@@ -179,11 +230,17 @@ namespace ui {
     TreeView::TreeView(TreeModel model) : TreeView(GTK_TREE_VIEW(gtk_tree_view_new_with_model(model)))
     {}
 
+    IMPL(Label, GTK_LABEL);
+
     Label::Label(const char *label) : Label(GTK_LABEL(gtk_label_new(label)))
     {}
 
+    IMPL(Image, GTK_IMAGE);
+
     Image::Image() : Image(GTK_IMAGE(gtk_image_new()))
     {}
+
+    IMPL(Entry, GTK_ENTRY);
 
     Entry::Entry() : Entry(GTK_ENTRY(gtk_entry_new()))
     {}
@@ -193,15 +250,21 @@ namespace ui {
         gtk_entry_set_max_length(this, static_cast<gint>(max_length));
     }
 
+    IMPL(SpinButton, GTK_SPIN_BUTTON);
+
     SpinButton::SpinButton(Adjustment adjustment, double climb_rate, std::size_t digits) : SpinButton(
             GTK_SPIN_BUTTON(gtk_spin_button_new(adjustment, climb_rate, digits)))
     {}
+
+    IMPL(HScale, GTK_HSCALE);
 
     HScale::HScale(Adjustment adjustment) : HScale(GTK_HSCALE(gtk_hscale_new(adjustment)))
     {}
 
     HScale::HScale(double min, double max, double step) : HScale(GTK_HSCALE(gtk_hscale_new_with_range(min, max, step)))
     {}
+
+    IMPL(Adjustment, GTK_ADJUSTMENT);
 
     Adjustment::Adjustment(double value,
                            double lower, double upper,
@@ -211,8 +274,12 @@ namespace ui {
             GTK_ADJUSTMENT(gtk_adjustment_new(value, lower, upper, step_increment, page_increment, page_size)))
     {}
 
+    IMPL(CellRendererText, GTK_CELL_RENDERER_TEXT);
+
     CellRendererText::CellRendererText() : CellRendererText(GTK_CELL_RENDERER_TEXT(gtk_cell_renderer_text_new()))
     {}
+
+    IMPL(TreeViewColumn, GTK_TREE_VIEW_COLUMN);
 
     TreeViewColumn::TreeViewColumn(const char *title, CellRenderer renderer,
                                    std::initializer_list<TreeViewColumnAttribute> attributes)
@@ -223,12 +290,19 @@ namespace ui {
         }
     };
 
+    IMPL(AccelGroup, GTK_ACCEL_GROUP);
+
     AccelGroup::AccelGroup() : AccelGroup(GTK_ACCEL_GROUP(gtk_accel_group_new()))
     {}
 
-    void IListStore::clear() {
+    IMPL(ListStore, GTK_LIST_STORE);
+
+    void IListStore::clear()
+    {
         gtk_list_store_clear(this);
     }
+
+    // IMPL(TreePath, GTK_TREE_PATH);
 
     TreePath::TreePath() : TreePath(gtk_tree_path_new())
     {}

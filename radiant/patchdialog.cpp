@@ -158,16 +158,16 @@ typedef struct _GtkCheckButton GtkCheckButton;
 class Subdivisions
 {
 public:
-GtkCheckButton* m_enabled;
+ui::CheckButton m_enabled;
 GtkEntry* m_horizontal;
 GtkEntry* m_vertical;
-Subdivisions() : m_enabled( 0 ), m_horizontal( 0 ), m_vertical( 0 ){
+Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( 0 ), m_vertical( 0 ){
 }
 void update(){
 	PatchFixedSubdivisions subdivisions;
 	Scene_PatchGetFixedSubdivisions( subdivisions );
 
-	toggle_button_set_active_no_signal( GTK_TOGGLE_BUTTON( m_enabled ), subdivisions.m_enabled );
+	toggle_button_set_active_no_signal( m_enabled, subdivisions.m_enabled );
 
 	if ( subdivisions.m_enabled ) {
 		entry_set_int( m_horizontal, static_cast<int>( subdivisions.m_x ) );
@@ -748,7 +748,7 @@ ui::Window PatchInspector::BuildDialog(){
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 							}
 							{
-								GtkCheckButton* check = GTK_CHECK_BUTTON( gtk_check_button_new() );
+								auto check = ui::CheckButton(GTK_CHECK_BUTTON( gtk_check_button_new() ));
 								gtk_widget_show( GTK_WIDGET( check ) );
 								gtk_table_attach( table, GTK_WIDGET( check ), 1, 2, 0, 1,
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),

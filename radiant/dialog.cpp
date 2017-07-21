@@ -142,10 +142,10 @@ typedef ImportExport<GtkToggleButton, bool, BoolToggleImport, BoolToggleExport> 
 
 
 void IntRadioImport( GtkRadioButton& widget, int index ){
-	radio_button_set_active( &widget, index );
+	radio_button_set_active( ui::RadioButton(&widget), index );
 }
 void IntRadioExport( GtkRadioButton& widget, const IntImportCallback& importCallback ){
-	importCallback( radio_button_get_active( &widget ) );
+	importCallback( radio_button_get_active( ui::RadioButton(&widget) ) );
 }
 typedef ImportExport<GtkRadioButton, int, IntRadioImport, IntRadioExport> IntRadioImportExport;
 

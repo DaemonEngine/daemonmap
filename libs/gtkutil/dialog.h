@@ -94,7 +94,7 @@ class RadioHBox
 {
 public:
 GtkHBox* m_hbox;
-GtkRadioButton* m_radio;
+ui::RadioButton m_radio;
 RadioHBox( GtkHBox* hbox, GtkRadioButton* radio ) :
 	m_hbox( hbox ),
 	m_radio( radio ){
