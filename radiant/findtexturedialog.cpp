@@ -168,7 +168,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
+	entry.connect( "focus_in_event",
 					  G_CALLBACK( find_focus_in ), 0 );
 	AddDialogData( *GTK_ENTRY(entry), m_strFind );
 	GlobalTextureEntryCompletion::instance().connect( entry );
@@ -178,7 +178,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
+	entry.connect( "focus_in_event",
 					  G_CALLBACK( replace_focus_in ), 0 );
 	AddDialogData( *GTK_ENTRY(entry), m_strReplace );
 	GlobalTextureEntryCompletion::instance().connect( entry );
@@ -195,14 +195,14 @@ ui::Window FindTextureDialog::BuildDialog(){
 	button = ui::Button( "Apply" );
 	button.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( OnApply ), 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "Close" );
 	button.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( OnClose ), 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 

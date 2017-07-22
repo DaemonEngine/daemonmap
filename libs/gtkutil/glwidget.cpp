@@ -231,10 +231,10 @@ ui::Widget glwidget_new( gboolean zbuffer ){
 
 	g_object_set_data( G_OBJECT( widget ), "zbuffer", gint_to_pointer( zbuffer ) );
 
-	g_signal_connect( G_OBJECT( widget ), "hierarchy-changed", G_CALLBACK( glwidget_enable_gl ), 0 );
+	widget.connect( "hierarchy-changed", G_CALLBACK( glwidget_enable_gl ), 0 );
 
-	g_signal_connect( G_OBJECT( widget ), "realize", G_CALLBACK( glwidget_context_created ), 0 );
-	g_signal_connect( G_OBJECT( widget ), "unrealize", G_CALLBACK( glwidget_context_destroyed ), 0 );
+	widget.connect( "realize", G_CALLBACK( glwidget_context_created ), 0 );
+	widget.connect( "unrealize", G_CALLBACK( glwidget_context_destroyed ), 0 );
 
 	return widget;
 }

@@ -51,7 +51,7 @@ static gboolean main_window_iconified( ui::Widget widget, GdkEventWindowState* e
 }
 
 unsigned int connect_floating( ui::Window main_window, ui::Window floating ){
-	return g_signal_connect( G_OBJECT( main_window ), "window_state_event", G_CALLBACK( main_window_iconified ), floating );
+	return main_window.connect( "window_state_event", G_CALLBACK( main_window_iconified ), floating );
 }
 
 gboolean destroy_disconnect_floating( ui::Window widget, gpointer data ){
@@ -67,7 +67,7 @@ gboolean floating_window_delete_present( ui::Window floating, GdkEventFocus *eve
 }
 
 guint connect_floating_window_delete_present( ui::Window floating, ui::Window main_window ){
-	return g_signal_connect( G_OBJECT( floating ), "delete_event", G_CALLBACK( floating_window_delete_present ), main_window );
+	return floating.connect( "delete_event", G_CALLBACK( floating_window_delete_present ), main_window );
 }
 
 gboolean floating_window_destroy_present( ui::Window floating, ui::Window main_window ){
@@ -78,7 +78,7 @@ gboolean floating_window_destroy_present( ui::Window floating, ui::Window main_w
 }
 
 guint connect_floating_window_destroy_present( ui::Window floating, ui::Window main_window ){
-	return g_signal_connect( G_OBJECT( floating ), "destroy", G_CALLBACK( floating_window_destroy_present ), main_window );
+	return floating.connect( "destroy", G_CALLBACK( floating_window_destroy_present ), main_window );
 }
 
 ui::Window create_floating_window( const char* title, ui::Window parent ){
@@ -89,7 +89,7 @@ ui::Window create_floating_window( const char* title, ui::Window parent ){
 		gtk_window_set_transient_for( window, parent );
 		connect_floating_window_destroy_present( window, parent );
 		g_object_set_data( G_OBJECT( window ), "floating_handler", gint_to_pointer( connect_floating( parent, window ) ) );
-		g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy_disconnect_floating ), parent );
+		window.connect( "destroy", G_CALLBACK( destroy_disconnect_floating ), parent );
 	}
 
 	return window;
@@ -115,11 +115,11 @@ ui::Window create_persistent_floating_window( const char* title, ui::Window main
 	gtk_widget_set_events( GTK_WIDGET( window ), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK );
 
 	connect_floating_window_delete_present( window, main_window );
-	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( persistent_floating_window_delete ), 0 );
+	window.connect( "delete_event", G_CALLBACK( persistent_floating_window_delete ), 0 );
 
 #if 0
 	if ( g_multimon_globals.m_bStartOnPrimMon && g_multimon_globals.m_bNoSysMenuPopups ) {
-		g_signal_connect( G_OBJECT( window ), "realize", G_CALLBACK( window_realize_remove_sysmenu ), 0 );
+		window.connect( "realize", G_CALLBACK( window_realize_remove_sysmenu ), 0 );
 	}
 #endif
 
@@ -132,7 +132,7 @@ gint window_realize_remove_minmax( ui::Widget widget, gpointer data ){
 }
 
 void window_remove_minmax( ui::Window window ){
-	g_signal_connect( G_OBJECT( window ), "realize", G_CALLBACK( window_realize_remove_minmax ), 0 );
+	window.connect( "realize", G_CALLBACK( window_realize_remove_minmax ), 0 );
 }
 
 
@@ -153,7 +153,7 @@ gboolean window_focus_in_clear_focus_widget(ui::Widget widget, GdkEventKey *even
 
 guint window_connect_focus_in_clear_focus_widget(ui::Window window)
 {
-	return g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( window_focus_in_clear_focus_widget ), NULL );
+	return window.connect( "focus_in_event", G_CALLBACK( window_focus_in_clear_focus_widget ), NULL );
 }
 
 void window_get_position(ui::Window window, WindowPosition &position)
@@ -223,7 +223,7 @@ void WindowPositionTracker::sync(ui::Window window)
 void WindowPositionTracker::connect(ui::Window window)
 {
 	sync( window );
-	g_signal_connect( G_OBJECT( window ), "configure_event", G_CALLBACK( configure ), this );
+	window.connect( "configure_event", G_CALLBACK( configure ), this );
 }
 
 const WindowPosition &WindowPositionTracker::getPosition() const

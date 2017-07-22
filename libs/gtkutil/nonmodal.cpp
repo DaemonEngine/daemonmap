@@ -14,7 +14,7 @@ gboolean escape_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpoint
 
 void widget_connect_escape_clear_focus_widget(ui::Widget widget)
 {
-    g_signal_connect(G_OBJECT(widget), "key_press_event", G_CALLBACK(escape_clear_focus_widget), 0);
+    widget.connect("key_press_event", G_CALLBACK(escape_clear_focus_widget), 0);
 }
 
 gboolean NonModalEntry::focus_in(ui::Entry entry, GdkEventFocus *event, NonModalEntry *self)
@@ -62,11 +62,11 @@ gboolean NonModalEntry::escape(ui::Entry entry, GdkEventKey *event, NonModalEntr
 
 void NonModalEntry::connect(ui::Entry entry)
 {
-    g_signal_connect(G_OBJECT(entry), "focus_in_event", G_CALLBACK(focus_in), this);
-    g_signal_connect(G_OBJECT(entry), "focus_out_event", G_CALLBACK(focus_out), this);
-    g_signal_connect(G_OBJECT(entry), "key_press_event", G_CALLBACK(enter), this);
-    g_signal_connect(G_OBJECT(entry), "key_press_event", G_CALLBACK(escape), this);
-    g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(changed), this);
+    entry.connect("focus_in_event", G_CALLBACK(focus_in), this);
+    entry.connect("focus_out_event", G_CALLBACK(focus_out), this);
+    entry.connect("key_press_event", G_CALLBACK(enter), this);
+    entry.connect("key_press_event", G_CALLBACK(escape), this);
+    entry.connect("changed", G_CALLBACK(changed), this);
 }
 
 gboolean NonModalSpinner::changed(ui::SpinButton spin, NonModalSpinner *self)
@@ -96,11 +96,11 @@ gboolean NonModalSpinner::escape(ui::SpinButton spin, GdkEventKey *event, NonMod
 
 void NonModalSpinner::connect(ui::SpinButton spin)
 {
-    guint handler = g_signal_connect(G_OBJECT(gtk_spin_button_get_adjustment(spin)), "value_changed",
-                                     G_CALLBACK(changed), this);
+    auto adj = ui::Adjustment(gtk_spin_button_get_adjustment(spin));
+    guint handler = adj.connect("value_changed", G_CALLBACK(changed), this);
     g_object_set_data(G_OBJECT(spin), "handler", gint_to_pointer(handler));
-    g_signal_connect(G_OBJECT(spin), "key_press_event", G_CALLBACK(enter), this);
-    g_signal_connect(G_OBJECT(spin), "key_press_event", G_CALLBACK(escape), this);
+    spin.connect("key_press_event", G_CALLBACK(enter), this);
+    spin.connect("key_press_event", G_CALLBACK(escape), this);
 }
 
 void NonModalRadio::connect(ui::RadioButton radio)

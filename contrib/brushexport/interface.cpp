@@ -22,15 +22,10 @@ create_w_plugplug2( void ){
 	GtkWidget *r_collapsebymaterial;
 	GtkWidget *r_nocollapse;
 	GtkWidget *vbox3;
-	GtkWidget *b_export;
-	GtkWidget *b_close;
 	GtkWidget *vbox2;
 	GtkWidget *label1;
 	GtkWidget *ed_materialname;
 	GtkWidget *hbox1;
-	GtkWidget *b_addmaterial;
-	GtkWidget *b_removematerial;
-	GtkWidget *t_exportmaterials;
 	GtkWidget *t_limitmatnames;
 	GtkWidget *t_objects;
 
@@ -86,13 +81,13 @@ create_w_plugplug2( void ){
 	gtk_widget_show( vbox3 );
 	gtk_box_pack_start( GTK_BOX( hbox2 ), vbox3, FALSE, FALSE, 0 );
 
-	b_export = gtk_button_new_from_stock( "gtk-save" );
+	auto b_export = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-save" )));
 	gtk_widget_set_name( b_export, "b_export" );
 	gtk_widget_show( b_export );
 	gtk_box_pack_start( GTK_BOX( vbox3 ), b_export, TRUE, FALSE, 0 );
 	gtk_container_set_border_width( GTK_CONTAINER( b_export ), 5 );
 
-	b_close = gtk_button_new_from_stock( "gtk-cancel" );
+	auto b_close = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-cancel" )));
 	gtk_widget_set_name( b_close, "b_close" );
 	gtk_widget_show( b_close );
 	gtk_box_pack_start( GTK_BOX( vbox3 ), b_close, TRUE, FALSE, 0 );
@@ -133,12 +128,12 @@ create_w_plugplug2( void ){
 	gtk_widget_show( hbox1 );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), hbox1, FALSE, FALSE, 0 );
 
-	b_addmaterial = gtk_button_new_from_stock( "gtk-add" );
+	auto b_addmaterial = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-add" )));
 	gtk_widget_set_name( b_addmaterial, "b_addmaterial" );
 	gtk_widget_show( b_addmaterial );
 	gtk_box_pack_start( GTK_BOX( hbox1 ), b_addmaterial, FALSE, FALSE, 0 );
 
-	b_removematerial = gtk_button_new_from_stock( "gtk-remove" );
+	auto b_removematerial = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-remove" )));
 	gtk_widget_set_name( b_removematerial, "b_removematerial" );
 	gtk_widget_show( b_removematerial );
 	gtk_box_pack_start( GTK_BOX( hbox1 ), b_removematerial, FALSE, FALSE, 0 );
@@ -153,20 +148,20 @@ create_w_plugplug2( void ){
 	gtk_widget_show( t_objects );
 	gtk_box_pack_end( GTK_BOX( vbox2 ), t_objects, FALSE, FALSE, 0 );
 
-	t_exportmaterials = gtk_check_button_new_with_mnemonic( "Create material information (.mtl file)" );
+	auto t_exportmaterials = ui::CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_mnemonic( "Create material information (.mtl file)" )));
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( t_exportmaterials ), true );
 	gtk_widget_set_name( t_exportmaterials, "t_exportmaterials" );
 	gtk_widget_show( t_exportmaterials );
 	gtk_box_pack_end( GTK_BOX( vbox2 ), t_exportmaterials, FALSE, FALSE, 10 );
 
 	using namespace callbacks;
-	g_signal_connect( G_OBJECT( w_plugplug2 ), "destroy", G_CALLBACK( OnDestroy ), NULL );
+	w_plugplug2.connect( "destroy", G_CALLBACK( OnDestroy ), NULL );
 	g_signal_connect_swapped( G_OBJECT( b_close ), "clicked", G_CALLBACK( OnDestroy ), NULL );
 
-	g_signal_connect( ( gpointer )b_export, "clicked", G_CALLBACK( OnExportClicked ), NULL );
-	g_signal_connect( ( gpointer )b_addmaterial, "clicked", G_CALLBACK( OnAddMaterial ), NULL );
-	g_signal_connect( ( gpointer )b_removematerial, "clicked", G_CALLBACK( OnRemoveMaterial ), NULL );
-	g_signal_connect( ( gpointer )t_exportmaterials, "clicked", G_CALLBACK( OnExportMatClicked ), NULL );
+	b_export.connect( "clicked", G_CALLBACK( OnExportClicked ), NULL );
+	b_addmaterial.connect( "clicked", G_CALLBACK( OnAddMaterial ), NULL );
+	b_removematerial.connect( "clicked", G_CALLBACK( OnRemoveMaterial ), NULL );
+	t_exportmaterials.connect( "clicked", G_CALLBACK( OnExportMatClicked ), NULL );
 
 	/* Store pointers to all widgets, for use by lookup_widget(). */
 	GLADE_HOOKUP_OBJECT_NO_REF( w_plugplug2, w_plugplug2, "w_plugplug2" );

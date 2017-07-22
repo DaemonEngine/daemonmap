@@ -307,8 +307,8 @@ void EntityList_constructWindow( ui::Window main_window ){
 			GtkTreeSelection* select = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 			gtk_tree_selection_set_mode( select, GTK_SELECTION_MULTIPLE );
 
-			g_signal_connect( G_OBJECT( view ), "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );
-			g_signal_connect( G_OBJECT( view ), "row_collapsed", G_CALLBACK( entitylist_treeview_rowcollapsed ), 0 );
+			view.connect( "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );
+			view.connect( "row_collapsed", G_CALLBACK( entitylist_treeview_rowcollapsed ), 0 );
 
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 

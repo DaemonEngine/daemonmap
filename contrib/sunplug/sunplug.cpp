@@ -257,8 +257,8 @@ void about_plugin_window(){
 
 	auto window = ui::Window( ui::window_type::TOP ); // create a window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
-	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
-	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
+	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
+	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
 	gtk_window_set_title( GTK_WINDOW( window ), "About SunPlug" ); // set the title of the window for the window
 	gtk_window_set_resizable( GTK_WINDOW( window ), FALSE ); // don't let the user resize the window
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
@@ -314,7 +314,7 @@ void GetOptimalCoordinates( AABB *levelBoundingBox ){
 
 // MapCoordinator dialog window
 void MapCoordinator(){
-	GtkWidget *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY, *button;
+	GtkWidget *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY;
 	Entity *theWorldspawn = NULL;
 	const char *buffer;
 	char line[20];
@@ -322,8 +322,8 @@ void MapCoordinator(){
 	// in any case we need a window to show the user what to do
 	auto window = ui::Window( ui::window_type::TOP ); // create the window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
-	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event for the window
-	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
+	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event for the window
+	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
 	gtk_window_set_title( GTK_WINDOW( window ), "ET-MapCoordinator" ); // set the title of the window for the window
 	gtk_window_set_resizable( GTK_WINDOW( window ), FALSE ); // don't let the user resize the window
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
@@ -370,8 +370,8 @@ void MapCoordinator(){
 		auto spinner_adj_MaxX = ui::Adjustment( map_maxX, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum x value
 		auto spinner_adj_MaxY = ui::Adjustment( map_maxY, -65536.0, 65536.0, 1.0, 5.0, 0 ); // create adjustment for value and range of maximum y value
 
-		button = ui::Button( "Get optimal mapcoords" ); // create button with text
-		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( input_optimal ), NULL ); // connect button with callback function
+		auto button = ui::Button( "Get optimal mapcoords" ); // create button with text
+		button.connect( "clicked", G_CALLBACK( input_optimal ), NULL ); // connect button with callback function
 		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert button into vbox
 
 		gtk_box_pack_start( GTK_BOX( vbox ), gtk_hseparator_new(), FALSE, FALSE, 2 ); // insert separator into vbox
@@ -417,11 +417,11 @@ void MapCoordinator(){
 		msp.worldspawn = theWorldspawn;
 
 		button = ui::Button( "Set" ); // create button with text
-		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( set_coordinates ), NULL ); // connect button with callback function
+		button.connect( "clicked", G_CALLBACK( set_coordinates ), NULL ); // connect button with callback function
 		gtk_table_attach_defaults( GTK_TABLE( table ), button, 1, 2, 3, 4 ); // insert button into table
 
 		button = ui::Button( "Cancel" ); // create button with text
-		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( close_window ), NULL ); // connect button with callback function
+		button.connect( "clicked", G_CALLBACK( close_window ), NULL ); // connect button with callback function
 		gtk_table_attach_defaults( GTK_TABLE( table ), button, 2, 3, 3, 4 ); // insert button into table
 	}
 	else {
@@ -431,8 +431,8 @@ void MapCoordinator(){
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
 		gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
 
-		button = ui::Button( "OK" ); // create a button with text
-		g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( close_window ), NULL ); // connect the click event to close the window
+		auto button = ui::Button( "OK" ); // create a button with text
+		button.connect( "clicked", G_CALLBACK( close_window ), NULL ); // connect the click event to close the window
 		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
 	}
 

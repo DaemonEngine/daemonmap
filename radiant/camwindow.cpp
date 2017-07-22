@@ -1082,11 +1082,11 @@ void CamWnd_Move_Discrete_Import( bool value ){
 
 
 void CamWnd_Add_Handlers_Move( CamWnd& camwnd ){
-	camwnd.m_selection_button_press_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_press_event", G_CALLBACK( selection_button_press ), camwnd.m_window_observer );
-	camwnd.m_selection_button_release_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_release_event", G_CALLBACK( selection_button_release ), camwnd.m_window_observer );
-	camwnd.m_selection_motion_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "motion_notify_event", G_CALLBACK( DeferredMotion::gtk_motion ), &camwnd.m_deferred_motion );
+	camwnd.m_selection_button_press_handler = camwnd.m_gl_widget.connect( "button_press_event", G_CALLBACK( selection_button_press ), camwnd.m_window_observer );
+	camwnd.m_selection_button_release_handler = camwnd.m_gl_widget.connect( "button_release_event", G_CALLBACK( selection_button_release ), camwnd.m_window_observer );
+	camwnd.m_selection_motion_handler = camwnd.m_gl_widget.connect( "motion_notify_event", G_CALLBACK( DeferredMotion::gtk_motion ), &camwnd.m_deferred_motion );
 
-	camwnd.m_freelook_button_press_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_press_event", G_CALLBACK( enable_freelook_button_press ), &camwnd );
+	camwnd.m_freelook_button_press_handler = camwnd.m_gl_widget.connect( "button_press_event", G_CALLBACK( enable_freelook_button_press ), &camwnd );
 
 	if ( g_camwindow_globals_private.m_bCamDiscrete ) {
 		CamWnd_Move_Discrete_Enable( camwnd );
@@ -1114,11 +1114,11 @@ void CamWnd_Remove_Handlers_Move( CamWnd& camwnd ){
 }
 
 void CamWnd_Add_Handlers_FreeMove( CamWnd& camwnd ){
-	camwnd.m_selection_button_press_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_press_event", G_CALLBACK( selection_button_press_freemove ), camwnd.m_window_observer );
-	camwnd.m_selection_button_release_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_release_event", G_CALLBACK( selection_button_release_freemove ), camwnd.m_window_observer );
-	camwnd.m_selection_motion_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "motion_notify_event", G_CALLBACK( selection_motion_freemove ), camwnd.m_window_observer );
+	camwnd.m_selection_button_press_handler = camwnd.m_gl_widget.connect( "button_press_event", G_CALLBACK( selection_button_press_freemove ), camwnd.m_window_observer );
+	camwnd.m_selection_button_release_handler = camwnd.m_gl_widget.connect( "button_release_event", G_CALLBACK( selection_button_release_freemove ), camwnd.m_window_observer );
+	camwnd.m_selection_motion_handler = camwnd.m_gl_widget.connect( "motion_notify_event", G_CALLBACK( selection_motion_freemove ), camwnd.m_window_observer );
 
-	camwnd.m_freelook_button_press_handler = g_signal_connect( G_OBJECT( camwnd.m_gl_widget ), "button_press_event", G_CALLBACK( disable_freelook_button_press ), &camwnd );
+	camwnd.m_freelook_button_press_handler = camwnd.m_gl_widget.connect( "button_press_event", G_CALLBACK( disable_freelook_button_press ), &camwnd );
 
 	KeyEvent_connect( "CameraFreeMoveForward" );
 	KeyEvent_connect( "CameraFreeMoveBack" );
@@ -1170,8 +1170,8 @@ CamWnd::CamWnd() :
 	gtk_widget_set_events( m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
 	gtk_widget_set_can_focus( m_gl_widget, true );
 
-	m_sizeHandler = g_signal_connect( G_OBJECT( m_gl_widget ), "size_allocate", G_CALLBACK( camera_size_allocate ), this );
-	m_exposeHandler = g_signal_connect( G_OBJECT( m_gl_widget ), "expose_event", G_CALLBACK( camera_expose ), this );
+	m_sizeHandler = m_gl_widget.connect( "size_allocate", G_CALLBACK( camera_size_allocate ), this );
+	m_exposeHandler = m_gl_widget.connect( "expose_event", G_CALLBACK( camera_expose ), this );
 
 	Map_addValidCallback( g_map, DeferredDrawOnMapValidChangedCaller( m_deferredDraw ) );
 
@@ -1179,7 +1179,7 @@ CamWnd::CamWnd() :
 
 	CamWnd_Add_Handlers_Move( *this );
 
-	g_signal_connect( G_OBJECT( m_gl_widget ), "scroll_event", G_CALLBACK( wheelmove_scroll ), this );
+	m_gl_widget.connect( "scroll_event", G_CALLBACK( wheelmove_scroll ), this );
 
 	AddSceneChangeCallback( ReferenceCaller<CamWnd, CamWnd_Update>( *this ) );
 
@@ -1299,7 +1299,7 @@ void CamWnd::EnableFreeMove(){
 	CamWnd_Add_Handlers_FreeMove( *this );
 
 	gtk_window_set_focus( m_parent, m_gl_widget );
-	m_freemove_handle_focusout = g_signal_connect( G_OBJECT( m_gl_widget ), "focus_out_event", G_CALLBACK( camwindow_freemove_focusout ), this );
+	m_freemove_handle_focusout = m_gl_widget.connect( "focus_out_event", G_CALLBACK( camwindow_freemove_focusout ), this );
 	m_freezePointer.freeze_pointer( m_parent, Camera_motionDelta, &m_Camera );
 
 	CamWnd_Update( *this );

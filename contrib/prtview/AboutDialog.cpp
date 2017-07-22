@@ -50,14 +50,14 @@ static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer
 }
 
 void DoAboutDlg(){
-	GtkWidget *vbox, *button, *label;
+	GtkWidget *vbox, *label;
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "About Portal Viewer" );
-	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
+	dlg.connect( "delete_event",
 					  G_CALLBACK( dialog_delete_callback ), NULL );
-	g_signal_connect( GTK_OBJECT( dlg ), "destroy",
+	dlg.connect( "destroy",
 						G_CALLBACK( gtk_widget_destroy ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
@@ -80,10 +80,10 @@ void DoAboutDlg(){
 	gtk_widget_show( vbox );
 	gtk_box_pack_start( GTK_BOX( hbox ), vbox, FALSE, FALSE, 0 );
 
-	button = ui::Button( "OK" );
+	auto button = ui::Button( "OK" );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 

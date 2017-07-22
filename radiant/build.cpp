@@ -876,7 +876,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					auto renderer = ui::CellRendererText();
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
-					g_signal_connect( G_OBJECT(renderer), "edited", G_CALLBACK( project_cell_edited ), &projectList );
+					renderer.connect("edited", G_CALLBACK( project_cell_edited ), &projectList );
 
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
@@ -890,7 +890,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					projectList.m_store = store;
 					scr.add(view);
 
-					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( project_key_press ), &projectList );
+					view.connect( "key_press_event", G_CALLBACK( project_key_press ), &projectList );
 
 					g_object_unref( G_OBJECT( store ) );
 				}
@@ -913,7 +913,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					auto renderer = ui::CellRendererText();
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
-					g_signal_connect( G_OBJECT(renderer), "edited", G_CALLBACK( commands_cell_edited ), store );
+					renderer.connect( "edited", G_CALLBACK( commands_cell_edited ), store );
 
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
@@ -927,9 +927,10 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					g_object_unref( G_OBJECT( store ) );
 
-					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( commands_key_press ), store );
+					view.connect( "key_press_event", G_CALLBACK( commands_key_press ), store );
 
-					g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( buildView ) ) ), "changed", G_CALLBACK( project_selection_changed ), store );
+					auto sel = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( buildView ) ));
+					sel.connect( "changed", G_CALLBACK( project_selection_changed ), store );
 				}
 			}
 		}

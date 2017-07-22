@@ -80,14 +80,14 @@ static void change_clicked( GtkWidget *widget, gpointer data ){
 }
 
 int DoLoadPortalFileDialog(){
-	GtkWidget *hbox, *button, *entry, *check2d, *check3d;
+	GtkWidget *hbox, *entry, *check2d, *check3d;
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "Load .prt" );
-	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
+	dlg.connect( "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
-	g_signal_connect( GTK_OBJECT( dlg ), "destroy",
+	dlg.connect( "destroy",
 						G_CALLBACK( gtk_widget_destroy ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
@@ -114,10 +114,10 @@ int DoLoadPortalFileDialog(){
 	gtk_widget_show( check2d );
 	gtk_box_pack_start( GTK_BOX( hbox ), check2d, FALSE, FALSE, 0 );
 
-	button = ui::Button( "Change" );
+	auto button = ui::Button( "Change" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked", G_CALLBACK( change_clicked ), entry );
+	button.connect( "clicked", G_CALLBACK( change_clicked ), entry );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	hbox = ui::HBox( FALSE, 5 );
@@ -127,14 +127,14 @@ int DoLoadPortalFileDialog(){
 	button = ui::Button( "Cancel" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "OK" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 

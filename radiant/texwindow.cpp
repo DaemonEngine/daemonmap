@@ -1591,7 +1591,7 @@ void TextureBrowser_createTreeViewTree(){
 	gtk_tree_view_set_enable_search( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTree ), FALSE );
 
 	gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTree ), FALSE );
-	g_signal_connect( g_TextureBrowser.m_treeViewTree, "row-activated", (GCallback) TreeView_onRowActivated, NULL );
+	g_TextureBrowser.m_treeViewTree.connect( "row-activated", (GCallback) TreeView_onRowActivated, NULL );
 
 	auto renderer = ui::CellRendererText();
 	gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTree ), -1, "", renderer, "text", 0, NULL );
@@ -1607,15 +1607,15 @@ void TextureBrowser_createContextMenu( ui::Widget treeview, GdkEventButton *even
 	ui::Widget menu = ui::Menu();
 
 	ui::Widget menuitem = ui::MenuItem( "Add tag" );
-	g_signal_connect( menuitem, "activate", (GCallback)TextureBrowser_addTag, treeview );
+	menuitem.connect( "activate", (GCallback)TextureBrowser_addTag, treeview );
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), menuitem );
 
 	menuitem = ui::MenuItem( "Rename tag" );
-	g_signal_connect( menuitem, "activate", (GCallback)TextureBrowser_renameTag, treeview );
+	menuitem.connect( "activate", (GCallback)TextureBrowser_renameTag, treeview );
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), menuitem );
 
 	menuitem = ui::MenuItem( "Delete tag" );
-	g_signal_connect( menuitem, "activate", (GCallback)TextureBrowser_deleteTag, treeview );
+	menuitem.connect( "activate", (GCallback)TextureBrowser_deleteTag, treeview );
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), menuitem );
 
 	gtk_widget_show_all( menu );
@@ -1646,7 +1646,7 @@ void TextureBrowser_createTreeViewTags(){
 	g_TextureBrowser.m_treeViewTags = ui::TreeView();
 	gtk_tree_view_set_enable_search( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTags ), FALSE );
 
-	g_signal_connect( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTags ), "button-press-event", (GCallback)TreeViewTags_onButtonPressed, NULL );
+	g_TextureBrowser.m_treeViewTags.connect( "button-press-event", (GCallback)TreeViewTags_onButtonPressed, NULL );
 
 	gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTags ), FALSE );
 
@@ -1933,7 +1933,7 @@ void TextureBrowser_constructTagNotebook(){
 	gtk_notebook_append_page( GTK_NOTEBOOK( g_TextureBrowser.m_tag_notebook ), g_TextureBrowser.m_scr_win_tree, labelTextures );
 	gtk_notebook_append_page( GTK_NOTEBOOK( g_TextureBrowser.m_tag_notebook ), g_TextureBrowser.m_scr_win_tags, labelTags );
 
-	g_signal_connect( G_OBJECT( g_TextureBrowser.m_tag_notebook ), "switch-page", G_CALLBACK( TextureBrowser_toggleSearchButton ), NULL );
+	g_TextureBrowser.m_tag_notebook.connect( "switch-page", G_CALLBACK( TextureBrowser_toggleSearchButton ), NULL );
 
 	gtk_widget_show_all( g_TextureBrowser.m_tag_notebook );
 }
@@ -1941,7 +1941,7 @@ void TextureBrowser_constructTagNotebook(){
 void TextureBrowser_constructSearchButton(){
 	ui::Widget image = ui::Widget(gtk_image_new_from_stock( GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR ));
 	g_TextureBrowser.m_search_button = ui::Button();
-	g_signal_connect( G_OBJECT( g_TextureBrowser.m_search_button ), "clicked", G_CALLBACK( TextureBrowser_searchTags ), NULL );
+	g_TextureBrowser.m_search_button.connect( "clicked", G_CALLBACK( TextureBrowser_searchTags ), NULL );
 	gtk_widget_set_tooltip_text(g_TextureBrowser.m_search_button, "Search with selected tags");
 	g_TextureBrowser.m_search_button.add(image);
 }
@@ -2050,8 +2050,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		w.show();
 		g_TextureBrowser.m_texture_scroll = w;
 
-		GtkAdjustment *vadjustment = gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) );
-		g_signal_connect( G_OBJECT( vadjustment ), "value_changed", G_CALLBACK( TextureBrowser_verticalScroll ), &g_TextureBrowser );
+		auto vadjustment = ui::Adjustment(gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) ));
+		vadjustment.connect( "value_changed", G_CALLBACK( TextureBrowser_verticalScroll ), &g_TextureBrowser );
 
 		widget_set_visible( g_TextureBrowser.m_texture_scroll, g_TextureBrowser.m_showTextureScrollbar );
 	}
@@ -2065,13 +2065,13 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		gtk_table_attach_defaults( GTK_TABLE( table ), g_TextureBrowser.m_gl_widget, 1, 2, 1, 2 );
 		g_TextureBrowser.m_gl_widget.show();
 
-		g_TextureBrowser.m_sizeHandler = g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
-		g_TextureBrowser.m_exposeHandler = g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "expose_event", G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
+		g_TextureBrowser.m_sizeHandler = g_TextureBrowser.m_gl_widget.connect( "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
+		g_TextureBrowser.m_exposeHandler = g_TextureBrowser.m_gl_widget.connect( "expose_event", G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
 
-		g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "button_press_event", G_CALLBACK( TextureBrowser_button_press ), &g_TextureBrowser );
-		g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "button_release_event", G_CALLBACK( TextureBrowser_button_release ), &g_TextureBrowser );
-		g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "motion_notify_event", G_CALLBACK( TextureBrowser_motion ), &g_TextureBrowser );
-		g_signal_connect( G_OBJECT( g_TextureBrowser.m_gl_widget ), "scroll_event", G_CALLBACK( TextureBrowser_scroll ), &g_TextureBrowser );
+		g_TextureBrowser.m_gl_widget.connect( "button_press_event", G_CALLBACK( TextureBrowser_button_press ), &g_TextureBrowser );
+		g_TextureBrowser.m_gl_widget.connect( "button_release_event", G_CALLBACK( TextureBrowser_button_release ), &g_TextureBrowser );
+		g_TextureBrowser.m_gl_widget.connect( "motion_notify_event", G_CALLBACK( TextureBrowser_motion ), &g_TextureBrowser );
+		g_TextureBrowser.m_gl_widget.connect( "scroll_event", G_CALLBACK( TextureBrowser_scroll ), &g_TextureBrowser );
 	}
 
 	// tag stuff
@@ -2140,7 +2140,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_assigned_store ) ));
 			g_object_unref( G_OBJECT( g_TextureBrowser.m_assigned_store ) );
-			g_signal_connect( g_TextureBrowser.m_assigned_tree, "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
+			g_TextureBrowser.m_assigned_tree.connect( "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_assigned_tree ), FALSE );
 
 			GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( g_TextureBrowser.m_assigned_tree ) );
@@ -2168,7 +2168,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_available_store ) ));
 			g_object_unref( G_OBJECT( g_TextureBrowser.m_available_store ) );
-			g_signal_connect( g_TextureBrowser.m_available_tree, "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
+			g_TextureBrowser.m_available_tree.connect( "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ), FALSE );
 
 			GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ) );
@@ -2198,8 +2198,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_table_attach( GTK_TABLE( frame_table ), m_btn_left, 1, 2, 1, 2, GTK_SHRINK, GTK_EXPAND, 0, 0 );
 			gtk_table_attach( GTK_TABLE( frame_table ), m_btn_right, 1, 2, 2, 3, GTK_SHRINK, GTK_EXPAND, 0, 0 );
 
-			g_signal_connect( G_OBJECT( m_btn_left ), "clicked", G_CALLBACK( TextureBrowser_assignTags ), NULL );
-			g_signal_connect( G_OBJECT( m_btn_right ), "clicked", G_CALLBACK( TextureBrowser_removeTags ), NULL );
+			m_btn_left.connect( "clicked", G_CALLBACK( TextureBrowser_assignTags ), NULL );
+			m_btn_right.connect( "clicked", G_CALLBACK( TextureBrowser_removeTags ), NULL );
 
 			m_btn_left.show();
 			m_btn_right.show();

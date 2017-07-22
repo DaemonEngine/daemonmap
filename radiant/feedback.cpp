@@ -312,9 +312,9 @@ ui::Window CDbgDlg::BuildDialog(){
 		}
 
 		{
-			GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
+			auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
-			g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( feedback_selection_changed ), NULL );
+			selection.connect( "changed", G_CALLBACK( feedback_selection_changed ), NULL );
 		}
 
 		view.show();

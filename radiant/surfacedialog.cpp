@@ -813,7 +813,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				gtk_table_attach( GTK_TABLE( table ), button, 2, 4, 5, 6,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
-				g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnMatchGrid ), 0 );
+				button.connect( "clicked", G_CALLBACK( OnBtnMatchGrid ), 0 );
 			}
 		}
 
@@ -862,7 +862,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnAxial ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -872,7 +872,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnFaceFit ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -882,7 +882,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchdetails ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -892,7 +892,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchreset ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -902,7 +902,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 2, 3, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchnatural ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -912,7 +912,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					gtk_table_attach( GTK_TABLE( table ), button, 3, 4, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					g_signal_connect( G_OBJECT( button ), "clicked",
+					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchFit ), 0 );
 					gtk_widget_set_size_request( button, 60, -1 );
 				}
@@ -1050,11 +1050,11 @@ ui::Window SurfaceInspector::BuildDialog(){
 				gtk_widget_set_size_request( TexTool::g_textoolWin, -1, 240 ); //Yeah!
 				frame.add(TexTool::g_textoolWin);
 
-				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "size_allocate", G_CALLBACK( TexTool::size_allocate ), NULL );
-				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "expose_event", G_CALLBACK( TexTool::expose ), NULL );
-				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "button_press_event", G_CALLBACK( TexTool::button_press ), NULL );
-				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "button_release_event", G_CALLBACK( TexTool::button_release ), NULL );
-				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "motion_notify_event", G_CALLBACK( TexTool::motion ), NULL );
+				TexTool::g_textoolWin.connect( "size_allocate", G_CALLBACK( TexTool::size_allocate ), NULL );
+				TexTool::g_textoolWin.connect( "expose_event", G_CALLBACK( TexTool::expose ), NULL );
+				TexTool::g_textoolWin.connect( "button_press_event", G_CALLBACK( TexTool::button_press ), NULL );
+				TexTool::g_textoolWin.connect( "button_release_event", G_CALLBACK( TexTool::button_release ), NULL );
+				TexTool::g_textoolWin.connect( "motion_notify_event", G_CALLBACK( TexTool::motion ), NULL );
 			}
 			{
 				ui::Widget hbox = ui::HBox( FALSE, 5 );
@@ -1073,11 +1073,11 @@ ui::Window SurfaceInspector::BuildDialog(){
 //        frame.add(hbox);
 
 //Hmm. Do we really need g_object_set_data? Mebbe not... And we don't! :-)
-//        g_object_set_data(G_OBJECT(flipX), "handler", gint_to_pointer(g_signal_connect(G_OBJECT(flipX), "toggled", G_CALLBACK(TexTool::flipX), 0)));
-//        g_object_set_data(G_OBJECT(flipY), "handler", gint_to_pointer(g_signal_connect(G_OBJECT(flipY), "toggled", G_CALLBACK(TexTool::flipY), 0)));
+//        g_object_set_data(G_OBJECT(flipX), "handler", gint_to_pointer(flipX.connect("toggled", G_CALLBACK(TexTool::flipX), 0)));
+//        g_object_set_data(G_OBJECT(flipY), "handler", gint_to_pointer(flipY.connect("toggled", G_CALLBACK(TexTool::flipY), 0)));
 //Instead, just do:
-				g_signal_connect( G_OBJECT( flipX ), "toggled", G_CALLBACK( TexTool::flipX ), NULL );
-				g_signal_connect( G_OBJECT( flipY ), "toggled", G_CALLBACK( TexTool::flipY ), NULL );
+				flipX.connect( "toggled", G_CALLBACK( TexTool::flipX ), NULL );
+				flipY.connect( "toggled", G_CALLBACK( TexTool::flipY ), NULL );
 			}
 		}
 #endif

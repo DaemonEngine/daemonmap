@@ -1621,7 +1621,7 @@ WaitDialog create_wait_dialog( const char* title, const char* text ){
 	gtk_container_set_border_width( GTK_CONTAINER( dialog.m_window ), 0 );
 	gtk_window_set_position( dialog.m_window, GTK_WIN_POS_CENTER_ON_PARENT );
 
-	g_signal_connect( G_OBJECT( dialog.m_window ), "realize", G_CALLBACK( window_realize_remove_decoration ), 0 );
+	dialog.m_window.connect( "realize", G_CALLBACK( window_realize_remove_decoration ), 0 );
 
 	{
 		dialog.m_label = ui::Label( text );
@@ -2453,10 +2453,10 @@ public:
 WindowFocusPrinter( const char* name ) : m_name( name ){
 }
 void connect( ui::Window toplevel_window ){
-	g_signal_connect( G_OBJECT( toplevel_window ), "notify::has_toplevel_focus", G_CALLBACK( notify ), this );
-	g_signal_connect( G_OBJECT( toplevel_window ), "notify::is_active", G_CALLBACK( notify ), this );
-	g_signal_connect( G_OBJECT( toplevel_window ), "keys_changed", G_CALLBACK( keys_changed ), this );
-	g_signal_connect( G_OBJECT( toplevel_window ), "frame_event", G_CALLBACK( frame_event ), this );
+	toplevel_window.connect( "notify::has_toplevel_focus", G_CALLBACK( notify ), this );
+	toplevel_window.connect( "notify::is_active", G_CALLBACK( notify ), this );
+	toplevel_window.connect( "keys_changed", G_CALLBACK( keys_changed ), this );
+	toplevel_window.connect( "frame_event", G_CALLBACK( frame_event ), this );
 }
 };
 
@@ -2475,7 +2475,7 @@ static gboolean notify( ui::Window window, gpointer dummy, MainWindowActive* sel
 }
 public:
 void connect( ui::Window toplevel_window ){
-	g_signal_connect( G_OBJECT( toplevel_window ), "notify::is-active", G_CALLBACK( notify ), this );
+	toplevel_window.connect( "notify::is-active", G_CALLBACK( notify ), this );
 }
 };
 
@@ -2721,7 +2721,7 @@ void MainFrame::Create(){
 #endif
 
 	gtk_widget_add_events( GTK_WIDGET( window ), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_FOCUS_CHANGE_MASK );
-	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( mainframe_delete ), this );
+	window.connect( "delete_event", G_CALLBACK( mainframe_delete ), this );
 
 	m_position_tracker.connect( window );
 

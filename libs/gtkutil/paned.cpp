@@ -65,27 +65,27 @@ ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widg
 	auto hsplit = ui::HPaned();
 	hsplit.show();
 
-	g_signal_connect( G_OBJECT( hsplit ), "size_allocate", G_CALLBACK( hpaned_allocate ), &g_hpaned );
-	g_signal_connect( G_OBJECT( hsplit ), "notify::position", G_CALLBACK( paned_position ), &g_hpaned );
+	hsplit.connect( "size_allocate", G_CALLBACK( hpaned_allocate ), &g_hpaned );
+	hsplit.connect( "notify::position", G_CALLBACK( paned_position ), &g_hpaned );
 
 	{
-		GtkVPaned* vsplit = ui::VPaned();
+		auto vsplit = ui::VPaned();
 		gtk_paned_add1( GTK_PANED( hsplit ), GTK_WIDGET( vsplit ) );
 		gtk_widget_show( GTK_WIDGET( vsplit ) );
 
-		g_signal_connect( G_OBJECT( vsplit ), "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned1 );
-		g_signal_connect( G_OBJECT( vsplit ), "notify::position", G_CALLBACK( paned_position ), &g_vpaned1 );
+		vsplit.connect( "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned1 );
+		vsplit.connect( "notify::position", G_CALLBACK( paned_position ), &g_vpaned1 );
 
 		gtk_paned_add1( GTK_PANED( vsplit ), GTK_WIDGET( create_framed_widget( topleft ) ) );
 		gtk_paned_add2( GTK_PANED( vsplit ), GTK_WIDGET( create_framed_widget( topright ) ) );
 	}
 	{
-		GtkVPaned* vsplit = ui::VPaned();
+		auto vsplit = ui::VPaned();
 		gtk_paned_add2( GTK_PANED( hsplit ), GTK_WIDGET( vsplit ) );
 		gtk_widget_show( GTK_WIDGET( vsplit ) );
 
-		g_signal_connect( G_OBJECT( vsplit ), "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned2 );
-		g_signal_connect( G_OBJECT( vsplit ), "notify::position", G_CALLBACK( paned_position ), &g_vpaned2 );
+		vsplit.connect( "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned2 );
+		vsplit.connect( "notify::position", G_CALLBACK( paned_position ), &g_vpaned2 );
 
 		gtk_paned_add1( GTK_PANED( vsplit ), GTK_WIDGET( create_framed_widget( botleft ) ) );
 		gtk_paned_add2( GTK_PANED( vsplit ), GTK_WIDGET( create_framed_widget( botright ) ) );

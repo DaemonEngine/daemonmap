@@ -304,9 +304,9 @@ gboolean PressedButtons_focus_out( GtkWidget* widget, GdkEventFocus* event, Pres
 }
 
 void PressedButtons_connect( PressedButtons& pressedButtons, ui::Widget widget ){
-	g_signal_connect( G_OBJECT( widget ), "button_press_event", G_CALLBACK( PressedButtons_button_press ), &pressedButtons );
-	g_signal_connect( G_OBJECT( widget ), "button_release_event", G_CALLBACK( PressedButtons_button_release ), &pressedButtons );
-	g_signal_connect( G_OBJECT( widget ), "focus_out_event", G_CALLBACK( PressedButtons_focus_out ), &pressedButtons );
+	widget.connect( "button_press_event", G_CALLBACK( PressedButtons_button_press ), &pressedButtons );
+	widget.connect( "button_release_event", G_CALLBACK( PressedButtons_button_release ), &pressedButtons );
+	widget.connect( "focus_out_event", G_CALLBACK( PressedButtons_focus_out ), &pressedButtons );
 }
 
 PressedButtons g_pressedButtons;
@@ -379,12 +379,12 @@ void GlobalPressedKeys_releaseAll(){
 }
 
 void GlobalPressedKeys_connect( ui::Window window ){
-	unsigned int key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( PressedKeys_key_press ), &g_pressedKeys );
-	unsigned int key_release_handler = g_signal_connect( G_OBJECT( window ), "key_release_event", G_CALLBACK( PressedKeys_key_release ), &g_pressedKeys );
+	unsigned int key_press_handler = window.connect( "key_press_event", G_CALLBACK( PressedKeys_key_press ), &g_pressedKeys );
+	unsigned int key_release_handler = window.connect( "key_release_event", G_CALLBACK( PressedKeys_key_release ), &g_pressedKeys );
 	g_object_set_data( G_OBJECT( window ), "key_press_handler", gint_to_pointer( key_press_handler ) );
 	g_object_set_data( G_OBJECT( window ), "key_release_handler", gint_to_pointer( key_release_handler ) );
-	unsigned int focus_in_handler = g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( PressedKeys_focus_in ), &g_pressedKeys );
-	unsigned int focus_out_handler = g_signal_connect( G_OBJECT( window ), "focus_out_event", G_CALLBACK( PressedKeys_focus_out ), &g_pressedKeys );
+	unsigned int focus_in_handler = window.connect( "focus_in_event", G_CALLBACK( PressedKeys_focus_in ), &g_pressedKeys );
+	unsigned int focus_out_handler = window.connect( "focus_out_event", G_CALLBACK( PressedKeys_focus_out ), &g_pressedKeys );
 	g_object_set_data( G_OBJECT( window ), "focus_in_handler", gint_to_pointer( focus_in_handler ) );
 	g_object_set_data( G_OBJECT( window ), "focus_out_handler", gint_to_pointer( focus_out_handler ) );
 }
@@ -496,16 +496,16 @@ static gboolean override_global_accelerators( ui::Window window, GdkEventKey* ev
 
 void global_accel_connect_window( ui::Window window ){
 #if 1
-	unsigned int override_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( override_global_accelerators ), 0 );
+	unsigned int override_handler = window.connect( "key_press_event", G_CALLBACK( override_global_accelerators ), 0 );
 	g_object_set_data( G_OBJECT( window ), "override_handler", gint_to_pointer( override_handler ) );
 
-	unsigned int special_key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( accelerator_key_event ), &g_special_accelerators );
+	unsigned int special_key_press_handler = window.connect( "key_press_event", G_CALLBACK( accelerator_key_event ), &g_special_accelerators );
 	g_object_set_data( G_OBJECT( window ), "special_key_press_handler", gint_to_pointer( special_key_press_handler ) );
 
 	GlobalPressedKeys_connect( window );
 #else
-	unsigned int key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( accelerator_key_event ), &g_keydown_accelerators );
-	unsigned int key_release_handler = g_signal_connect( G_OBJECT( window ), "key_release_event", G_CALLBACK( accelerator_key_event ), &g_keyup_accelerators );
+	unsigned int key_press_handler = window.connect( "key_press_event", G_CALLBACK( accelerator_key_event ), &g_keydown_accelerators );
+	unsigned int key_release_handler = window.connect( "key_release_event", G_CALLBACK( accelerator_key_event ), &g_keyup_accelerators );
 	g_object_set_data( G_OBJECT( window ), "key_press_handler", gint_to_pointer( key_press_handler ) );
 	g_object_set_data( G_OBJECT( window ), "key_release_handler", gint_to_pointer( key_release_handler ) );
 #endif

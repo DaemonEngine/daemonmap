@@ -622,8 +622,8 @@ void ToggleButton_state_changed_Widget_updateDependency( ui::Widget toggleButton
 }
 
 void Widget_connectToggleDependency( ui::Widget self, ui::Widget toggleButton ){
-	g_signal_connect( G_OBJECT( toggleButton ), "state_changed", G_CALLBACK( ToggleButton_state_changed_Widget_updateDependency ), self );
-	g_signal_connect( G_OBJECT( toggleButton ), "toggled", G_CALLBACK( ToggleButton_toggled_Widget_updateDependency ), self );
+	toggleButton.connect( "state_changed", G_CALLBACK( ToggleButton_state_changed_Widget_updateDependency ), self );
+	toggleButton.connect( "toggled", G_CALLBACK( ToggleButton_toggled_Widget_updateDependency ), self );
 	Widget_updateDependency( self, toggleButton );
 }
 
@@ -742,8 +742,8 @@ ui::Window PrefsDlg::BuildDialog(){
 					}
 
 					{
-						GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
-						g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( treeSelection ), this );
+						auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
+						selection.connect( "changed", G_CALLBACK( treeSelection ), this );
 					}
 
 					view.show();

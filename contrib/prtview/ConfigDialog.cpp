@@ -54,7 +54,6 @@ static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer
 // Color selection dialog
 
 static int DoColor( PackedColour *c ){
-	GtkWidget* dlg;
 	GdkColor clr;
 	int loop = 1, ret = IDCANCEL;
 
@@ -62,20 +61,16 @@ static int DoColor( PackedColour *c ){
 	clr.blue = (guint16) (GetGValue(*c) * (65535 / 255));
 	clr.green = (guint16) (GetBValue(*c) * (65535 / 255));
 
-	dlg = gtk_color_selection_dialog_new( "Choose Color" );
+	auto dlg = ui::Widget(gtk_color_selection_dialog_new( "Choose Color" ));
 	gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG(dlg)) ), &clr );
-	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
-						G_CALLBACK( dialog_delete_callback ), NULL );
-	g_signal_connect( GTK_OBJECT( dlg ), "destroy",
-						G_CALLBACK( gtk_widget_destroy ), NULL );
+	dlg.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	dlg.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	GtkWidget *ok_button, *cancel_button;
 	g_object_get(dlg, "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
 
-	g_signal_connect( GTK_OBJECT(ok_button), "clicked",
-						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
-	g_signal_connect( GTK_OBJECT(cancel_button), "clicked",
-						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
+	ui::Widget(ok_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
+	ui::Widget(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
@@ -243,18 +238,16 @@ static void OnClip( GtkWidget *widget, gpointer data ){
 }
 
 void DoConfigDialog(){
-	GtkWidget *hbox, *button, *table;
+	GtkWidget *hbox, *table;
 	GtkWidget *lw3slider, *lw3label, *lw2slider, *lw2label, *item;
-	GtkWidget *aa2check, *aa3check, *depthcheck, *linescheck, *polyscheck;
 	GtkWidget *transslider, *translabel, *clipslider, *cliplabel;
-	GtkWidget *show2check, *show3check, *portalcheck;
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "Portal Viewer Configuration" );
-	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
+	dlg.connect( "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
-	g_signal_connect( GTK_OBJECT( dlg ), "destroy",
+	dlg.connect( "destroy",
 						G_CALLBACK( gtk_widget_destroy ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
@@ -286,7 +279,7 @@ void DoConfigDialog(){
 	lw3label = ui::Label( "" );
 	gtk_widget_show( lw3label );
 	gtk_box_pack_start( GTK_BOX( hbox ), lw3label, FALSE, TRUE, 0 );
-	g_signal_connect( GTK_OBJECT(adj), "value_changed", G_CALLBACK( OnScroll3d ), lw3label );
+	adj.connect( "value_changed", G_CALLBACK( OnScroll3d ), lw3label );
 
 	table = ui::Table( 2, 4, FALSE );
 	gtk_widget_show( table );
@@ -294,47 +287,47 @@ void DoConfigDialog(){
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
-	button = ui::Button( "Color" );
+	auto button = ui::Button( "Color" );
 	gtk_widget_show( button );
 	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked", G_CALLBACK( OnColor3d ), NULL );
+	button.connect( "clicked", G_CALLBACK( OnColor3d ), NULL );
 
 	button = ui::Button( "Depth Color" );
 	gtk_widget_show( button );
 	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 1, 2,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked", G_CALLBACK( OnColorFog ), NULL );
+	button.connect( "clicked", G_CALLBACK( OnColorFog ), NULL );
 
-	aa3check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
+	auto aa3check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
 	gtk_widget_show( aa3check );
 	gtk_table_attach( GTK_TABLE( table ), aa3check, 1, 4, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( aa3check ), "toggled", G_CALLBACK( OnAntiAlias3d ), NULL );
+	aa3check.connect( "toggled", G_CALLBACK( OnAntiAlias3d ), NULL );
 
-	depthcheck = ui::CheckButton( "Depth Cue" );
+	auto depthcheck = ui::CheckButton( "Depth Cue" );
 	gtk_widget_show( depthcheck );
 	gtk_table_attach( GTK_TABLE( table ), depthcheck, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( depthcheck ), "toggled", G_CALLBACK( OnFog ), NULL );
+	depthcheck.connect( "toggled", G_CALLBACK( OnFog ), NULL );
 
-	linescheck = ui::CheckButton( "Lines" );
+	auto linescheck = ui::CheckButton( "Lines" );
 	gtk_widget_show( linescheck );
 	gtk_table_attach( GTK_TABLE( table ), linescheck, 2, 3, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( linescheck ), "toggled", G_CALLBACK( OnLines ), NULL );
+	linescheck.connect( "toggled", G_CALLBACK( OnLines ), NULL );
 
-	polyscheck = ui::CheckButton( "Polygons" );
+	auto polyscheck = ui::CheckButton( "Polygons" );
 	gtk_widget_show( polyscheck );
 	gtk_table_attach( GTK_TABLE( table ), polyscheck, 3, 4, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( GTK_OBJECT( polyscheck ), "toggled", G_CALLBACK( OnPoly ), NULL );
+	polyscheck.connect( "toggled", G_CALLBACK( OnPoly ), NULL );
 
 	auto zlist = ui::ComboBoxText();
 	gtk_widget_show( zlist );
@@ -344,7 +337,7 @@ void DoConfigDialog(){
 	gtk_combo_box_text_append_text(zlist, "Z-Buffer Test Only (recommended for transparent polygons)");
 	gtk_combo_box_text_append_text(zlist, "Z-Buffer Off");
 
-	g_signal_connect(G_OBJECT(zlist), "changed", G_CALLBACK(+[](GtkComboBox *self, void *) {
+	zlist.connect("changed", G_CALLBACK(+[](GtkComboBox *self, void *) {
 		OnSelchangeZbuffer(GTK_WIDGET(self), GINT_TO_POINTER(gtk_combo_box_get_active(self)));
 	}), nullptr);
 
@@ -368,7 +361,7 @@ void DoConfigDialog(){
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_misc_set_alignment( GTK_MISC( translabel ), 0.0, 0.0 );
-	g_signal_connect( GTK_OBJECT(adj), "value_changed", G_CALLBACK( OnScrollTrans ), translabel );
+	adj.connect( "value_changed", G_CALLBACK( OnScrollTrans ), translabel );
 
 	adj = ui::Adjustment( portals.clip_range, 1, 128, 1, 1, 0 );
 	clipslider = ui::HScale( adj );
@@ -384,21 +377,21 @@ void DoConfigDialog(){
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_misc_set_alignment( GTK_MISC( cliplabel ), 0.0, 0.0 );
-	g_signal_connect( GTK_OBJECT(adj), "value_changed", G_CALLBACK( OnScrollClip ), cliplabel );
+	adj.connect( "value_changed", G_CALLBACK( OnScrollClip ), cliplabel );
 
 	hbox = ui::HBox( TRUE, 5 );
 	gtk_widget_show( hbox );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), hbox, TRUE, FALSE, 0 );
 
-	show3check = ui::CheckButton( "Show" );
+	auto show3check = ui::CheckButton( "Show" );
 	gtk_widget_show( show3check );
 	gtk_box_pack_start( GTK_BOX( hbox ), show3check, TRUE, TRUE, 0 );
-	g_signal_connect( GTK_OBJECT( show3check ), "toggled", G_CALLBACK( OnConfig3d ), NULL );
+	show3check.connect( "toggled", G_CALLBACK( OnConfig3d ), NULL );
 
-	portalcheck = ui::CheckButton( "Portal cubic clipper" );
+	auto portalcheck = ui::CheckButton( "Portal cubic clipper" );
 	gtk_widget_show( portalcheck );
 	gtk_box_pack_start( GTK_BOX( hbox ), portalcheck, TRUE, TRUE, 0 );
-	g_signal_connect( GTK_OBJECT( portalcheck ), "toggled", G_CALLBACK( OnClip ), NULL );
+	portalcheck.connect( "toggled", G_CALLBACK( OnClip ), NULL );
 
 	frame = ui::Frame( "2D View" );
 	gtk_widget_show( frame );
@@ -422,7 +415,7 @@ void DoConfigDialog(){
 	lw2label = ui::Label( "" );
 	gtk_widget_show( lw2label );
 	gtk_box_pack_start( GTK_BOX( hbox ), lw2label, FALSE, TRUE, 0 );
-	g_signal_connect( GTK_OBJECT(adj), "value_changed", G_CALLBACK( OnScroll2d ), lw2label );
+	adj.connect( "value_changed", G_CALLBACK( OnScroll2d ), lw2label );
 
 	hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
@@ -431,22 +424,22 @@ void DoConfigDialog(){
 	button = ui::Button( "Color" );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked", G_CALLBACK( OnColor2d ), NULL );
+	button.connect( "clicked", G_CALLBACK( OnColor2d ), NULL );
 	gtk_widget_set_size_request( button, 60, -1 );
 
-	aa2check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
+	auto aa2check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
 	gtk_widget_show( aa2check );
 	gtk_box_pack_start( GTK_BOX( hbox ), aa2check, TRUE, TRUE, 0 );
-	g_signal_connect( GTK_OBJECT( aa2check ), "toggled", G_CALLBACK( OnAntiAlias2d ), NULL );
+	aa2check.connect( "toggled", G_CALLBACK( OnAntiAlias2d ), NULL );
 
 	hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), hbox, TRUE, FALSE, 0 );
 
-	show2check = ui::CheckButton( "Show" );
+	auto show2check = ui::CheckButton( "Show" );
 	gtk_widget_show( show2check );
 	gtk_box_pack_start( GTK_BOX( hbox ), show2check, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( show2check ), "toggled", G_CALLBACK( OnConfig2d ), NULL );
+	show2check.connect( "toggled", G_CALLBACK( OnConfig2d ), NULL );
 
 	hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
@@ -455,7 +448,7 @@ void DoConfigDialog(){
 	button = ui::Button( "OK" );
 	gtk_widget_show( button );
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( GTK_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 

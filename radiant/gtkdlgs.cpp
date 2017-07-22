@@ -252,7 +252,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
-					g_signal_connect( G_OBJECT( dialog.game_combo.game_select ), "changed", G_CALLBACK( OnSelchangeComboWhatgame ), &dialog.game_combo );
+					dialog.game_combo.game_select.connect( "changed", G_CALLBACK( OnSelchangeComboWhatgame ), &dialog.game_combo );
 				}
 
 				{
@@ -746,7 +746,7 @@ static void CreateGtkTextEditor(){
 
 	auto dlg = ui::Window( ui::window_type::TOP );
 
-	g_signal_connect( G_OBJECT( dlg ), "delete_event",
+	dlg.connect( "delete_event",
 					  G_CALLBACK( editor_delete ), 0 );
 	gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 300 );
 
@@ -774,14 +774,14 @@ static void CreateGtkTextEditor(){
 	button = ui::Button( "Close" );
 	button.show();
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( editor_close ), dlg );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "Save" );
 	button.show();
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( editor_save ), dlg );
 	gtk_widget_set_size_request( button, 60, -1 );
 

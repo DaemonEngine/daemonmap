@@ -66,7 +66,7 @@ void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, co
 		auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_tool_button_new(GTK_WIDGET(new_plugin_image(icon)), text)));
 		gtk_widget_set_tooltip_text(button, tooltip);
 		gtk_widget_show_all(button);
-		g_signal_connect(button, "clicked", G_CALLBACK(handler), data);
+		button.connect("clicked", G_CALLBACK(handler), data);
 		toolbar.add(button);
 		return;
 	}
@@ -76,7 +76,7 @@ void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, co
 		gtk_tool_button_set_label(button, text);
 		gtk_widget_set_tooltip_text(button, tooltip);
 		gtk_widget_show_all(button);
-		g_signal_connect(button, "toggled", G_CALLBACK(handler), data);
+		button.connect("toggled", G_CALLBACK(handler), data);
 		toolbar.add(button);
 		return;
 	}

@@ -2,6 +2,7 @@
 #define INCLUDED_UILIB_H
 
 #include <string>
+#include <glib-object.h>
 
 struct _GdkEventKey;
 struct _GtkAccelGroup;
@@ -54,6 +55,7 @@ struct _GtkToolButton;
 struct _GtkToolItem;
 struct _GtkTreeModel;
 struct _GtkTreePath;
+struct _GtkTreeSelection;
 struct _GtkTreeView;
 struct _GtkTreeViewColumn;
 struct _GtkVBox;
@@ -161,6 +163,7 @@ namespace ui {
             public details::Convertible<Object, _GtkObject *, details::Convert::Explicit>,
             public details::Convertible<Object, _GTypeInstance *, details::Convert::Explicit> {
     public:
+        using self = Object *;
         using native = _GtkObject *;
         native _handle;
 
@@ -172,6 +175,9 @@ namespace ui {
 
         explicit operator void *() const
         { return _handle; }
+
+        template<class Lambda>
+        gulong connect(char const *detailed_signal, Lambda &&c_handler, void *data);
     };
     static_assert(sizeof(Object) == sizeof(Object::native), "object slicing");
 
@@ -506,6 +512,10 @@ namespace ui {
          void clear();
     );
 
+    WRAP(TreeSelection, Object, _GtkTreeSelection, (),
+    ,
+    );
+
     // GBoxed
 
     WRAP(TreePath, Object, _GtkTreePath, (),
@@ -526,6 +536,12 @@ namespace ui {
     }
 
 #define this (*static_cast<self>(this))
+
+    template<class Lambda>
+    gulong Object::connect(char const *detailed_signal, Lambda &&c_handler, void *data)
+    {
+        return g_signal_connect(G_OBJECT(this), detailed_signal, c_handler, data);
+    }
 
     template<class Lambda>
     void IContainer::foreach(Lambda &&lambda)

@@ -608,7 +608,7 @@ ui::Window PatchInspector::BuildDialog(){
 							}
 							{
 								auto combo = ui::ComboBoxText();
-								g_signal_connect( G_OBJECT( combo ), "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
+								combo.connect( "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
 								AddDialogData( *GTK_COMBO_BOX(combo), m_nRow );
 
 								combo.show();
@@ -621,7 +621,7 @@ ui::Window PatchInspector::BuildDialog(){
 
 							{
 								auto combo = ui::ComboBoxText();
-								g_signal_connect( G_OBJECT( combo ), "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
+								combo.connect( "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
 								AddDialogData( *GTK_COMBO_BOX(combo), m_nCol );
 
 								combo.show();
@@ -680,7 +680,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							AddDialogData( *GTK_ENTRY(entry), m_fX );
 
-							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
 							auto entry = ui::Entry();
@@ -690,7 +690,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							AddDialogData( *GTK_ENTRY(entry), m_fY );
 
-							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
 							auto entry = ui::Entry();
@@ -700,7 +700,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							AddDialogData( *GTK_ENTRY(entry), m_fZ );
 
-							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
 							auto entry = ui::Entry();
@@ -710,7 +710,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							AddDialogData( *GTK_ENTRY(entry), m_fS );
 
-							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 						{
 							auto entry = ui::Entry();
@@ -720,7 +720,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							AddDialogData( *GTK_ENTRY(entry), m_fT );
 
-							g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
 					}
 				}
@@ -753,7 +753,7 @@ ui::Window PatchInspector::BuildDialog(){
 												  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 												  (GtkAttachOptions)( 0 ), 0, 0 );
 								m_subdivisions.m_enabled = check;
-								guint handler_id = g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( &Subdivisions::applyGtk ), &m_subdivisions );
+								guint handler_id = check.connect( "toggled", G_CALLBACK( &Subdivisions::applyGtk ), &m_subdivisions );
 								g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( handler_id ) );
 							}
 							{
@@ -815,7 +815,7 @@ ui::Window PatchInspector::BuildDialog(){
 						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 						AddDialogData( *GTK_ENTRY(entry), m_strName );
 
-						g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
+						entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 					}
 					{
 						auto table = ui::Table( 5, 4, FALSE );
@@ -853,7 +853,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_table_attach( table, GTK_WIDGET( button ), 3, 4, 2, 3,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchFlipX ), 0 );
+							button.connect( "clicked", G_CALLBACK( OnBtnPatchFlipX ), 0 );
 							gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 						}
 						{
@@ -870,7 +870,7 @@ ui::Window PatchInspector::BuildDialog(){
 							gtk_table_attach( table, GTK_WIDGET( button ), 3, 4, 3, 4,
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
-							g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchFlipY ), 0 );
+							button.connect( "clicked", G_CALLBACK( OnBtnPatchFlipY ), 0 );
 							gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 						}
 						{
@@ -894,7 +894,7 @@ ui::Window PatchInspector::BuildDialog(){
 							entry_set_float( entry, g_pi_globals.shift[0] );
 
 							auto adj = ui::Adjustment( 0, -8192, 8192, 1, 1, 0 );
-							g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( OnSpinChanged ), (gpointer) entry );
+							adj.connect( "value_changed", G_CALLBACK( OnSpinChanged ), (gpointer) entry );
 							g_object_set_data( G_OBJECT( window ), "hshift_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
@@ -915,7 +915,7 @@ ui::Window PatchInspector::BuildDialog(){
 							entry_set_float( entry, g_pi_globals.shift[1] );
 
 							auto adj = ui::Adjustment( 0, -8192, 8192, 1, 1, 0 );
-							g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( OnSpinChanged ), entry );
+							adj.connect( "value_changed", G_CALLBACK( OnSpinChanged ), entry );
 							g_object_set_data( G_OBJECT( window ), "vshift_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
@@ -936,7 +936,7 @@ ui::Window PatchInspector::BuildDialog(){
 							entry_set_float( entry, g_pi_globals.scale[0] );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 );
-							g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( OnSpinChanged ), entry );
+							adj.connect( "value_changed", G_CALLBACK( OnSpinChanged ), entry );
 							g_object_set_data( G_OBJECT( window ), "hscale_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
@@ -957,7 +957,7 @@ ui::Window PatchInspector::BuildDialog(){
 							entry_set_float( entry, g_pi_globals.scale[1] );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 );
-							g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( OnSpinChanged ), entry );
+							adj.connect( "value_changed", G_CALLBACK( OnSpinChanged ), entry );
 							g_object_set_data( G_OBJECT( window ), "vscale_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
@@ -978,7 +978,7 @@ ui::Window PatchInspector::BuildDialog(){
 							entry_set_float( entry, g_pi_globals.rotate );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 ); // NOTE: Arnout - this really should be 360 but can't change it anymore as it could break existing maps
-							g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( OnSpinChanged ), entry );
+							adj.connect( "value_changed", G_CALLBACK( OnSpinChanged ), entry );
 							g_object_set_data( G_OBJECT( window ), "rotate_adj", (gpointer) adj );
 
 							auto spin = ui::SpinButton( adj, 1, 0 );
@@ -997,35 +997,35 @@ ui::Window PatchInspector::BuildDialog(){
 						auto button = ui::Button( "Auto Cap" );
 						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchAutoCap ), 0 );
+						button.connect( "clicked", G_CALLBACK( OnBtnPatchAutoCap ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "CAP" );
 						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchdetails ), 0 );
+						button.connect( "clicked", G_CALLBACK( OnBtnPatchdetails ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Set..." );
 						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchreset ), 0 );
+						button.connect( "clicked", G_CALLBACK( OnBtnPatchreset ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Natural" );
 						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchnatural ), 0 );
+						button.connect( "clicked", G_CALLBACK( OnBtnPatchnatural ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Fit" );
 						button.show();
 						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( OnBtnPatchfit ), 0 );
+						button.connect( "clicked", G_CALLBACK( OnBtnPatchfit ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 				}

@@ -140,12 +140,12 @@ void GlobalWindowObservers_add( WindowObserver* observer ){
 }
 
 void GlobalWindowObservers_connectTopLevel( ui::Window window ){
-	g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( selection_modifier_key_press ), &g_window_observers );
-	g_signal_connect( G_OBJECT( window ), "key_release_event", G_CALLBACK( selection_modifier_key_release ), &g_window_observers );
+	window.connect( "key_press_event", G_CALLBACK( selection_modifier_key_press ), &g_window_observers );
+	window.connect( "key_release_event", G_CALLBACK( selection_modifier_key_release ), &g_window_observers );
 }
 
 void GlobalWindowObservers_connectWidget( ui::Widget widget ){
-	g_signal_connect( G_OBJECT( widget ), "button_press_event", G_CALLBACK( modifiers_button_press ), &g_window_observers );
-	g_signal_connect( G_OBJECT( widget ), "button_release_event", G_CALLBACK( modifiers_button_release ), &g_window_observers );
-	g_signal_connect( G_OBJECT( widget ), "motion_notify_event", G_CALLBACK( modifiers_motion ), &g_window_observers );
+	widget.connect( "button_press_event", G_CALLBACK( modifiers_button_press ), &g_window_observers );
+	widget.connect( "button_release_event", G_CALLBACK( modifiers_button_release ), &g_window_observers );
+	widget.connect( "motion_notify_event", G_CALLBACK( modifiers_motion ), &g_window_observers );
 }

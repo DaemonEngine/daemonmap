@@ -833,15 +833,15 @@ XYWnd::XYWnd() :
 	gtk_widget_set_events( m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
 	gtk_widget_set_can_focus( m_gl_widget, true );
 
-	m_sizeHandler = g_signal_connect( G_OBJECT( m_gl_widget ), "size_allocate", G_CALLBACK( xywnd_size_allocate ), this );
-	m_exposeHandler = g_signal_connect( G_OBJECT( m_gl_widget ), "expose_event", G_CALLBACK( xywnd_expose ), this );
+	m_sizeHandler = m_gl_widget.connect( "size_allocate", G_CALLBACK( xywnd_size_allocate ), this );
+	m_exposeHandler = m_gl_widget.connect( "expose_event", G_CALLBACK( xywnd_expose ), this );
 
-	g_signal_connect( G_OBJECT( m_gl_widget ), "button_press_event", G_CALLBACK( xywnd_button_press ), this );
-	g_signal_connect( G_OBJECT( m_gl_widget ), "button_release_event", G_CALLBACK( xywnd_button_release ), this );
-	g_signal_connect( G_OBJECT( m_gl_widget ), "focus_in_event", G_CALLBACK( xywnd_focus_in ), this );
-	g_signal_connect( G_OBJECT( m_gl_widget ), "motion_notify_event", G_CALLBACK( DeferredMotion::gtk_motion ), &m_deferred_motion );
+	m_gl_widget.connect( "button_press_event", G_CALLBACK( xywnd_button_press ), this );
+	m_gl_widget.connect( "button_release_event", G_CALLBACK( xywnd_button_release ), this );
+	m_gl_widget.connect( "focus_in_event", G_CALLBACK( xywnd_focus_in ), this );
+	m_gl_widget.connect( "motion_notify_event", G_CALLBACK( DeferredMotion::gtk_motion ), &m_deferred_motion );
 
-	g_signal_connect( G_OBJECT( m_gl_widget ), "scroll_event", G_CALLBACK( xywnd_wheel_scroll ), this );
+	m_gl_widget.connect( "scroll_event", G_CALLBACK( xywnd_wheel_scroll ), this );
 
 	Map_addValidCallback( g_map, DeferredDrawOnMapValidChangedCaller( m_deferredDraw ) );
 
@@ -1078,7 +1078,7 @@ void entitycreate_activated( ui::Widget item ){
 
 void EntityClassMenu_addItem( ui::Menu menu, const char* name ){
 	auto item = ui::MenuItem( name );
-	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( entitycreate_activated ), item );
+	item.connect( "activate", G_CALLBACK( entitycreate_activated ), item );
 	item.show();
 	menu_add_item( menu, item );
 }
@@ -1185,7 +1185,7 @@ void XYWnd::Move_Begin(){
 	}
 	m_move_started = true;
 	g_xywnd_freezePointer.freeze_pointer( m_parent  ? m_parent : MainFrame_getWindow(), XYWnd_moveDelta, this );
-	m_move_focusOut = g_signal_connect( G_OBJECT( m_gl_widget ), "focus_out_event", G_CALLBACK( XYWnd_Move_focusOut ), this );
+	m_move_focusOut = m_gl_widget.connect( "focus_out_event", G_CALLBACK( XYWnd_Move_focusOut ), this );
 }
 
 void XYWnd::Move_End(){
@@ -1231,7 +1231,7 @@ void XYWnd::Zoom_Begin(){
 	m_zoom_started = true;
 	g_dragZoom = 0;
 	g_xywnd_freezePointer.freeze_pointer( m_parent ? m_parent : MainFrame_getWindow(), XYWnd_zoomDelta, this );
-	m_zoom_focusOut = g_signal_connect( G_OBJECT( m_gl_widget ), "focus_out_event", G_CALLBACK( XYWnd_Zoom_focusOut ), this );
+	m_zoom_focusOut = m_gl_widget.connect( "focus_out_event", G_CALLBACK( XYWnd_Zoom_focusOut ), this );
 }
 
 void XYWnd::Zoom_End(){

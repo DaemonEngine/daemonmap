@@ -23,3 +23,7 @@ radiant_plugin(entity
         skincache.cpp skincache.h
         targetable.cpp targetable.h
         )
+
+target_include_directories(entity
+    PRIVATE $<TARGET_PROPERTY:uilib,INTERFACE_INCLUDE_DIRECTORIES>
+)

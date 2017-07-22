@@ -127,7 +127,7 @@ BooleanAttribute( const char* key ) :
 
 	m_check = check;
 
-	guint handler = g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( toggled ), this );
+	guint handler = check.connect( "toggled", G_CALLBACK( toggled ), this );
 	g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( handler ) );
 
 	update();
@@ -640,10 +640,10 @@ static gboolean changed( GtkComboBox *widget, NonModalComboBox* self ){
 public:
 NonModalComboBox( const Callback& changed ) : m_changed( changed ), m_changedHandler( 0 ){
 }
-void connect( GtkComboBox* combo ){
-	m_changedHandler = g_signal_connect( G_OBJECT( combo ), "changed", G_CALLBACK( changed ), this );
+void connect( ui::ComboBox combo ){
+	m_changedHandler = combo.connect( "changed", G_CALLBACK( changed ), this );
 }
-void setActive( GtkComboBox* combo, int value ){
+void setActive( ui::ComboBox combo, int value ){
 	g_signal_handler_disconnect( G_OBJECT( combo ), m_changedHandler );
 	gtk_combo_box_set_active( combo, value );
 	connect( combo );
@@ -653,7 +653,7 @@ void setActive( GtkComboBox* combo, int value ){
 class ListAttribute : public EntityAttribute
 {
 CopiedString m_key;
-GtkComboBox* m_combo;
+ui::ComboBox m_combo;
 NonModalComboBox m_nonModal;
 const ListAttributeType& m_type;
 public:
@@ -1293,7 +1293,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 	vbox.show();
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 2 );
 
-	g_signal_connect( G_OBJECT( vbox ), "destroy", G_CALLBACK( EntityInspector_destroyWindow ), 0 );
+	vbox.connect( "destroy", G_CALLBACK( EntityInspector_destroyWindow ), 0 );
 
 	{
 		ui::Widget split1 = ui::VPaned();
@@ -1323,8 +1323,8 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					auto view = ui::TreeView( ui::TreeModel( GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
 					gtk_tree_view_set_headers_visible( view, FALSE );
-					g_signal_connect( G_OBJECT( view ), "button_press_event", G_CALLBACK( EntityClassList_button_press ), 0 );
-					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( EntityClassList_keypress ), 0 );
+					view.connect( "button_press_event", G_CALLBACK( EntityClassList_button_press ), 0 );
+					view.connect( "key_press_event", G_CALLBACK( EntityClassList_keypress ), 0 );
 
 					{
 						auto renderer = ui::CellRendererText();
@@ -1333,8 +1333,8 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					}
 
 					{
-						GtkTreeSelection* selection = gtk_tree_view_get_selection( view );
-						g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( EntityClassList_selection_changed ), 0 );
+						auto selection = ui::TreeSelection(gtk_tree_view_get_selection( view ));
+						selection.connect( "changed", G_CALLBACK( EntityClassList_selection_changed ), 0 );
 					}
 
 					view.show();
@@ -1386,9 +1386,9 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 					for ( int i = 0; i < MAX_FLAGS; i++ )
 					{
-						GtkCheckButton* check = ui::CheckButton( "" );
+						auto check = ui::CheckButton( "" );
 						g_object_ref( GTK_WIDGET( check ) );
-						g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( SpawnflagCheck_toggled ), 0 ) ) );
+						g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( check.connect( "toggled", G_CALLBACK( SpawnflagCheck_toggled ), 0 ) ) );
 						g_entitySpawnflagsCheck[i] = check;
 					}
 				}
@@ -1421,8 +1421,8 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 						}
 
 						{
-							GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
-							g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( EntityProperties_selection_changed ), 0 );
+							auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
+							selection.connect( "changed", G_CALLBACK( EntityProperties_selection_changed ), 0 );
 						}
 
 						view.show();
@@ -1450,7 +1450,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 										  (GtkAttachOptions)( 0 ), 0, 0 );
 						gtk_widget_set_events( GTK_WIDGET( entry ), GDK_KEY_PRESS_MASK );
-						g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
+						entry.connect( "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
 						g_entityKeyEntry = entry;
 					}
 
@@ -1461,7 +1461,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
 										  (GtkAttachOptions)( 0 ), 0, 0 );
 						gtk_widget_set_events( GTK_WIDGET( entry ), GDK_KEY_PRESS_MASK );
-						g_signal_connect( G_OBJECT( entry ), "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
+						entry.connect( "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
 						g_entityValueEntry = entry;
 					}
 
@@ -1492,13 +1492,13 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					{
 						auto button = ui::Button( "Clear All" );
 						button.show();
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( EntityInspector_clearAllKeyValues ), 0 );
+						button.connect( "clicked", G_CALLBACK( EntityInspector_clearAllKeyValues ), 0 );
 						gtk_box_pack_start( hbox, GTK_WIDGET( button ), TRUE, TRUE, 0 );
 					}
 					{
 						auto button = ui::Button( "Delete Key" );
 						button.show();
-						g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( EntityInspector_clearKeyValue ), 0 );
+						button.connect( "clicked", G_CALLBACK( EntityInspector_clearKeyValue ), 0 );
 						gtk_box_pack_start( hbox, GTK_WIDGET( button ), TRUE, TRUE, 0 );
 					}
 				}

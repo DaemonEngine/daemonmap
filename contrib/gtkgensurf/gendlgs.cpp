@@ -1357,8 +1357,8 @@ GtkWidget* create_main_dialog(){
 
 	auto dlg = g_pWnd = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), gszCaption );
-	g_signal_connect( G_OBJECT( dlg ), "delete_event", G_CALLBACK( main_close ), NULL );
-	//  g_signal_connect (G_OBJECT (dlg), "destroy", G_CALLBACK (gtk_widget_destroy), NULL);
+	dlg.connect( "delete_event", G_CALLBACK( main_close ), NULL );
+	//  dlg.connect( "destroy", G_CALLBACK (gtk_widget_destroy), NULL);
 	gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( g_pRadiantWnd ) );
 
 	auto hbox = ui::HBox( FALSE, 5 );
@@ -1369,7 +1369,7 @@ GtkWidget* create_main_dialog(){
 	notebook = gtk_notebook_new();
 	gtk_widget_show( notebook );
 	gtk_box_pack_start( GTK_BOX( hbox ), notebook, TRUE, TRUE, 0 );
-	g_signal_connect( G_OBJECT( notebook ), "switch_page",
+	notebook.connect( "switch_page",
 					  G_CALLBACK( switch_page ), NULL );
 	gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), GTK_POS_TOP );
 	g_object_set_data( G_OBJECT( dlg ), "notebook", notebook );
@@ -1402,7 +1402,7 @@ GtkWidget* create_main_dialog(){
 		gtk_box_pack_start( GTK_BOX( vbox ), radio, TRUE, TRUE, 0 );
 		group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radio ) );
 		game_radios[i] = radio;
-		g_signal_connect( G_OBJECT( radio ), "toggled", G_CALLBACK( general_game ), GINT_TO_POINTER( i ) );
+		radio.connect( "toggled", G_CALLBACK( general_game ), GINT_TO_POINTER( i ) );
 	}
 
 	frame = ui::Frame( "Waveform" );
@@ -1423,7 +1423,7 @@ GtkWidget* create_main_dialog(){
 		gtk_box_pack_start( GTK_BOX( vbox ), radio, TRUE, TRUE, 0 );
 		group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radio ) );
 		wave_radios[i] = radio;
-		g_signal_connect( G_OBJECT( radio ), "toggled", G_CALLBACK( general_wave ), GINT_TO_POINTER( i ) );
+		radio.connect( "toggled", G_CALLBACK( general_wave ), GINT_TO_POINTER( i ) );
 	}
 
 	frame = ui::Frame( "Orientation" );
@@ -1444,7 +1444,7 @@ GtkWidget* create_main_dialog(){
 		gtk_box_pack_start( GTK_BOX( vbox ), radio, TRUE, TRUE, 0 );
 		group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radio ) );
 		plane_radios[i] = radio;
-		g_signal_connect( G_OBJECT( radio ), "toggled", G_CALLBACK( general_plane ), GINT_TO_POINTER( i ) );
+		radio.connect( "toggled", G_CALLBACK( general_plane ), GINT_TO_POINTER( i ) );
 	}
 
 	table2 = ui::Table( 4, 2, FALSE );
@@ -1494,7 +1494,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "wavelength", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &WaveLength );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &WaveLength );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1503,7 +1503,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "amplitude", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Amplitude );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Amplitude );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1512,10 +1512,10 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "roughness", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Roughness );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Roughness );
 
 	adj = ui::Adjustment( 1, 1, 32767, 1, 10, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( general_random ), NULL );
+	adj.connect( "value_changed", G_CALLBACK( general_random ), NULL );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_table_attach( GTK_TABLE( table2 ), spin, 1, 2, 3, 4,
@@ -1594,7 +1594,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmin", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hll );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hll );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1603,7 +1603,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmax", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hur );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hur );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1612,7 +1612,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmin", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vll );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vll );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1621,7 +1621,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmax", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vur );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vur );
 
 	frame = ui::Frame( "Divisions" );
 	gtk_widget_show( frame );
@@ -1649,7 +1649,7 @@ GtkWidget* create_main_dialog(){
 	g_object_set_data( G_OBJECT( dlg ), "nv_text", label );
 
 	adj = ui::Adjustment( 8, 1, MAX_ROWS, 1, 10, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( extents_nhnv_spin ), &NH );
+	adj.connect( "value_changed", G_CALLBACK( extents_nhnv_spin ), &NH );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 0, 1,
@@ -1659,7 +1659,7 @@ GtkWidget* create_main_dialog(){
 	g_object_set_data( G_OBJECT( dlg ), "nh", spin );
 
 	adj = ui::Adjustment( 8, 1, MAX_ROWS, 1, 10, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( extents_nhnv_spin ), &NV );
+	adj.connect( "value_changed", G_CALLBACK( extents_nhnv_spin ), &NV );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 1, 2,
@@ -1672,7 +1672,7 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "use_patches", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( extents_use_patches ), NULL );
+	check.connect( "toggled", G_CALLBACK( extents_use_patches ), NULL );
 
 	// ^Fishman - Snap to grid, replaced scroll bar with a texbox.
 	label = ui::Label( "Snap to grid:" );
@@ -1681,7 +1681,7 @@ GtkWidget* create_main_dialog(){
 	gtk_object_set_data( GTK_OBJECT( dlg ), "snap_text", label );
 
 	adj = ui::Adjustment( 8, 0, 256, 1, 10, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( extents_snaptogrid_spin ), &SP );
+	adj.connect( "value_changed", G_CALLBACK( extents_snaptogrid_spin ), &SP );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_box_pack_start( GTK_BOX( vbox ), spin, FALSE, TRUE, 0 );
@@ -1698,7 +1698,7 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( hbox2 ), label, FALSE, TRUE, 0 );
 
 	adj = ui::Adjustment( 0, 0, 110, 1, 10, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( extents_decimate ), NULL );
+	adj.connect( "value_changed", G_CALLBACK( extents_decimate ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "decimate_adj", adj );
 	scale = ui::HScale( adj );
 	gtk_widget_show( scale );
@@ -1749,7 +1749,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z01", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z01 );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z01 );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1758,7 +1758,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z00", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z00 );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z00 );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1767,7 +1767,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z11", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z11 );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z11 );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1776,7 +1776,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z10", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z10 );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z10 );
 
 	check = ui::CheckButton( "Linear borders" );
 	gtk_widget_show( check );
@@ -1784,7 +1784,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "linearborder", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( extents_linearborder ), NULL );
+	check.connect( "toggled", G_CALLBACK( extents_linearborder ), NULL );
 
 	vbox = ui::VBox( FALSE, 10 );
 	gtk_widget_show( vbox );
@@ -1819,7 +1819,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_file", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( bitmap_file_entryfocusout ), NULL );
+	entry.connect( "focus_out_event", G_CALLBACK( bitmap_file_entryfocusout ), NULL );
 
 	hbox2 = ui::HBox( TRUE, 5 );
 	gtk_widget_show( hbox2 );
@@ -1832,14 +1832,14 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( hbox2 ), button, FALSE, FALSE, 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_file_browse", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( bitmap_browse ), NULL );
+	button.connect( "clicked", G_CALLBACK( bitmap_browse ), NULL );
 
 	button = ui::Button( "Reload" );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( hbox2 ), button, FALSE, FALSE, 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_reload", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( bitmap_reload ), NULL );
+	button.connect( "clicked", G_CALLBACK( bitmap_reload ), NULL );
 
 	table = ui::Table( 2, 2, TRUE );
 	gtk_widget_show( table );
@@ -1877,7 +1877,7 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( hbox2 ), entry, FALSE, FALSE, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_black", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.black_value );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.black_value );
 
 	hbox2 = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox2 );
@@ -1890,7 +1890,7 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( hbox2 ), entry, FALSE, FALSE, 0 );
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_white", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.white_value );
+	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.white_value );
 
 	vbox = ui::VBox( FALSE, 10 );
 	gtk_widget_show( vbox );
@@ -1941,7 +1941,7 @@ GtkWidget* create_main_dialog(){
 	g_object_set_data( G_OBJECT( dlg ), "fix_rate_text", label );
 
 	adj = ui::Adjustment( 0, -65536, 65536, 1, 16, 0 );
-	g_signal_connect( G_OBJECT( adj ), "value_changed", G_CALLBACK( fix_value_changed ), NULL );
+	adj.connect( "value_changed", G_CALLBACK( fix_value_changed ), NULL );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 0, 1,
@@ -1949,7 +1949,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND ), 0, 0 );
 	gtk_widget_set_size_request( spin, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_value", spin );
-	g_signal_connect( G_OBJECT( spin ), "focus_out_event", G_CALLBACK( fix_value_entryfocusout ), NULL );
+	spin.connect( "focus_out_event", G_CALLBACK( fix_value_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1958,7 +1958,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_range", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( fix_range_entryfocusout ), NULL );
+	entry.connect( "focus_out_event", G_CALLBACK( fix_range_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -1967,7 +1967,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_rate", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( fix_rate_entryfocusout ), NULL );
+	entry.connect( "focus_out_event", G_CALLBACK( fix_rate_entryfocusout ), NULL );
 
 	button = ui::Button( "Free" );
 	gtk_widget_show( button );
@@ -1976,7 +1976,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_free", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( fix_free ), NULL );
+	button.connect( "clicked", G_CALLBACK( fix_free ), NULL );
 
 	button = ui::Button( "Free All" );
 	gtk_widget_show( button );
@@ -1985,7 +1985,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_freeall", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( fix_freeall ), NULL );
+	button.connect( "clicked", G_CALLBACK( fix_freeall ), NULL );
 
 	vbox = ui::VBox( FALSE, 10 );
 	gtk_widget_show( vbox );
@@ -2030,7 +2030,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture1", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 0 ) );
+	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 0 ) );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -2039,7 +2039,7 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture2", entry );
-	g_signal_connect( G_OBJECT( entry ), "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 1 ) );
+	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 1 ) );
 
 	entry = ui::Entry();
 	gtk_widget_show( entry );
@@ -2119,20 +2119,20 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "detail", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( texture_detail ), NULL );
+	check.connect( "toggled", G_CALLBACK( texture_detail ), NULL );
 
 	check = ui::CheckButton( "Detail hint brushes" );
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "hint", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( texture_hint ), NULL );
+	check.connect( "toggled", G_CALLBACK( texture_hint ), NULL );
 
 	// ^Fishman - Add terrain key to func_group.
 	check = ui::CheckButton( "Add terrain key" );
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "terrain_ent", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( texture_terrainent ), NULL );
+	check.connect( "toggled", G_CALLBACK( texture_terrainent ), NULL );
 
 	vbox = ui::VBox( FALSE, 5 );
 	gtk_widget_show( vbox );
@@ -2143,7 +2143,7 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, TRUE, 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "go", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( main_go ), NULL );
+	button.connect( "clicked", G_CALLBACK( main_go ), NULL );
 
 	label = ui::Label( "Settings:" );
 	gtk_widget_show( label );
@@ -2153,29 +2153,29 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "open", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( main_open ), NULL );
+	button.connect( "clicked", G_CALLBACK( main_open ), NULL );
 
 	button = ui::Button( "Save as..." );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "save", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( main_save ), NULL );
+	button.connect( "clicked", G_CALLBACK( main_save ), NULL );
 
 	button = ui::Button( "Defaults" );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "defaults", button );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( main_defaults ), NULL );
+	button.connect( "clicked", G_CALLBACK( main_defaults ), NULL );
 
 	button = ui::Button( "About..." );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, TRUE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked", G_CALLBACK( main_about ), NULL );
+	button.connect( "clicked", G_CALLBACK( main_about ), NULL );
 
 	check = ui::CheckButton( "Preview" );
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( main_preview ), NULL );
+	check.connect( "toggled", G_CALLBACK( main_preview ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "main_preview", check );
 
 	// ^Fishman - Antializing for the preview window.
@@ -2183,7 +2183,7 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( check );
 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, TRUE, 0 );
 	g_object_set_data( G_OBJECT( dlg ), "main_antialiasing", check );
-	g_signal_connect( G_OBJECT( check ), "toggled", G_CALLBACK( main_antialiasing ), NULL );
+	check.connect( "toggled", G_CALLBACK( main_antialiasing ), NULL );
 
 	for ( i = 0; i < 5; i++ )
 		SetDlgValues( i );

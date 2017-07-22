@@ -92,7 +92,7 @@ void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user
 	menu_separator( menu );
 
 	ui::Widget item(ui::MenuItem( "Clear" ));
-	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( console_clear ), 0 );
+	item.connect( "activate", G_CALLBACK( console_clear ), 0 );
 	item.show();
 	menu.add(item);
 }
@@ -125,8 +125,8 @@ ui::Widget Console_constructWindow( ui::Window toplevel ){
 
 		//g_consoleWidgetFocusPrinter.connect(g_console);
 
-		g_signal_connect( G_OBJECT( g_console ), "populate-popup", G_CALLBACK( console_populate_popup ), 0 );
-		g_signal_connect( G_OBJECT( g_console ), "destroy", G_CALLBACK( destroy_set_null ), &g_console );
+		g_console.connect( "populate-popup", G_CALLBACK( console_populate_popup ), 0 );
+		g_console.connect( "destroy", G_CALLBACK( destroy_set_null ), &g_console );
 	}
 
 	gtk_container_set_focus_chain( GTK_CONTAINER( scr ), NULL );

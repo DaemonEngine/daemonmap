@@ -101,7 +101,7 @@ void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
 				{
 					item = ui::MenuItem( menuText );
 					g_object_set_data( G_OBJECT( item ),"command", const_cast<gpointer>( static_cast<const void*>( menuCommand ) ) );
-					g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
+					item.connect( "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
 				}
 				item.show();
 				menu.add(item);

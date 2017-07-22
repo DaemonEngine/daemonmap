@@ -76,8 +76,8 @@ void ToggleShown::connect(ui::Widget widget)
 {
     m_widget = widget;
     widget_set_visible(m_widget, m_shownDeferred);
-    g_signal_connect(G_OBJECT(m_widget), "notify::visible", G_CALLBACK(notify_visible), this);
-    g_signal_connect(G_OBJECT(m_widget), "destroy", G_CALLBACK(destroy), this);
+    m_widget.connect("notify::visible", G_CALLBACK(notify_visible), this);
+    m_widget.connect("destroy", G_CALLBACK(destroy), this);
     update();
 }
 
@@ -95,6 +95,6 @@ gboolean WidgetFocusPrinter::focus_out(ui::Widget widget, GdkEventFocus *event, 
 
 void WidgetFocusPrinter::connect(ui::Widget widget)
 {
-    g_signal_connect(G_OBJECT(widget), "focus_in_event", G_CALLBACK(focus_in), this);
-    g_signal_connect(G_OBJECT(widget), "focus_out_event", G_CALLBACK(focus_out), this);
+    widget.connect("focus_in_event", G_CALLBACK(focus_in), this);
+    widget.connect("focus_out_event", G_CALLBACK(focus_out), this);
 }

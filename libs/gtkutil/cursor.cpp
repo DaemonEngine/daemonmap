@@ -110,7 +110,7 @@ void FreezePointer::freeze_pointer(ui::Window window, FreezePointer::MotionDelta
 	m_function = function;
 	m_data = data;
 
-	handle_motion = g_signal_connect( G_OBJECT( window ), "motion_notify_event", G_CALLBACK( motion_delta ), this );
+	handle_motion = window.connect( "motion_notify_event", G_CALLBACK( motion_delta ), this );
 }
 
 void FreezePointer::unfreeze_pointer(ui::Window window)

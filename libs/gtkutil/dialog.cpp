@@ -60,7 +60,7 @@ ui::Button create_dialog_button( const char* label, GCallback func, gpointer dat
 	auto button = ui::Button( label );
 	gtk_widget_set_size_request( GTK_WIDGET( button ), 64, -1 );
 	button.show();
-	g_signal_connect( G_OBJECT( button ), "clicked", func, data );
+	button.connect( "clicked", func, data );
 	return button;
 }
 
@@ -68,7 +68,7 @@ ui::Window create_dialog_window( ui::Window parent, const char* title, GCallback
 	ui::Window window = create_floating_window( title, parent );
 	gtk_window_set_default_size( window, default_w, default_h );
 	gtk_window_set_position( window, GTK_WIN_POS_CENTER_ON_PARENT );
-	g_signal_connect( G_OBJECT( window ), "delete_event", func, data );
+	window.connect( "delete_event", func, data );
 
 	return window;
 }
@@ -231,7 +231,7 @@ void BrowsedPathEntry_clicked( ui::Widget widget, BrowsedPathEntry* self ){
 BrowsedPathEntry::BrowsedPathEntry( const BrowseCallback& browse ) :
 	m_entry( PathEntry_new() ),
 	m_browse( browse ){
-	g_signal_connect( G_OBJECT( m_entry.m_button ), "clicked", G_CALLBACK( BrowsedPathEntry_clicked ), this );
+	m_entry.m_button.connect( "clicked", G_CALLBACK( BrowsedPathEntry_clicked ), this );
 }
 
 

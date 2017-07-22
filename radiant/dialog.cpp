@@ -332,7 +332,7 @@ void Dialog::Create(){
 	ASSERT_MESSAGE( !m_window, "dialog cannot be constructed" );
 
 	m_window = BuildDialog();
-	g_signal_connect( G_OBJECT( m_window ), "delete_event", G_CALLBACK( delete_event_callback ), this );
+	m_window.connect( "delete_event", G_CALLBACK( delete_event_callback ), this );
 }
 
 void Dialog::Destroy(){
@@ -606,7 +606,7 @@ ui::Widget Dialog::addFloatEntry( ui::Widget vbox, const char* name, const Float
 
 ui::Widget Dialog::addPathEntry( ui::Widget vbox, const char* name, bool browse_directory, const StringImportCallback& importViewer, const StringExportCallback& exportViewer ){
 	PathEntry pathEntry = PathEntry_new();
-	g_signal_connect( G_OBJECT( pathEntry.m_button ), "clicked", G_CALLBACK( browse_directory ? button_clicked_entry_browse_directory : button_clicked_entry_browse_file ), pathEntry.m_entry );
+	pathEntry.m_button.connect( "clicked", G_CALLBACK( browse_directory ? button_clicked_entry_browse_directory : button_clicked_entry_browse_file ), pathEntry.m_entry );
 
 	AddTextEntryData( *GTK_ENTRY(pathEntry.m_entry), importViewer, exportViewer );
 
