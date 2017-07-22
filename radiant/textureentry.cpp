@@ -20,3 +20,55 @@
  */
 
 #include "textureentry.h"
+
+#include <gtk/gtk.h>
+
+template
+class EntryCompletion<TextureNameList>;
+
+template
+class EntryCompletion<ShaderList>;
+
+template<class StringList>
+void EntryCompletion<StringList>::connect(ui::Entry entry)
+{
+    if (!m_store) {
+        m_store = ui::ListStore(gtk_list_store_new(1, G_TYPE_STRING));
+
+        fill();
+
+        StringList().connect(IdleDraw::QueueDrawCaller(m_idleUpdate));
+    }
+
+    auto completion = ui::EntryCompletion(gtk_entry_completion_new());
+    gtk_entry_set_completion(entry, completion);
+    gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(m_store));
+    gtk_entry_completion_set_text_column(completion, 0);
+}
+
+template<class StringList>
+void EntryCompletion<StringList>::append(const char *string)
+{
+    GtkTreeIter iter;
+    gtk_list_store_append(m_store, &iter);
+    gtk_list_store_set(m_store, &iter, 0, string, -1);
+}
+
+template<class StringList>
+void EntryCompletion<StringList>::fill()
+{
+    StringList().forEach(AppendCaller(*this));
+}
+
+template<class StringList>
+void EntryCompletion<StringList>::clear()
+{
+    gtk_list_store_clear(m_store);
+}
+
+template<class StringList>
+void EntryCompletion<StringList>::update()
+{
+    clear();
+    fill();
+}

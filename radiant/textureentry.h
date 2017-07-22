@@ -22,8 +22,6 @@
 #if !defined( INCLUDED_TEXTUREENTRY_H )
 #define INCLUDED_TEXTUREENTRY_H
 
-
-#include <gtk/gtk.h>
 #include "gtkutil/idledraw.h"
 
 #include "generic/static.h"
@@ -33,84 +31,65 @@
 #include "texwindow.h"
 
 template<typename StringList>
-class EntryCompletion
-{
-ui::ListStore m_store;
-IdleDraw m_idleUpdate;
+class EntryCompletion {
+    ui::ListStore m_store;
+    IdleDraw m_idleUpdate;
 public:
-EntryCompletion() : m_store( 0 ), m_idleUpdate( UpdateCaller( *this ) ){
-}
+    EntryCompletion() : m_store(0), m_idleUpdate(UpdateCaller(*this))
+    {
+    }
 
-void connect( ui::Entry entry ){
-	if ( !m_store ) {
-		m_store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+    void connect(ui::Entry entry);
 
-		fill();
+    void append(const char *string);
 
-		StringList().connect( IdleDraw::QueueDrawCaller( m_idleUpdate ) );
-	}
+    typedef MemberCaller1<EntryCompletion, const char *, &EntryCompletion::append> AppendCaller;
 
-	auto completion = ui::EntryCompletion(gtk_entry_completion_new());
-	gtk_entry_set_completion( entry, completion );
-	gtk_entry_completion_set_model( completion, GTK_TREE_MODEL( m_store ) );
-	gtk_entry_completion_set_text_column( completion, 0 );
-}
+    void fill();
 
-void append( const char* string ){
-	GtkTreeIter iter;
-	gtk_list_store_append( m_store, &iter );
-	gtk_list_store_set( m_store, &iter, 0, string, -1 );
-}
-typedef MemberCaller1<EntryCompletion, const char*, &EntryCompletion::append> AppendCaller;
+    void clear();
 
-void fill(){
-	StringList().forEach( AppendCaller( *this ) );
-}
+    void update();
 
-void clear(){
-	gtk_list_store_clear( m_store );
-}
-
-void update(){
-	clear();
-	fill();
-}
-typedef MemberCaller<EntryCompletion, &EntryCompletion::update> UpdateCaller;
+    typedef MemberCaller<EntryCompletion, &EntryCompletion::update> UpdateCaller;
 };
 
-class TextureNameList
-{
+class TextureNameList {
 public:
-void forEach( const ShaderNameCallback& callback ) const {
-	for ( QERApp_ActiveShaders_IteratorBegin(); !QERApp_ActiveShaders_IteratorAtEnd(); QERApp_ActiveShaders_IteratorIncrement() )
-	{
-		IShader *shader = QERApp_ActiveShaders_IteratorCurrent();
+    void forEach(const ShaderNameCallback &callback) const
+    {
+        for (QERApp_ActiveShaders_IteratorBegin(); !QERApp_ActiveShaders_IteratorAtEnd(); QERApp_ActiveShaders_IteratorIncrement()) {
+            IShader *shader = QERApp_ActiveShaders_IteratorCurrent();
 
-		if ( shader_equal_prefix( shader->getName(), "textures/" ) ) {
-			callback( shader->getName() + 9 );
-		}
-	}
-}
-void connect( const SignalHandler& update ) const {
-	TextureBrowser_addActiveShadersChangedCallback( update );
-}
+            if (shader_equal_prefix(shader->getName(), "textures/")) {
+                callback(shader->getName() + 9);
+            }
+        }
+    }
+
+    void connect(const SignalHandler &update) const
+    {
+        TextureBrowser_addActiveShadersChangedCallback(update);
+    }
 };
 
-typedef Static< EntryCompletion<TextureNameList> > GlobalTextureEntryCompletion;
+typedef Static<EntryCompletion<TextureNameList> > GlobalTextureEntryCompletion;
 
 
-class ShaderList
-{
+class ShaderList {
 public:
-void forEach( const ShaderNameCallback& callback ) const {
-	GlobalShaderSystem().foreachShaderName( callback );
-}
-void connect( const SignalHandler& update ) const {
-	TextureBrowser_addShadersRealiseCallback( update );
-}
+    void forEach(const ShaderNameCallback &callback) const
+    {
+        GlobalShaderSystem().foreachShaderName(callback);
+    }
+
+    void connect(const SignalHandler &update) const
+    {
+        TextureBrowser_addShadersRealiseCallback(update);
+    }
 };
 
-typedef Static< EntryCompletion<ShaderList> > GlobalShaderEntryCompletion;
+typedef Static<EntryCompletion<ShaderList> > GlobalShaderEntryCompletion;
 
 
 #endif

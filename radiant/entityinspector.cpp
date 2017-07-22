@@ -22,6 +22,7 @@
 #include "entityinspector.h"
 
 #include "debugging/debugging.h"
+#include <gtk/gtk.h>
 
 #include "ientity.h"
 #include "ifilesystem.h"
