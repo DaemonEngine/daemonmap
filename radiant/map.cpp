@@ -885,7 +885,7 @@ void DoMapInfo(){
 		}
 	}
 
-	g_object_unref( G_OBJECT( EntityBreakdownWalker ) );
+	EntityBreakdownWalker.unref();
 
 	char tmp[16];
 	sprintf( tmp, "%u", Unsigned( g_brushCount.get() ) );

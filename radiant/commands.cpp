@@ -460,7 +460,7 @@ public:
 				GlobalShortcuts_foreach( visitor );
 			}
 
-			g_object_unref( G_OBJECT( store ) );
+			store.unref();
 		}
 	}
 

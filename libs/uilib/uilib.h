@@ -176,8 +176,14 @@ namespace ui {
         explicit operator void *() const
         { return _handle; }
 
+        void unref()
+        { g_object_unref(_handle); }
+
         template<class Lambda>
         gulong connect(char const *detailed_signal, Lambda &&c_handler, void *data);
+
+        template<class Lambda>
+        gulong connect(char const *detailed_signal, Lambda &&c_handler, Object data);
     };
     static_assert(sizeof(Object) == sizeof(Object::native), "object slicing");
 
@@ -541,6 +547,12 @@ namespace ui {
     gulong Object::connect(char const *detailed_signal, Lambda &&c_handler, void *data)
     {
         return g_signal_connect(G_OBJECT(this), detailed_signal, c_handler, data);
+    }
+
+    template<class Lambda>
+    gulong Object::connect(char const *detailed_signal, Lambda &&c_handler, Object data)
+    {
+        return g_signal_connect(G_OBJECT(this), detailed_signal, c_handler, (_GtkObject *) data);
     }
 
     template<class Lambda>

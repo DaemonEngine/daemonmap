@@ -43,7 +43,7 @@ public:
 
     void append(const char *string);
 
-    typedef MemberCaller1<EntryCompletion, const char *, &EntryCompletion::append> AppendCaller;
+    using AppendCaller = MemberCaller1<EntryCompletion, const char *, &EntryCompletion::append>;
 
     void fill();
 
@@ -51,7 +51,7 @@ public:
 
     void update();
 
-    typedef MemberCaller<EntryCompletion, &EntryCompletion::update> UpdateCaller;
+    using UpdateCaller = MemberCaller<EntryCompletion, &EntryCompletion::update>;
 };
 
 class TextureNameList {

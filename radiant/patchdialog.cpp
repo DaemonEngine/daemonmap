@@ -888,7 +888,7 @@ ui::Window PatchInspector::BuildDialog(){
 											  (GtkAttachOptions)( GTK_FILL ),
 											  (GtkAttachOptions)( 0 ), 0, 0 );
 							gtk_widget_set_size_request( GTK_WIDGET( entry ), 50, -1 );
-							g_object_set_data( G_OBJECT( window ), "hshift_entry", entry );
+							g_object_set_data( G_OBJECT( window ), "hshift_entry", (void *) entry );
 							// we fill in this data, if no patch is selected the widgets are unmodified when the inspector is raised
 							// so we need to have at least one initialisation somewhere
 							entry_set_float( entry, g_pi_globals.shift[0] );

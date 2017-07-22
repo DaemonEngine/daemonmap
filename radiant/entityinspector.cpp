@@ -882,7 +882,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 			gtk_table_attach( g_spawnflagsTable, widget, i % 4, i % 4 + 1, i / 4, i / 4 + 1,
 							  (GtkAttachOptions)( GTK_FILL ),
 							  (GtkAttachOptions)( GTK_FILL ), 0, 0 );
-			g_object_unref( widget );
+			widget.unref();
 
 			gtk_label_set_text( GTK_LABEL( gtk_bin_get_child(GTK_BIN(widget)) ), str.c_str() );
 		}
@@ -1341,7 +1341,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 					scr.add(view);
 
-					g_object_unref( G_OBJECT( store ) );
+					store.unref();
 					g_entityClassList = view;
 					g_entlist_store = store;
 				}
@@ -1429,7 +1429,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 						scr.add(view);
 
-						g_object_unref( G_OBJECT( store ) );
+						store.unref();
 
 						g_entprops_store = store;
 					}

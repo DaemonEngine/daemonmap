@@ -23,12 +23,6 @@
 
 #include <gtk/gtk.h>
 
-template
-class EntryCompletion<TextureNameList>;
-
-template
-class EntryCompletion<ShaderList>;
-
 template<class StringList>
 void EntryCompletion<StringList>::connect(ui::Entry entry)
 {
@@ -72,3 +66,9 @@ void EntryCompletion<StringList>::update()
     clear();
     fill();
 }
+
+template
+class EntryCompletion<TextureNameList>;
+
+template
+class EntryCompletion<ShaderList>;

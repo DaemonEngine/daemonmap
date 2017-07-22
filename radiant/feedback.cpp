@@ -321,7 +321,7 @@ ui::Window CDbgDlg::BuildDialog(){
 
 		scr.add(view);
 
-		g_object_unref( G_OBJECT( store ) );
+		store.unref();
 
 		m_clist = store;
 	}

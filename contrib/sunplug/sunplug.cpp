@@ -272,7 +272,7 @@ void about_plugin_window(){
 	gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
 
 	button = ui::Button( "OK" ); // create a button with text
-	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), window ); // connect the click event to close the window
+	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), (void *) window ); // connect the click event to close the window
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
 
 	gtk_window_set_position( GTK_WINDOW( window ), GTK_WIN_POS_CENTER ); // center the window on screen

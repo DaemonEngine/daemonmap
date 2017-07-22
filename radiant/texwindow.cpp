@@ -2139,7 +2139,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			auto renderer = ui::CellRendererText();
 
 			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_assigned_store ) ));
-			g_object_unref( G_OBJECT( g_TextureBrowser.m_assigned_store ) );
+			g_TextureBrowser.m_assigned_store.unref();
 			g_TextureBrowser.m_assigned_tree.connect( "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_assigned_tree ), FALSE );
 
@@ -2167,7 +2167,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			auto renderer = ui::CellRendererText();
 
 			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_available_store ) ));
-			g_object_unref( G_OBJECT( g_TextureBrowser.m_available_store ) );
+			g_TextureBrowser.m_available_store.unref();
 			g_TextureBrowser.m_available_tree.connect( "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ), FALSE );
 
@@ -2233,7 +2233,7 @@ void TextureBrowser_destroyWindow(){
 	g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_sizeHandler );
 	g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_exposeHandler );
 
-	g_object_unref( g_TextureBrowser.m_gl_widget );
+	g_TextureBrowser.m_gl_widget.unref();
 }
 
 const Vector3& TextureBrowser_getBackgroundColour( TextureBrowser& textureBrowser ){

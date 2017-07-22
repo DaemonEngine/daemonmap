@@ -892,7 +892,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					view.connect( "key_press_event", G_CALLBACK( project_key_press ), &projectList );
 
-					g_object_unref( G_OBJECT( store ) );
+					store.unref();
 				}
 			}
 		}
@@ -925,7 +925,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					scr.add(view);
 
-					g_object_unref( G_OBJECT( store ) );
+					store.unref();
 
 					view.connect( "key_press_event", G_CALLBACK( commands_key_press ), store );
 

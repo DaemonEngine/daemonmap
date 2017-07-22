@@ -867,7 +867,7 @@ XYWnd::~XYWnd(){
 	g_signal_handler_disconnect( G_OBJECT( m_gl_widget ), m_sizeHandler );
 	g_signal_handler_disconnect( G_OBJECT( m_gl_widget ), m_exposeHandler );
 
-	g_object_unref( m_gl_widget );
+	m_gl_widget.unref();
 
 	m_window_observer->release();
 }

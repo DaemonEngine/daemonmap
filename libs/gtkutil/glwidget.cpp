@@ -203,7 +203,7 @@ gint glwidget_context_destroyed( ui::Widget widget, gpointer data ){
 
 		GLWidget_sharedContextDestroyed();
 
-		g_object_unref( g_shared );
+		g_shared.unref();
 		g_shared = ui::Widget(nullptr);
 	}
 	return FALSE;

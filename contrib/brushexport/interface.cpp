@@ -7,10 +7,10 @@
 
 #define GLADE_HOOKUP_OBJECT( component,widget,name ) \
 	g_object_set_data_full( G_OBJECT( component ), name, \
-							g_object_ref( widget ), (GDestroyNotify) g_object_unref )
+							g_object_ref( (void *) widget ), (GDestroyNotify) g_object_unref )
 
 #define GLADE_HOOKUP_OBJECT_NO_REF( component,widget,name )	\
-	g_object_set_data( G_OBJECT( component ), name, widget )
+	g_object_set_data( G_OBJECT( component ), name, (void *) widget )
 
 // created by glade
 GtkWidget*
@@ -208,7 +208,7 @@ void CreateWindow( void ){
 	// list store
 	ui::ListStore ignorelist = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 	gtk_tree_view_set_model( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), GTK_TREE_MODEL( ignorelist ) );
-	g_object_unref( ignorelist );
+    ignorelist.unref();
 
 	gtk_widget_show_all( wnd );
 	g_brushexp_window = wnd;
