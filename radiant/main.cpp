@@ -396,7 +396,7 @@ bool check_version(){
 		msg << "This editor binary (" RADIANT_VERSION ") doesn't match what the latest setup has configured in this directory\n"
 				"Make sure you run the right/latest editor binary you installed\n"
 			<< AppPath_get();
-		ui::alert( 0, msg.c_str(), "Radiant", eMB_OK, eMB_ICONDEFAULT );
+		ui::root.alert( msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Default);
 	}
 	return bVerIsGood;
 #else
@@ -434,7 +434,7 @@ void create_global_pid(){
 			   "The failure may be related to current global preferences.\n"
 			   "Do you want to reset global preferences to defaults?";
 
-		if ( ui::root.alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::QUESTION ) == ui::alert_response::YES ) {
+		if ( ui::root.alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::YES ) {
 			g_GamesDialog.Reset();
 		}
 
@@ -493,7 +493,7 @@ void create_local_pid(){
 			   "The failure may be caused by current preferences.\n"
 			   "Do you want to reset all preferences to defaults?";
 
-		if ( ui::root.alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::QUESTION ) == ui::alert_response::YES ) {
+		if ( ui::root.alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::YES ) {
 			Preferences_Reset();
 		}
 
