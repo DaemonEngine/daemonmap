@@ -32,6 +32,7 @@
 // Small functions to help with GTK
 //
 
+#include <gtk/gtk.h>
 #include "gtkmisc.h"
 
 #include "uilib/uilib.h"

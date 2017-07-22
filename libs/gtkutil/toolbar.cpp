@@ -22,6 +22,7 @@
 #include "toolbar.h"
 
 #include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "generic/callback.h"
 

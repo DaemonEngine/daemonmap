@@ -22,7 +22,6 @@
 #if !defined( INCLUDED_GTKUTIL_TOOLBAR_H )
 #define INCLUDED_GTKUTIL_TOOLBAR_H
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 #include "generic/callbackfwd.h"
 
