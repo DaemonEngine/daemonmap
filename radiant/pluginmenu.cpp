@@ -21,6 +21,8 @@
 
 #include "pluginmenu.h"
 
+#include <gtk/gtk.h>
+
 #include "stream/textstream.h"
 
 #include "gtkutil/pointer.h"

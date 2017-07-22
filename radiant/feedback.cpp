@@ -27,6 +27,8 @@
 
 #include "feedback.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "igl.h"

@@ -28,6 +28,8 @@
 
 #include "dialog.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 

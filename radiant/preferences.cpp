@@ -26,6 +26,8 @@
 //
 
 #include "preferences.h"
+
+#include <gtk/gtk.h>
 #include "environment.h"
 
 #include "debugging/debugging.h"

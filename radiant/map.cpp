@@ -21,6 +21,8 @@
 
 #include "map.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "imap.h"

@@ -27,6 +27,8 @@
 
 #include "mainframe.h"
 
+#include <gtk/gtk.h>
+
 #include "ifilesystem.h"
 #include "iundo.h"
 #include "editable.h"

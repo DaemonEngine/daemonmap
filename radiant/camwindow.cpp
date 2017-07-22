@@ -25,8 +25,10 @@
 // Leonardo Zide (leo@lokigames.com)
 //
 
-#include <gdk/gdkkeysyms.h>
 #include "camwindow.h"
+
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "debugging/debugging.h"
 

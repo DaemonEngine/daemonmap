@@ -27,6 +27,8 @@
 
 #include "findtexturedialog.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "ishaders.h"

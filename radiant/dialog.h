@@ -24,7 +24,6 @@
 
 #include <list>
 #include <uilib/uilib.h>
-#include <gtk/gtk.h>
 
 #include "gtkutil/dialog.h"
 #include "generic/callback.h"
@@ -162,27 +161,27 @@ ui::SpinButton addSpinner( ui::Widget vbox, const char* name, double value, doub
 
 protected:
 
-void AddBoolToggleData( GtkToggleButton& object, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
-void AddIntRadioData( GtkRadioButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddTextEntryData( GtkEntry& object, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
-void AddIntEntryData( GtkEntry& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddSizeEntryData( GtkEntry& object, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
-void AddFloatEntryData( GtkEntry& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-void AddFloatSpinnerData( GtkSpinButton& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-void AddIntSpinnerData( GtkSpinButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddIntAdjustmentData( GtkAdjustment& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddIntComboData( GtkComboBox& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddBoolToggleData( struct _GtkToggleButton& object, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
+void AddIntRadioData( struct _GtkRadioButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddTextEntryData( struct _GtkEntry& object, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
+void AddIntEntryData( struct _GtkEntry& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddSizeEntryData( struct _GtkEntry& object, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
+void AddFloatEntryData( struct _GtkEntry& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+void AddFloatSpinnerData( struct _GtkSpinButton& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+void AddIntSpinnerData( struct _GtkSpinButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddIntAdjustmentData( struct _GtkAdjustment& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddIntComboData( struct _GtkComboBox& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
 
-void AddDialogData( GtkToggleButton& object, bool& data );
-void AddDialogData( GtkRadioButton& object, int& data );
-void AddDialogData( GtkEntry& object, CopiedString& data );
-void AddDialogData( GtkEntry& object, int& data );
-void AddDialogData( GtkEntry& object, std::size_t& data );
-void AddDialogData( GtkEntry& object, float& data );
-void AddDialogData( GtkSpinButton& object, float& data );
-void AddDialogData( GtkSpinButton& object, int& data );
-void AddDialogData( GtkAdjustment& object, int& data );
-void AddDialogData( GtkComboBox& object, int& data );
+void AddDialogData( struct _GtkToggleButton& object, bool& data );
+void AddDialogData( struct _GtkRadioButton& object, int& data );
+void AddDialogData( struct _GtkEntry& object, CopiedString& data );
+void AddDialogData( struct _GtkEntry& object, int& data );
+void AddDialogData( struct _GtkEntry& object, std::size_t& data );
+void AddDialogData( struct _GtkEntry& object, float& data );
+void AddDialogData( struct _GtkSpinButton& object, float& data );
+void AddDialogData( struct _GtkSpinButton& object, int& data );
+void AddDialogData( struct _GtkAdjustment& object, int& data );
+void AddDialogData( struct _GtkComboBox& object, int& data );
 };
 
 #endif

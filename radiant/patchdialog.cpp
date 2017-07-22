@@ -27,6 +27,8 @@
 
 #include "patchdialog.h"
 
+#include <gtk/gtk.h>
+
 #include "itexdef.h"
 
 #include "debugging/debugging.h"

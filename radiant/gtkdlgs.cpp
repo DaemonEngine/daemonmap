@@ -36,6 +36,8 @@
 
 #include "gtkdlgs.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 #include "version.h"
 #include "aboutmsg.h"
