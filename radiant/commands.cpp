@@ -21,6 +21,7 @@
 
 #include "commands.h"
 
+#include "gtk/gtk.h"
 #include "debugging/debugging.h"
 #include "warnings.h"
 
@@ -398,7 +399,7 @@ void DoCommandListDlg(){
 	window.add(hbox);
 
 	{
-		auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
+		auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC );
 		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 		{

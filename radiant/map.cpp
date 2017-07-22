@@ -835,7 +835,7 @@ void DoMapInfo(){
 			gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		}
 		{
-			auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+			auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 			{

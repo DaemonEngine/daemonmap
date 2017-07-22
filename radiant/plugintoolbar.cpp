@@ -21,6 +21,7 @@
 
 #include "plugintoolbar.h"
 
+#include <gtk/gtk.h>
 
 #include "itoolbar.h"
 #include "modulesystem.h"

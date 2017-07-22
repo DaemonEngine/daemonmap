@@ -22,135 +22,88 @@
 #if !defined( INCLUDED_GTKUTIL_WINDOW_H )
 #define INCLUDED_GTKUTIL_WINDOW_H
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 #include "debugging/debugging.h"
 #include "generic/callback.h"
 #include "widget.h"
 
-inline gboolean window_focus_in_clear_focus_widget( ui::Widget widget, GdkEventKey* event, gpointer data ){
-	gtk_window_set_focus( GTK_WINDOW( widget ), NULL );
-	return FALSE;
-}
+gboolean window_focus_in_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpointer data);
 
-inline guint window_connect_focus_in_clear_focus_widget( ui::Window window ){
-	return g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( window_focus_in_clear_focus_widget ), NULL );
-}
+guint window_connect_focus_in_clear_focus_widget(ui::Window window);
 
+unsigned int connect_floating(ui::Window main_window, ui::Window floating);
 
-unsigned int connect_floating( ui::Window main_window, ui::Window floating );
-ui::Window create_floating_window( const char* title, ui::Window parent );
-void destroy_floating_window( ui::Window window );
+ui::Window create_floating_window(const char *title, ui::Window parent);
 
-ui::Window create_persistent_floating_window( const char* title, ui::Window main_window );
-gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event, ui::Window main_window );
+void destroy_floating_window(ui::Window window);
 
-void window_remove_minmax( ui::Window window );
+ui::Window create_persistent_floating_window(const char *title, ui::Window main_window);
 
-ui::ScrolledWindow create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border = 0 );
+gboolean persistent_floating_window_delete(ui::Window floating, GdkEvent *event, ui::Window main_window);
+
+void window_remove_minmax(ui::Window window);
+
+ui::ScrolledWindow create_scrolled_window(ui::Policy hscrollbar_policy, ui::Policy vscrollbar_policy, int border = 0);
 
 
-struct WindowPosition
-{
-	int x, y, w, h;
+struct WindowPosition {
+    int x, y, w, h;
 
-	WindowPosition(){
-	}
-	WindowPosition( int _x, int _y, int _w, int _h )
-		: x( _x ), y( _y ), w( _w ), h( _h ){
-	}
+    WindowPosition()
+    {
+    }
+
+    WindowPosition(int _x, int _y, int _w, int _h)
+            : x(_x), y(_y), w(_w), h(_h)
+    {
+    }
 };
 
-const WindowPosition c_default_window_pos( 50, 25, 400, 300 );
+const WindowPosition c_default_window_pos(50, 25, 400, 300);
 
-inline void window_get_position( ui::Window window, WindowPosition& position ){
-	ASSERT_MESSAGE( window , "error saving window position" );
+void window_get_position(ui::Window window, WindowPosition &position);
 
-	gtk_window_get_position( window, &position.x, &position.y );
-	gtk_window_get_size( window, &position.w, &position.h );
-}
+void window_set_position(ui::Window window, const WindowPosition &position);
 
-inline void window_set_position( ui::Window window, const WindowPosition& position ){
-	gtk_window_set_gravity( window, GDK_GRAVITY_STATIC );
+void WindowPosition_Parse(WindowPosition &position, const char *value);
 
-	GdkScreen* screen = gdk_screen_get_default();
-	if ( position.x < 0
-		 || position.y < 0
-		 || position.x > gdk_screen_get_width( screen )
-		 || position.y > gdk_screen_get_height( screen ) ) {
-		gtk_window_set_position( window, GTK_WIN_POS_CENTER_ON_PARENT );
-	}
-	else
-	{
-		gtk_window_move( window, position.x, position.y );
-	}
+typedef ReferenceCaller1<WindowPosition, const char *, WindowPosition_Parse> WindowPositionImportStringCaller;
 
-	gtk_window_set_default_size( window, position.w, position.h );
-}
+void WindowPosition_Write(const WindowPosition &position, const StringImportCallback &importCallback);
 
-inline void WindowPosition_Parse( WindowPosition& position, const char* value ){
-	if ( sscanf( value, "%d %d %d %d", &position.x, &position.y, &position.w, &position.h ) != 4 ) {
-		position = WindowPosition( c_default_window_pos ); // ensure sane default value for window position
-	}
-}
-typedef ReferenceCaller1<WindowPosition, const char*, WindowPosition_Parse> WindowPositionImportStringCaller;
-
-inline void WindowPosition_Write( const WindowPosition& position, const StringImportCallback& importCallback ){
-	char buffer[64];
-	sprintf( buffer, "%d %d %d %d", position.x, position.y, position.w, position.h );
-	importCallback( buffer );
-}
-typedef ConstReferenceCaller1<WindowPosition, const StringImportCallback&, WindowPosition_Write> WindowPositionExportStringCaller;
+typedef ConstReferenceCaller1<WindowPosition, const StringImportCallback &, WindowPosition_Write> WindowPositionExportStringCaller;
 
 
+class WindowPositionTracker {
+    WindowPosition m_position;
 
-class WindowPositionTracker
-{
-WindowPosition m_position;
-
-static gboolean configure( ui::Widget widget, GdkEventConfigure *event, WindowPositionTracker* self ){
-	self->m_position = WindowPosition( event->x, event->y, event->width, event->height );
-	return FALSE;
-}
+    static gboolean configure(ui::Widget widget, GdkEventConfigure *event, WindowPositionTracker *self);
 
 public:
-WindowPositionTracker()
-	: m_position( c_default_window_pos ){
-}
+    WindowPositionTracker()
+            : m_position(c_default_window_pos)
+    {
+    }
 
-void sync( ui::Window window ){
-	window_set_position( window, m_position );
-}
+    void sync(ui::Window window);
 
-void connect( ui::Window window ){
-	sync( window );
-	g_signal_connect( G_OBJECT( window ), "configure_event", G_CALLBACK( configure ), this );
-}
+    void connect(ui::Window window);
 
-const WindowPosition& getPosition() const {
-	return m_position;
-}
+    const WindowPosition &getPosition() const;
 
 //hack
-void setPosition( const WindowPosition& position ){
-	m_position = position;
-}
+    void setPosition(const WindowPosition &position);
 };
 
 
-inline void WindowPositionTracker_importString( WindowPositionTracker& self, const char* value ){
-	WindowPosition position;
-	WindowPosition_Parse( position, value );
-	self.setPosition( position );
-}
-typedef ReferenceCaller1<WindowPositionTracker, const char*, WindowPositionTracker_importString> WindowPositionTrackerImportStringCaller;
+void WindowPositionTracker_importString(WindowPositionTracker &self, const char *value);
 
-inline void WindowPositionTracker_exportString( const WindowPositionTracker& self, const StringImportCallback& importer ){
-	WindowPosition_Write( self.getPosition(), importer );
-}
-typedef ConstReferenceCaller1<WindowPositionTracker, const StringImportCallback&, WindowPositionTracker_exportString> WindowPositionTrackerExportStringCaller;
+typedef ReferenceCaller1<WindowPositionTracker, const char *, WindowPositionTracker_importString> WindowPositionTrackerImportStringCaller;
 
+void WindowPositionTracker_exportString(const WindowPositionTracker &self, const StringImportCallback &importer);
+
+typedef ConstReferenceCaller1<WindowPositionTracker, const StringImportCallback &, WindowPositionTracker_exportString> WindowPositionTrackerExportStringCaller;
 
 
 #endif

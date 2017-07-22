@@ -31,6 +31,7 @@
 #include "debugging/debugging.h"
 
 #include <vector>
+#include <gtk/gtk.h>
 
 #include "gtkutil/widget.h"
 #include "gtkutil/accelerator.h"

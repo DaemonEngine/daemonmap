@@ -23,6 +23,7 @@
 
 #include <time.h>
 #include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "gtkutil/accelerator.h"
 #include "gtkutil/messagebox.h"

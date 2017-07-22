@@ -561,7 +561,7 @@ void DoAbout(){
 				auto frame = create_dialog_frame( "OpenGL Extensions" );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
 				{
-					auto sc_extensions = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS, 4 );
+					auto sc_extensions = create_scrolled_window( ui::Policy::AUTOMATIC, ui::Policy::ALWAYS, 4 );
 					frame.add(sc_extensions);
 					{
 						auto text_extensions = ui::TextView();

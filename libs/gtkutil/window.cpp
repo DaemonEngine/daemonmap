@@ -22,7 +22,6 @@
 #include "window.h"
 
 #include <gtk/gtk.h>
-#include <uilib/uilib.h>
 
 #include "pointer.h"
 #include "accelerator.h"
@@ -137,11 +136,102 @@ void window_remove_minmax( ui::Window window ){
 }
 
 
-ui::ScrolledWindow create_scrolled_window( GtkPolicyType hscrollbar_policy, GtkPolicyType vscrollbar_policy, int border ){
+ui::ScrolledWindow create_scrolled_window( ui::Policy hscrollbar_policy, ui::Policy vscrollbar_policy, int border ){
 	auto scr = ui::ScrolledWindow();
 	gtk_widget_show( GTK_WIDGET( scr ) );
-	gtk_scrolled_window_set_policy( scr, hscrollbar_policy, vscrollbar_policy );
+	gtk_scrolled_window_set_policy( scr, (GtkPolicyType) hscrollbar_policy, (GtkPolicyType) vscrollbar_policy );
 	gtk_scrolled_window_set_shadow_type( scr, GTK_SHADOW_IN );
 	gtk_container_set_border_width( GTK_CONTAINER( scr ), border );
 	return scr;
+}
+
+gboolean window_focus_in_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpointer data)
+{
+    gtk_window_set_focus( GTK_WINDOW( widget ), NULL );
+    return FALSE;
+}
+
+guint window_connect_focus_in_clear_focus_widget(ui::Window window)
+{
+	return g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( window_focus_in_clear_focus_widget ), NULL );
+}
+
+void window_get_position(ui::Window window, WindowPosition &position)
+{
+	ASSERT_MESSAGE( window , "error saving window position" );
+
+	gtk_window_get_position( window, &position.x, &position.y );
+	gtk_window_get_size( window, &position.w, &position.h );
+}
+
+void window_set_position(ui::Window window, const WindowPosition &position)
+{
+	gtk_window_set_gravity( window, GDK_GRAVITY_STATIC );
+
+	GdkScreen* screen = gdk_screen_get_default();
+	if ( position.x < 0
+		 || position.y < 0
+		 || position.x > gdk_screen_get_width( screen )
+		 || position.y > gdk_screen_get_height( screen ) ) {
+		gtk_window_set_position( window, GTK_WIN_POS_CENTER_ON_PARENT );
+	}
+	else
+	{
+		gtk_window_move( window, position.x, position.y );
+	}
+
+	gtk_window_set_default_size( window, position.w, position.h );
+}
+
+void WindowPosition_Parse(WindowPosition &position, const char *value)
+{
+	if ( sscanf( value, "%d %d %d %d", &position.x, &position.y, &position.w, &position.h ) != 4 ) {
+		position = WindowPosition( c_default_window_pos ); // ensure sane default value for window position
+	}
+}
+
+void WindowPosition_Write(const WindowPosition &position, const StringImportCallback &importCallback)
+{
+	char buffer[64];
+	sprintf( buffer, "%d %d %d %d", position.x, position.y, position.w, position.h );
+	importCallback( buffer );
+}
+
+void WindowPositionTracker_importString(WindowPositionTracker &self, const char *value)
+{
+	WindowPosition position;
+	WindowPosition_Parse( position, value );
+	self.setPosition( position );
+}
+
+void WindowPositionTracker_exportString(const WindowPositionTracker &self, const StringImportCallback &importer)
+{
+	WindowPosition_Write( self.getPosition(), importer );
+}
+
+gboolean WindowPositionTracker::configure(ui::Widget widget, GdkEventConfigure *event, WindowPositionTracker *self)
+{
+	self->m_position = WindowPosition( event->x, event->y, event->width, event->height );
+	return FALSE;
+}
+
+void WindowPositionTracker::sync(ui::Window window)
+{
+	window_set_position( window, m_position );
+}
+
+void WindowPositionTracker::connect(ui::Window window)
+{
+	sync( window );
+	g_signal_connect( G_OBJECT( window ), "configure_event", G_CALLBACK( configure ), this );
+}
+
+const WindowPosition &WindowPositionTracker::getPosition() const
+{
+	return m_position;
+}
+
+void WindowPositionTracker::setPosition(const WindowPosition &position)
+{
+	m_position = position;
 }

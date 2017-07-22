@@ -22,6 +22,7 @@
 #include "build.h"
 #include "debugging/debugging.h"
 
+#include <gtk/gtk.h>
 #include <map>
 #include <list>
 #include "stream/stringstream.h"
@@ -864,7 +865,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
 				frame.add(scr);
 
 				{
@@ -901,7 +902,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
 				frame.add(scr);
 
 				{

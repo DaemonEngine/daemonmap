@@ -110,6 +110,12 @@ namespace ui {
         ETCHED_OUT
     };
 
+    enum class Policy {
+        ALWAYS,
+        AUTOMATIC,
+        NEVER
+    };
+
     namespace details {
 
         enum class Convert {

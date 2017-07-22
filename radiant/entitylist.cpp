@@ -24,6 +24,7 @@
 #include "iselection.h"
 
 #include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "string/string.h"
 #include "scenelib.h"
@@ -291,7 +292,7 @@ void EntityList_constructWindow( ui::Window main_window ){
 	getEntityList().m_window = window;
 
 	{
-		auto scr = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+		auto scr = create_scrolled_window( ui::Policy::AUTOMATIC, ui::Policy::AUTOMATIC );
 		window.add(scr);
 
 		{
