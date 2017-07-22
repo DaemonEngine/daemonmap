@@ -19,7 +19,7 @@ add_library(gtkutil
         paned.cpp paned.h
         pointer.h
         toolbar.cpp toolbar.h
-        widget.h
+        widget.cpp widget.h
         window.cpp window.h
         xorrectangle.h
         )

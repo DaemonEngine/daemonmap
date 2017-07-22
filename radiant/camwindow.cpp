@@ -1148,7 +1148,7 @@ CamWnd::CamWnd() :
 	m_gl_widget( ui::Widget(glwidget_new( TRUE )) ),
 	m_window_observer( NewWindowObserver() ),
 	m_XORRectangle( m_gl_widget ),
-	m_deferredDraw( WidgetQueueDrawCaller( *m_gl_widget ) ),
+	m_deferredDraw( WidgetQueueDrawCaller( m_gl_widget ) ),
 	m_deferred_motion( selection_motion, m_window_observer ),
 	m_selection_button_press_handler( 0 ),
 	m_selection_button_release_handler( 0 ),
