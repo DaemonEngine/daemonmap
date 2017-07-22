@@ -866,7 +866,7 @@ struct RotateDialog
 	GtkSpinButton* x;
 	GtkSpinButton* y;
 	GtkSpinButton* z;
-	ui::Window window;
+	ui::Window window{ui::null};
 };
 
 static gboolean rotatedlg_apply( ui::Widget widget, RotateDialog* rotateDialog ){
@@ -1017,7 +1017,7 @@ struct ScaleDialog
 	ui::Widget x;
 	ui::Widget y;
 	ui::Widget z;
-	ui::Window window;
+	ui::Window window{ui::null};
 };
 
 static gboolean scaledlg_apply( ui::Widget widget, ScaleDialog* scaleDialog ){

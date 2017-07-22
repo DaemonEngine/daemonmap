@@ -49,7 +49,7 @@ bool IsWindowOpen( void );
 
 namespace BrushExport
 {
-ui::Window g_mainwnd;
+ui::Window g_mainwnd{ui::null};
 
 const char* init( void* hApp, void* pMainWidget ){
 	g_mainwnd = ui::Window(GTK_WINDOW(pMainWidget));

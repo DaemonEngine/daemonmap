@@ -337,7 +337,7 @@ void Dialog::Destroy(){
 	ASSERT_MESSAGE( m_window, "dialog cannot be destroyed" );
 
 	gtk_widget_destroy( GTK_WIDGET( m_window ) );
-	m_window = ui::Window();
+	m_window = ui::Window{ui::null};
 }
 
 

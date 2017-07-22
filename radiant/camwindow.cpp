@@ -671,7 +671,7 @@ FreezePointer m_freezePointer;
 
 public:
 ui::Widget m_gl_widget;
-ui::Window m_parent;
+ui::Window m_parent{ui::null};
 
 SelectionSystemWindowObserver* m_window_observer;
 XORRectangle m_XORRectangle;

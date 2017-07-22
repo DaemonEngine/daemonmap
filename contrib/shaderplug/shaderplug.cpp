@@ -57,7 +57,7 @@ ShaderPlugPluginDependencies() :
 
 namespace Shaderplug
 {
-ui::Window g_window;
+ui::Window g_window{ui::null};
 
 std::vector<const char*> archives;
 std::set<std::string> shaders;

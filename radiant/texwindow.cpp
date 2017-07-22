@@ -254,7 +254,7 @@ int m_nTotalHeight;
 
 CopiedString shader;
 
-ui::Window m_parent;
+ui::Window m_parent{ui::null};
 ui::Widget m_gl_widget;
 ui::Widget m_texture_scroll;
 ui::Widget m_treeViewTree;

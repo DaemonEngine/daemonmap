@@ -184,7 +184,7 @@ SunPlugPluginDependencies() :
 //  *************************
 namespace SunPlug
 {
-ui::Window main_window;
+ui::Window main_window{ui::null};
 char MenuList[100] = "";
 
 const char* init( void* hApp, void* pMainWidget ){

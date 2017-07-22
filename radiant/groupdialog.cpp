@@ -147,7 +147,7 @@ void GroupDialog_constructWindow( ui::Window main_window ){
 void GroupDialog_destroyWindow(){
 	ASSERT_TRUE( g_GroupDlg.m_window );
 	destroy_floating_window( g_GroupDlg.m_window );
-	g_GroupDlg.m_window = ui::Window();
+	g_GroupDlg.m_window = ui::Window{ui::null};
 }
 
 

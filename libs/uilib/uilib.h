@@ -231,7 +231,6 @@ namespace ui {
 
     class AccelGroup;
     WRAP(Window, Bin, _GtkWindow, (),
-         Window();
          Window(window_type type);
     ,
          Window create_dialog_window(

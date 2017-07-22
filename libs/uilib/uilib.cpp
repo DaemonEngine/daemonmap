@@ -29,7 +29,7 @@ namespace ui {
         }
     }
 
-    Widget root{nullptr};
+    Widget root;
 
 #define IMPL(T, F) template<> _IMPL(T, F)
 #define _IMPL(T, F) struct verify<T *> { using self = T; static self test(self it) { return self(F(it)); } }
@@ -100,9 +100,6 @@ namespace ui {
     IMPL(Bin, GTK_BIN);
 
     IMPL(Window, GTK_WINDOW);
-
-    Window::Window() : Window(nullptr)
-    {}
 
     Window::Window(window_type type) : Window(GTK_WINDOW(gtk_window_new(
             type == window_type::TOP ? GTK_WINDOW_TOPLEVEL :

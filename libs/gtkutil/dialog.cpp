@@ -158,7 +158,7 @@ gboolean dialog_delete_callback( ui::Widget widget, GdkEventAny* event, ModalDia
 }
 
 ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, ui::Widget contents ){
-	ui::Window window = create_fixedsize_modal_dialog_window(ui::Window(), title, dialog );
+	ui::Window window = create_fixedsize_modal_dialog_window(ui::Window{ui::null}, title, dialog );
 
 	auto vbox1 = create_dialog_vbox( 8, 4 );
 	window.add(vbox1);
