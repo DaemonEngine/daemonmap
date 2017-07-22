@@ -91,8 +91,6 @@ struct MakeChainRS {
 	int linkNum;
 };
 
-typedef struct _GtkWidget GtkWidget;
-
 struct TwinWidget {
 	GtkWidget* one;
 	GtkComboBox* two;

@@ -40,7 +40,6 @@ namespace scene
 {
 class Node;
 }
-typedef struct _GtkMenu GtkMenu;
 
 
 void FlipClip();

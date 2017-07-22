@@ -151,7 +151,6 @@ void Scene_PatchSetFixedSubdivisions( const PatchFixedSubdivisions& subdivisions
 	Scene_forEachVisibleSelectedPatch( PatchSetFixedSubdivisions( subdivisions ) );
 }
 
-typedef struct _GtkCheckButton GtkCheckButton;
 
 class Subdivisions
 {

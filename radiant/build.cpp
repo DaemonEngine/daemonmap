@@ -973,8 +973,6 @@ void DoBuildMenu(){
 #include "preferences.h"
 #include "qe3.h"
 
-typedef struct _GtkMenuItem GtkMenuItem;
-
 class BuildMenuItem
 {
 const char* m_name;

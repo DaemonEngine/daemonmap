@@ -37,7 +37,6 @@ class XYWnd;
 class CamWnd;
 class ZWnd;
 
-typedef struct _GtkWidget GtkWidget;
 
 const int c_command_status = 0;
 const int c_position_status = 1;

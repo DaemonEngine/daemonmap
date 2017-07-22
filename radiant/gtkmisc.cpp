@@ -71,14 +71,14 @@ void toggle_remove_accelerator( const char* name ){
 	global_accel_group_disconnect( toggle.m_command.m_accelerator, toggle.m_command.m_callback );
 }
 
-GtkCheckMenuItem* create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const char* commandName ){
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const char* commandName ){
 	GlobalShortcuts_register( commandName, 2 );
 	const Toggle& toggle = GlobalToggles_find( commandName );
 	global_accel_group_connect( toggle.m_command.m_accelerator, toggle.m_command.m_callback );
 	return create_check_menu_item_with_mnemonic( menu, mnemonic, toggle );
 }
 
-GtkMenuItem* create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const char* commandName ){
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const char* commandName ){
 	GlobalShortcuts_register( commandName, 1 );
 	const Command& command = GlobalCommands_find( commandName );
 	global_accel_group_connect( command.m_accelerator, command.m_callback );
@@ -126,7 +126,7 @@ bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
 	return ok;
 }
 
-void button_clicked_entry_browse_file( ui::Widget widget, GtkEntry* entry ){
+void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry ){
 	const char *filename = ui::Widget(gtk_widget_get_toplevel( widget )).file_dialog( TRUE, "Choose File", gtk_entry_get_text( entry ) );
 
 	if ( filename != 0 ) {
@@ -134,7 +134,7 @@ void button_clicked_entry_browse_file( ui::Widget widget, GtkEntry* entry ){
 	}
 }
 
-void button_clicked_entry_browse_directory( ui::Widget widget, GtkEntry* entry ){
+void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry ){
 	const char* text = gtk_entry_get_text( entry );
 	char *dir = dir_dialog( ui::Widget(gtk_widget_get_toplevel( widget )), "Choose Directory", path_is_absolute( text ) ? text : "" );
 

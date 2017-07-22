@@ -22,6 +22,13 @@ namespace ui {
         gtk_main();
     }
 
+    void process()
+    {
+        while (gtk_events_pending()) {
+            gtk_main_iteration();
+        }
+    }
+
     Widget root{nullptr};
 
 #define IMPL(T, F) template<> _IMPL(T, F)

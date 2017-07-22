@@ -93,12 +93,6 @@ struct DLG_DATA
 	virtual void exportData() const = 0;
 };
 
-typedef struct _GtkToggleButton GtkToggleButton;
-typedef struct _GtkRadioButton GtkRadioButton;
-typedef struct _GtkSpinButton GtkSpinButton;
-typedef struct _GtkComboBox GtkComboBox;
-typedef struct _GtkEntry GtkEntry;
-typedef struct _GtkAdjustment GtkAdjustment;
 
 template<typename FirstArgument>
 class CallbackDialogData;

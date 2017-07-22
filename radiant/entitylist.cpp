@@ -42,7 +42,6 @@
 void RedrawEntityList();
 typedef FreeCaller<RedrawEntityList> RedrawEntityListCaller;
 
-typedef struct _GtkTreeView GtkTreeView;
 
 class EntityList
 {

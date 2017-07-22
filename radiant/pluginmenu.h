@@ -19,14 +19,13 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_PLUGINMENU_H )
 #define INCLUDED_PLUGINMENU_H
 
-typedef struct _GtkMenuItem GtkMenuItem;
-GtkMenuItem* create_plugins_menu();
+ui::MenuItem create_plugins_menu();
 
-typedef struct _GtkMenu GtkMenu;
-typedef struct _GtkMenuItem GtkMenuItem;
 void PluginsMenu_populate();
 void PluginsMenu_clear();
 

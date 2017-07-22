@@ -69,6 +69,8 @@ namespace ui {
 
     void main();
 
+    void process();
+
     extern class Widget root;
 
     enum class alert_type {

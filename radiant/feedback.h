@@ -143,7 +143,6 @@ void DecRef() {
 void Draw2D( VIEWTYPE vt );
 };
 
-typedef struct _GtkListStore GtkListStore;
 
 class CDbgDlg : public Dialog
 {

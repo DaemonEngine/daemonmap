@@ -303,7 +303,7 @@ gboolean PressedButtons_focus_out( GtkWidget* widget, GdkEventFocus* event, Pres
 	return FALSE;
 }
 
-void PressedButtons_connect( PressedButtons& pressedButtons, GtkWidget* widget ){
+void PressedButtons_connect( PressedButtons& pressedButtons, ui::Widget widget ){
 	g_signal_connect( G_OBJECT( widget ), "button_press_event", G_CALLBACK( PressedButtons_button_press ), &pressedButtons );
 	g_signal_connect( G_OBJECT( widget ), "button_release_event", G_CALLBACK( PressedButtons_button_release ), &pressedButtons );
 	g_signal_connect( G_OBJECT( widget ), "focus_out_event", G_CALLBACK( PressedButtons_focus_out ), &pressedButtons );

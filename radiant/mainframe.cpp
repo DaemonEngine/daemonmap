@@ -1683,7 +1683,7 @@ bool ScreenUpdates_Enabled(){
 
 void ScreenUpdates_process(){
 	if ( redrawRequired() && gtk_widget_get_visible( g_wait.m_window ) ) {
-		process_gui();
+		ui::process();
 	}
 }
 
@@ -1692,7 +1692,7 @@ void ScreenUpdates_Disable( const char* message, const char* title ){
 	if ( g_wait_stack.empty() ) {
 		EverySecondTimer_disable();
 
-		process_gui();
+		ui::process();
 
 		bool isActiveApp = MainFrame_isActiveApp();
 
@@ -2691,7 +2691,7 @@ static ui::Window splash_screen;
 void show_splash(){
 	splash_screen = create_splash();
 
-	process_gui();
+	ui::process();
 }
 
 void hide_splash(){

@@ -181,10 +181,10 @@ unsigned int g_context_count = 0;
 
 namespace
 {
-GtkWidget* g_shared = 0;
+	ui::Widget g_shared;
 }
 
-gint glwidget_context_created( GtkWidget* widget, gpointer data ){
+gint glwidget_context_created( ui::Widget widget, gpointer data ){
 	if ( ++g_context_count == 1 ) {
 		g_shared = widget;
 		g_object_ref( g_shared );
@@ -197,27 +197,27 @@ gint glwidget_context_created( GtkWidget* widget, gpointer data ){
 	return FALSE;
 }
 
-gint glwidget_context_destroyed( GtkWidget* widget, gpointer data ){
+gint glwidget_context_destroyed( ui::Widget widget, gpointer data ){
 	if ( --g_context_count == 0 ) {
 		GlobalOpenGL().contextValid = false;
 
 		GLWidget_sharedContextDestroyed();
 
 		g_object_unref( g_shared );
-		g_shared = 0;
+		g_shared = ui::Widget(nullptr);
 	}
 	return FALSE;
 }
 
-gboolean glwidget_enable_gl( GtkWidget* widget, GtkWidget* widget2, gpointer data ){
-	if ( widget2 == 0 && !gtk_widget_is_gl_capable( widget ) ) {
+gboolean glwidget_enable_gl( ui::Widget widget, ui::Widget widget2, gpointer data ){
+	if ( !widget2 && !gtk_widget_is_gl_capable( widget ) ) {
 		GdkGLConfig* glconfig = ( g_object_get_data( G_OBJECT( widget ), "zbuffer" ) ) ? glconfig_new_with_depth() : glconfig_new();
 		ASSERT_MESSAGE( glconfig != 0, "failed to create OpenGL config" );
 
-		gtk_widget_set_gl_capability( widget, glconfig, g_shared != 0 ? gtk_widget_get_gl_context( g_shared ) : 0,  TRUE, GDK_GL_RGBA_TYPE );
+		gtk_widget_set_gl_capability( widget, glconfig, g_shared ? gtk_widget_get_gl_context( g_shared ) : 0,  TRUE, GDK_GL_RGBA_TYPE );
 
 		gtk_widget_realize( widget );
-		if ( g_shared == 0 ) {
+		if ( !g_shared ) {
 			g_shared = widget;
 		}
 
@@ -226,8 +226,8 @@ gboolean glwidget_enable_gl( GtkWidget* widget, GtkWidget* widget2, gpointer dat
 	return FALSE;
 }
 
-GtkWidget* glwidget_new( gboolean zbuffer ){
-	GtkWidget* widget = gtk_drawing_area_new();
+ui::Widget glwidget_new( gboolean zbuffer ){
+	auto widget = ui::Widget(gtk_drawing_area_new());
 
 	g_object_set_data( G_OBJECT( widget ), "zbuffer", gint_to_pointer( zbuffer ) );
 
@@ -239,18 +239,18 @@ GtkWidget* glwidget_new( gboolean zbuffer ){
 	return widget;
 }
 
-void glwidget_destroy_context( GtkWidget *widget ){
+void glwidget_destroy_context( ui::Widget widget ){
 }
 
-void glwidget_create_context( GtkWidget *widget ){
+void glwidget_create_context( ui::Widget widget ){
 }
 
-void glwidget_swap_buffers( GtkWidget *widget ){
+void glwidget_swap_buffers( ui::Widget widget ){
 	GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable( widget );
 	gdk_gl_drawable_swap_buffers( gldrawable );
 }
 
-gboolean glwidget_make_current( GtkWidget *widget ){
+gboolean glwidget_make_current( ui::Widget widget ){
 	GdkGLContext *glcontext = gtk_widget_get_gl_context( widget );
 	GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable( widget );
 	return gdk_gl_drawable_gl_begin( gldrawable, glcontext );

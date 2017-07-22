@@ -152,9 +152,9 @@ void PluginsMenu_clear(){
 	}
 }
 
-GtkMenuItem* create_plugins_menu(){
+ui::MenuItem create_plugins_menu(){
 	// Plugins menu
-	GtkMenuItem* plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
+	auto plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
 	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) ));
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );

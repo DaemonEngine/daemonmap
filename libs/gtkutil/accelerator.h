@@ -85,7 +85,6 @@ void keydown_accelerators_remove( Accelerator accelerator );
 void keyup_accelerators_add( Accelerator accelerator, const Callback& callback );
 void keyup_accelerators_remove( Accelerator accelerator );
 
-typedef struct _GtkWidget GtkWidget;
 void global_accel_connect_window( ui::Window window );
 void global_accel_disconnect_window( ui::Window window );
 
@@ -130,8 +129,7 @@ KeyEvent( const Accelerator& accelerator, const Callback& keyDown, const Callbac
 
 
 struct PressedButtons;
-typedef struct _GtkWidget GtkWidget;
-void PressedButtons_connect( PressedButtons& pressedButtons, GtkWidget* widget );
+void PressedButtons_connect( PressedButtons& pressedButtons, ui::Widget widget );
 
 extern PressedButtons g_pressedButtons;
 

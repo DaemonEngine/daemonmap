@@ -40,7 +40,6 @@ void CamWnd_setParent( CamWnd& camwnd, ui::Window parent );
 void GlobalCamera_setCamWnd( CamWnd& camwnd );
 
 void fill_view_camera_menu( ui::Menu menu );
-typedef struct _GtkToolbar GtkToolbar;
 void CamWnd_constructToolbar( ui::Toolbar toolbar );
 void CamWnd_registerShortcuts();
 
