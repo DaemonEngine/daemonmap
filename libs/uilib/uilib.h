@@ -223,6 +223,11 @@ namespace ui {
     WRAP(Container, Widget, _GtkContainer, (),
     ,
          void add(Widget widget);
+
+         void remove(Widget widget);
+
+         template<class Lambda>
+         void foreach(Lambda &&lambda);
     );
 
     WRAP(Bin, Container, _GtkBin, (),
@@ -496,6 +501,30 @@ namespace ui {
     );
 
 #undef WRAP
+
+    // callbacks
+
+    namespace {
+        using GtkCallback = void (*)(_GtkWidget *, void *);
+        extern "C" {
+        void gtk_container_foreach(_GtkContainer *, GtkCallback, void *);
+        }
+    }
+
+#define this (*static_cast<self>(this))
+
+    template<class Lambda>
+    void IContainer::foreach(Lambda &&lambda)
+    {
+        GtkCallback cb = [](_GtkWidget *widget, void *data) -> void {
+            using Function = typename std::decay<Lambda>::type;
+            Function *f = static_cast<Function *>(data);
+            (*f)(Widget(widget));
+        };
+        gtk_container_foreach(this, cb, &lambda);
+    }
+
+#undef this
 
 }
 

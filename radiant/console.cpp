@@ -93,7 +93,7 @@ void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user
 	ui::Widget item(ui::MenuItem( "Clear" ));
 	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( console_clear ), 0 );
 	item.show();
-	container_add_widget( menu, item );
+	menu.add(item);
 }
 
 gboolean destroy_set_null( ui::Window widget, ui::Widget* p ){

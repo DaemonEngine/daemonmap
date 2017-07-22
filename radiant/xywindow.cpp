@@ -1107,7 +1107,7 @@ void visit( EntityClass* e ){
 void pushMenu( const CopiedString& name ){
 	auto item = ui::MenuItem( name.c_str() );
 	item.show();
-	container_add_widget( m_stack.back().first, item );
+	m_stack.back().first.add(item);
 
 	auto submenu = ui::Menu();
 	gtk_menu_item_set_submenu( item, GTK_WIDGET( submenu ) );

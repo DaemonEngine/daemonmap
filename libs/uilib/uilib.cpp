@@ -39,7 +39,7 @@ namespace ui {
 
     template<class T> _IMPL(T,);
 
-#define this verify<self>::test(*static_cast<self>(this))
+#define this (verify<self>::test(*static_cast<self>(this)))
 
     IMPL(Editable, GTK_EDITABLE);
 
@@ -95,6 +95,11 @@ namespace ui {
     void IContainer::add(Widget widget)
     {
         gtk_container_add(this, widget);
+    }
+
+    void IContainer::remove(Widget widget)
+    {
+        gtk_container_remove(this, widget);
     }
 
     IMPL(Bin, GTK_BIN);
