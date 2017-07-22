@@ -24,6 +24,7 @@
 
 #include <list>
 #include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "gtkutil/dialog.h"
 #include "generic/callback.h"

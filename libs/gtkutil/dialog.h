@@ -25,7 +25,6 @@
 #include "generic/callback.h"
 #include "generic/arrayrange.h"
 #include "qerplugin.h"
-#include <gtk/gtk.h>
 
 typedef int gint;
 typedef gint gboolean;
@@ -60,7 +59,7 @@ ui::Table create_dialog_table( unsigned int rows, unsigned int columns, unsigned
 ui::Button create_dialog_button( const char* label, GCallback func, gpointer data );
 ui::VBox create_dialog_vbox( int spacing, int border = 0 );
 ui::HBox create_dialog_hbox( int spacing, int border = 0 );
-ui::Frame create_dialog_frame( const char* label, GtkShadowType shadow = GTK_SHADOW_ETCHED_IN );
+ui::Frame create_dialog_frame( const char* label, ui::Shadow shadow = ui::Shadow::ETCHED_IN );
 
 ui::Button create_modal_dialog_button( const char* label, ModalDialogButton& button );
 ui::Window create_modal_dialog_window( ui::Window parent, const char* title, ModalDialog& dialog, int default_w = -1, int default_h = -1 );

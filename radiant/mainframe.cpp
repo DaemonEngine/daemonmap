@@ -433,7 +433,7 @@ class PathsDialog : public Dialog
 {
 public:
 ui::Window BuildDialog(){
-	auto frame = create_dialog_frame( "Path settings", GTK_SHADOW_ETCHED_IN );
+	auto frame = create_dialog_frame( "Path settings", ui::Shadow::ETCHED_IN );
 
 	auto vbox2 = create_dialog_vbox( 0, 4 );
 	frame.add(vbox2);

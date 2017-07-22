@@ -317,7 +317,7 @@ void CGameDialog::CreateGlobalFrame( PreferencesPage& page ){
 }
 
 ui::Window CGameDialog::BuildDialog(){
-	auto frame = create_dialog_frame( "Game settings", GTK_SHADOW_ETCHED_IN );
+	auto frame = create_dialog_frame( "Game settings", ui::Shadow::ETCHED_IN );
 
 	auto vbox2 = create_dialog_vbox( 0, 4 );
 	frame.add(vbox2);

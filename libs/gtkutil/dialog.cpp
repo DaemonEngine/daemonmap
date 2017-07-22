@@ -40,10 +40,10 @@ ui::HBox create_dialog_hbox( int spacing, int border ){
 	return hbox;
 }
 
-ui::Frame create_dialog_frame( const char* label, GtkShadowType shadow ){
+ui::Frame create_dialog_frame( const char* label, ui::Shadow shadow ){
 	auto frame = ui::Frame( label );
 	frame.show();
-	gtk_frame_set_shadow_type( frame, shadow );
+	gtk_frame_set_shadow_type( frame, (GtkShadowType) shadow );
 	return frame;
 }
 

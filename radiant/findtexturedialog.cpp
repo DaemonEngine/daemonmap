@@ -127,7 +127,7 @@ FindTextureDialog::~FindTextureDialog(){
 
 ui::Window FindTextureDialog::BuildDialog(){
 	ui::Widget vbox, hbox, table, label;
-	ui::Widget button, check;
+	ui::Widget button;
 	ui::Entry entry{nullptr};
 
 	auto dlg = ui::Window(create_floating_window( "Find / Replace Texture(s)", m_parent ));
@@ -168,7 +168,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
 					  G_CALLBACK( find_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY( entry ), m_strFind );
+	AddDialogData( *GTK_ENTRY(entry), m_strFind );
 	GlobalTextureEntryCompletion::instance().connect( entry );
 
 	entry = ui::Entry();
@@ -178,13 +178,13 @@ ui::Window FindTextureDialog::BuildDialog(){
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
 					  G_CALLBACK( replace_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY( entry ), m_strReplace );
+	AddDialogData( *GTK_ENTRY(entry), m_strReplace );
 	GlobalTextureEntryCompletion::instance().connect( entry );
 
-	check = ui::CheckButton( "Within selected brushes only" );
+	auto check = ui::CheckButton( "Within selected brushes only" );
 	check.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), check, TRUE, TRUE, 0 );
-	AddDialogData( *GTK_TOGGLE_BUTTON( check ), m_bSelectedOnly );
+	AddDialogData( *GTK_TOGGLE_BUTTON(check), m_bSelectedOnly );
 
 	vbox = ui::VBox( FALSE, 5 );
 	vbox.show();

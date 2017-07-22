@@ -102,6 +102,14 @@ namespace ui {
         POPUP
     };
 
+    enum class Shadow {
+        NONE,
+        IN,
+        OUT,
+        ETCHED_IN,
+        ETCHED_OUT
+    };
+
     namespace details {
 
         enum class Convert {

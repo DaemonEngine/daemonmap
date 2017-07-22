@@ -453,7 +453,7 @@ void DoAbout(){
 				GtkVBox* vbox2 = create_dialog_vbox( 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox2 ), TRUE, FALSE, 0 );
 				{
-					auto frame = create_dialog_frame( 0, GTK_SHADOW_IN );
+					auto frame = create_dialog_frame( 0, ui::Shadow::IN );
 					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
 					{
 						auto image = new_local_image( "logo.png" );
