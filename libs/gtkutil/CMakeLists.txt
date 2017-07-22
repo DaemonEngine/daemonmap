@@ -15,7 +15,7 @@ add_library(gtkutil
         image.cpp image.h
         menu.cpp menu.h
         messagebox.cpp messagebox.h
-        nonmodal.h
+        nonmodal.cpp nonmodal.h
         paned.cpp paned.h
         pointer.h
         toolbar.cpp toolbar.h
