@@ -1344,7 +1344,7 @@ void create_tooltips(){
 // create main dialog
 
 GtkWidget* create_main_dialog(){
-	GtkWidget *dlg, *vbox, *hbox, *hbox2, *button, *notebook, *frame, *table, *table2;
+	GtkWidget *hbox2, *button, *notebook, *table2;
 	GtkWidget *check, *spin, *radio, *label, *entry, *scale;
 	ui::Adjustment adj;
 	GSList *group;
@@ -1355,15 +1355,15 @@ GtkWidget* create_main_dialog(){
 	const char *orientations[] = { "Ground surface", "Ceiling", "Wall facing 0", "Wall facing 90",
 								   "Wall facing 180","Wall facing 270" };
 
-	g_pWnd = dlg = ui::Window( ui::window_type::TOP );
+	auto dlg = g_pWnd = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), gszCaption );
 	g_signal_connect( G_OBJECT( dlg ), "delete_event", G_CALLBACK( main_close ), NULL );
 	//  g_signal_connect (G_OBJECT (dlg), "destroy", G_CALLBACK (gtk_widget_destroy), NULL);
 	gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( g_pRadiantWnd ) );
 
-	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), hbox );
+	auto hbox = ui::HBox( FALSE, 5 );
+	hbox.show();
+	dlg.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 5 );
 
 	notebook = gtk_notebook_new();
@@ -1384,15 +1384,15 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( label );
 	gtk_notebook_append_page( GTK_NOTEBOOK( notebook ), table, label );
 
-	frame = ui::Frame( "Game" );
+	auto frame = ui::Frame( "Game" );
 	gtk_widget_show( frame );
 	gtk_table_attach( GTK_TABLE( table ), frame, 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 
-	vbox = ui::VBox( TRUE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( frame ), vbox );
+	auto vbox = ui::VBox( TRUE, 5 );
+	vbox.show();
+	frame.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 	for ( i = 0, group = NULL; i < NUMGAMES; i++ )
@@ -1412,8 +1412,8 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 
 	vbox = ui::VBox( TRUE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( frame ), vbox );
+	vbox.show();
+	frame.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 	for ( i = 0, group = NULL; i < 5; i++ )
@@ -1433,8 +1433,8 @@ GtkWidget* create_main_dialog(){
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 
 	vbox = ui::VBox( TRUE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( frame ), vbox );
+	vbox.show();
+	frame.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 	for ( i = 0, group = NULL; i < 6; i++ )
@@ -1540,10 +1540,10 @@ GtkWidget* create_main_dialog(){
 	gtk_widget_show( frame );
 	gtk_box_pack_start( GTK_BOX( hbox2 ), frame, TRUE, TRUE, 0 );
 
-	table = ui::Table( 3, 4, FALSE );
-	gtk_widget_show( table );
+	auto table = ui::Table( 3, 4, FALSE );
+	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
@@ -1628,9 +1628,9 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( hbox2 ), frame, TRUE, TRUE, 0 );
 
 	table = ui::Table( 2, 2, FALSE );
-	gtk_widget_show( table );
+	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
@@ -1712,9 +1712,9 @@ GtkWidget* create_main_dialog(){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 3, 4, FALSE );
-	gtk_widget_show( table );
+	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 

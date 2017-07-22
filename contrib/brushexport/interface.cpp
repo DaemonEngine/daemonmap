@@ -15,8 +15,6 @@
 // created by glade
 GtkWidget*
 create_w_plugplug2( void ){
-	GtkWidget *w_plugplug2;
-	GtkWidget *vbox1;
 	GtkWidget *hbox2;
 	GtkWidget *vbox4;
 	GtkWidget *r_collapse;
@@ -28,8 +26,6 @@ create_w_plugplug2( void ){
 	GtkWidget *b_close;
 	GtkWidget *vbox2;
 	GtkWidget *label1;
-	GtkWidget *scrolledwindow1;
-	GtkWidget *t_materialist;
 	GtkWidget *ed_materialname;
 	GtkWidget *hbox1;
 	GtkWidget *b_addmaterial;
@@ -38,16 +34,16 @@ create_w_plugplug2( void ){
 	GtkWidget *t_limitmatnames;
 	GtkWidget *t_objects;
 
-	w_plugplug2 = ui::Window( ui::window_type::TOP );
+	auto w_plugplug2 = ui::Window( ui::window_type::TOP );
 	gtk_widget_set_name( w_plugplug2, "w_plugplug2" );
 	gtk_window_set_title( GTK_WINDOW( w_plugplug2 ), "BrushExport-Plugin 3.0 by namespace" );
 	gtk_window_set_position( GTK_WINDOW( w_plugplug2 ), GTK_WIN_POS_CENTER );
 	gtk_window_set_destroy_with_parent( GTK_WINDOW( w_plugplug2 ), TRUE );
 
-	vbox1 = ui::VBox( FALSE, 0 );
+	auto vbox1 = ui::VBox( FALSE, 0 );
 	gtk_widget_set_name( vbox1, "vbox1" );
 	gtk_widget_show( vbox1 );
-	gtk_container_add( GTK_CONTAINER( w_plugplug2 ), vbox1 );
+	w_plugplug2.add(vbox1);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox1 ), 5 );
 
 	hbox2 = ui::HBox( TRUE, 5 );
@@ -113,17 +109,17 @@ create_w_plugplug2( void ){
 	gtk_widget_show( label1 );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), label1, FALSE, FALSE, 0 );
 
-	scrolledwindow1 = ui::ScrolledWindow();
+	auto scrolledwindow1 = ui::ScrolledWindow();
 	gtk_widget_set_name( scrolledwindow1, "scrolledwindow1" );
-	gtk_widget_show( scrolledwindow1 );
+	scrolledwindow1.show();
 	gtk_box_pack_start( GTK_BOX( vbox2 ), scrolledwindow1, TRUE, TRUE, 0 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledwindow1 ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledwindow1 ), GTK_SHADOW_IN );
 
-	t_materialist = ui::TreeView();
+	auto t_materialist = ui::TreeView();
 	gtk_widget_set_name( t_materialist, "t_materialist" );
-	gtk_widget_show( t_materialist );
-	gtk_container_add( GTK_CONTAINER( scrolledwindow1 ), t_materialist );
+	t_materialist.show();
+	scrolledwindow1.add(t_materialist);
 	gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( t_materialist ), FALSE );
 	gtk_tree_view_set_enable_search( GTK_TREE_VIEW( t_materialist ), FALSE );
 

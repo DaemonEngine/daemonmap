@@ -70,8 +70,8 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	auto accel = ui::AccelGroup();
 	window.add_accel_group( accel );
 
-	GtkVBox* vbox = create_dialog_vbox( 8, 8 );
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
+	auto vbox = create_dialog_vbox( 8, 8 );
+	window.add(vbox);
 
 
 	GtkHBox* hboxDummy = create_dialog_hbox( 0, 0 );
@@ -97,12 +97,12 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	GtkVBox* vboxDummy = create_dialog_vbox( 0, 0 );
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( vboxDummy ), FALSE, FALSE, 0 );
 
-	GtkAlignment* alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
+	auto alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
 	gtk_widget_show( GTK_WIDGET( alignment ) );
 	gtk_box_pack_start( GTK_BOX( vboxDummy ), GTK_WIDGET( alignment ), FALSE, FALSE, 0 );
 
-	GtkHBox* hbox = create_dialog_hbox( 8, 0 );
-	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( hbox ) );
+	auto hbox = create_dialog_hbox( 8, 0 );
+	alignment.add(hbox);
 
 	gtk_box_pack_start( GTK_BOX( vboxDummy ), create_padding( 400, 0 ), FALSE, FALSE, 0 ); // HACK to force minimum width
 

@@ -45,7 +45,7 @@
 #include "gtkmisc.h"
 
 
-GtkEntry* DialogEntry_new(){
+ui::Entry DialogEntry_new(){
 	auto entry = ui::Entry();
 	entry.show();
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
@@ -62,17 +62,17 @@ GtkEntry* m_entry;
 };
 
 DialogEntryRow DialogEntryRow_new( const char* name ){
-	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
+	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 
-	GtkEntry* entry = DialogEntry_new();
-	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( entry ) );
+	auto entry = DialogEntry_new();
+	alignment.add(entry);
 
 	return DialogEntryRow( ui::Widget(GTK_WIDGET( DialogRow_new( name, alignment ) )), entry );
 }
 
 
-GtkSpinButton* DialogSpinner_new( double value, double lower, double upper, int fraction ){
+ui::SpinButton DialogSpinner_new( double value, double lower, double upper, int fraction ){
 	double step = 1.0 / double(fraction);
 	unsigned int digits = 0;
 	for (; fraction > 1; fraction /= 10 )
@@ -95,11 +95,11 @@ GtkSpinButton* m_spin;
 };
 
 DialogSpinnerRow DialogSpinnerRow_new( const char* name, double value, double lower, double upper, int fraction ){
-	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
+	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 
-	GtkSpinButton* spin = DialogSpinner_new( value, lower, upper, fraction );
-	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( spin ) );
+	auto spin = DialogSpinner_new( value, lower, upper, fraction );
+	alignment.add(spin);
 
 	return DialogSpinnerRow( ui::Widget(GTK_WIDGET( DialogRow_new( name, alignment ) )), spin );
 }
@@ -465,7 +465,7 @@ ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const ch
 }
 
 void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange values, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
-	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
+	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 	{
 		ui::Widget combo = ui::ComboBoxText();
@@ -478,7 +478,7 @@ void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange value
 		AddIntComboData( *GTK_COMBO_BOX( combo ), importViewer, exportViewer );
 
 		combo.show();
-		gtk_container_add( GTK_CONTAINER( alignment ), combo );
+		alignment.add(combo);
 	}
 
 	auto row = DialogRow_new( name, alignment );
@@ -513,13 +513,13 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 	AddIntAdjustmentData( *GTK_ADJUSTMENT(adj), IntImportCaller( data ), IntExportCaller( data ) );
 
 	// scale
-	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 1.0, 0.0 );
+	auto alignment = ui::Alignment( 0.0, 0.5, 1.0, 0.0 );
 	alignment.show();
 
 	ui::Widget scale = ui::HScale( adj );
 	gtk_scale_set_value_pos( GTK_SCALE( scale ), GTK_POS_LEFT );
 	scale.show();
-	gtk_container_add( GTK_CONTAINER( alignment ), scale );
+	alignment.add(scale);
 
 	gtk_scale_set_draw_value( GTK_SCALE( scale ), draw_value );
 	gtk_scale_set_digits( GTK_SCALE( scale ), 0 );
@@ -529,11 +529,11 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 }
 
 void Dialog::addRadio( ui::Widget vbox, const char* name, StringArrayRange names, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
-	ui::Widget alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
+	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();;
 	{
 		RadioHBox radioBox = RadioHBox_new( names );
-		gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( radioBox.m_hbox ) );
+		alignment.add(radioBox.m_hbox);
 		AddIntRadioData( *GTK_RADIO_BUTTON( radioBox.m_radio ), importViewer, exportViewer );
 	}
 

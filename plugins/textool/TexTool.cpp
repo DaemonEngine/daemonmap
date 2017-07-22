@@ -51,10 +51,10 @@ static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer
 }
 
 int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
-	GtkWidget *window, *w, *vbox, *hbox;
+	GtkWidget *w, *vbox, *hbox;
 	int mode = ( uType & MB_TYPEMASK ), ret, loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 	g_signal_connect( GTK_OBJECT( window ), "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy",
@@ -66,7 +66,7 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 	gtk_widget_realize( window );
 
 	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	w = ui::Label( lpText );

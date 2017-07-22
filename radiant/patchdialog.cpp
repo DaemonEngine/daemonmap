@@ -565,7 +565,7 @@ ui::Window PatchInspector::BuildDialog(){
 		auto vbox = ui::VBox( FALSE, 5 );
 		gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 		vbox.show();
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
+		window.add(vbox);
 		{
 			auto hbox = ui::HBox( FALSE, 5 );
 			hbox.show();
@@ -583,7 +583,7 @@ ui::Window PatchInspector::BuildDialog(){
 						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
 						vbox3.show();
-						gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
+						frame.add(vbox3);
 						{
 							auto table = ui::Table( 2, 2, FALSE );
 							table.show();
@@ -730,7 +730,7 @@ ui::Window PatchInspector::BuildDialog(){
 						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
 						vbox3.show();
-						gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
+						frame.add(vbox3);
 						{
 							auto table = ui::Table( 3, 2, FALSE );
 							table.show();
@@ -797,7 +797,7 @@ ui::Window PatchInspector::BuildDialog(){
 				{
 					auto vbox2 = ui::VBox( FALSE, 5 );
 					vbox2.show();
-					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox2 ) );
+					frame.add(vbox2);
 					gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 					{
 						auto label = ui::Label( "Name:" );

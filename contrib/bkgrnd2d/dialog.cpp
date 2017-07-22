@@ -172,8 +172,6 @@ void CBackgroundDialogPage::SetPosLabel(){
 }
 
 CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
-	GtkWidget *frame;
-	GtkWidget *hbox;
 	GtkWidget *w;
 
 	m_vt = vt;
@@ -198,13 +196,13 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 // A vbox to hold everything
 	m_pWidget = ui::VBox( FALSE,0 );
 // Frame for file row
-	frame = ui::Frame( "File" );
+	auto frame = ui::Frame( "File" );
 	gtk_box_pack_start( GTK_BOX( m_pWidget ),frame, FALSE, FALSE, 2 );
 
 // hbox for first row
-	hbox = ui::HBox( FALSE,5 );
+	auto hbox = ui::HBox( FALSE,5 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
-	gtk_container_add( GTK_CONTAINER( frame ), hbox );
+	frame.add(hbox);
 
 // label to display filename
 	m_pFileLabel  = ui::Label( NO_FILE_MSG );
@@ -239,7 +237,7 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 
 	hbox = ui::HBox( FALSE,5 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
-	gtk_container_add( GTK_CONTAINER( frame ), hbox );
+	frame.add(hbox);
 
 	w = ui::Label( "Vertex alpha:" );
 	gtk_box_pack_start( GTK_BOX( hbox ),w, FALSE, FALSE, 5 );
@@ -262,7 +260,7 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	gtk_box_pack_start( GTK_BOX( m_pWidget ), frame, FALSE, FALSE, 2 );
 
 	hbox = ui::HBox( FALSE,5 );
-	gtk_container_add( GTK_CONTAINER( frame ), hbox );
+	frame.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ),4 );
 
 	w = ui::Button( "from selection" );

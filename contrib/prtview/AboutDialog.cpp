@@ -50,10 +50,10 @@ static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer
 }
 
 void DoAboutDlg(){
-	GtkWidget *dlg, *hbox, *vbox, *button, *label;
+	GtkWidget *vbox, *button, *label;
 	int loop = 1, ret = IDCANCEL;
 
-	dlg = ui::Window( ui::window_type::TOP );
+	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "About Portal Viewer" );
 	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
 					  G_CALLBACK( dialog_delete_callback ), NULL );
@@ -62,9 +62,9 @@ void DoAboutDlg(){
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
-	hbox = ui::HBox( FALSE, 10 );
-	gtk_widget_show( hbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), hbox );
+	auto hbox = ui::HBox( FALSE, 10 );
+	hbox.show();
+	dlg.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 10 );
 
 	char const *label_text = "Version 1.000\n\n"

@@ -320,7 +320,7 @@ ui::Window CGameDialog::BuildDialog(){
 	auto frame = create_dialog_frame( "Game settings", GTK_SHADOW_ETCHED_IN );
 
 	auto vbox2 = create_dialog_vbox( 0, 4 );
-	gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox2 ) );
+	frame.add(vbox2);
 
 	{
 		PreferencesPage preferencesPage( *this, ui::Widget(GTK_WIDGET( vbox2 )) );
@@ -641,14 +641,14 @@ ui::Widget PreferencePages_addPage( ui::Widget notebook, const char* name ){
 	ui::Widget preflabel = ui::Label( name );
 	preflabel.show();
 
-	ui::Widget pageframe = ui::Frame( name );
+	auto pageframe = ui::Frame( name );
 	gtk_container_set_border_width( GTK_CONTAINER( pageframe ), 4 );
 	pageframe.show();
 
 	ui::Widget vbox = ui::VBox( FALSE, 4 );
 	vbox.show();
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
-	gtk_container_add( GTK_CONTAINER( pageframe ), vbox );
+	pageframe.add(vbox);
 
 	// Add the page to the notebook
 	gtk_notebook_append_page( GTK_NOTEBOOK( notebook ), pageframe, preflabel );
@@ -684,7 +684,7 @@ ui::Window PrefsDlg::BuildDialog(){
 
 	{
 		ui::Widget mainvbox = ui::VBox( FALSE, 5 );
-		gtk_container_add( GTK_CONTAINER( dialog ), mainvbox );
+		dialog.add(mainvbox);
 		gtk_container_set_border_width( GTK_CONTAINER( mainvbox ), 5 );
 		mainvbox.show();
 
@@ -713,7 +713,7 @@ ui::Window PrefsDlg::BuildDialog(){
 			hbox.show();
 
 			{
-				ui::Widget sc_win = ui::ScrolledWindow();
+				auto sc_win = ui::ScrolledWindow();
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( sc_win ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 				gtk_box_pack_start( GTK_BOX( hbox ), sc_win, FALSE, FALSE, 0 );
 				sc_win.show();
@@ -746,7 +746,7 @@ ui::Window PrefsDlg::BuildDialog(){
 
 					view.show();
 
-					gtk_container_add( GTK_CONTAINER( sc_win ), view );
+					sc_win.add(view);
 
 					{
 						/********************************************************************/

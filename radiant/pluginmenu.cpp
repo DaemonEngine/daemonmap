@@ -40,7 +40,7 @@ void plugin_activated( ui::Widget widget, gpointer data ){
 
 #include <stack>
 
-void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
+void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
 	ui::Widget item, parent;
 	ui::Menu menu{nullptr}, subMenu{nullptr};
 	const char *menuText, *menuCommand;
@@ -48,7 +48,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 
 	parent = ui::MenuItem( pPlugIn->getMenuName() );
 	parent.show();
-	gtk_container_add( GTK_CONTAINER( plugin_menu ), parent );
+	plugin_menu.add(parent);
 
 	std::size_t nCount = pPlugIn->getCommandCount();
 	if ( nCount > 0 ) {
@@ -76,7 +76,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 
 					item = ui::MenuItem( menuText );
 					item.show();
-					gtk_container_add( GTK_CONTAINER( menu ), item );
+					menu.add(item);
 
 					subMenu = ui::Menu();
 					gtk_menu_item_set_submenu( GTK_MENU_ITEM( item ), subMenu );
@@ -102,7 +102,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 					g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
 				}
 				item.show();
-				gtk_container_add( GTK_CONTAINER( menu ), item );
+				menu.add(item);
 				pPlugIn->addMenuID( m_nNextPlugInID++ );
 			}
 		}
@@ -122,15 +122,15 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 	}
 }
 
-GtkMenu* g_plugins_menu = 0;
+ui::Menu g_plugins_menu{ui::null};
 GtkMenuItem* g_plugins_menu_separator = 0;
 
 void PluginsMenu_populate(){
 	class PluginsMenuConstructor : public PluginsVisitor
 	{
-	GtkMenu* m_menu;
+	ui::Menu m_menu;
 public:
-	PluginsMenuConstructor( GtkMenu* menu ) : m_menu( menu ){
+	PluginsMenuConstructor( ui::Menu menu ) : m_menu( menu ){
 	}
 	void visit( IPlugIn& plugin ){
 		PlugInMenu_Add( m_menu, &plugin );

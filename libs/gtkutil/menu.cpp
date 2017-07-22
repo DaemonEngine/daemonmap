@@ -34,7 +34,7 @@
 #include "pointer.h"
 
 void menu_add_item( ui::Menu menu, ui::MenuItem item ){
-	gtk_container_add( GTK_CONTAINER( menu ), GTK_WIDGET( item ) );
+	menu.add(item);
 }
 
 ui::MenuItem menu_separator( ui::Menu menu ){

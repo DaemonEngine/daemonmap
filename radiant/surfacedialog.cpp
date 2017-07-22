@@ -593,7 +593,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 		// replaced by only the vbox:
 		ui::Widget vbox = ui::VBox( FALSE, 5 );
 		vbox.show();
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
+		window.add(vbox);
 		gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 		{
@@ -816,13 +816,13 @@ ui::Window SurfaceInspector::BuildDialog(){
 		}
 
 		{
-			ui::Widget frame = ui::Frame( "Texturing" );
+			auto frame = ui::Frame( "Texturing" );
 			frame.show();
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
 			{
 				ui::Widget table = ui::Table( 4, 4, FALSE );
 				table.show();
-				gtk_container_add( GTK_CONTAINER( frame ), table );
+				frame.add(table);
 				gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 				gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 				gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -943,7 +943,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
 					vbox3.show();
-					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
+					frame.add(vbox3);
 					{
 						auto table = ui::Table( 8, 4, FALSE );
 						table.show();
@@ -978,7 +978,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
 					vbox3.show();
-					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
+					frame.add(vbox3);
 					{
 
 						auto table = ui::Table( 8, 4, FALSE );
@@ -1017,7 +1017,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 4 );
 					vbox3.show();
-					gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( vbox3 ) );
+					frame.add(vbox3);
 
 					{
 						auto entry = ui::Entry();
@@ -1046,7 +1046,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				// <-- end stuff...
 				TexTool::g_textoolWin.show();
 				gtk_widget_set_size_request( TexTool::g_textoolWin, -1, 240 ); //Yeah!
-				gtk_container_add( GTK_CONTAINER( frame ), TexTool::g_textoolWin );
+				frame.add(TexTool::g_textoolWin);
 
 				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "size_allocate", G_CALLBACK( TexTool::size_allocate ), NULL );
 				g_signal_connect( G_OBJECT( TexTool::g_textoolWin ), "expose_event", G_CALLBACK( TexTool::expose ), NULL );
@@ -1068,7 +1068,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 
 //Instead of this, we probably need to create a vbox to put into the frame, then the
 //window, then the hbox. !!! FIX !!!
-//        gtk_container_add(GTK_CONTAINER(frame), hbox);
+//        frame.add(hbox);
 
 //Hmm. Do we really need g_object_set_data? Mebbe not... And we don't! :-)
 //        g_object_set_data(G_OBJECT(flipX), "handler", gint_to_pointer(g_signal_connect(G_OBJECT(flipX), "toggled", G_CALLBACK(TexTool::flipX), 0)));

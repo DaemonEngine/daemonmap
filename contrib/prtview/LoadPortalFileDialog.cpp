@@ -80,10 +80,10 @@ static void change_clicked( GtkWidget *widget, gpointer data ){
 }
 
 int DoLoadPortalFileDialog(){
-	GtkWidget *dlg, *vbox, *hbox, *button, *entry, *check2d, *check3d;
+	GtkWidget *hbox, *button, *entry, *check2d, *check3d;
 	int loop = 1, ret = IDCANCEL;
 
-	dlg = ui::Window( ui::window_type::TOP );
+	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "Load .prt" );
 	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
@@ -92,9 +92,9 @@ int DoLoadPortalFileDialog(){
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
-	vbox = ui::VBox( FALSE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), vbox );
+	auto vbox = ui::VBox( FALSE, 5 );
+	vbox.show();
+	dlg.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 	entry = ui::Entry();

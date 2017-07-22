@@ -92,7 +92,7 @@ GroupDlg::GroupDlg() : m_window( 0 ){
 void GroupDlg::Create( ui::Window parent ){
 	ASSERT_MESSAGE( !m_window, "dialog already created" );
 
-	ui::Window window = ui::Window(create_persistent_floating_window( "Entities", parent ));
+	auto window = ui::Window(create_persistent_floating_window( "Entities", parent ));
 
 	global_accel_connect_window( window );
 
@@ -112,7 +112,7 @@ void GroupDlg::Create( ui::Window parent ){
 	{
 		ui::Widget notebook = ui::Widget(gtk_notebook_new());
 		notebook.show();
-		gtk_container_add( GTK_CONTAINER( window ), notebook );
+		window.add(notebook);
 		gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), GTK_POS_BOTTOM );
 		m_pNotebook = notebook;
 

@@ -73,7 +73,7 @@ guint toggle_button_connect_callback( ui::ToggleToolButton button, const Callbac
 void button_set_icon( ui::Button button, const char* icon ){
 	ui::Image image = ui::Image(new_local_image( icon ));
 	image.show();
-	gtk_container_add( GTK_CONTAINER( button ), GTK_WIDGET( image ) );
+	button.add(image);
 }
 
 void toggle_button_set_active_no_signal( ui::ToggleButton button, gboolean active ){

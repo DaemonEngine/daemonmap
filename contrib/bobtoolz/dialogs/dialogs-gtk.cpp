@@ -209,11 +209,11 @@ bool ValidateTextInt( const char* pData, char* error_title, int* value ){
  */
 
 EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMessageBoxType type ){
-	ui::Widget window, w, vbox, hbox;
+	ui::Widget w, vbox, hbox;
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 	g_signal_connect( GTK_OBJECT( window ), "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy",
@@ -225,7 +225,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	gtk_widget_realize( window );
 
 	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	w = ui::Label( lpText );
@@ -321,12 +321,12 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 }
 
 EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
-	GtkWidget *window, *w, *vbox, *hbox;
+	GtkWidget *w, *hbox;
 	GtkWidget *check1, *check2;
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -341,8 +341,8 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 
 
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	// ---- vbox ----
@@ -416,7 +416,7 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 }
 
 EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
-	GtkWidget *window, *w, *vbox, *hbox, *vbox2, *hbox2;
+	GtkWidget *w, *hbox, *vbox2, *hbox2;
 
 	GtkWidget *check1, *check2, *check3;
 	GtkWidget *text1, *text2;
@@ -424,7 +424,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -439,9 +439,9 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 
 
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
-	gtk_widget_show( vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
+	vbox.show();
 
 	// ---- vbox ----
 
@@ -586,8 +586,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 // for stair builder stuck as close as i could to the MFC version
 // obviously feel free to change it at will :)
 EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
-	// i made widgets for just about everything ... i think that's what i need to do  dunno tho
-	GtkWidget   *window, *w, *vbox, *hbox;
+	GtkWidget   *w;
 	GtkWidget   *textStairHeight, *textRiserTex, *textMainTex;
 	GtkWidget   *radioNorth, *radioSouth, *radioEast, *radioWest;   // i'm guessing we can't just abuse 'w' for these if we're getting a value
 	GtkWidget   *radioOldStyle, *radioBobStyle, *radioCornerStyle;
@@ -598,7 +597,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 
 	char *text = "Please set a value in the boxes below and press 'OK' to build the stairs";
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -613,12 +612,12 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	gtk_widget_realize( window );
 
 	// new vbox
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
-	hbox = ui::HBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( vbox ), hbox );
+	auto hbox = ui::HBox( FALSE, 10 );
+	vbox.add(hbox);
 	gtk_widget_show( hbox );
 
 	// dunno if you want this text or not ...
@@ -843,7 +842,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 }
 
 EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
-	GtkWidget   *window, *hbox, *vbox, *w;
+	GtkWidget   *hbox, *w;
 	GtkWidget   *textFrontBackTex, *textTrimTex;
 	GtkWidget   *checkScaleMainH, *checkScaleMainV, *checkScaleTrimH, *checkScaleTrimV;
 	GtkWidget   *comboMain, *comboTrim;
@@ -854,7 +853,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -874,8 +873,8 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex.txt" ), listMainTextures );
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex-trim.txt" ), listTrimTextures );
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	// -------------------------- //
@@ -1059,7 +1058,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 }
 
 EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
-	GtkWidget *window, *w, *vbox, *hbox;
+	GtkWidget *w, *hbox;
 
 	GtkWidget *text1, *text2, *text3;
 	GtkWidget *check1, *check2;
@@ -1067,7 +1066,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -1082,8 +1081,8 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	// ---- vbox ----
@@ -1234,11 +1233,11 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 }
 
 EMessageBoxReturn DoCTFColourChangeBox(){
-	GtkWidget *window, *w, *vbox, *hbox;
+	GtkWidget *w, *hbox;
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -1253,8 +1252,8 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 
 
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
 	gtk_widget_show( vbox );
 
 	// ---- vbox ----
@@ -1304,12 +1303,12 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	Str texSelected;
 
-	GtkWidget *window, *w, *vbox, *hbox, *frame, *table;
+	GtkWidget *w, *hbox;
 
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -1322,9 +1321,9 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 
 	gtk_widget_realize( window );
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
-	gtk_widget_show( vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
+	vbox.show();
 
 	// ---- vbox ----
 
@@ -1344,13 +1343,13 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 
 	// ---- /hbox ----
 
-	frame = ui::Frame( "Reset Texture Names" );
+	auto frame = ui::Frame( "Reset Texture Names" );
 	gtk_widget_show( frame );
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
-	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	auto table = ui::Table( 2, 3, TRUE );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1397,8 +1396,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1453,8 +1452,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1509,8 +1508,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 1, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1635,7 +1634,7 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	Str texSelected;
 
-	GtkWidget *window, *w, *vbox, *hbox, *frame, *table;
+	GtkWidget *w, *hbox;
 
 	GtkWidget *radiusX, *radiusY;
 	GtkWidget *angleStart, *angleEnd;
@@ -1645,7 +1644,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -1658,9 +1657,9 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 
 	gtk_widget_realize( window );
 
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
-	gtk_widget_show( vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
+	vbox.show();
 
 	// ---- vbox ----
 
@@ -1670,13 +1669,13 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 
 	// ---- /hbox ----
 
-	frame = ui::Frame( "Radii" );
+	auto frame = ui::Frame( "Radii" );
 	gtk_widget_show( frame );
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
-	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	auto table = ui::Table( 2, 3, TRUE );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1718,8 +1717,8 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1760,8 +1759,8 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1803,8 +1802,8 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, FALSE, TRUE, 0 );
 
 	table = ui::Table( 2, 3, TRUE );
-	gtk_widget_show( table );
-	gtk_container_add( GTK_CONTAINER( frame ), table );
+	table.show();
+	frame.add(table);
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
@@ -1901,14 +1900,14 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 // ailmanki
 // add a simple input for the MakeChain thing..
 EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
-	GtkWidget   *window, *w, *vbox, *hbox;
+	GtkWidget   *w;
 	GtkWidget   *textlinkNum, *textlinkName;
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	char    *text = "Please set a value in the boxes below and press 'OK' to make a chain";
+	char const *text = "Please set a value in the boxes below and press 'OK' to make a chain";
 
-	window = ui::Window( ui::window_type::TOP );
+	auto window = ui::Window( ui::window_type::TOP );
 
 	g_signal_connect( GTK_OBJECT( window ), "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	g_signal_connect( GTK_OBJECT( window ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -1923,13 +1922,13 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 	gtk_widget_realize( window );
 
 	// new vbox
-	vbox = ui::VBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( window ), vbox );
-	gtk_widget_show( vbox );
+	auto vbox = ui::VBox( FALSE, 10 );
+	window.add(vbox);
+	vbox.show();
 
-	hbox = ui::HBox( FALSE, 10 );
-	gtk_container_add( GTK_CONTAINER( vbox ), hbox );
-	gtk_widget_show( hbox );
+	auto hbox = ui::HBox( FALSE, 10 );
+	vbox.add(hbox);
+	hbox.show();
 
 	// dunno if you want this text or not ...
 	w = ui::Label( text );

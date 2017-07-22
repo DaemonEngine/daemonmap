@@ -54,29 +54,29 @@ ui::Image new_plugin_image( const char* filename ){
 	return image_new_missing();
 }
 
-void toolbar_insert( GtkToolbar *toolbar, const char* icon, const char* text, const char* tooltip, IToolbarButton::EType type, GCallback handler, gpointer data ){
+void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, const char* tooltip, IToolbarButton::EType type, GCallback handler, gpointer data ){
 	if (type == IToolbarButton::eSpace) {
 		auto it = ui::Widget(GTK_WIDGET(gtk_separator_tool_item_new()));
 		it.show();
-		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(it));
+		toolbar.add(it);
 		return;
 	}
 	if (type == IToolbarButton::eButton) {
-		auto button = gtk_tool_button_new(GTK_WIDGET(new_plugin_image(icon)), text);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(button), tooltip);
-		gtk_widget_show_all(GTK_WIDGET(button));
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(handler), data);
-		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(button));
+		auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_tool_button_new(GTK_WIDGET(new_plugin_image(icon)), text)));
+		gtk_widget_set_tooltip_text(button, tooltip);
+		gtk_widget_show_all(button);
+		g_signal_connect(button, "clicked", G_CALLBACK(handler), data);
+		toolbar.add(button);
 		return;
 	}
 	if (type == IToolbarButton::eToggleButton) {
-		auto button = gtk_toggle_tool_button_new();
-		gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(button), GTK_WIDGET(new_plugin_image(icon)));
-		gtk_tool_button_set_label(GTK_TOOL_BUTTON(button), text);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(button), tooltip);
-		gtk_widget_show_all(GTK_WIDGET(button));
-		g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(handler), data);
-		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(button));
+		auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_toggle_tool_button_new()));
+		gtk_tool_button_set_icon_widget(button, GTK_WIDGET(new_plugin_image(icon)));
+		gtk_tool_button_set_label(button, text);
+		gtk_widget_set_tooltip_text(button, tooltip);
+		gtk_widget_show_all(button);
+		g_signal_connect(button, "toggled", G_CALLBACK(handler), data);
+		toolbar.add(button);
 		return;
 	}
 	ERROR_MESSAGE( "invalid toolbar button type" );
@@ -86,7 +86,7 @@ void ActivateToolbarButton( GtkToolButton *widget, gpointer data ){
 	(const_cast<const IToolbarButton *>( reinterpret_cast<IToolbarButton *>( data )))->activate();
 }
 
-void PlugInToolbar_AddButton( GtkToolbar* toolbar, const IToolbarButton* button ){
+void PlugInToolbar_AddButton( ui::Toolbar toolbar, const IToolbarButton* button ){
 	toolbar_insert( toolbar, button->getImage(), button->getText(), button->getTooltip(), button->getType(), G_CALLBACK( ActivateToolbarButton ), reinterpret_cast<gpointer>( const_cast<IToolbarButton*>( button ) ) );
 }
 
@@ -95,9 +95,9 @@ ui::Toolbar g_plugin_toolbar{nullptr};
 void PluginToolbar_populate(){
 	class AddToolbarItemVisitor : public ToolbarModules::Visitor
 	{
-	GtkToolbar* m_toolbar;
+	ui::Toolbar m_toolbar;
 public:
-	AddToolbarItemVisitor( GtkToolbar* toolbar )
+	AddToolbarItemVisitor( ui::Toolbar toolbar )
 		: m_toolbar( toolbar ){
 	}
 	void visit( const char* name, const _QERPlugToolbarTable& table ) const {

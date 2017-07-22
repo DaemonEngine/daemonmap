@@ -852,8 +852,8 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 	window.add_accel_group( accel );
 
 	{
-		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( hbox ) );
+		auto hbox = create_dialog_hbox( 4, 4 );
+		window.add(hbox);
 		{
 			GtkTable* table = create_dialog_table( 2, 2, 4, 4 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
@@ -979,13 +979,13 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 	window.add_accel_group( accel_group );
 
 	{
-		GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( hbox ) );
+		auto hbox = create_dialog_hbox( 4, 4 );
+		window.add(hbox);
 
 		{
 			// Gef: Added a vbox to contain the toggle buttons
-			GtkVBox* radio_vbox = create_dialog_vbox( 4 );
-			gtk_container_add( GTK_CONTAINER( hbox ), GTK_WIDGET( radio_vbox ) );
+			auto radio_vbox = create_dialog_vbox( 4 );
+			hbox.add(radio_vbox);
 
 			{
 				auto table = ui::Table( 5, 2, FALSE );

@@ -253,9 +253,9 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server 
 
 // About dialog
 void about_plugin_window(){
-	GtkWidget *window, *vbox, *label, *button;
+	GtkWidget *label, *button;
 
-	window = ui::Window( ui::window_type::TOP ); // create a window
+	auto window = ui::Window( ui::window_type::TOP ); // create a window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
 	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
 	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
@@ -264,8 +264,8 @@ void about_plugin_window(){
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
-	vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
-	gtk_container_add( GTK_CONTAINER( window ), vbox ); // add the box to the window
+	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
+	window.add(vbox);
 
 	label = ui::Label( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
@@ -314,13 +314,13 @@ void GetOptimalCoordinates( AABB *levelBoundingBox ){
 
 // MapCoordinator dialog window
 void MapCoordinator(){
-	GtkWidget *window, *vbox, *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY, *button;
+	GtkWidget *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY, *button;
 	Entity *theWorldspawn = NULL;
 	const char *buffer;
 	char line[20];
 
 	// in any case we need a window to show the user what to do
-	window = ui::Window( ui::window_type::TOP ); // create the window
+	auto window = ui::Window( ui::window_type::TOP ); // create the window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
 	g_signal_connect( G_OBJECT( window ), "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event for the window
 	g_signal_connect( G_OBJECT( window ), "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
@@ -329,8 +329,8 @@ void MapCoordinator(){
 	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
-	vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
-	gtk_container_add( GTK_CONTAINER( window ), vbox ); // add the box to the window
+	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
+	window.add(vbox);
 
 	scene::Path path = makeReference( GlobalSceneGraph().root() ); // get the path to the root element of the graph
 	scene::Instance* instance = GlobalSceneGraph().find( path ); // find the instance to the given path

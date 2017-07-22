@@ -263,7 +263,7 @@ void CDbgDlg::Init(){
 		g_ptr_array_remove_index( m_pFeedbackElements, 0 );
 	}
 
-	if ( m_clist != NULL ) {
+	if ( m_clist ) {
 		gtk_list_store_clear( m_clist );
 	}
 }
@@ -289,11 +289,11 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 }
 
 ui::Window CDbgDlg::BuildDialog(){
-	ui::Window window = MainFrame_getWindow().create_floating_window("Q3Map debug window" );
+	auto window = MainFrame_getWindow().create_floating_window("Q3Map debug window" );
 
-	ui::Widget scr = ui::ScrolledWindow();
+	auto scr = ui::ScrolledWindow();
 	scr.show();
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( scr ) );
+	window.add(scr);
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
@@ -317,7 +317,7 @@ ui::Window CDbgDlg::BuildDialog(){
 
 		view.show();
 
-		gtk_container_add( GTK_CONTAINER( scr ), view );
+		scr.add(view);
 
 		g_object_unref( G_OBJECT( store ) );
 

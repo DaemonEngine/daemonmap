@@ -243,14 +243,14 @@ static void OnClip( GtkWidget *widget, gpointer data ){
 }
 
 void DoConfigDialog(){
-	GtkWidget *dlg, *hbox, *vbox, *vbox2, *button, *table, *frame;
+	GtkWidget *hbox, *button, *table;
 	GtkWidget *lw3slider, *lw3label, *lw2slider, *lw2label, *item;
 	GtkWidget *aa2check, *aa3check, *depthcheck, *linescheck, *polyscheck;
 	GtkWidget *transslider, *translabel, *clipslider, *cliplabel;
 	GtkWidget *show2check, *show3check, *portalcheck;
 	int loop = 1, ret = IDCANCEL;
 
-	dlg = ui::Window( ui::window_type::TOP );
+	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "Portal Viewer Configuration" );
 	g_signal_connect( GTK_OBJECT( dlg ), "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
@@ -259,18 +259,18 @@ void DoConfigDialog(){
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
-	vbox = ui::VBox( FALSE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), vbox );
+	auto vbox = ui::VBox( FALSE, 5 );
+	vbox.show();
+	dlg.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
-	frame = ui::Frame( "3D View" );
-	gtk_widget_show( frame );
+	auto frame = ui::Frame( "3D View" );
+	frame.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, TRUE, TRUE, 0 );
 
-	vbox2 = ui::VBox( FALSE, 5 );
-	gtk_widget_show( vbox2 );
-	gtk_container_add( GTK_CONTAINER( frame ), vbox2 );
+	auto vbox2 = ui::VBox( FALSE, 5 );
+	vbox2.show();
+	frame.add(vbox2);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 
 	hbox = ui::HBox( FALSE, 5 );
@@ -405,8 +405,8 @@ void DoConfigDialog(){
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, TRUE, TRUE, 0 );
 
 	vbox2 = ui::VBox( FALSE, 5 );
-	gtk_widget_show( vbox2 );
-	gtk_container_add( GTK_CONTAINER( frame ), vbox2 );
+	vbox2.show();
+	frame.add(vbox2);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 
 	hbox = ui::HBox( FALSE, 5 );

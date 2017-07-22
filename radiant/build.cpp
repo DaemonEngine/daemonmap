@@ -842,8 +842,8 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 	ui::Widget buildView;
 
 	{
-		GtkTable* table1 = create_dialog_table( 2, 2, 4, 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( table1 ) );
+		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
+		window.add(table1);
 		{
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
@@ -859,13 +859,13 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 			}
 		}
 		{
-			GtkFrame* frame = create_dialog_frame( "Build menu" );
+			auto frame = create_dialog_frame( "Build menu" );
 			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 0, 1,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
-				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
+				auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+				frame.add(scr);
 
 				{
 					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
@@ -887,7 +887,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					buildView = view;
 					projectList.m_store = store;
-					gtk_container_add( GTK_CONTAINER( scr ), view );
+					scr.add(view);
 
 					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( project_key_press ), &projectList );
 
@@ -896,13 +896,13 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 			}
 		}
 		{
-			GtkFrame* frame = create_dialog_frame( "Commandline" );
+			auto frame = create_dialog_frame( "Commandline" );
 			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 1, 2,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
-				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
+				auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+				frame.add(scr);
 
 				{
 					ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
@@ -922,7 +922,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					view.show();
 
-					gtk_container_add( GTK_CONTAINER( scr ), view );
+					scr.add(view);
 
 					g_object_unref( G_OBJECT( store ) );
 

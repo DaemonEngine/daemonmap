@@ -21,6 +21,7 @@ struct _GtkContainer;
 struct _GtkDialog;
 struct _GtkEditable;
 struct _GtkEntry;
+struct _GtkEntryCompletion;
 struct _GtkFrame;
 struct _GtkHBox;
 struct _GtkHPaned;
@@ -140,6 +141,8 @@ namespace ui {
         };
     }
 
+    extern struct Null {} null;
+
     class Object :
             public details::Convertible<Object, _GtkObject *, details::Convert::Explicit>,
             public details::Convertible<Object, _GTypeInstance *, details::Convert::Explicit> {
@@ -160,22 +163,25 @@ namespace ui {
 
 #define WRAP(name, super, T, interfaces, ctors, methods) \
     class name; \
-    class I##name { \
+    class I##name : public details::Convertible<name, T *, details::Convert::Implicit> { \
     public: \
         using self = name *; \
         methods \
     }; \
-    class name : public super, public details::Convertible<name, T *, details::Convert::Implicit>, public I##name, public details::Mixin<name, void interfaces>::type { \
+    class name : public super, public I##name, public details::Mixin<name, void interfaces>::type { \
     public: \
         using self = name *; \
         using native = T *; \
         explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
+        explicit name(Null n) : name((native) nullptr) {} \
         ctors \
     }; \
     inline bool operator<(name self, name other) { return self._handle < other._handle; } \
     static_assert(sizeof(name) == sizeof(super), "object slicing")
 
     // https://developer.gnome.org/gtk2/stable/ch01.html
+
+    // GInterface
 
     WRAP(CellEditable, Object, _GtkCellEditable, (),
     ,
@@ -186,6 +192,12 @@ namespace ui {
     ,
          void editable(bool value);
     );
+
+    WRAP(TreeModel, Object, _GtkTreeModel, (),
+    ,
+    );
+
+    // GObject
 
     WRAP(Widget, Object, _GtkWidget, (),
          Widget();
@@ -210,6 +222,7 @@ namespace ui {
 
     WRAP(Container, Widget, _GtkContainer, (),
     ,
+         void add(Widget widget);
     );
 
     WRAP(Bin, Container, _GtkBin, (),
@@ -466,14 +479,16 @@ namespace ui {
     ,
     );
 
-    WRAP(ListStore, Object, _GtkListStore, (),
+    WRAP(EntryCompletion, Object, _GtkEntryCompletion, (),
+    ,
+    );
+
+    WRAP(ListStore, Object, _GtkListStore, (ITreeModel),
     ,
          void clear();
     );
 
-    WRAP(TreeModel, Widget, _GtkTreeModel, (),
-    ,
-    );
+    // GBoxed
 
     WRAP(TreePath, Object, _GtkTreePath, (),
          TreePath();

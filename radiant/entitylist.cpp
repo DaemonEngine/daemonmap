@@ -281,7 +281,7 @@ void DetachEntityTreeModel(){
 void EntityList_constructWindow( ui::Window main_window ){
 	ASSERT_TRUE( !getEntityList().m_window );
 
-	ui::Window window = ui::Window(create_persistent_floating_window( "Entity List", main_window ));
+	auto window = ui::Window(create_persistent_floating_window( "Entity List", main_window ));
 
 	window.add_accel_group(global_accel);
 
@@ -291,8 +291,8 @@ void EntityList_constructWindow( ui::Window main_window ){
 	getEntityList().m_window = window;
 
 	{
-		GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( scr ) );
+		auto scr = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+		window.add(scr);
 
 		{
 			ui::Widget view = ui::TreeView();
@@ -312,7 +312,7 @@ void EntityList_constructWindow( ui::Window main_window ){
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 
 			view.show();
-			gtk_container_add( GTK_CONTAINER( scr ), view );
+			scr.add(view);
 			getEntityList().m_tree_view = GTK_TREE_VIEW( view );
 		}
 	}

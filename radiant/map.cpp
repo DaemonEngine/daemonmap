@@ -770,8 +770,8 @@ void DoMapInfo(){
 	window_set_position( window, g_posMapInfoWnd );
 
 	{
-		GtkVBox* vbox = create_dialog_vbox( 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
+		auto vbox = create_dialog_vbox( 4, 4 );
+		window.add(vbox);
 
 		{
 			GtkHBox* hbox = create_dialog_hbox( 4 );
@@ -835,7 +835,7 @@ void DoMapInfo(){
 			gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		}
 		{
-			GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
+			auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 			{
@@ -860,7 +860,7 @@ void DoMapInfo(){
 
 				view.show();
 
-				gtk_container_add( GTK_CONTAINER( scr ), view );
+				scr.add(view);
 
 				EntityBreakdownWalker = store;
 			}
@@ -2043,8 +2043,8 @@ void DoFind(){
 	window.add_accel_group( accel );
 
 	{
-		GtkVBox* vbox = create_dialog_vbox( 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox ) );
+		auto vbox = create_dialog_vbox( 4, 4 );
+		window.add(vbox);
 		{
 			GtkTable* table = create_dialog_table( 2, 2, 4, 4 );
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );

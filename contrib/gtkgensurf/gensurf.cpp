@@ -71,7 +71,7 @@ int Antialiasing;             // ^Fishman - Antializing for the preview window.
 int AddTerrainKey;             // ^Fishman - Add terrain key to func_group.
 int SP;             // ^Fishman - Snap to grid.
 
-GtkWidget *g_pWnd;        // ghwnd;
+ui::Window g_pWnd{ui::null};        // ghwnd;
 GtkWidget *g_pRadiantWnd; // ghwnd_main;
 /*HWND      ghwndAngles;
  */GtkWidget *g_pWndPreview;

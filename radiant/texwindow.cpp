@@ -259,7 +259,7 @@ ui::Widget m_gl_widget;
 ui::Widget m_texture_scroll;
 ui::Widget m_treeViewTree;
 ui::Widget m_treeViewTags;
-ui::Widget m_tag_frame;
+ui::Frame m_tag_frame{ui::null};
 ui::ListStore m_assigned_store{nullptr};
 ui::ListStore m_available_store{nullptr};
 ui::Widget m_assigned_tree;
@@ -267,7 +267,7 @@ ui::Widget m_available_tree;
 ui::Widget m_scr_win_tree;
 ui::Widget m_scr_win_tags;
 ui::Widget m_tag_notebook;
-ui::Widget m_search_button;
+ui::Button m_search_button{ui::null};
 ui::Widget m_shader_info_item;
 
 std::set<CopiedString> m_all_tags;
@@ -1941,7 +1941,7 @@ void TextureBrowser_constructSearchButton(){
 	g_TextureBrowser.m_search_button = ui::Button();
 	g_signal_connect( G_OBJECT( g_TextureBrowser.m_search_button ), "clicked", G_CALLBACK( TextureBrowser_searchTags ), NULL );
 	gtk_widget_set_tooltip_text(g_TextureBrowser.m_search_button, "Search with selected tags");
-	gtk_container_add( GTK_CONTAINER( g_TextureBrowser.m_search_button ), image );
+	g_TextureBrowser.m_search_button.add(image);
 }
 
 void TextureBrowser_checkTagFile(){
@@ -2122,7 +2122,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			frame_table.show();
 
-			gtk_container_add( GTK_CONTAINER( g_TextureBrowser.m_tag_frame ), frame_table );
+			g_TextureBrowser.m_tag_frame.add(frame_table);
 		}
 		{ // assigned tag list
 			ui::Widget scrolled_win = ui::ScrolledWindow();
@@ -2182,12 +2182,12 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 2, 3, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
 		}
 		{ // tag arrow buttons
-			ui::Widget m_btn_left = ui::Button();
-			ui::Widget m_btn_right = ui::Button();
-			ui::Widget m_arrow_left = ui::Widget(gtk_arrow_new( GTK_ARROW_LEFT, GTK_SHADOW_OUT ));
-			ui::Widget m_arrow_right = ui::Widget(gtk_arrow_new( GTK_ARROW_RIGHT, GTK_SHADOW_OUT ));
-			gtk_container_add( GTK_CONTAINER( m_btn_left ), m_arrow_left );
-			gtk_container_add( GTK_CONTAINER( m_btn_right ), m_arrow_right );
+			auto m_btn_left = ui::Button();
+			auto m_btn_right = ui::Button();
+			auto m_arrow_left = ui::Widget(gtk_arrow_new( GTK_ARROW_LEFT, GTK_SHADOW_OUT ));
+			auto m_arrow_right = ui::Widget(gtk_arrow_new( GTK_ARROW_RIGHT, GTK_SHADOW_OUT ));
+			m_btn_left.add(m_arrow_left);
+			m_btn_right.add(m_arrow_right);
 
 			// workaround. the size of the tag frame depends of the requested size of the arrow buttons.
 			gtk_widget_set_size_request( m_arrow_left, -1, 68 );

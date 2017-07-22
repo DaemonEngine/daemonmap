@@ -90,6 +90,15 @@ namespace ui {
         gtk_widget_show(this);
     }
 
+    IMPL(Container, GTK_CONTAINER);
+
+    void IContainer::add(Widget widget)
+    {
+        gtk_container_add(this, widget);
+    }
+
+    IMPL(Bin, GTK_BIN);
+
     IMPL(Window, GTK_WINDOW);
 
     Window::Window() : Window(nullptr)

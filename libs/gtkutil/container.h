@@ -25,13 +25,13 @@
 #include <gtk/gtk.h>
 
 inline ui::Widget container_add_widget( ui::Container container, ui::Widget widget ){
-	gtk_container_add( container, widget );
+	container.add(widget);
 	return widget;
 }
 
 inline void container_remove( ui::Widget item, gpointer data ){
 	auto container = ui::Container(GTK_CONTAINER( data ));
-	gtk_container_remove( container, item );
+	container.add(item);
 }
 
 inline void container_remove_all( ui::Container container ){

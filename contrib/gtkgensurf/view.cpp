@@ -363,7 +363,7 @@ static void preview_spin( GtkAdjustment *adj, double *data ){
 }
 
 void CreateViewWindow(){
-	GtkWidget *dlg, *vbox, *hbox, *label, *spin, *frame;
+	GtkWidget *hbox, *label, *spin;
 	GtkObject *adj;
 
 #ifndef ISOMETRIC
@@ -371,16 +371,16 @@ void CreateViewWindow(){
 	azimuth   = PI / 6.;
 #endif
 
-	g_pWndPreview = dlg = ui::Window( ui::window_type::TOP );
+	auto dlg = g_pWndPreview = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "GtkGenSurf Preview" );
 	g_signal_connect( GTK_OBJECT( dlg ), "delete_event", G_CALLBACK( preview_close ), NULL );
 	g_signal_connect( GTK_OBJECT( dlg ), "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 	gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( g_pWnd ) );
 	gtk_window_set_default_size( GTK_WINDOW( dlg ), 300, 400 );
 
-	vbox = ui::VBox( FALSE, 5 );
-	gtk_widget_show( vbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), vbox );
+	auto vbox = ui::VBox( FALSE, 5 );
+	vbox.show();
+	dlg.add(vbox);
 
 #ifndef ISOMETRIC
 	hbox = ui::HBox( TRUE, 5 );
@@ -414,8 +414,8 @@ void CreateViewWindow(){
 	g_signal_connect( G_OBJECT( spin ), "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &azimuth );
 #endif
 
-	frame = ui::Frame( nullptr );
-	gtk_widget_show( frame );
+	auto frame = ui::Frame( nullptr );
+	frame.show();
 	gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_IN );
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, TRUE, TRUE, 0 );
 
@@ -428,7 +428,7 @@ void CreateViewWindow(){
 						G_CALLBACK( button_press ), NULL );
 
 	gtk_widget_show( g_pPreviewWidget );
-	gtk_container_add( GTK_CONTAINER( frame ), g_pPreviewWidget );
+	frame.add(ui::Widget(g_pPreviewWidget));
 
 	if ( Preview ) {
 		gtk_widget_show( g_pWndPreview );

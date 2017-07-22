@@ -176,7 +176,7 @@ StringAttribute( const char* key ) :
 ui::Widget getWidget() const {
 	return ui::Widget(GTK_WIDGET( m_entry ));
 }
-GtkEntry* getEntry() const {
+ui::Entry getEntry() const {
 	return m_entry;
 }
 
@@ -1310,7 +1310,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 			{
 				// class list
-				ui::Widget scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow();
 				scr.show();
 				gtk_paned_add1( GTK_PANED( split2 ), scr );
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
@@ -1338,7 +1338,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 					view.show();
 
-					gtk_container_add( GTK_CONTAINER( scr ), GTK_WIDGET( view ) );
+					scr.add(view);
 
 					g_object_unref( G_OBJECT( store ) );
 					g_entityClassList = view;
@@ -1347,7 +1347,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 			}
 
 			{
-				ui::Widget scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow();
 				scr.show();
 				gtk_paned_add2( GTK_PANED( split2 ), scr );
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
@@ -1359,7 +1359,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					gtk_text_view_set_wrap_mode( text, GTK_WRAP_WORD );
 					gtk_text_view_set_editable( text, FALSE );
 					text.show();
-					gtk_container_add( GTK_CONTAINER( scr ), GTK_WIDGET( text ) );
+					scr.add(text);
 					g_entityClassComment = text;
 				}
 			}
@@ -1394,7 +1394,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 				{
 					// key/value list
-					ui::Widget scr = ui::ScrolledWindow();
+					auto scr = ui::ScrolledWindow();
 					scr.show();
 					gtk_box_pack_start( GTK_BOX( vbox2 ), scr, TRUE, TRUE, 0 );
 					gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
@@ -1426,7 +1426,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 						view.show();
 
-						gtk_container_add( GTK_CONTAINER( scr ), view );
+						scr.add(view);
 
 						g_object_unref( G_OBJECT( store ) );
 
@@ -1504,19 +1504,19 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 			}
 
 			{
-				ui::Widget scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow();
 				scr.show();
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 
-				ui::Widget viewport = ui::Widget(gtk_viewport_new( 0, 0 ));
+				auto viewport = ui::Container(GTK_CONTAINER(gtk_viewport_new( 0, 0 )));
 				viewport.show();
 				gtk_viewport_set_shadow_type( GTK_VIEWPORT( viewport ), GTK_SHADOW_NONE );
 
 				g_attributeBox = ui::VBox( FALSE, 2 );
 				g_attributeBox.show();
 
-				gtk_container_add( GTK_CONTAINER( viewport ), GTK_WIDGET( g_attributeBox ) );
-				gtk_container_add( GTK_CONTAINER( scr ), viewport );
+				viewport.add(g_attributeBox);
+				scr.add(viewport);
 				gtk_paned_pack2( GTK_PANED( split2 ), scr, FALSE, FALSE );
 			}
 		}

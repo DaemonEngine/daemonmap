@@ -28,7 +28,7 @@ ui::Frame create_framed_widget( ui::Widget widget ){
 	auto frame = ui::Frame();
 	frame.show();
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
-	gtk_container_add( GTK_CONTAINER( frame ), widget );
-	gtk_widget_show( GTK_WIDGET( widget ) );
+	frame.add(widget);
+	widget.show();
 	return frame;
 }

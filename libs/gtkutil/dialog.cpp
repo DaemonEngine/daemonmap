@@ -160,17 +160,17 @@ gboolean dialog_delete_callback( ui::Widget widget, GdkEventAny* event, ModalDia
 ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& dialog, ui::Widget contents ){
 	ui::Window window = create_fixedsize_modal_dialog_window(ui::Window(), title, dialog );
 
-	GtkVBox* vbox1 = create_dialog_vbox( 8, 4 );
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( vbox1 ) );
+	auto vbox1 = create_dialog_vbox( 8, 4 );
+	window.add(vbox1);
 
-	gtk_container_add( GTK_CONTAINER( vbox1 ), contents );
+	vbox1.add(contents);
 
 	ui::Alignment alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
 	gtk_widget_show( GTK_WIDGET( alignment ) );
 	gtk_box_pack_start( GTK_BOX( vbox1 ), GTK_WIDGET( alignment ), FALSE, FALSE, 0 );
 
-	GtkButton* button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
-	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( button ) );
+	auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
+	alignment.add(button);
 
 	return window;
 }
@@ -200,7 +200,7 @@ PathEntry PathEntry_new(){
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 	// path entry
-	GtkHBox* hbox = ui::HBox( FALSE, 0 );
+	auto hbox = ui::HBox( FALSE, 0 );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
 	auto entry = ui::Entry();
@@ -214,7 +214,7 @@ PathEntry PathEntry_new(){
 	gtk_widget_show( GTK_WIDGET( button ) );
 	gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 
-	gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( hbox ) );
+	frame.add(hbox);
 
 	return PathEntry( frame, entry, button );
 }

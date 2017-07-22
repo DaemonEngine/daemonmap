@@ -394,11 +394,11 @@ void DoCommandListDlg(){
 	auto accel = ui::AccelGroup();
 	window.add_accel_group( accel );
 
-	GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( hbox ) );
+	auto hbox = create_dialog_hbox( 4, 4 );
+	window.add(hbox);
 
 	{
-		GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
+		auto scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 		{
@@ -422,7 +422,7 @@ void DoCommandListDlg(){
 			}
 
 			view.show();
-			gtk_container_add( GTK_CONTAINER( scr ), view );
+			scr.add(view);
 
 			{
 				// Initialize dialog
