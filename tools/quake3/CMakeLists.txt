@@ -28,6 +28,9 @@ include_directories(${LIBXML2_INCLUDE_DIR})
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
 
+find_package(Minizip REQUIRED)
+include_directories(${MINIZIP_INCLUDE_DIRS})
+
 set(q3map2_games
         q3map2/game_darkplaces.h
         q3map2/game_dq.h
@@ -64,7 +67,6 @@ radiant_tool(q3map2
         common/scriplib.c common/scriplib.h
         common/surfaceflags.h
         common/threads.c
-        common/unzip.c common/unzip.h
         common/vfs.c common/vfs.h
 
         q3map2/brush.c
@@ -123,6 +125,7 @@ target_link_libraries(q3map2
         ${PNG_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${ZLIB_LIBRARIES}
+        ${MINIZIP_LIBRARIES}
         ddslib
         etclib
         filematch
@@ -140,7 +143,6 @@ radiant_tool(q3data
         common/md4.c common/md4.h
         common/scriplib.c common/scriplib.h
         common/trilib.c common/trilib.h
-        common/unzip.c common/unzip.h
         common/vfs.c common/vfs.h
 
         q3data/3dslib.c q3data/3dslib.h
@@ -159,6 +161,7 @@ target_link_libraries(q3data
         ${GLIB_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${ZLIB_LIBRARIES}
+        ${MINIZIP_LIBRARIES}
         filematch
         etclib
         l_net

@@ -19,7 +19,7 @@ before_script:
         sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe" &&
         sudo apt-get -qq update &&
         sudo apt-get -qq -f install &&
-        sudo apt-get -qq install libgtk2.0-dev libgtkglext1-dev;
+        sudo apt-get -qq install libgtk2.0-dev libgtkglext1-dev libminizip-dev;
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
         brew update &&
