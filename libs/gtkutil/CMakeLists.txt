@@ -6,7 +6,7 @@ add_library(gtkutil
         container.h
         cursor.cpp cursor.h
         dialog.cpp dialog.h
-        entry.h
+        entry.cpp entry.h
         filechooser.cpp filechooser.h
         frame.cpp frame.h
         glfont.cpp glfont.h

@@ -19,39 +19,21 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_GTKUTIL_ENTRY_H )
 #define INCLUDED_GTKUTIL_ENTRY_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <gtk/gtk.h>
+void entry_set_string(ui::Entry entry, const char *string);
 
-inline void entry_set_string( ui::Entry entry, const char* string ){
-	gtk_entry_set_text( entry, string );
-}
+void entry_set_int(ui::Entry entry, int i);
 
-inline void entry_set_int( ui::Entry entry, int i ){
-	char buf[32];
-	sprintf( buf, "%d", i );
-	entry_set_string( entry, buf );
-}
+void entry_set_float(ui::Entry entry, float f);
 
-inline void entry_set_float( ui::Entry entry, float f ){
-	char buf[32];
-	sprintf( buf, "%g", f );
-	entry_set_string( entry, buf );
-}
+const char *entry_get_string(ui::Entry entry);
 
-inline const char* entry_get_string( ui::Entry entry ){
-	return gtk_entry_get_text( entry );
-}
+int entry_get_int(ui::Entry entry);
 
-inline int entry_get_int( ui::Entry entry ){
-	return atoi( entry_get_string( entry ) );
-}
-
-inline double entry_get_float( ui::Entry entry ){
-	return atof( entry_get_string( entry ) );
-}
+double entry_get_float(ui::Entry entry);
 
 #endif
