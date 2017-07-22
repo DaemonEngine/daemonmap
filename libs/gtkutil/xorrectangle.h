@@ -22,7 +22,7 @@
 #if !defined ( INCLUDED_XORRECTANGLE_H )
 #define INCLUDED_XORRECTANGLE_H
 
-#include <gtk/gtk.h>
+#include <cairo.h>
 #include <uilib/uilib.h>
 #include "math/vector.h"
 
@@ -64,46 +64,17 @@ class XORRectangle
 
 rectangle_t m_rectangle;
 
-GtkWidget* m_widget;
+ui::Widget m_widget;
 cairo_t *cr;
 
-bool initialised() const {
-	return cr != nullptr;
-}
-void lazy_init(){
-	if ( !initialised() ) {
-		cr = gdk_cairo_create(gtk_widget_get_window(m_widget));
-	}
-}
-void draw() const {
-	const int x = float_to_integer( m_rectangle.x );
-	const int y = float_to_integer( m_rectangle.y );
-	const int w = float_to_integer( m_rectangle.w );
-	const int h = float_to_integer( m_rectangle.h );
-	GtkAllocation allocation;
-	gtk_widget_get_allocation(m_widget, &allocation);
-	cairo_rectangle(cr, x, -(h) - (y - allocation.height), w, h);
-	cairo_set_source_rgb(cr, 1, 1, 1);
-	cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
-	cairo_stroke(cr);
-}
+bool initialised() const;
+void lazy_init();
+void draw() const;
 
 public:
-XORRectangle( ui::Widget widget ) : m_widget( widget ), cr( 0 ) {
-}
-~XORRectangle(){
-	if ( initialised() ) {
-		cairo_destroy(cr);
-	}
-}
-void set( rectangle_t rectangle ){
-	if ( gtk_widget_get_realized( m_widget ) ) {
-		lazy_init();
-		draw();
-		m_rectangle = rectangle;
-		draw();
-	}
-}
+XORRectangle( ui::Widget widget );
+~XORRectangle();
+void set( rectangle_t rectangle );
 };
 
 

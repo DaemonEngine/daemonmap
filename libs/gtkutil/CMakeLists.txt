@@ -21,7 +21,7 @@ add_library(gtkutil
         toolbar.cpp toolbar.h
         widget.cpp widget.h
         window.cpp window.h
-        xorrectangle.h
+        xorrectangle.cpp xorrectangle.h
         )
 
 target_include_directories(gtkutil PRIVATE uilib)
