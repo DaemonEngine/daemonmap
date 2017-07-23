@@ -539,11 +539,11 @@ static void OnSpinChanged( GtkAdjustment *adj, gpointer data ){
 }
 
 static gint OnDialogKey( ui::Widget widget, GdkEventKey* event, gpointer data ){
-	if ( event->keyval == GDK_Return ) {
+	if ( event->keyval == GDK_KEY_Return ) {
 		OnApply( ui::root, 0 );
 		return TRUE;
 	}
-	else if ( event->keyval == GDK_Escape ) {
+	else if ( event->keyval == GDK_KEY_Escape ) {
 		g_PatchInspector.GetPatchInfo();
 		return TRUE;
 	}

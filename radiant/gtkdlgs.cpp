@@ -397,12 +397,12 @@ void DoSides( int type, int axis ){
 				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
 				GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &dialog );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}
@@ -665,12 +665,12 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
 				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}
@@ -892,12 +892,12 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
 				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}
@@ -960,12 +960,12 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, char* title ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
 				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}
@@ -1019,7 +1019,7 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, char*
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}

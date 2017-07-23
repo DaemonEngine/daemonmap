@@ -711,7 +711,7 @@ gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gch
 gboolean project_key_press( ui::Widget widget, GdkEventKey* event, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
-	if ( event->keyval == GDK_Delete ) {
+	if ( event->keyval == GDK_KEY_Delete ) {
 		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
@@ -816,7 +816,7 @@ gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStor
 	}
 	Build& build = *g_current_build;
 
-	if ( event->keyval == GDK_Delete ) {
+	if ( event->keyval == GDK_KEY_Delete ) {
 		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
 		GtkTreeIter iter;
 		GtkTreeModel* model;

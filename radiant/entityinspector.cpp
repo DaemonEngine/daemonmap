@@ -1195,7 +1195,7 @@ static gint EntityClassList_button_press( ui::Widget widget, GdkEventButton *eve
 static gint EntityClassList_keypress( ui::Widget widget, GdkEventKey* event, gpointer data ){
 	unsigned int code = gdk_keyval_to_upper( event->keyval );
 
-	if ( event->keyval == GDK_Return ) {
+	if ( event->keyval == GDK_KEY_Return ) {
 		EntityClassList_createEntity();
 		return TRUE;
 	}
@@ -1261,7 +1261,7 @@ static void SpawnflagCheck_toggled( ui::Widget widget, gpointer data ){
 }
 
 static gint EntityEntry_keypress( GtkEntry* widget, GdkEventKey* event, gpointer data ){
-	if ( event->keyval == GDK_Return ) {
+	if ( event->keyval == GDK_KEY_Return ) {
 		if ( widget == g_entityKeyEntry ) {
 			gtk_entry_set_text( g_entityValueEntry, "" );
 			gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( widget ) ) ), GTK_WIDGET( g_entityValueEntry ) );
@@ -1272,7 +1272,7 @@ static gint EntityEntry_keypress( GtkEntry* widget, GdkEventKey* event, gpointer
 		}
 		return TRUE;
 	}
-	if ( event->keyval == GDK_Escape ) {
+	if ( event->keyval == GDK_KEY_Escape ) {
 		gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( widget ) ) ), NULL );
 		return TRUE;
 	}

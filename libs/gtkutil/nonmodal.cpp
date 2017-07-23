@@ -40,7 +40,7 @@ gboolean NonModalEntry::changed(ui::Entry entry, NonModalEntry *self)
 
 gboolean NonModalEntry::enter(ui::Entry entry, GdkEventKey *event, NonModalEntry *self)
 {
-    if (event->keyval == GDK_Return) {
+    if (event->keyval == GDK_KEY_Return) {
         self->m_apply();
         self->m_editing = false;
         gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(entry))), NULL);
@@ -51,7 +51,7 @@ gboolean NonModalEntry::enter(ui::Entry entry, GdkEventKey *event, NonModalEntry
 
 gboolean NonModalEntry::escape(ui::Entry entry, GdkEventKey *event, NonModalEntry *self)
 {
-    if (event->keyval == GDK_Escape) {
+    if (event->keyval == GDK_KEY_Escape) {
         self->m_cancel();
         self->m_editing = false;
         gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(entry))), NULL);
@@ -77,7 +77,7 @@ gboolean NonModalSpinner::changed(ui::SpinButton spin, NonModalSpinner *self)
 
 gboolean NonModalSpinner::enter(ui::SpinButton spin, GdkEventKey *event, NonModalSpinner *self)
 {
-    if (event->keyval == GDK_Return) {
+    if (event->keyval == GDK_KEY_Return) {
         gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(spin))), NULL);
         return TRUE;
     }
@@ -86,7 +86,7 @@ gboolean NonModalSpinner::enter(ui::SpinButton spin, GdkEventKey *event, NonModa
 
 gboolean NonModalSpinner::escape(ui::SpinButton spin, GdkEventKey *event, NonModalSpinner *self)
 {
-    if (event->keyval == GDK_Escape) {
+    if (event->keyval == GDK_KEY_Escape) {
         self->m_cancel();
         gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(spin))), NULL);
         return TRUE;

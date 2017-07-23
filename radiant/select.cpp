@@ -988,12 +988,12 @@ void DoRotateDlg(){
 					auto button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 					widget_make_default( button );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( rotatedlg_cancel ), &g_rotate_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Apply", G_CALLBACK( rotatedlg_apply ), &g_rotate_dialog );
@@ -1133,12 +1133,12 @@ void DoScaleDlg(){
 					auto button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
 					widget_make_default( button );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( scaledlg_cancel ), &g_scale_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Apply", G_CALLBACK( scaledlg_apply ), &g_scale_dialog );
