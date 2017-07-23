@@ -3096,7 +3096,8 @@ void GlobalGL_sharedContextCreated(){
 	globalOutputStream() << "GL_VENDOR: " << reinterpret_cast<const char*>( glGetString( GL_VENDOR ) ) << "\n";
 	globalOutputStream() << "GL_RENDERER: " << reinterpret_cast<const char*>( glGetString( GL_RENDERER ) ) << "\n";
 	globalOutputStream() << "GL_VERSION: " << reinterpret_cast<const char*>( glGetString( GL_VERSION ) ) << "\n";
-	globalOutputStream() << "GL_EXTENSIONS: " << reinterpret_cast<const char*>( glGetString( GL_EXTENSIONS ) ) << "\n";
+    const auto extensions = reinterpret_cast<const char*>( glGetString(GL_EXTENSIONS ) );
+    globalOutputStream() << "GL_EXTENSIONS: " << (extensions ? extensions : "") << "\n";
 
 	QGL_sharedContextCreated( GlobalOpenGL() );
 
