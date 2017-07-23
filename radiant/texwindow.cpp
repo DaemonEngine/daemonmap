@@ -2057,7 +2057,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	}
 	{ // gl_widget
 		g_TextureBrowser.m_gl_widget = glwidget_new( FALSE );
-		g_object_ref( g_TextureBrowser.m_gl_widget );
+		g_object_ref( g_TextureBrowser.m_gl_widget._handle );
 
 		gtk_widget_set_events( g_TextureBrowser.m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
 		gtk_widget_set_can_focus( g_TextureBrowser.m_gl_widget, true );

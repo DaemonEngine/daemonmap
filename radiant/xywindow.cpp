@@ -828,7 +828,7 @@ XYWnd::XYWnd() :
 	m_window_observer->setRectangleDrawCallback( ReferenceCaller1<XYWnd, rect_t, xy_update_xor_rectangle>( *this ) );
 	m_window_observer->setView( m_view );
 
-	g_object_ref( m_gl_widget );
+	g_object_ref( m_gl_widget._handle );
 
 	gtk_widget_set_events( m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
 	gtk_widget_set_can_focus( m_gl_widget, true );

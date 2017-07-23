@@ -37,7 +37,7 @@ void _glwidget_context_created(ui::GLArea self, void *data)
 {
     if (++g_context_count == 1) {
         g_shared = self;
-        g_object_ref(g_shared);
+        g_object_ref(g_shared._handle);
 
         glwidget_make_current(g_shared);
         GlobalOpenGL().contextValid = true;
