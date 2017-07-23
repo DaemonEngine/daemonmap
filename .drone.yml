@@ -1,0 +1,8 @@
+build:
+  image: teaci/msys32
+  shell: mingw32
+  pull: true
+  commands:
+    - pacman -S --needed --noconfirm --noprogressbar mingw-w64-i686-{toolchain,cmake,gtk2,gtkglext}
+    - cmake -G "MSYS Makefiles" .
+    - make

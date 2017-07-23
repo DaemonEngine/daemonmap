@@ -25,6 +25,7 @@
 #include "gtkutil/messagebox.h"
 
 #ifdef WIN32
+#include <gtk/gtk.h>
 #include <gdk/gdkwin32.h>
 #include <shellapi.h>
 bool open_url( const char* url ){

@@ -90,18 +90,19 @@ if (NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-D_DEBUG=1)
 endif ()
 
-add_definitions(
-        -DGTK_DISABLE_SINGLE_INCLUDES
-        -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES
-        -DGSEAL_ENABLE
-)
+macro(disable_deprecated name gtk2only)
+    add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
+    if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
+        add_definitions(-D${name}_DISABLE_DEPRECATED)
+    endif ()
+endmacro()
 
-if (GTK_TARGET EQUAL 2)
-    add_definitions(
-            -DGTK_DISABLE_DEPRECATED
-            -DGDK_DISABLE_DEPRECATED
-    )
-endif ()
+disable_deprecated(ATK 0)
+disable_deprecated(G 0)
+disable_deprecated(GDK 0)
+disable_deprecated(GDK_PIXBUF 0)
+disable_deprecated(GTK 1)
+disable_deprecated(PANGO 0)
 
 if (APPLE)
     option(XWINDOWS "Build against X11" ON)

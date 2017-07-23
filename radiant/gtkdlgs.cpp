@@ -826,7 +826,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 		text_editor.show();
 
 #ifdef WIN32
-		process_gui();
+		ui::process();
 #endif
 
 		// only move the cursor if it's not exceeding the size..
