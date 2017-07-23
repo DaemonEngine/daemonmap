@@ -257,7 +257,7 @@ int m_nTotalHeight;
 CopiedString shader;
 
 ui::Window m_parent{ui::null};
-ui::Widget m_gl_widget;
+ui::GLArea m_gl_widget{ui::null};
 ui::Widget m_texture_scroll;
 ui::Widget m_treeViewTree;
 ui::Widget m_treeViewTags;
@@ -1255,7 +1255,7 @@ void Texture_Draw( TextureBrowser& textureBrowser ){
 }
 
 void TextureBrowser_queueDraw( TextureBrowser& textureBrowser ){
-	if ( textureBrowser.m_gl_widget != 0 ) {
+	if ( textureBrowser.m_gl_widget ) {
 		gtk_widget_queue_draw( textureBrowser.m_gl_widget );
 	}
 }
@@ -2056,7 +2056,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		widget_set_visible( g_TextureBrowser.m_texture_scroll, g_TextureBrowser.m_showTextureScrollbar );
 	}
 	{ // gl_widget
-		g_TextureBrowser.m_gl_widget = ui::Widget(glwidget_new( FALSE ));
+		g_TextureBrowser.m_gl_widget = glwidget_new( FALSE );
 		g_object_ref( g_TextureBrowser.m_gl_widget );
 
 		gtk_widget_set_events( g_TextureBrowser.m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
@@ -2066,7 +2066,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		g_TextureBrowser.m_gl_widget.show();
 
 		g_TextureBrowser.m_sizeHandler = g_TextureBrowser.m_gl_widget.connect( "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
-		g_TextureBrowser.m_exposeHandler = g_TextureBrowser.m_gl_widget.connect( "expose_event", G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
+		g_TextureBrowser.m_exposeHandler = g_TextureBrowser.m_gl_widget.on_render( G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
 
 		g_TextureBrowser.m_gl_widget.connect( "button_press_event", G_CALLBACK( TextureBrowser_button_press ), &g_TextureBrowser );
 		g_TextureBrowser.m_gl_widget.connect( "button_release_event", G_CALLBACK( TextureBrowser_button_release ), &g_TextureBrowser );

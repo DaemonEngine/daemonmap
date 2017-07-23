@@ -672,7 +672,7 @@ static Shader* m_state_select2;
 FreezePointer m_freezePointer;
 
 public:
-ui::Widget m_gl_widget;
+ui::GLArea m_gl_widget;
 ui::Window m_parent{ui::null};
 
 SelectionSystemWindowObserver* m_window_observer;
@@ -759,7 +759,7 @@ void GlobalCamera_setCamWnd( CamWnd& camwnd ){
 }
 
 
-ui::Widget CamWnd_getWidget( CamWnd& camwnd ){
+ui::GLArea CamWnd_getWidget( CamWnd& camwnd ){
 	return camwnd.m_gl_widget;
 }
 
@@ -1147,7 +1147,7 @@ CamWnd::CamWnd() :
 	m_view( true ),
 	m_Camera( &m_view, CamWndQueueDraw( *this ) ),
 	m_cameraview( m_Camera, &m_view, ReferenceCaller<CamWnd, CamWnd_Update>( *this ) ),
-	m_gl_widget( ui::Widget(glwidget_new( TRUE )) ),
+	m_gl_widget( glwidget_new( TRUE ) ),
 	m_window_observer( NewWindowObserver() ),
 	m_XORRectangle( m_gl_widget ),
 	m_deferredDraw( WidgetQueueDrawCaller( m_gl_widget ) ),
@@ -1171,7 +1171,7 @@ CamWnd::CamWnd() :
 	gtk_widget_set_can_focus( m_gl_widget, true );
 
 	m_sizeHandler = m_gl_widget.connect( "size_allocate", G_CALLBACK( camera_size_allocate ), this );
-	m_exposeHandler = m_gl_widget.connect( "expose_event", G_CALLBACK( camera_expose ), this );
+	m_exposeHandler = m_gl_widget.on_render( G_CALLBACK( camera_expose ), this );
 
 	Map_addValidCallback( g_map, DeferredDrawOnMapValidChangedCaller( m_deferredDraw ) );
 

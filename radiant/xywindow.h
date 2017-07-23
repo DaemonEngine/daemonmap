@@ -63,7 +63,7 @@ inline const char* ViewType_getTitle( VIEWTYPE viewtype ){
 
 class XYWnd
 {
-ui::Widget m_gl_widget;
+ui::GLArea m_gl_widget;
 guint m_sizeHandler;
 guint m_exposeHandler;
 
@@ -77,7 +77,7 @@ XYWnd();
 void queueDraw(){
 	m_deferredDraw.draw();
 }
-ui::Widget GetWidget(){
+ui::GLArea GetWidget(){
 	return m_gl_widget;
 }
 

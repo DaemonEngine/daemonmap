@@ -64,6 +64,14 @@ struct _GtkWidget;
 struct _GtkWindow;
 struct _GTypeInstance;
 
+#if GTK_TARGET == 3
+struct _GtkGLArea;
+#endif
+
+#if GTK_TARGET == 2
+using _GtkGLArea = struct _GtkDrawingArea;
+#endif
+
 struct ModalDialog;
 
 namespace ui {
@@ -528,6 +536,13 @@ namespace ui {
          TreePath();
          TreePath(const char *path);
     ,
+    );
+
+    // Custom
+
+    WRAP(GLArea, Widget, _GtkGLArea, (),
+    ,
+         guint on_render(GCallback pFunction, void *data);
     );
 
 #undef WRAP

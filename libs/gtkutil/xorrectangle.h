@@ -64,7 +64,7 @@ class XORRectangle
 
 rectangle_t m_rectangle;
 
-ui::Widget m_widget;
+ui::GLArea m_widget;
 cairo_t *cr;
 
 bool initialised() const;
@@ -72,7 +72,7 @@ void lazy_init();
 void draw() const;
 
 public:
-XORRectangle( ui::Widget widget );
+XORRectangle( ui::GLArea widget );
 ~XORRectangle();
 void set( rectangle_t rectangle );
 };

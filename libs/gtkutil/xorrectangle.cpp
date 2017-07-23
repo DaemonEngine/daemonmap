@@ -28,7 +28,7 @@ void XORRectangle::draw() const
     cairo_stroke(cr);
 }
 
-XORRectangle::XORRectangle(ui::Widget widget) : m_widget(widget), cr(0)
+XORRectangle::XORRectangle(ui::GLArea widget) : m_widget(widget), cr(0)
 {
 }
 

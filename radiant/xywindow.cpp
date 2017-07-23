@@ -834,7 +834,7 @@ XYWnd::XYWnd() :
 	gtk_widget_set_can_focus( m_gl_widget, true );
 
 	m_sizeHandler = m_gl_widget.connect( "size_allocate", G_CALLBACK( xywnd_size_allocate ), this );
-	m_exposeHandler = m_gl_widget.connect( "expose_event", G_CALLBACK( xywnd_expose ), this );
+	m_exposeHandler = m_gl_widget.on_render( G_CALLBACK( xywnd_expose ), this );
 
 	m_gl_widget.connect( "button_press_event", G_CALLBACK( xywnd_button_press ), this );
 	m_gl_widget.connect( "button_release_event", G_CALLBACK( xywnd_button_release ), this );

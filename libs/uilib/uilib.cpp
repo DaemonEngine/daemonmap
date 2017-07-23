@@ -328,4 +328,16 @@ namespace ui {
     TreePath::TreePath(const char *path) : TreePath(gtk_tree_path_new_from_string(path))
     {}
 
+    // Custom
+
+    guint IGLArea::on_render(GCallback pFunction, void *data)
+    {
+#if GTK_TARGET == 3
+        return this.connect("render", pFunction, data);
+#endif
+#if GTK_TARGET == 2
+        return this.connect("expose_event", pFunction, data);
+#endif
+    };
+
 }

@@ -34,7 +34,7 @@ void AddCameraMovedCallback( const SignalHandler& handler );
 
 void CamWnd_Update( CamWnd& camwnd );
 
-ui::Widget CamWnd_getWidget( CamWnd& camwnd );
+ui::GLArea CamWnd_getWidget( CamWnd& camwnd );
 void CamWnd_setParent( CamWnd& camwnd, ui::Window parent );
 
 void GlobalCamera_setCamWnd( CamWnd& camwnd );
