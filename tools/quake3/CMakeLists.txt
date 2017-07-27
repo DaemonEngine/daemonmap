@@ -124,8 +124,8 @@ target_link_libraries(q3map2
         ${JPEG_LIBRARIES}
         ${PNG_LIBRARIES}
         ${LIBXML2_LIBRARIES}
-        ${ZLIB_LIBRARIES}
         ${MINIZIP_LIBRARIES}
+        ${ZLIB_LIBRARIES}
         ddslib
         etclib
         filematch
@@ -160,8 +160,8 @@ radiant_tool(q3data
 target_link_libraries(q3data
         ${GLIB_LIBRARIES}
         ${LIBXML2_LIBRARIES}
-        ${ZLIB_LIBRARIES}
         ${MINIZIP_LIBRARIES}
+        ${ZLIB_LIBRARIES}
         filematch
         etclib
         l_net
