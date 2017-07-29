@@ -95,6 +95,7 @@ if (WIN32)
 endif()
 
 radiant_tool(radiant WIN32 radiant.rc ${RADIANTLIST})
+add_dependencies(radiant modules)
 target_link_libraries(radiant
     ${CMAKE_DL_LIBS}
     ${LIBXML2_LIBRARIES}
