@@ -27,36 +27,21 @@ See also https://gitlab.com/xonotic/netradiant/ for a source browser, issues and
  * GtkGLExt
  * LibJpeg
  * LibPng
+ * Minizip
  * ZLib
 
-# Compiling
-
-This project uses the usual CMake workflow:
-
-`cmake -H. -Bbuild && cmake --build build -- -j$(nproc)`
-
-## linux
-
-```
-cmake -H. -Bbuild -G "Unix Makefiles"
-```
-
 ## msys2
-
-`pacman -S --needed base-devel`
 
 ### 32 bit:
 
 ```
-pacman -S --needed mingw-w64-i686-{toolchain,cmake,gtk2,gtkglext}
-cmake -H. -Bbuild -G "MSYS Makefiles" -DGTK2_GLIBCONFIG_INCLUDE_DIR=/mingw32/lib/glib-2.0/include -DGTK2_GDKCONFIG_INCLUDE_DIR=/mingw32/lib/gtk-2.0/include
+pacman -S --needed base-devel mingw-w64-i686-{toolchain,cmake,make,gtk2,gtkglext}
 ```
 
 ### 64 bit:
 
 ```
-pacman -S mingw-w64-x86_64-{toolchain,cmake,gtk2,gtkglext}
-cmake -H. -Bbuild -G "MSYS Makefiles" -DGTK2_GLIBCONFIG_INCLUDE_DIR=/mingw64/lib/glib-2.0/include -DGTK2_GDKCONFIG_INCLUDE_DIR=/mingw64/lib/gtk-2.0/include
+pacman -S --needed base-devel mingw-w64-x86_64-{toolchain,cmake,make,gtk2,gtkglext}
 ```
 
 ## OS X:
@@ -67,8 +52,13 @@ brew install Caskroom/cask/xquartz
 brew link --force gettext
 ```
 
-More Compilation Details
-------------------------
+# Compiling
+
+This project uses the usual CMake workflow:
+
+`cmake -G "Unix Makefiles" -H . -B build && cmake --build build -- -j$(nproc)`
+
+## More Compilation Details
 
 options:
  * `DOWNLOAD_GAMEPACKS=ON`
