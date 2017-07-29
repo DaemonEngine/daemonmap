@@ -5,6 +5,7 @@ macro(radiant_plugin name)
     message(STATUS "Found Module ${name}")
     add_library(${name} MODULE ${ARGN})
     add_dependencies(modules ${name})
+    copy_dlls(${name})
 endmacro()
 
 add_subdirectory(archivepak)

@@ -105,6 +105,16 @@ endif ()
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_SOURCE_DIR}/libs")
 
+macro(copy_dlls target)
+    if (WIN32)
+        add_custom_command(TARGET ${target} POST_BUILD
+            COMMAND bash
+            ARGS -c "ldd '$<TARGET_FILE:${target}>' | grep -v /c/Windows | awk '{ print $1 }' | while read dll; do cp \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
+            VERBATIM
+        )
+    endif ()
+endmacro()
+
 #-----------------------------------------------------------------------
 # Libraries
 #-----------------------------------------------------------------------
