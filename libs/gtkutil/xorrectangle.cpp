@@ -4,7 +4,7 @@
 
 bool XORRectangle::initialised() const
 {
-    return cr != nullptr;
+    return !!cr;
 }
 
 void XORRectangle::lazy_init()

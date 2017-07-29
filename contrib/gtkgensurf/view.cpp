@@ -413,7 +413,7 @@ void CreateViewWindow(){
 	spin.connect( "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &azimuth );
 #endif
 
-	auto frame = ui::Frame( nullptr );
+	auto frame = ui::Frame(ui::null);
 	frame.show();
 	gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_IN );
 	gtk_box_pack_start( GTK_BOX( vbox ), frame, TRUE, TRUE, 0 );

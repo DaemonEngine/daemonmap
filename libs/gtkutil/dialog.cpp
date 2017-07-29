@@ -180,7 +180,7 @@ RadioHBox RadioHBox_new( StringArrayRange names ){
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
 	GSList* group = 0;
-	auto radio = ui::RadioButton{nullptr};
+	auto radio = ui::RadioButton(ui::null);
 	for ( StringArrayRange::Iterator i = names.first; i != names.last; ++i )
 	{
 		radio = ui::RadioButton(GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) ));

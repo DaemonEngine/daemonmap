@@ -122,7 +122,7 @@ float& m_f;
 public:
 GtkSpinButton* m_spin;
 ui::Entry m_entry;
-Increment( float& f ) : m_f( f ), m_spin( 0 ), m_entry( nullptr ){
+Increment( float& f ) : m_f( f ), m_spin( 0 ), m_entry( ui::null ){
 }
 void cancel(){
 	entry_set_float( m_entry, m_f );
@@ -159,7 +159,7 @@ GtkCheckButton* m_surfaceFlags[32];
 GtkCheckButton* m_contentFlags[32];
 
 NonModalEntry m_valueEntry;
-ui::Entry m_valueEntryWidget{nullptr};
+ui::Entry m_valueEntryWidget{ui::null};
 public:
 WindowPositionTracker m_positionTracker;
 WindowPositionTrackerImportStringCaller m_importPosition;

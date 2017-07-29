@@ -538,7 +538,7 @@ VIEWTYPE GlobalXYWnd_getCurrentViewType(){
 
 bool g_bCrossHairs = false;
 
-ui::Menu XYWnd::m_mnuDrop{nullptr};
+ui::Menu XYWnd::m_mnuDrop(ui::null);
 
 // this is disabled, and broken
 // http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=394
@@ -820,7 +820,7 @@ XYWnd::XYWnd() :
 
 	m_entityCreate = false;
 
-	m_mnuDrop = ui::Menu{nullptr};
+	m_mnuDrop = ui::Menu(ui::null);
 
 	GlobalWindowObservers_add( m_window_observer );
 	GlobalWindowObservers_connectWidget( m_gl_widget );
@@ -861,7 +861,7 @@ XYWnd::~XYWnd(){
 
 	if ( m_mnuDrop ) {
 		gtk_widget_destroy( GTK_WIDGET( m_mnuDrop ) );
-		m_mnuDrop = ui::Menu{nullptr};
+		m_mnuDrop = ui::Menu(ui::null);
 	}
 
 	g_signal_handler_disconnect( G_OBJECT( m_gl_widget ), m_sizeHandler );
@@ -2570,7 +2570,7 @@ void unrealise(){
 	if ( ++m_unrealised == 1 ) {
 		if ( XYWnd::m_mnuDrop ) {
 			gtk_widget_destroy( GTK_WIDGET( XYWnd::m_mnuDrop ) );
-			XYWnd::m_mnuDrop = ui::Menu(nullptr);
+			XYWnd::m_mnuDrop = ui::Menu(ui::null);
 		}
 	}
 }

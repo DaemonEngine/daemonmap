@@ -165,7 +165,7 @@ NonModalEntry m_nonModal;
 public:
 StringAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( nullptr ),
+	m_entry( ui::null ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
 	auto entry = ui::Entry();
 	entry.show();
@@ -324,7 +324,7 @@ NonModalEntry m_nonModal;
 public:
 AngleAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( nullptr ),
+	m_entry( ui::null ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
 	auto entry = numeric_entry_new();
 	m_entry = entry;
@@ -371,11 +371,11 @@ ui::Entry m_entry;
 NonModalEntry m_nonModal;
 RadioHBox m_radio;
 NonModalRadio m_nonModalRadio;
-ui::HBox m_hbox{nullptr};
+ui::HBox m_hbox{ui::null};
 public:
 DirectionAttribute( const char* key ) :
 	m_key( key ),
-	m_entry( nullptr ),
+	m_entry( ui::null ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ),
 	m_radio( RadioHBox_new( STRING_ARRAY_RANGE( buttons ) ) ),
 	m_nonModalRadio( ApplyRadioCaller( *this ) ){
@@ -456,7 +456,7 @@ public:
 ui::Entry m_roll;
 ui::Entry m_pitch;
 ui::Entry m_yaw;
-AnglesEntry() : m_roll( nullptr ), m_pitch( nullptr ), m_yaw( nullptr ){
+AnglesEntry() : m_roll( ui::null ), m_pitch( ui::null ), m_yaw( ui::null ){
 }
 };
 
@@ -546,7 +546,7 @@ public:
 ui::Entry m_x;
 ui::Entry m_y;
 ui::Entry m_z;
-Vector3Entry() : m_x( nullptr ), m_y( nullptr ), m_z( nullptr ){
+Vector3Entry() : m_x( ui::null ), m_y( ui::null ), m_z( ui::null ){
 }
 };
 
@@ -555,7 +555,7 @@ class Vector3Attribute : public EntityAttribute
 CopiedString m_key;
 Vector3Entry m_vector3;
 NonModalEntry m_nonModal;
-ui::Box m_hbox{nullptr};
+ui::Box m_hbox{ui::null};
 public:
 Vector3Attribute( const char* key ) :
 	m_key( key ),
@@ -717,8 +717,8 @@ GtkCheckButton* g_entitySpawnflagsCheck[MAX_FLAGS];
 GtkEntry* g_entityKeyEntry;
 GtkEntry* g_entityValueEntry;
 
-ui::ListStore g_entlist_store{nullptr};
-ui::ListStore g_entprops_store{nullptr};
+ui::ListStore g_entlist_store{ui::null};
+ui::ListStore g_entprops_store{ui::null};
 const EntityClass* g_current_flags = 0;
 const EntityClass* g_current_comment = 0;
 const EntityClass* g_current_attributes = 0;
@@ -731,7 +731,7 @@ int spawn_table[MAX_FLAGS];
 // the table is a 4x4 in which we need to put the comment box g_entityClassComment and the spawn flags..
 GtkTable* g_spawnflagsTable;
 
-ui::VBox g_attributeBox{nullptr};
+ui::VBox g_attributeBox{ui::null};
 typedef std::vector<EntityAttribute*> EntityAttributes;
 EntityAttributes g_entityAttributes;
 }

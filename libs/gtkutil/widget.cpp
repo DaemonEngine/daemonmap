@@ -35,7 +35,7 @@ gboolean ToggleShown::notify_visible(ui::Widget widget, gpointer dummy, ToggleSh
 gboolean ToggleShown::destroy(ui::Widget widget, ToggleShown *self)
 {
     self->m_shownDeferred = gtk_widget_get_visible(self->m_widget) != FALSE;
-    self->m_widget = ui::Widget(nullptr);
+    self->m_widget = ui::Widget(ui::null);
     return FALSE;
 }
 

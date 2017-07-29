@@ -262,8 +262,8 @@ ui::Widget m_texture_scroll;
 ui::Widget m_treeViewTree;
 ui::Widget m_treeViewTags;
 ui::Frame m_tag_frame{ui::null};
-ui::ListStore m_assigned_store{nullptr};
-ui::ListStore m_available_store{nullptr};
+ui::ListStore m_assigned_store{ui::null};
+ui::ListStore m_available_store{ui::null};
 ui::Widget m_assigned_tree;
 ui::Widget m_available_tree;
 ui::Widget m_scr_win_tree;
@@ -273,7 +273,7 @@ ui::Button m_search_button{ui::null};
 ui::Widget m_shader_info_item;
 
 std::set<CopiedString> m_all_tags;
-ui::ListStore m_all_tags_list{nullptr};
+ui::ListStore m_all_tags_list{ui::null};
 std::vector<CopiedString> m_copied_tags;
 std::set<CopiedString> m_found_shaders;
 

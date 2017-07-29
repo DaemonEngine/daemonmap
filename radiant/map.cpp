@@ -765,7 +765,7 @@ void DoMapInfo(){
 	ModalDialog dialog;
 	GtkEntry* brushes_entry;
 	GtkEntry* entities_entry;
-	ui::ListStore EntityBreakdownWalker{nullptr};
+	ui::ListStore EntityBreakdownWalker{ui::null};
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Map Info", G_CALLBACK(dialog_delete_callback ), &dialog );
 

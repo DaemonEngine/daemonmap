@@ -663,7 +663,7 @@ class ProjectList
 {
 public:
 Project& m_project;
-ui::ListStore m_store{nullptr};
+ui::ListStore m_store{ui::null};
 bool m_changed;
 ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 }
@@ -993,7 +993,7 @@ typedef std::list<BuildMenuItem> BuildMenuItems;
 BuildMenuItems g_BuildMenuItems;
 
 
-ui::Menu g_bsp_menu{nullptr};
+ui::Menu g_bsp_menu{ui::null};
 
 void Build_constructMenu( ui::Menu menu ){
 	for ( Project::iterator i = g_build_project.begin(); i != g_build_project.end(); ++i )

@@ -91,7 +91,7 @@ void PlugInToolbar_AddButton( ui::Toolbar toolbar, const IToolbarButton* button 
 	toolbar_insert( toolbar, button->getImage(), button->getText(), button->getTooltip(), button->getType(), G_CALLBACK( ActivateToolbarButton ), reinterpret_cast<gpointer>( const_cast<IToolbarButton*>( button ) ) );
 }
 
-ui::Toolbar g_plugin_toolbar{nullptr};
+ui::Toolbar g_plugin_toolbar{ui::null};
 
 void PluginToolbar_populate(){
 	class AddToolbarItemVisitor : public ToolbarModules::Visitor

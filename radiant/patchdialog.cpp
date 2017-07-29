@@ -160,7 +160,7 @@ public:
 ui::CheckButton m_enabled;
 ui::Entry m_horizontal;
 ui::Entry m_vertical;
-Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( nullptr ), m_vertical( nullptr ){
+Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( ui::null ), m_vertical( ui::null ){
 }
 void update(){
 	PatchFixedSubdivisions subdivisions;
@@ -226,8 +226,8 @@ float m_fZ;
    float	m_fVShift; */
 int m_nCol;
 int m_nRow;
-ui::ComboBoxText m_pRowCombo{nullptr};
-ui::ComboBoxText m_pColCombo{nullptr};
+ui::ComboBoxText m_pRowCombo{ui::null};
+ui::ComboBoxText m_pColCombo{ui::null};
 std::size_t m_countRows;
 std::size_t m_countCols;
 

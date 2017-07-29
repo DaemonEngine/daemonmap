@@ -1610,7 +1610,7 @@ class WaitDialog
 {
 public:
 ui::Window m_window{ui::null};
-ui::Label m_label{(GtkLabel *) nullptr};
+ui::Label m_label{ui::null};
 };
 
 WaitDialog create_wait_dialog( const char* title, const char* text ){

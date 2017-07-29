@@ -44,7 +44,7 @@ void plugin_activated( ui::Widget widget, gpointer data ){
 
 void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
 	ui::Widget item, parent;
-	ui::Menu menu{nullptr}, subMenu{nullptr};
+	ui::Menu menu{ui::null}, subMenu{ui::null};
 	const char *menuText, *menuCommand;
 	std::stack<ui::Menu> menuStack;
 

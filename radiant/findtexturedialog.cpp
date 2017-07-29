@@ -130,7 +130,7 @@ FindTextureDialog::~FindTextureDialog(){
 ui::Window FindTextureDialog::BuildDialog(){
 	ui::Widget vbox, hbox, table, label;
 	ui::Widget button;
-	ui::Entry entry{nullptr};
+	ui::Entry entry{ui::null};
 
 	auto dlg = ui::Window(create_floating_window( "Find / Replace Texture(s)", m_parent ));
 
