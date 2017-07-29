@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-# Enable Debug by default, can be changed with -DCMAKE_BUILD_TYPE=Release
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-endif ()
 
 project(NetRadiant C CXX)
 option(BUILD_RADIANT "Build the gui" ON)
@@ -75,7 +71,7 @@ add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
 
 add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
+if (NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-D_DEBUG=1)
 endif ()
 
