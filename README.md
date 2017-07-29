@@ -58,11 +58,11 @@ This project uses the usual CMake workflow:
 
 ## Debug
 
-`cmake -G "Unix Makefiles" -H . -B build && cmake --build build -- -j$(nproc)`
+`cmake -G "Unix Makefiles" -H. -Bbuild && cmake --build build -- -j$(nproc)`
 
 ## Release
 
-`cmake -G "Unix Makefiles" -H . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)`
+`cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)`
 
 ## MSYS2
 
@@ -72,7 +72,7 @@ Under MSYS2, the mingw shell must be used with the following additional flags:
 cmake -G "MSYS Makefiles" \
     -DGTK2_GLIBCONFIG_INCLUDE_DIR=/mingw64/lib/glib-2.0/include \
     -DGTK2_GDKCONFIG_INCLUDE_DIR=/mingw64/lib/gtk-2.0/include \
-    -H . -B build
+    -H. -Bbuild
 ```
 
 ## More Compilation Details
