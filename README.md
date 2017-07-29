@@ -56,7 +56,13 @@ brew link --force gettext
 
 This project uses the usual CMake workflow:
 
+## Debug
+
 `cmake -G "Unix Makefiles" -H . -B build && cmake --build build -- -j$(nproc)`
+
+## Release
+
+`cmake -G "Unix Makefiles" -H . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)`
 
 ## More Compilation Details
 
