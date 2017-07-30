@@ -4,6 +4,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(NetRadiant C CXX)
 option(BUILD_RADIANT "Build the gui" ON)
 
+if (NOT CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install")
+endif ()
+
 #-----------------------------------------------------------------------
 # Version
 #-----------------------------------------------------------------------
@@ -174,13 +178,14 @@ endif ()
 
 add_subdirectory(tools)
 
+file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/setup/data/tools/*")
+file(GLOB DOCS_FILES "${PROJECT_SOURCE_DIR}/docs/*")
+
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
     # Copy data files from sources to the build directory
     message(STATUS "Copying data files")
-    file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/setup/data/tools/*")
     file(COPY ${DATA_FILES} DESTINATION "${PROJECT_BINARY_DIR}")
-    file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/docs/*")
-    file(COPY ${DATA_FILES} DESTINATION "${PROJECT_BINARY_DIR}/docs")
+    file(COPY ${DOCS_FILES} DESTINATION "${PROJECT_BINARY_DIR}/docs")
 endif ()
 
 #-----------------------------------------------------------------------
@@ -196,3 +201,32 @@ add_custom_target(game_packs
 if (DOWNLOAD_GAMEPACKS)
     add_custom_target(game_packs_all ALL DEPENDS game_packs)
 endif ()
+
+#-----------------------------------------------------------------------
+# Install
+#-----------------------------------------------------------------------
+
+install(
+        FILES
+        "${PROJECT_BINARY_DIR}/RADIANT_MAJOR"
+        "${PROJECT_BINARY_DIR}/RADIANT_MINOR"
+        "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+file(GLOB GAME_FILES "${PROJECT_SOURCE_DIR}/games/*")
+unset(_tmp)
+foreach (it ${GAME_FILES})
+    list(APPEND _tmp "${it}/games")
+    file(GLOB GAME_DIR "${it}/*.game")
+    list(APPEND _tmp "${GAME_DIR}")
+endforeach ()
+set(GAME_FILES ${_tmp})
+
+install(
+        DIRECTORY
+        ${PROJECT_SOURCE_DIR}/setup/data/tools/
+        ${PROJECT_SOURCE_DIR}/docs
+        ${GAME_FILES}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+

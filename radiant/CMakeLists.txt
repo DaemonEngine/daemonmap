@@ -130,3 +130,8 @@ if (X11_LIBRARIES)
 endif ()
 
 copy_dlls(radiant)
+
+install(
+        TARGETS radiant
+        RUNTIME DESTINATION .
+)

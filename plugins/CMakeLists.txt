@@ -6,6 +6,10 @@ macro(radiant_plugin name)
     add_library(${name} MODULE ${ARGN})
     add_dependencies(modules ${name})
     copy_dlls(${name})
+    install(
+            TARGETS ${name}
+            LIBRARY DESTINATION modules
+    )
 endmacro()
 
 add_subdirectory(archivepak)
