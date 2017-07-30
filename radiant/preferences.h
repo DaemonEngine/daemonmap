@@ -33,7 +33,6 @@
 #include "dialog.h"
 #include <list>
 #include <map>
-#include <glib.h>
 
 void Widget_connectToggleDependency( ui::Widget self, ui::Widget toggleButton );
 

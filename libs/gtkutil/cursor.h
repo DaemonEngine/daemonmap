@@ -22,7 +22,6 @@
 #if !defined( INCLUDED_GTKUTIL_CURSOR_H )
 #define INCLUDED_GTKUTIL_CURSOR_H
 
-#include <glib.h>
 #include <uilib/uilib.h>
 
 #include "debugging/debugging.h"

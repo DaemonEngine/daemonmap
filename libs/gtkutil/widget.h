@@ -24,7 +24,6 @@
 
 #include <list>
 #include <uilib/uilib.h>
-#include <glib.h>
 #include <gdk/gdk.h>
 #include "generic/callback.h"
 #include "warnings.h"

@@ -30,7 +30,6 @@
 
 #include "math/vector.h"
 #include "stream/stringstream.h"
-#include <glib.h>
 #include "xmlstuff.h"
 #include "dialog.h"
 #include "xywindow.h"

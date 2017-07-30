@@ -40,7 +40,6 @@
 
 #include "iplugin.h"
 
-#include <glib.h>
 #include "synapse.h"
 
 class CSynapseClientHydraToolz : public CSynapseClient
