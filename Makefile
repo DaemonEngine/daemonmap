@@ -113,7 +113,7 @@ CFLAGS_COMMON = -MMD -W -Wall -Wcast-align -Wcast-qual -Wno-unused-parameter -fn
 CPPFLAGS_COMMON =
 LDFLAGS_COMMON =
 LIBS_COMMON =
-CXXFLAGS_COMMON = -Wno-non-virtual-dtor -Wreorder -fno-exceptions -fno-rtti
+CXXFLAGS_COMMON = -std=c++11 -Wno-non-virtual-dtor -Wreorder -fno-exceptions -fno-rtti
 
 ifeq ($(BUILD),debug)
 ifeq ($(findstring $(CFLAGS),-g),)
@@ -258,6 +258,7 @@ ifneq ($(GIT_VERSION),)
 endif
 
 CPPFLAGS += -DRADIANT_VERSION="\"$(RADIANT_VERSION)\"" -DRADIANT_MAJOR_VERSION="\"$(RADIANT_MAJOR_VERSION)\"" -DRADIANT_MINOR_VERSION="\"$(RADIANT_MINOR_VERSION)\"" -DRADIANT_PATCH_VERSION="\"$(RADIANT_PATCH_VERSION)\"" -DRADIANT_ABOUTMSG="\"$(RADIANT_ABOUTMSG)\"" -DQ3MAP_VERSION="\"$(Q3MAP_VERSION)\"" -DRADIANT_EXECUTABLE="\"$(RADIANT_EXECUTABLE)\""
+CPPFLAGS += -DGTK_TARGET=2
 
 .PHONY: all
 all: \
@@ -697,6 +698,7 @@ $(INSTALLDIR)/radiant.$(EXE): \
 	radiant/stacktrace.o \
 	radiant/surfacedialog.o \
 	radiant/texmanip.o \
+	radiant/textureentry.o \
 	radiant/textures.o \
 	radiant/texwindow.o \
 	radiant/timer.o \
@@ -711,6 +713,7 @@ $(INSTALLDIR)/radiant.$(EXE): \
 	radiant/xywindow.o \
 	libcmdlib.$(A) \
 	libgtkutil.$(A) \
+	libuilib.$(A) \
 	libl_net.$(A) \
 	libmathlib.$(A) \
 	libprofile.$(A) \
@@ -735,8 +738,6 @@ libgtkutil.$(A): \
 	libs/gtkutil/accelerator.o \
 	libs/gtkutil/button.o \
 	libs/gtkutil/clipboard.o \
-	libs/gtkutil/closure.o \
-	libs/gtkutil/container.o \
 	libs/gtkutil/cursor.o \
 	libs/gtkutil/dialog.o \
 	libs/gtkutil/entry.o \
@@ -744,51 +745,42 @@ libgtkutil.$(A): \
 	libs/gtkutil/frame.o \
 	libs/gtkutil/glfont.o \
 	libs/gtkutil/glwidget.o \
-	libs/gtkutil/idledraw.o \
 	libs/gtkutil/image.o \
 	libs/gtkutil/menu.o \
 	libs/gtkutil/messagebox.o \
 	libs/gtkutil/nonmodal.o \
 	libs/gtkutil/paned.o \
-	libs/gtkutil/pointer.o \
 	libs/gtkutil/toolbar.o \
 	libs/gtkutil/widget.o \
 	libs/gtkutil/window.o \
 	libs/gtkutil/xorrectangle.o \
 
+libuilib.$(A): CPPFLAGS_EXTRA := $(CPPFLAGS_GLIB) $(CPPFLAGS_GTK) $(CPPFLAGS_GTKGLEXT) -Ilibs -Iinclude
+libuilib.$(A): \
+	libs/uilib/uilib.o \
+
 libxmllib.$(A): CPPFLAGS_EXTRA := $(CPPFLAGS_XML) $(CPPFLAGS_GLIB) -Ilibs -Iinclude
 libxmllib.$(A): \
-	libs/xml/ixml.o \
-	libs/xml/xmlelement.o \
-	libs/xml/xmlparser.o \
 	libs/xml/xmltextags.o \
-	libs/xml/xmlwriter.o \
 
 $(INSTALLDIR)/modules/archivezip.$(DLL): LIBS_EXTRA := $(LIBS_ZLIB)
 $(INSTALLDIR)/modules/archivezip.$(DLL): CPPFLAGS_EXTRA := $(CPPFLAGS_ZLIB) -Ilibs -Iinclude
 $(INSTALLDIR)/modules/archivezip.$(DLL): \
 	plugins/archivezip/archive.o \
-	plugins/archivezip/pkzip.o \
 	plugins/archivezip/plugin.o \
-	plugins/archivezip/zlibstream.o \
 
 $(INSTALLDIR)/modules/archivewad.$(DLL): CPPFLAGS_EXTRA := -Ilibs -Iinclude
 $(INSTALLDIR)/modules/archivewad.$(DLL): \
 	plugins/archivewad/archive.o \
 	plugins/archivewad/plugin.o \
-	plugins/archivewad/wad.o \
 
 $(INSTALLDIR)/modules/archivepak.$(DLL): CPPFLAGS_EXTRA := -Ilibs -Iinclude
 $(INSTALLDIR)/modules/archivepak.$(DLL): \
 	plugins/archivepak/archive.o \
-	plugins/archivepak/pak.o \
 	plugins/archivepak/plugin.o \
 
-$(INSTALLDIR)/modules/entity.$(DLL): CPPFLAGS_EXTRA := -Ilibs -Iinclude
+$(INSTALLDIR)/modules/entity.$(DLL): CPPFLAGS_EXTRA := $(CPPFLAGS_GLIB) -Ilibs -Iinclude
 $(INSTALLDIR)/modules/entity.$(DLL): \
-	plugins/entity/angle.o \
-	plugins/entity/angles.o \
-	plugins/entity/colour.o \
 	plugins/entity/doom3group.o \
 	plugins/entity/eclassmodel.o \
 	plugins/entity/entity.o \
@@ -797,13 +789,7 @@ $(INSTALLDIR)/modules/entity.$(DLL): \
 	plugins/entity/group.o \
 	plugins/entity/light.o \
 	plugins/entity/miscmodel.o \
-	plugins/entity/model.o \
-	plugins/entity/modelskinkey.o \
-	plugins/entity/namedentity.o \
-	plugins/entity/origin.o \
 	plugins/entity/plugin.o \
-	plugins/entity/rotation.o \
-	plugins/entity/scale.o \
 	plugins/entity/skincache.o \
 	plugins/entity/targetable.o \
 
@@ -838,7 +824,7 @@ $(INSTALLDIR)/modules/imagepng.$(DLL): CPPFLAGS_EXTRA := $(CPPFLAGS_PNG) -Ilibs 
 $(INSTALLDIR)/modules/imagepng.$(DLL): \
 	plugins/imagepng/plugin.o \
 
-$(INSTALLDIR)/modules/mapq3.$(DLL): CPPFLAGS_EXTRA := -Ilibs -Iinclude
+$(INSTALLDIR)/modules/mapq3.$(DLL): CPPFLAGS_EXTRA := $(CPPFLAGS_GLIB) -Ilibs -Iinclude
 $(INSTALLDIR)/modules/mapq3.$(DLL): \
 	plugins/mapq3/parse.o \
 	plugins/mapq3/plugin.o \
