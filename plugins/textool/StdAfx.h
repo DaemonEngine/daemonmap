@@ -23,7 +23,6 @@
 // precompiled headers
 
 // standard headers
-#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <stdlib.h>
 

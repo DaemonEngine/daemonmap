@@ -149,3 +149,18 @@ void GlobalWindowObservers_connectWidget( ui::Widget widget ){
 	widget.connect( "button_release_event", G_CALLBACK( modifiers_button_release ), &g_window_observers );
 	widget.connect( "motion_notify_event", G_CALLBACK( modifiers_motion ), &g_window_observers );
 }
+
+ModifierFlags modifiers_for_state(unsigned int state)
+{
+	ModifierFlags modifiers = c_modifierNone;
+	if ( state & GDK_SHIFT_MASK ) {
+		modifiers |= c_modifierShift;
+	}
+	if ( state & GDK_CONTROL_MASK ) {
+		modifiers |= c_modifierControl;
+	}
+	if ( state & GDK_MOD1_MASK ) {
+		modifiers |= c_modifierAlt;
+	}
+	return modifiers;
+}
