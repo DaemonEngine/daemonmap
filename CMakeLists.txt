@@ -57,8 +57,16 @@ endif ()
 # Flags
 #-----------------------------------------------------------------------
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}   -fno-strict-aliasing")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing -fno-exceptions -fno-rtti")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
+macro(addflags args)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${args}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${args}")
+endmacro()
+addflags("-fno-strict-aliasing")
+if (NOT WIN32)
+    addflags("-fvisibility=hidden")
+endif ()
+
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 set(GTK_NS "GTK2" CACHE STRING "GTK variable prefix")
 
@@ -106,10 +114,10 @@ include_directories("${PROJECT_SOURCE_DIR}/libs")
 macro(copy_dlls target)
     if (WIN32)
         add_custom_command(TARGET ${target} POST_BUILD
-            COMMAND bash
-            ARGS -c "ldd '$<TARGET_FILE:${target}>' | grep -v /c/Windows | awk '{ print $1 }' | while read dll; do cp \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
-            VERBATIM
-        )
+                COMMAND bash
+                ARGS -c "ldd '$<TARGET_FILE:${target}>' | grep -v /c/Windows | awk '{ print $1 }' | while read dll; do cp \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
+                VERBATIM
+                )
     endif ()
 endmacro()
 
