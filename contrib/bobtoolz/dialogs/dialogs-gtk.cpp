@@ -832,9 +832,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 
 EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	GtkWidget   *hbox;
-	GtkWidget   *textFrontBackTex, *textTrimTex;
 	GtkWidget   *checkScaleMainH, *checkScaleMainV, *checkScaleTrimH, *checkScaleTrimV;
-	GtkWidget   *comboMain, *comboTrim;
 	GtkWidget   *radioNS, *radioEW;
 	GSList      *radioOrientation;
 	TwinWidget tw1, tw2;
@@ -871,7 +869,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 0 );
 	gtk_widget_show( hbox );
 
-	textFrontBackTex = ui::Entry( 512 );
+	auto textFrontBackTex = ui::Entry( 512 );
 	gtk_entry_set_text( GTK_ENTRY( textFrontBackTex ), rs->mainTexture );
 	gtk_box_pack_start( GTK_BOX( hbox ), textFrontBackTex, FALSE, FALSE, 0 );
 	gtk_widget_show( textFrontBackTex );
@@ -886,7 +884,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 0 );
 	gtk_widget_show( hbox );
 
-	textTrimTex = ui::Entry( 512 );
+	auto textTrimTex = ui::Entry( 512 );
 	gtk_box_pack_start( GTK_BOX( hbox ), textTrimTex, FALSE, FALSE, 0 );
 	gtk_widget_show( textTrimTex );
 
@@ -935,13 +933,13 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 
 	// djbob: lists added
 
-	comboMain = gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listMainTextures));
+	auto comboMain = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listMainTextures))));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	gtk_box_pack_start( GTK_BOX( hbox ), comboMain, FALSE, FALSE, 0 );
 	gtk_widget_show( comboMain );
 
 	tw1.one = textFrontBackTex;
-	tw1.two = GTK_COMBO_BOX(comboMain);
+	tw1.two = comboMain;
 
 	auto buttonSetMain = ui::Button( "Set As Main Texture" );
 	buttonSetMain.connect( "clicked", G_CALLBACK( dialog_button_callback_settex ), &tw1 );
@@ -954,13 +952,13 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 0 );
 	gtk_widget_show( hbox );
 
-	comboTrim = gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listTrimTextures));
+	auto comboTrim = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listTrimTextures))));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	gtk_box_pack_start( GTK_BOX( hbox ), comboTrim, FALSE, FALSE, 0 );
 	gtk_widget_show( comboTrim );
 
 	tw2.one = textTrimTex;
-	tw2.two = GTK_COMBO_BOX(comboTrim);
+	tw2.two = comboTrim;
 
 	auto buttonSetTrim = ui::Button( "Set As Trim Texture" );
 	buttonSetTrim.connect( "clicked", G_CALLBACK( dialog_button_callback_settex ), &tw2 );

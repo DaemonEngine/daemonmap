@@ -35,7 +35,6 @@
 #define USE_ENTITYTABLE_DEFINE
 #include "ientity.h"
 
-#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 

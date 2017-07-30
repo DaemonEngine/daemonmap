@@ -6,7 +6,6 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
 #include <uilib/uilib.h>
 
 /*

@@ -48,8 +48,6 @@ extern _QERBrushTable __BRUSHTABLENAME;
 #include "igl.h"
 #include "ientity.h"
 
-#include <gtk/gtk.h>
-
 #include "iui_gtk.h"
 
 #include "gendlgs.h"

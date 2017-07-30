@@ -208,6 +208,7 @@ namespace ui {
         using native = T *; \
         explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
         explicit name(Null n) : name((native) nullptr) {} \
+        static name from(void *ptr) { return name((native) ptr); } \
         ctors \
     }; \
     inline bool operator<(name self, name other) { return self._handle < other._handle; } \
