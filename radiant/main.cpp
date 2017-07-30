@@ -324,14 +324,7 @@ void streams_init(){
 }
 
 void paths_init(){
-	const char* home = environment_get_home_path();
-	Q_mkdir( home );
-
-	{
-		StringOutputStream path( 256 );
-		path << home << "/";
-		g_strSettingsPath = path.c_str();
-	}
+	g_strSettingsPath = environment_get_home_path();
 
 	Q_mkdir( g_strSettingsPath.c_str() );
 
