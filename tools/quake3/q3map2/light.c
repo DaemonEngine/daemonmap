@@ -2120,7 +2120,6 @@ int LightMain( int argc, char **argv ){
 	qboolean lightSamplesInsist = qfalse;
 	qboolean fastAllocate = qfalse;
 
-
 	/* note it */
 	Sys_Printf( "--- Light ---\n" );
 	Sys_Printf( "--- ProcessGameSpecific ---\n" );
@@ -2777,6 +2776,14 @@ int LightMain( int argc, char **argv ){
 		else if ( !strcmp( argv[ i ], "-lomem" ) ) {
 			loMem = qtrue;
 			Sys_Printf( "Enabling low-memory (potentially slower) lighting mode\n" );
+		}
+		else if ( !strcmp( argv[ i ], "-lightsubdiv" ) ) {
+			defaultLightSubdivide = atoi( argv[ i + 1 ] );
+			if ( defaultLightSubdivide < 1 ) {
+				defaultLightSubdivide = 1;
+			}
+			i++;
+			Sys_Printf( "Default light subdivision set to %d\n", defaultLightSubdivide );
 		}
 		else if ( !strcmp( argv[ i ], "-lightanglehl" ) ) {
 			if ( ( atoi( argv[ i + 1 ] ) != 0 ) != lightAngleHL ) {

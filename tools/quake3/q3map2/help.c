@@ -207,6 +207,7 @@ void HelpLight()
 		{"-keeplights", "Keep light entities in the BSP file after compile"},
 		{"-lightmapdir <directory>", "Directory to store external lightmaps (default: same as map name without extension)"},
 		{"-lightmapsize <N>", "Size of lightmaps to generate (must be a power of two)"},
+		{"-lightsubdiv <N>", "Size of light emitting shader subdivision"},
 		{"-lomem", "Low memory but slower lighting mode"},
 		{"-lowquality", "Low quality floodlight (appears to currently break floodlight)"},
 		{"-minsamplesize <N>", "Sets minimum lightmap resolution in luxels/qu"},
