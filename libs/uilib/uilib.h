@@ -76,7 +76,7 @@ struct ModalDialog;
 
 namespace ui {
 
-    void init(int argc, char *argv[]);
+    bool init(int *argc, char **argv[], char const *parameter_string, char const **error);
 
     void main();
 

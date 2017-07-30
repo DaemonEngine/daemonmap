@@ -11,10 +11,17 @@
 
 namespace ui {
 
-    void init(int argc, char *argv[])
+    bool init(int *argc, char **argv[], char const *parameter_string, char const **error)
     {
         gtk_disable_setlocale();
-        gtk_init(&argc, &argv);
+        static GOptionEntry entries[] = {{NULL}};
+        char const *translation_domain = NULL;
+        GError *gerror = NULL;
+        bool ret = gtk_init_with_args(argc, argv, parameter_string, entries, translation_domain, &gerror) != 0;
+        if (!ret) {
+            *error = gerror->message;
+        }
+        return ret;
     }
 
     void main()

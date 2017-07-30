@@ -558,15 +558,10 @@ int main( int argc, char* argv[] ){
 	}
 #endif
 
-	static GOptionEntry entries[] = {
-		{ NULL }
-	};
-	GError *error = NULL;
 	const char* mapname = NULL;
-
-	gtk_disable_setlocale();
-	if ( !gtk_init_with_args( &argc, &argv, "<filename.map>", entries, NULL, &error) ) {
-		g_print( "%s\n", error->message );
+    char const *error = NULL;
+	if ( !ui::init( &argc, &argv, "<filename.map>", &error) ) {
+		g_print( "%s\n", error );
 		return -1;
 	}
 
