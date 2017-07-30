@@ -16,6 +16,7 @@ set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.
 
 file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MAJOR" ${NetRadiant_VERSION_MAJOR})
 file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MINOR" ${NetRadiant_VERSION_MINOR})
+file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_PATCH" ${NetRadiant_VERSION_PATCH})
 
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
@@ -68,6 +69,7 @@ set(GTK_NS "GTK2" CACHE STRING "GTK variable prefix")
 add_definitions(-DRADIANT_VERSION="${NetRadiant_VERSION}")
 add_definitions(-DRADIANT_MAJOR_VERSION="${NetRadiant_VERSION_MAJOR}")
 add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
+add_definitions(-DRADIANT_PATCH_VERSION="${NetRadiant_VERSION_PATCH}")
 
 add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
 

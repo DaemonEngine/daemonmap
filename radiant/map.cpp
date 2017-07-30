@@ -39,7 +39,6 @@ MapModules& ReferenceAPI_getMapModules();
 #include "ifilesystem.h"
 #include "namespace.h"
 #include "moduleobserver.h"
-#include "moduleobservers.h"
 
 #include <set>
 
@@ -82,6 +81,7 @@ MapModules& ReferenceAPI_getMapModules();
 #include "xywindow.h"
 #include "mainframe.h"
 #include "preferences.h"
+#include "preferencesystem.h"
 #include "referencecache.h"
 #include "mru.h"
 #include "commands.h"
@@ -406,29 +406,6 @@ float g_MinWorldCoord = -64 * 1024;
 void AddRegionBrushes( void );
 void RemoveRegionBrushes( void );
 
-/* Map open/close observers */
-
-ModuleObservers g_mapPathObservers;
-
-class MapFileObserver : public ModuleObserver
-{
-void realise() {
-		// Refresh VFS to apply new pak filtering based on mapname
-		// needed for daemon dpk vfs
-		VFS_Refresh();
-}
-void unrealise() { }
-};
-
-MapFileObserver g_mapFileObserver;
-
-void BindMapFileObservers(){
-	g_mapPathObservers.attach( g_mapFileObserver );
-}
-
-void UnBindMapFileObservers(){
-	g_mapPathObservers.detach( g_mapFileObserver );
-}
 
 
 /*
@@ -448,7 +425,6 @@ void Map_Free(){
 
 	g_currentMap = 0;
 	Brush_unlatchPreferences();
-	g_mapPathObservers.unrealise();
 }
 
 class EntityFindByClassname : public scene::Graph::Walker
@@ -947,6 +923,8 @@ ScopeTimer( const char* message )
 }
 };
 
+CopiedString g_strLastFolder = "";
+
 /*
    ================
    Map_LoadFile
@@ -956,6 +934,9 @@ ScopeTimer( const char* message )
 void Map_LoadFile( const char *filename ){
 	globalOutputStream() << "Loading map from " << filename << "\n";
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Map" );
+
+	MRU_AddFile( filename );
+	g_strLastFolder = g_path_get_dirname( filename );
 
 	{
 		ScopeTimer timer( "map load" );
@@ -973,7 +954,6 @@ void Map_LoadFile( const char *filename ){
 			}
 			Brush_toggleFormat( i );
 			g_map.m_name = filename;
-			g_mapPathObservers.realise();
 			Map_UpdateTitle( g_map );
 			g_map.m_resource = GlobalReferenceCache().capture( g_map.m_name.c_str() );
 			if ( format ) {
@@ -1004,6 +984,10 @@ void Map_LoadFile( const char *filename ){
 	Map_StartPosition();
 
 	g_currentMap = &g_map;
+
+	// restart VFS to apply new pak filtering based on mapname
+	// needed for daemon DPK VFS
+	VFS_Restart();
 }
 
 class Excluder
@@ -1205,15 +1189,16 @@ void Map_RenameAbsolute( const char* absolute ){
 
 	g_map.m_resource->detach( g_map );
 	GlobalReferenceCache().release( g_map.m_name.c_str() );
-	g_mapPathObservers.unrealise();
 
 	g_map.m_resource = resource;
 
 	g_map.m_name = absolute;
-	g_mapPathObservers.realise();
 	Map_UpdateTitle( g_map );
 
 	g_map.m_resource->attach( g_map );
+	// refresh VFS to apply new pak filtering based on mapname
+	// needed for daemon DPK VFS
+	VFS_Refresh();
 }
 
 void Map_Rename( const char* filename ){
@@ -1248,7 +1233,6 @@ void Map_New(){
 	//globalOutputStream() << "Map_New\n";
 
 	g_map.m_name = "unnamed.map";
-	g_mapPathObservers.realise();
 	Map_UpdateTitle( g_map );
 
 	{
@@ -1262,6 +1246,10 @@ void Map_New(){
 	FocusViews( g_vector3_identity, 0 );
 
 	g_currentMap = &g_map;
+
+	// restart VFS to apply new pak filtering based on mapname
+	// needed for daemon DPK VFS
+	VFS_Restart();
 }
 
 extern void ConstructRegionBrushes( scene::Node * brushes[6], const Vector3 &region_mins, const Vector3 &region_maxs );
@@ -1509,6 +1497,8 @@ void Map_RegionBrush( void ){
 bool Map_ImportFile( const char* filename ){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Map" );
 
+	g_strLastFolder = g_path_get_dirname( filename );
+
 	bool success = false;
 
 	if ( extension_equal( path_get_extension( filename ), "bsp" ) ) {
@@ -1612,7 +1602,13 @@ tryDecompile:
  */
 bool Map_SaveFile( const char* filename ){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Saving Map" );
-	return MapResource_saveFile( MapFormat_forFile( filename ), GlobalSceneGraph().root(), Map_Traverse, filename );
+	bool success = MapResource_saveFile( MapFormat_forFile( filename ), GlobalSceneGraph().root(), Map_Traverse, filename );
+	if ( success ) {
+		// refresh VFS to apply new pak filtering based on mapname
+		// needed for daemon DPK VFS
+		VFS_Refresh();
+	}
+	return success;
 }
 
 //
@@ -1805,16 +1801,26 @@ const char* getMapsPath(){
 	return g_mapsPath.c_str();
 }
 
+const char* getLastFolderPath(){
+	if (g_strLastFolder.empty()) {
+		GlobalPreferenceSystem().registerPreference( "LastFolder", CopiedStringImportStringCaller( g_strLastFolder ), CopiedStringExportStringCaller( g_strLastFolder ) );
+		if (g_strLastFolder.empty()) {
+			g_strLastFolder = g_qeglobals.m_userGamePath;
+		}
+	}
+	return g_strLastFolder.c_str();
+}
+
 const char* map_open( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getMapsPath(), MapFormat::Name(), true, false, false );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 const char* map_import( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getMapsPath(), MapFormat::Name(), false, true, false );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false );
 }
 
 const char* map_save( const char* title ){
-	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), FALSE, title, getMapsPath(), MapFormat::Name(), false, false, true );
+	return file_dialog( GTK_WIDGET( MainFrame_getWindow() ), FALSE, title, getLastFolderPath(), MapFormat::Name(), false, false, true );
 }
 
 void OpenMap(){
@@ -1824,7 +1830,7 @@ void OpenMap(){
 
 	const char* filename = map_open( "Open Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
 		MRU_AddFile( filename );
 		Map_RegionOff();
 		Map_Free();
@@ -1835,7 +1841,7 @@ void OpenMap(){
 void ImportMap(){
 	const char* filename = map_import( "Import Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
 		UndoableCommand undo( "mapImport" );
 		Map_ImportFile( filename );
 	}
@@ -1844,7 +1850,8 @@ void ImportMap(){
 bool Map_SaveAs(){
 	const char* filename = map_save( "Save Map" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		MRU_AddFile( filename );
 		Map_Rename( filename );
 		return Map_Save();
@@ -1868,7 +1875,8 @@ void SaveMap(){
 void ExportMap(){
 	const char* filename = map_save( "Export Selection" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		Map_SaveSelected( filename );
 	}
 }
@@ -1876,7 +1884,8 @@ void ExportMap(){
 void SaveRegion(){
 	const char* filename = map_save( "Export Region" );
 
-	if ( filename != 0 ) {
+	if ( filename != NULL ) {
+		g_strLastFolder = g_path_get_dirname( filename );
 		Map_SaveRegion( filename );
 	}
 }
@@ -2170,8 +2179,6 @@ void unrealise(){
 };
 
 MapModuleObserver g_MapModuleObserver;
-
-#include "preferencesystem.h"
 
 CopiedString g_strLastMap;
 bool g_bLoadLastMap = false;

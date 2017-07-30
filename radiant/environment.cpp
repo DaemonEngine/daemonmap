@@ -245,7 +245,7 @@ void environment_init( int argc, char* argv[] ){
 
 	if ( !portable_app_setup() ) {
 		StringOutputStream home( 256 );
-		home << DirectoryCleaned( g_get_home_dir() ) << ".netradiant/";
+		home << DirectoryCleaned( g_get_user_config_dir() ) << "netradiant/";
 		Q_mkdir( home.c_str() );
 		home_path = home.c_str();
 	}
