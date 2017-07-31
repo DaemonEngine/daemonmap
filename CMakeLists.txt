@@ -4,8 +4,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(NetRadiant C CXX)
 option(BUILD_RADIANT "Build the gui" ON)
 
-if (NOT CMAKE_INSTALL_PREFIX)
-    set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install")
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
 
 #-----------------------------------------------------------------------
