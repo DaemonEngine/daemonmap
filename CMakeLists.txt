@@ -194,13 +194,11 @@ endif ()
 add_subdirectory(tools)
 
 file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/setup/data/tools/*")
-file(GLOB DOCS_FILES "${PROJECT_SOURCE_DIR}/docs/*")
 
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
     # Copy data files from sources to the build directory
     message(STATUS "Copying data files")
     file(COPY ${DATA_FILES} DESTINATION "${PROJECT_BINARY_DIR}")
-    file(COPY ${DOCS_FILES} DESTINATION "${PROJECT_BINARY_DIR}/docs")
 endif ()
 
 #-----------------------------------------------------------------------
