@@ -242,26 +242,26 @@ install(
 )
 
 set(GAME_FILES
-        DarkPlacesPack
-        NexuizPack
-        OpenArenaPack
-        OsirionPack
-        Q3Pack
-        Quake2Pack
-        QuakePack
-        QuetooPack
-        TremulousPack
-        UFOAIPack
-        UnvanquishedPack
-        WarsowPack
-        XonoticPack
+        DarkPlaces
+        Nexuiz
+        OpenArena
+        Osirion
+        Q3
+        Quake2
+        Quake
+        Quetoo
+        Tremulous
+        UFOAI
+        Unvanquished
+        Warsow
+        Xonotic
         )
 unset(_tmp)
 foreach (it ${GAME_FILES})
-    set(it "${PROJECT_BINARY_DIR}/games/${it}")
-    list(APPEND _tmp "${it}/games")
-    file(GLOB GAME_DIR "${it}/*.game")
-    list(APPEND _tmp "${GAME_DIR}")
+    set(dir "${PROJECT_BINARY_DIR}/games/${it}Pack")
+    string(TOLOWER "${it}" it)
+    list(APPEND _tmp "${dir}/games")
+    list(APPEND _tmp "${dir}/${it}.game")
 endforeach ()
 set(GAME_FILES ${_tmp})
 
