@@ -94,7 +94,7 @@ if (WIN32)
     list(APPEND RADIANTLIST multimon.cpp multimon.h)
 endif()
 
-add_executable(radiant WIN32 radiant.rc ${RADIANTLIST})
+radiant_tool(radiant WIN32 radiant.rc ${RADIANTLIST})
 target_link_libraries(radiant
     ${CMAKE_DL_LIBS}
     ${LIBXML2_LIBRARIES}
@@ -130,8 +130,3 @@ if (X11_LIBRARIES)
 endif ()
 
 copy_dlls(radiant)
-
-install(
-        TARGETS radiant
-        RUNTIME DESTINATION .
-)
