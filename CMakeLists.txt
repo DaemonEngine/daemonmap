@@ -115,8 +115,15 @@ endif ()
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_SOURCE_DIR}/libs")
 
+if (WIN32 AND NOT CMAKE_CROSSCOMPILING)
+    set(BUNDLE_LIBRARIES_DEFAULT ON)
+else ()
+    set(BUNDLE_LIBRARIES_DEFAULT OFF)
+endif ()
+option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
+
 macro(copy_dlls target)
-    if (WIN32)
+    if (BUNDLE_LIBRARIES)
         add_custom_command(TARGET ${target} POST_BUILD
                 COMMAND bash
                 ARGS -c "ldd '$<TARGET_FILE:${target}>' | grep -v /c/Windows | awk '{ print $1 }' | while read dll; do cp \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
