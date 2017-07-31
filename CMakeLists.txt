@@ -228,9 +228,32 @@ install(
         "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
         DESTINATION ${CMAKE_INSTALL_PREFIX}
 )
-file(GLOB GAME_FILES "${PROJECT_SOURCE_DIR}/games/*")
+
+install(
+        DIRECTORY
+        ${PROJECT_SOURCE_DIR}/setup/data/tools/
+        ${PROJECT_SOURCE_DIR}/docs
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+
+set(GAME_FILES
+        DarkPlacesPack
+        NexuizPack
+        OpenArenaPack
+        OsirionPack
+        Q3Pack
+        Quake2Pack
+        QuakePack
+        QuetooPack
+        TremulousPack
+        UFOAIPack
+        UnvanquishedPack
+        WarsowPack
+        XonoticPack
+        )
 unset(_tmp)
 foreach (it ${GAME_FILES})
+    set(it "${PROJECT_BINARY_DIR}/games/${it}")
     list(APPEND _tmp "${it}/games")
     file(GLOB GAME_DIR "${it}/*.game")
     list(APPEND _tmp "${GAME_DIR}")
@@ -239,9 +262,7 @@ set(GAME_FILES ${_tmp})
 
 install(
         DIRECTORY
-        ${PROJECT_SOURCE_DIR}/setup/data/tools/
-        ${PROJECT_SOURCE_DIR}/docs
         ${GAME_FILES}
         DESTINATION ${CMAKE_INSTALL_PREFIX}
+        OPTIONAL
 )
-
