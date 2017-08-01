@@ -51,6 +51,7 @@
 #include "inout.h"
 #include "vfs.h"
 #include <minizip/unzip.h>
+#include <glib.h>
 
 typedef struct
 {

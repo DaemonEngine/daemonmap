@@ -1,5 +1,3 @@
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkButton GtkButton;
 
 namespace callbacks {
 

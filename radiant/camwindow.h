@@ -22,11 +22,9 @@
 #if !defined( INCLUDED_CAMWINDOW_H )
 #define INCLUDED_CAMWINDOW_H
 
+#include <uilib/uilib.h>
 #include "math/vector.h"
 #include "signal/signalfwd.h"
-
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
 
 class CamWnd;
 CamWnd* NewCamWnd();
@@ -36,15 +34,13 @@ void AddCameraMovedCallback( const SignalHandler& handler );
 
 void CamWnd_Update( CamWnd& camwnd );
 
-GtkWidget* CamWnd_getWidget( CamWnd& camwnd );
-void CamWnd_setParent( CamWnd& camwnd, GtkWindow* parent );
+ui::GLArea CamWnd_getWidget( CamWnd& camwnd );
+void CamWnd_setParent( CamWnd& camwnd, ui::Window parent );
 
 void GlobalCamera_setCamWnd( CamWnd& camwnd );
 
-typedef struct _GtkMenu GtkMenu;
-void fill_view_camera_menu( GtkMenu* menu );
-typedef struct _GtkToolbar GtkToolbar;
-void CamWnd_constructToolbar( GtkToolbar* toolbar );
+void fill_view_camera_menu( ui::Menu menu );
+void CamWnd_constructToolbar( ui::Toolbar toolbar );
 void CamWnd_registerShortcuts();
 
 void GlobalCamera_Benchmark();

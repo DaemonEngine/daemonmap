@@ -19,21 +19,18 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_GTKUTIL_GLWIDGET_H )
 #define INCLUDED_GTKUTIL_GLWIDGET_H
 
-typedef struct _GtkWidget GtkWidget;
-typedef int gint;
-typedef gint gboolean;
+extern void (*GLWidget_sharedContextCreated)();
+extern void (*GLWidget_sharedContextDestroyed)();
 
-GtkWidget* glwidget_new( gboolean zbuffer );
-void glwidget_swap_buffers( GtkWidget* widget );
-gboolean glwidget_make_current( GtkWidget* widget );
-void glwidget_destroy_context( GtkWidget* widget );
-void glwidget_create_context( GtkWidget* widget );
-
-extern void ( *GLWidget_sharedContextCreated )();
-extern void ( *GLWidget_sharedContextDestroyed )();
-
+ui::GLArea glwidget_new(bool zbuffer);
+void glwidget_create_context(ui::GLArea self);
+void glwidget_destroy_context(ui::GLArea self);
+bool glwidget_make_current(ui::GLArea self);
+void glwidget_swap_buffers(ui::GLArea self);
 
 #endif

@@ -22,9 +22,8 @@
 #if !defined( INCLUDED_GTKUTIL_ACCELERATOR_H )
 #define INCLUDED_GTKUTIL_ACCELERATOR_H
 
-#include <gdk/gdktypes.h>
-#include <gdk/gdkkeysyms.h>
-#include <gdk/gdkkeys.h>
+#include <uilib/uilib.h>
+#include <gdk/gdk.h>
 
 #include "generic/callback.h"
 
@@ -86,17 +85,12 @@ void keydown_accelerators_remove( Accelerator accelerator );
 void keyup_accelerators_add( Accelerator accelerator, const Callback& callback );
 void keyup_accelerators_remove( Accelerator accelerator );
 
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
-void global_accel_connect_window( GtkWindow* window );
-void global_accel_disconnect_window( GtkWindow* window );
+void global_accel_connect_window( ui::Window window );
+void global_accel_disconnect_window( ui::Window window );
 
 void GlobalPressedKeys_releaseAll();
 
-typedef struct _GtkAccelGroup GtkAccelGroup;
-extern GtkAccelGroup* global_accel;
-void global_accel_init();
-void global_accel_destroy();
+extern ui::AccelGroup global_accel;
 
 GClosure* global_accel_group_find( Accelerator accelerator );
 
@@ -135,8 +129,7 @@ KeyEvent( const Accelerator& accelerator, const Callback& keyDown, const Callbac
 
 
 struct PressedButtons;
-typedef struct _GtkWidget GtkWidget;
-void PressedButtons_connect( PressedButtons& pressedButtons, GtkWidget* widget );
+void PressedButtons_connect( PressedButtons& pressedButtons, ui::Widget widget );
 
 extern PressedButtons g_pressedButtons;
 

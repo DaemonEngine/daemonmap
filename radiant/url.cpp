@@ -25,10 +25,11 @@
 #include "gtkutil/messagebox.h"
 
 #ifdef WIN32
+#include <gtk/gtk.h>
 #include <gdk/gdkwin32.h>
 #include <shellapi.h>
 bool open_url( const char* url ){
-	return ShellExecute( (HWND)GDK_WINDOW_HWND( GTK_WIDGET( MainFrame_getWindow() )->window ), "open", url, 0, 0, SW_SHOW ) > (HINSTANCE)32;
+	return ShellExecute( (HWND)GDK_WINDOW_HWND( gtk_widget_get_window( MainFrame_getWindow() ) ), "open", url, 0, 0, SW_SHOW ) > (HINSTANCE)32;
 }
 #endif
 
@@ -55,6 +56,6 @@ void OpenURL( const char *url ){
 	// let's put a little comment
 	globalOutputStream() << "OpenURL: " << url << "\n";
 	if ( !open_url( url ) ) {
-		gtk_MessageBox( GTK_WIDGET( MainFrame_getWindow() ), "Failed to launch browser!" );
+		MainFrame_getWindow().alert( "Failed to launch browser!" );
 	}
 }

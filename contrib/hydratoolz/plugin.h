@@ -35,13 +35,11 @@
 #define USE_ENTITYTABLE_DEFINE
 #include "ientity.h"
 
-#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "iplugin.h"
 
-#include <glib.h>
 #include "synapse.h"
 
 class CSynapseClientHydraToolz : public CSynapseClient

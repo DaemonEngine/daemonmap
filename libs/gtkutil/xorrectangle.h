@@ -22,7 +22,8 @@
 #if !defined ( INCLUDED_XORRECTANGLE_H )
 #define INCLUDED_XORRECTANGLE_H
 
-#include <gtk/gtkwidget.h>
+#include <cairo.h>
+#include <uilib/uilib.h>
 #include "math/vector.h"
 
 class rectangle_t
@@ -63,50 +64,17 @@ class XORRectangle
 
 rectangle_t m_rectangle;
 
-GtkWidget* m_widget;
-GdkGC* m_gc;
+ui::GLArea m_widget;
+cairo_t *cr;
 
-bool initialised() const {
-	return m_gc != 0;
-}
-void lazy_init(){
-	if ( !initialised() ) {
-		m_gc = gdk_gc_new( m_widget->window );
-
-		GdkColor color = { 0, 0xffff, 0xffff, 0xffff, };
-		GdkColormap* colormap = gdk_window_get_colormap( m_widget->window );
-		gdk_colormap_alloc_color( colormap, &color, FALSE, TRUE );
-		gdk_gc_copy( m_gc, m_widget->style->white_gc );
-		gdk_gc_set_foreground( m_gc, &color );
-		gdk_gc_set_background( m_gc, &color );
-
-		gdk_gc_set_function( m_gc, GDK_INVERT );
-	}
-}
-void draw() const {
-	const int x = float_to_integer( m_rectangle.x );
-	const int y = float_to_integer( m_rectangle.y );
-	const int w = float_to_integer( m_rectangle.w );
-	const int h = float_to_integer( m_rectangle.h );
-	gdk_draw_rectangle( m_widget->window, m_gc, FALSE, x, -( h ) - ( y - m_widget->allocation.height ), w, h );
-}
+bool initialised() const;
+void lazy_init();
+void draw() const;
 
 public:
-XORRectangle( GtkWidget* widget ) : m_widget( widget ), m_gc( 0 ){
-}
-~XORRectangle(){
-	if ( initialised() ) {
-		gdk_gc_unref( m_gc );
-	}
-}
-void set( rectangle_t rectangle ){
-	if ( GTK_WIDGET_REALIZED( m_widget ) ) {
-		lazy_init();
-		draw();
-		m_rectangle = rectangle;
-		draw();
-	}
-}
+XORRectangle( ui::GLArea widget );
+~XORRectangle();
+void set( rectangle_t rectangle );
 };
 
 

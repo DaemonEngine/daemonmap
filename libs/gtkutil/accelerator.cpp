@@ -25,8 +25,7 @@
 
 #include <map>
 #include <set>
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkaccelgroup.h>
+#include <gtk/gtk.h>
 
 #include "generic/callback.h"
 #include "generic/bitfield.h"
@@ -57,7 +56,7 @@ unsigned int global_keys_find( const char* name ){
 		return 0;
 	}
 	k = gdk_keyval_from_name( name );
-	if ( k == GDK_VoidSymbol ) {
+	if ( k == GDK_KEY_VoidSymbol ) {
 		return 0;
 	}
 	return k;
@@ -110,8 +109,8 @@ bool accelerator_map_erase( AcceleratorMap& acceleratorMap, Accelerator accelera
 
 Accelerator accelerator_for_event_key( guint keyval, guint state ){
 	keyval = gdk_keyval_to_upper( keyval );
-	if ( keyval == GDK_ISO_Left_Tab ) {
-		keyval = GDK_Tab;
+	if ( keyval == GDK_KEY_ISO_Left_Tab ) {
+		keyval = GDK_KEY_Tab;
 	}
 	return Accelerator( keyval, (GdkModifierType)( state & gtk_accelerator_get_default_mod_mask() ) );
 }
@@ -126,7 +125,7 @@ bool AcceleratorMap_activate( const AcceleratorMap& acceleratorMap, const Accele
 	return false;
 }
 
-static gboolean accelerator_key_event( GtkWindow* window, GdkEventKey* event, AcceleratorMap* acceleratorMap ){
+static gboolean accelerator_key_event( ui::Window window, GdkEventKey* event, AcceleratorMap* acceleratorMap ){
 	return AcceleratorMap_activate( *acceleratorMap, accelerator_for_event_key( event->keyval, event->state ) );
 }
 
@@ -173,7 +172,7 @@ ButtonMask ButtonMask_for_event_button( guint button ){
 	return 0;
 }
 
-bool window_has_accel( GtkWindow* toplevel ){
+bool window_has_accel( ui::Window toplevel ){
 	return g_slist_length( gtk_accel_groups_from_object( G_OBJECT( toplevel ) ) ) != 0;
 }
 
@@ -222,14 +221,7 @@ void globalQueuedAccelerators_commit(){
 	g_queuedAcceleratorsAdd.clear();
 }
 
-void accel_group_test( GtkWindow* toplevel, GtkAccelGroup* accel ){
-	guint n_entries;
-	gtk_accel_group_query( accel, '4', (GdkModifierType)0, &n_entries );
-	globalOutputStream() << "grid4: " << n_entries << "\n";
-	globalOutputStream() << "toplevel accelgroups: " << g_slist_length( gtk_accel_groups_from_object( G_OBJECT( toplevel ) ) ) << "\n";
-}
-
-typedef std::set<GtkWindow*> WindowSet;
+typedef std::set<ui::Window> WindowSet;
 WindowSet g_accel_windows;
 
 bool Buttons_press( ButtonMask& buttons, guint button, guint state ){
@@ -238,15 +230,12 @@ bool Buttons_press( ButtonMask& buttons, guint button, guint state ){
 		g_accel_enabled = false;
 		for ( WindowSet::iterator i = g_accel_windows.begin(); i != g_accel_windows.end(); ++i )
 		{
-			GtkWindow* toplevel = *i;
+			ui::Window toplevel = *i;
 			ASSERT_MESSAGE( window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( GTK_WIDGET_TOPLEVEL( toplevel ), "disabling accel for non-toplevel window" );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "disabling accel for non-toplevel window" );
 			gtk_window_remove_accel_group( toplevel,  global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": disabled global accelerators\n";
-#endif
-#if 0
-			accel_group_test( toplevel, global_accel );
 #endif
 		}
 	}
@@ -264,15 +253,12 @@ bool Buttons_release( ButtonMask& buttons, guint button, guint state ){
 		g_accel_enabled = true;
 		for ( WindowSet::iterator i = g_accel_windows.begin(); i != g_accel_windows.end(); ++i )
 		{
-			GtkWindow* toplevel = *i;
+			ui::Window toplevel = *i;
 			ASSERT_MESSAGE( !window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( GTK_WIDGET_TOPLEVEL( toplevel ), "enabling accel for non-toplevel window" );
-			gtk_window_add_accel_group( toplevel, global_accel );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "enabling accel for non-toplevel window" );
+			toplevel.add_accel_group( global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": enabled global accelerators\n";
-#endif
-#if 0
-			accel_group_test( toplevel, global_accel );
 #endif
 		}
 		globalQueuedAccelerators_commit();
@@ -317,16 +303,17 @@ gboolean PressedButtons_focus_out( GtkWidget* widget, GdkEventFocus* event, Pres
 	return FALSE;
 }
 
-void PressedButtons_connect( PressedButtons& pressedButtons, GtkWidget* widget ){
-	g_signal_connect( G_OBJECT( widget ), "button_press_event", G_CALLBACK( PressedButtons_button_press ), &pressedButtons );
-	g_signal_connect( G_OBJECT( widget ), "button_release_event", G_CALLBACK( PressedButtons_button_release ), &pressedButtons );
-	g_signal_connect( G_OBJECT( widget ), "focus_out_event", G_CALLBACK( PressedButtons_focus_out ), &pressedButtons );
+void PressedButtons_connect( PressedButtons& pressedButtons, ui::Widget widget ){
+	widget.connect( "button_press_event", G_CALLBACK( PressedButtons_button_press ), &pressedButtons );
+	widget.connect( "button_release_event", G_CALLBACK( PressedButtons_button_release ), &pressedButtons );
+	widget.connect( "focus_out_event", G_CALLBACK( PressedButtons_focus_out ), &pressedButtons );
 }
 
 PressedButtons g_pressedButtons;
 
 
 #include <set>
+#include <uilib/uilib.h>
 
 struct PressedKeys
 {
@@ -391,18 +378,18 @@ void GlobalPressedKeys_releaseAll(){
 	Keys_releaseAll( g_pressedKeys.keys, 0 );
 }
 
-void GlobalPressedKeys_connect( GtkWindow* window ){
-	unsigned int key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( PressedKeys_key_press ), &g_pressedKeys );
-	unsigned int key_release_handler = g_signal_connect( G_OBJECT( window ), "key_release_event", G_CALLBACK( PressedKeys_key_release ), &g_pressedKeys );
+void GlobalPressedKeys_connect( ui::Window window ){
+	unsigned int key_press_handler = window.connect( "key_press_event", G_CALLBACK( PressedKeys_key_press ), &g_pressedKeys );
+	unsigned int key_release_handler = window.connect( "key_release_event", G_CALLBACK( PressedKeys_key_release ), &g_pressedKeys );
 	g_object_set_data( G_OBJECT( window ), "key_press_handler", gint_to_pointer( key_press_handler ) );
 	g_object_set_data( G_OBJECT( window ), "key_release_handler", gint_to_pointer( key_release_handler ) );
-	unsigned int focus_in_handler = g_signal_connect( G_OBJECT( window ), "focus_in_event", G_CALLBACK( PressedKeys_focus_in ), &g_pressedKeys );
-	unsigned int focus_out_handler = g_signal_connect( G_OBJECT( window ), "focus_out_event", G_CALLBACK( PressedKeys_focus_out ), &g_pressedKeys );
+	unsigned int focus_in_handler = window.connect( "focus_in_event", G_CALLBACK( PressedKeys_focus_in ), &g_pressedKeys );
+	unsigned int focus_out_handler = window.connect( "focus_out_event", G_CALLBACK( PressedKeys_focus_out ), &g_pressedKeys );
 	g_object_set_data( G_OBJECT( window ), "focus_in_handler", gint_to_pointer( focus_in_handler ) );
 	g_object_set_data( G_OBJECT( window ), "focus_out_handler", gint_to_pointer( focus_out_handler ) );
 }
 
-void GlobalPressedKeys_disconnect( GtkWindow* window ){
+void GlobalPressedKeys_disconnect( ui::Window window ){
 	g_signal_handler_disconnect( G_OBJECT( window ), gpointer_to_int( g_object_get_data( G_OBJECT( window ), "key_press_handler" ) ) );
 	g_signal_handler_disconnect( G_OBJECT( window ), gpointer_to_int( g_object_get_data( G_OBJECT( window ), "key_release_handler" ) ) );
 	g_signal_handler_disconnect( G_OBJECT( window ), gpointer_to_int( g_object_get_data( G_OBJECT( window ), "focus_in_handler" ) ) );
@@ -481,15 +468,7 @@ void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerat
 	}
 }
 
-GtkAccelGroup* global_accel = 0;
-
-void global_accel_init(){
-	global_accel = gtk_accel_group_new();
-}
-
-void global_accel_destroy(){
-	g_object_unref( global_accel );
-}
+ui::AccelGroup global_accel = ui::AccelGroup();
 
 GClosure* global_accel_group_add_accelerator( Accelerator accelerator, const Callback& callback ){
 	if ( !global_accel_enabled() ) {
@@ -510,30 +489,30 @@ void global_accel_group_remove_accelerator( Accelerator accelerator ){
 }
 
 /// \brief Propagates key events to the focus-widget, overriding global accelerators.
-static gboolean override_global_accelerators( GtkWindow* window, GdkEventKey* event, gpointer data ){
+static gboolean override_global_accelerators( ui::Window window, GdkEventKey* event, gpointer data ){
 	gboolean b = gtk_window_propagate_key_event( window, event );
 	return b;
 }
 
-void global_accel_connect_window( GtkWindow* window ){
+void global_accel_connect_window( ui::Window window ){
 #if 1
-	unsigned int override_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( override_global_accelerators ), 0 );
+	unsigned int override_handler = window.connect( "key_press_event", G_CALLBACK( override_global_accelerators ), 0 );
 	g_object_set_data( G_OBJECT( window ), "override_handler", gint_to_pointer( override_handler ) );
 
-	unsigned int special_key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( accelerator_key_event ), &g_special_accelerators );
+	unsigned int special_key_press_handler = window.connect( "key_press_event", G_CALLBACK( accelerator_key_event ), &g_special_accelerators );
 	g_object_set_data( G_OBJECT( window ), "special_key_press_handler", gint_to_pointer( special_key_press_handler ) );
 
 	GlobalPressedKeys_connect( window );
 #else
-	unsigned int key_press_handler = g_signal_connect( G_OBJECT( window ), "key_press_event", G_CALLBACK( accelerator_key_event ), &g_keydown_accelerators );
-	unsigned int key_release_handler = g_signal_connect( G_OBJECT( window ), "key_release_event", G_CALLBACK( accelerator_key_event ), &g_keyup_accelerators );
+	unsigned int key_press_handler = window.connect( "key_press_event", G_CALLBACK( accelerator_key_event ), &g_keydown_accelerators );
+	unsigned int key_release_handler = window.connect( "key_release_event", G_CALLBACK( accelerator_key_event ), &g_keyup_accelerators );
 	g_object_set_data( G_OBJECT( window ), "key_press_handler", gint_to_pointer( key_press_handler ) );
 	g_object_set_data( G_OBJECT( window ), "key_release_handler", gint_to_pointer( key_release_handler ) );
 #endif
 	g_accel_windows.insert( window );
-	gtk_window_add_accel_group( window, global_accel );
+	window.add_accel_group( global_accel );
 }
-void global_accel_disconnect_window( GtkWindow* window ){
+void global_accel_disconnect_window( ui::Window window ){
 #if 1
 	GlobalPressedKeys_disconnect( window );
 

@@ -30,7 +30,6 @@
 
 #include "math/vector.h"
 #include "stream/stringstream.h"
-#include <glib.h>
 #include "xmlstuff.h"
 #include "dialog.h"
 #include "xywindow.h"
@@ -143,13 +142,12 @@ void DecRef() {
 void Draw2D( VIEWTYPE vt );
 };
 
-typedef struct _GtkListStore GtkListStore;
 
 class CDbgDlg : public Dialog
 {
 GPtrArray *m_pFeedbackElements;
 // the list widget we use in the dialog
-GtkListStore* m_clist;
+ui::ListStore m_clist{ui::null};
 ISAXHandler *m_pHighlight;
 IGL2DWindow* m_pDraw2D;
 public:
@@ -171,13 +169,13 @@ void draw2D( VIEWTYPE viewType ){
 	}
 }
 void destroyWindow(){
-	if ( GetWidget() != 0 ) {
+	if ( GetWidget() ) {
 		Destroy();
 	}
 }
 //  void HideDlg();
 protected:
-GtkWindow* BuildDialog();
+ui::Window BuildDialog();
 };
 
 extern CDbgDlg g_DbgDlg;

@@ -21,13 +21,14 @@
 
 #include "frame.h"
 
-#include <gtk/gtkframe.h>
+#include <gtk/gtk.h>
+#include <uilib/uilib.h>
 
-GtkFrame* create_framed_widget( GtkWidget* widget ){
-	GtkFrame* frame = GTK_FRAME( gtk_frame_new( 0 ) );
-	gtk_widget_show( GTK_WIDGET( frame ) );
+ui::Frame create_framed_widget( ui::Widget widget ){
+	auto frame = ui::Frame();
+	frame.show();
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
-	gtk_container_add( GTK_CONTAINER( frame ), widget );
-	gtk_widget_show( GTK_WIDGET( widget ) );
+	frame.add(widget);
+	widget.show();
 	return frame;
 }

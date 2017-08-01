@@ -27,21 +27,11 @@
 
 #include "findtexturedialog.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "ishaders.h"
-
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkbutton.h>
-#include <gtk/gtktogglebutton.h>
-#include <gtk/gtkcheckbutton.h>
-#include <gtk/gtkmenuitem.h>
-#include <gtk/gtkarrow.h>
 
 #include "gtkutil/window.h"
 #include "stream/stringstream.h"
@@ -65,9 +55,9 @@ static void updateTextures( const char* name );
 
 FindTextureDialog();
 virtual ~FindTextureDialog();
-GtkWindow* BuildDialog();
+ui::Window BuildDialog();
 
-void constructWindow( GtkWindow* parent ){
+void constructWindow( ui::Window parent ){
 	m_parent = parent;
 	Create();
 }
@@ -95,7 +85,7 @@ void FindTextureDialog_apply(){
 	FindReplaceTextures( find.c_str(), replace.c_str(), g_FindTextureDialog.m_bSelectedOnly );
 }
 
-static void OnApply( GtkWidget* widget, gpointer data ){
+static void OnApply( ui::Widget widget, gpointer data ){
 	g_FindTextureDialog.exportData();
 	FindTextureDialog_apply();
 }
@@ -111,17 +101,17 @@ static void OnOK( GtkWidget* widget, gpointer data ){
 	g_FindTextureDialog.HideDlg();
 }
 
-static void OnClose( GtkWidget* widget, gpointer data ){
+static void OnClose( ui::Widget widget, gpointer data ){
 	g_FindTextureDialog.HideDlg();
 }
 
 
-static gint find_focus_in( GtkWidget* widget, GdkEventFocus *event, gpointer data ){
+static gint find_focus_in( ui::Widget widget, GdkEventFocus *event, gpointer data ){
 	g_bFindActive = true;
 	return FALSE;
 }
 
-static gint replace_focus_in( GtkWidget* widget, GdkEventFocus *event, gpointer data ){
+static gint replace_focus_in( ui::Widget widget, GdkEventFocus *event, gpointer data ){
 	g_bFindActive = false;
 	return FALSE;
 }
@@ -137,83 +127,84 @@ FindTextureDialog::FindTextureDialog(){
 FindTextureDialog::~FindTextureDialog(){
 }
 
-GtkWindow* FindTextureDialog::BuildDialog(){
-	GtkWidget* vbox, *hbox, *table, *label;
-	GtkWidget* button, *check, *entry;
+ui::Window FindTextureDialog::BuildDialog(){
+	ui::Widget vbox, hbox, table, label;
+	ui::Widget button;
+	ui::Entry entry{ui::null};
 
-	GtkWindow* dlg = create_floating_window( "Find / Replace Texture(s)", m_parent );
+	auto dlg = ui::Window(create_floating_window( "Find / Replace Texture(s)", m_parent ));
 
-	hbox = gtk_hbox_new( FALSE, 5 );
-	gtk_widget_show( hbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), GTK_WIDGET( hbox ) );
+	hbox = ui::HBox( FALSE, 5 );
+	hbox.show();
+	dlg.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 5 );
 
-	vbox = gtk_vbox_new( FALSE, 5 );
-	gtk_widget_show( vbox );
+	vbox = ui::VBox( FALSE, 5 );
+	vbox.show();
 	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 
-	table = gtk_table_new( 2, 2, FALSE );
-	gtk_widget_show( table );
+	table = ui::Table( 2, 2, FALSE );
+	table.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
-	label = gtk_label_new( "Find:" );
-	gtk_widget_show( label );
+	label = ui::Label( "Find:" );
+	label.show();
 	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 
-	label = gtk_label_new( "Replace:" );
-	gtk_widget_show( label );
+	label = ui::Label( "Replace:" );
+	label.show();
 	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 
-	entry = gtk_entry_new();
-	gtk_widget_show( entry );
+	entry = ui::Entry();
+	entry.show();
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
+	entry.connect( "focus_in_event",
 					  G_CALLBACK( find_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY( entry ), m_strFind );
-	GlobalTextureEntryCompletion::instance().connect( GTK_ENTRY( entry ) );
+	AddDialogData( *GTK_ENTRY(entry), m_strFind );
+	GlobalTextureEntryCompletion::instance().connect( entry );
 
-	entry = gtk_entry_new();
-	gtk_widget_show( entry );
+	entry = ui::Entry();
+	entry.show();
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
-	g_signal_connect( G_OBJECT( entry ), "focus_in_event",
+	entry.connect( "focus_in_event",
 					  G_CALLBACK( replace_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY( entry ), m_strReplace );
-	GlobalTextureEntryCompletion::instance().connect( GTK_ENTRY( entry ) );
+	AddDialogData( *GTK_ENTRY(entry), m_strReplace );
+	GlobalTextureEntryCompletion::instance().connect( entry );
 
-	check = gtk_check_button_new_with_label( "Within selected brushes only" );
-	gtk_widget_show( check );
+	auto check = ui::CheckButton( "Within selected brushes only" );
+	check.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), check, TRUE, TRUE, 0 );
-	AddDialogData( *GTK_TOGGLE_BUTTON( check ), m_bSelectedOnly );
+	AddDialogData( *GTK_TOGGLE_BUTTON(check), m_bSelectedOnly );
 
-	vbox = gtk_vbox_new( FALSE, 5 );
-	gtk_widget_show( vbox );
+	vbox = ui::VBox( FALSE, 5 );
+	vbox.show();
 	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
 
-	button = gtk_button_new_with_label( "Apply" );
-	gtk_widget_show( button );
+	button = ui::Button( "Apply" );
+	button.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( OnApply ), 0 );
-	gtk_widget_set_usize( button, 60, -2 );
+	gtk_widget_set_size_request( button, 60, -1 );
 
-	button = gtk_button_new_with_label( "Close" );
-	gtk_widget_show( button );
+	button = ui::Button( "Close" );
+	button.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	g_signal_connect( G_OBJECT( button ), "clicked",
+	button.connect( "clicked",
 					  G_CALLBACK( OnClose ), 0 );
-	gtk_widget_set_usize( button, 60, -2 );
+	gtk_widget_set_size_request( button, 60, -1 );
 
 	return dlg;
 }
@@ -231,7 +222,7 @@ void FindTextureDialog::updateTextures( const char* name ){
 }
 
 bool FindTextureDialog::isOpen(){
-	return GTK_WIDGET_VISIBLE( g_FindTextureDialog.GetWidget() ) == TRUE;
+	return gtk_widget_get_visible( g_FindTextureDialog.GetWidget() ) == TRUE;
 }
 
 void FindTextureDialog::setFindStr( const char* name ){
@@ -251,7 +242,7 @@ void FindTextureDialog::show(){
 }
 
 
-void FindTextureDialog_constructWindow( GtkWindow* main_window ){
+void FindTextureDialog_constructWindow( ui::Window main_window ){
 	g_FindTextureDialog.constructWindow( main_window );
 }
 

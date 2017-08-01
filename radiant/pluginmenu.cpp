@@ -21,10 +21,9 @@
 
 #include "pluginmenu.h"
 
-#include "stream/textstream.h"
+#include <gtk/gtk.h>
 
-#include <gtk/gtkmenu.h>
-#include <gtk/gtkmenuitem.h>
+#include "stream/textstream.h"
 
 #include "gtkutil/pointer.h"
 #include "gtkutil/menu.h"
@@ -36,28 +35,28 @@
 
 int m_nNextPlugInID = 0;
 
-void plugin_activated( GtkWidget* widget, gpointer data ){
+void plugin_activated( ui::Widget widget, gpointer data ){
 	const char* str = (const char*)g_object_get_data( G_OBJECT( widget ),"command" );
 	GetPlugInMgr().Dispatch( gpointer_to_int( data ), str );
 }
 
 #include <stack>
-typedef std::stack<GtkWidget*> WidgetStack;
 
-void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
-	GtkWidget *menu, *item, *parent, *subMenu;
+void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
+	ui::Widget item, parent;
+	ui::Menu menu{ui::null}, subMenu{ui::null};
 	const char *menuText, *menuCommand;
-	WidgetStack menuStack;
+	std::stack<ui::Menu> menuStack;
 
-	parent = gtk_menu_item_new_with_label( pPlugIn->getMenuName() );
-	gtk_widget_show( parent );
-	gtk_container_add( GTK_CONTAINER( plugin_menu ), parent );
+	parent = ui::MenuItem( pPlugIn->getMenuName() );
+	parent.show();
+	plugin_menu.add(parent);
 
 	std::size_t nCount = pPlugIn->getCommandCount();
 	if ( nCount > 0 ) {
-		menu = gtk_menu_new();
+		menu = ui::Menu();
 		if ( g_Layout_enableDetachableMenus.m_value ) {
-			menu_tearoff( GTK_MENU( menu ) );
+			menu_tearoff( menu );
 		}
 		while ( nCount > 0 )
 		{
@@ -66,7 +65,7 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 
 			if ( menuText != 0 && strlen( menuText ) > 0 ) {
 				if ( !strcmp( menuText, "-" ) ) {
-					item = gtk_menu_item_new();
+					item = ui::Widget(gtk_menu_item_new());
 					gtk_widget_set_sensitive( item, FALSE );
 				}
 				else if ( !strcmp( menuText, ">" ) ) {
@@ -77,11 +76,11 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 						continue;
 					}
 
-					item = gtk_menu_item_new_with_label( menuText );
-					gtk_widget_show( item );
-					gtk_container_add( GTK_CONTAINER( menu ), item );
+					item = ui::MenuItem( menuText );
+					item.show();
+					menu.add(item);
 
-					subMenu = gtk_menu_new();
+					subMenu = ui::Menu();
 					gtk_menu_item_set_submenu( GTK_MENU_ITEM( item ), subMenu );
 					menuStack.push( menu );
 					menu = subMenu;
@@ -100,12 +99,12 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 				}
 				else
 				{
-					item = gtk_menu_item_new_with_label( menuText );
+					item = ui::MenuItem( menuText );
 					g_object_set_data( G_OBJECT( item ),"command", const_cast<gpointer>( static_cast<const void*>( menuCommand ) ) );
-					g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
+					item.connect( "activate", G_CALLBACK( plugin_activated ), gint_to_pointer( m_nNextPlugInID ) );
 				}
-				gtk_widget_show( item );
-				gtk_container_add( GTK_CONTAINER( menu ), item );
+				item.show();
+				menu.add(item);
 				pPlugIn->addMenuID( m_nNextPlugInID++ );
 			}
 		}
@@ -125,15 +124,15 @@ void PlugInMenu_Add( GtkMenu* plugin_menu, IPlugIn* pPlugIn ){
 	}
 }
 
-GtkMenu* g_plugins_menu = 0;
+ui::Menu g_plugins_menu{ui::null};
 GtkMenuItem* g_plugins_menu_separator = 0;
 
 void PluginsMenu_populate(){
 	class PluginsMenuConstructor : public PluginsVisitor
 	{
-	GtkMenu* m_menu;
+	ui::Menu m_menu;
 public:
-	PluginsMenuConstructor( GtkMenu* menu ) : m_menu( menu ){
+	PluginsMenuConstructor( ui::Menu menu ) : m_menu( menu ){
 	}
 	void visit( IPlugIn& plugin ){
 		PlugInMenu_Add( m_menu, &plugin );
@@ -147,18 +146,18 @@ public:
 void PluginsMenu_clear(){
 	m_nNextPlugInID = 0;
 
-	GList* lst = g_list_find( gtk_container_children( GTK_CONTAINER( g_plugins_menu ) ), GTK_WIDGET( g_plugins_menu_separator ) );
+	GList* lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ), GTK_WIDGET( g_plugins_menu_separator ) );
 	while ( lst->next )
 	{
 		gtk_container_remove( GTK_CONTAINER( g_plugins_menu ), GTK_WIDGET( lst->next->data ) );
-		lst = g_list_find( gtk_container_children( GTK_CONTAINER( g_plugins_menu ) ),  GTK_WIDGET( g_plugins_menu_separator ) );
+		lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ),  GTK_WIDGET( g_plugins_menu_separator ) );
 	}
 }
 
-GtkMenuItem* create_plugins_menu(){
+ui::MenuItem create_plugins_menu(){
 	// Plugins menu
-	GtkMenuItem* plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
-	GtkMenu* menu = GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) );
+	auto plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
+	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) ));
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}

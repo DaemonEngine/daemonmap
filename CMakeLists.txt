@@ -72,7 +72,8 @@ if (NOT WIN32)
 endif ()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
-set(GTK_NS "GTK2" CACHE STRING "GTK variable prefix")
+set(GTK_TARGET 2 CACHE STRING "GTK target")
+add_definitions(-DGTK_TARGET=${GTK_TARGET})
 
 #-----------------------------------------------------------------------
 # Defs
@@ -88,6 +89,20 @@ add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
 if (NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-D_DEBUG=1)
 endif ()
+
+macro(disable_deprecated name gtk2only)
+    add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
+    if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
+        add_definitions(-D${name}_DISABLE_DEPRECATED)
+    endif ()
+endmacro()
+
+disable_deprecated(ATK 0)
+disable_deprecated(G 0)
+disable_deprecated(GDK 0)
+disable_deprecated(GDK_PIXBUF 0)
+disable_deprecated(GTK 1)
+disable_deprecated(PANGO 0)
 
 if (APPLE)
     option(XWINDOWS "Build against X11" ON)

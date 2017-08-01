@@ -19,10 +19,11 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_HELP_H )
 #define INCLUDED_HELP_H
 
-typedef struct _GtkMenu GtkMenu;
-void create_game_help_menu( GtkMenu *menu );
+void create_game_help_menu( ui::Menu menu );
 
 #endif

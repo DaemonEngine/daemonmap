@@ -22,6 +22,7 @@
 #include "build.h"
 #include "debugging/debugging.h"
 
+#include <gtk/gtk.h>
 #include <map>
 #include <list>
 #include "stream/stringstream.h"
@@ -633,25 +634,17 @@ void build_commands_write( const char* filename ){
 
 
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkcellrenderertext.h>
-#include <gtk/gtktreeselection.h>
-#include <gtk/gtkliststore.h>
-#include <gtk/gtkscrolledwindow.h>
 
 #include "gtkutil/dialog.h"
 #include "gtkutil/closure.h"
 #include "gtkutil/window.h"
 #include "gtkdlgs.h"
 
-void Build_refreshMenu( GtkMenu* menu );
+void Build_refreshMenu( ui::Menu menu );
 
 
-void BSPCommandList_Construct( GtkListStore* store, Project& project ){
-	gtk_list_store_clear( store );
+void BSPCommandList_Construct( ui::ListStore store, Project& project ){
+	store.clear();
 
 	for ( Project::iterator i = project.begin(); i != project.end(); ++i )
 	{
@@ -670,7 +663,7 @@ class ProjectList
 {
 public:
 Project& m_project;
-GtkListStore* m_store;
+ui::ListStore m_store{ui::null};
 bool m_changed;
 ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 }
@@ -679,7 +672,7 @@ ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
-	GtkTreePath* path = gtk_tree_path_new_from_string( path_string );
+	GtkTreePath* path = ui::TreePath( path_string );
 
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
@@ -715,10 +708,10 @@ gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gch
 	return FALSE;
 }
 
-gboolean project_key_press( GtkWidget* widget, GdkEventKey* event, ProjectList* projectList ){
+gboolean project_key_press( ui::Widget widget, GdkEventKey* event, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
-	if ( event->keyval == GDK_Delete ) {
+	if ( event->keyval == GDK_KEY_Delete ) {
 		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
@@ -742,7 +735,7 @@ gboolean project_key_press( GtkWidget* widget, GdkEventKey* event, ProjectList* 
 
 Build* g_current_build = 0;
 
-gboolean project_selection_changed( GtkTreeSelection* selection, GtkListStore* store ){
+gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore store ){
 	Project& project = g_build_project;
 
 	gtk_list_store_clear( store );
@@ -780,13 +773,13 @@ gboolean project_selection_changed( GtkTreeSelection* selection, GtkListStore* s
 	return FALSE;
 }
 
-gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, GtkListStore* store ){
+gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
 	Build& build = *g_current_build;
 
-	GtkTreePath* path = gtk_tree_path_new_from_string( path_string );
+	GtkTreePath* path = ui::TreePath( path_string );
 
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
@@ -817,13 +810,13 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 	return FALSE;
 }
 
-gboolean commands_key_press( GtkWidget* widget, GdkEventKey* event, GtkListStore* store ){
+gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
 	Build& build = *g_current_build;
 
-	if ( event->keyval == GDK_Delete ) {
+	if ( event->keyval == GDK_KEY_Delete ) {
 		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
@@ -844,14 +837,14 @@ gboolean commands_key_press( GtkWidget* widget, GdkEventKey* event, GtkListStore
 }
 
 
-GtkWindow* BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
-	GtkWindow* window = create_dialog_window( MainFrame_getWindow(), "Build Menu", G_CALLBACK( dialog_delete_callback ), &modal, -1, 400 );
+ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
+	ui::Window window = MainFrame_getWindow().create_dialog_window("Build Menu", G_CALLBACK(dialog_delete_callback ), &modal, -1, 400 );
 
-	GtkWidget* buildView = 0;
+	ui::Widget buildView;
 
 	{
-		GtkTable* table1 = create_dialog_table( 2, 2, 4, 4, 4 );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( table1 ) );
+		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
+		window.add(table1);
 		{
 			GtkVBox* vbox = create_dialog_vbox( 4 );
 			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
@@ -867,76 +860,77 @@ GtkWindow* BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 			}
 		}
 		{
-			GtkFrame* frame = create_dialog_frame( "Build menu" );
+			auto frame = create_dialog_frame( "Build menu" );
 			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 0, 1,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
-				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
+				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
+				frame.add(scr);
 
 				{
-					GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					GtkWidget* view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
+					ui::Widget view = ui::TreeView( ui::TreeModel(GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-					GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
+					auto renderer = ui::CellRendererText();
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
-					g_signal_connect( renderer, "edited", G_CALLBACK( project_cell_edited ), &projectList );
+					renderer.connect("edited", G_CALLBACK( project_cell_edited ), &projectList );
 
-					GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "", renderer, "text", 0, 0 );
+					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 
 					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
-					gtk_widget_show( view );
+					view.show();
 
 					buildView = view;
 					projectList.m_store = store;
-					gtk_container_add( GTK_CONTAINER( scr ), view );
+					scr.add(view);
 
-					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( project_key_press ), &projectList );
+					view.connect( "key_press_event", G_CALLBACK( project_key_press ), &projectList );
 
-					g_object_unref( G_OBJECT( store ) );
+					store.unref();
 				}
 			}
 		}
 		{
-			GtkFrame* frame = create_dialog_frame( "Commandline" );
+			auto frame = create_dialog_frame( "Commandline" );
 			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 1, 2,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
-				GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC, 4 );
-				gtk_container_add( GTK_CONTAINER( frame ), GTK_WIDGET( scr ) );
+				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
+				frame.add(scr);
 
 				{
-					GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+					ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					GtkWidget* view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
+					ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-					GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
+					auto renderer = ui::CellRendererText();
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
-					g_signal_connect( renderer, "edited", G_CALLBACK( commands_cell_edited ), store );
+					renderer.connect( "edited", G_CALLBACK( commands_cell_edited ), store );
 
-					GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "", renderer, "text", 0, 0 );
+					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 
 					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
-					gtk_widget_show( view );
+					view.show();
 
-					gtk_container_add( GTK_CONTAINER( scr ), view );
+					scr.add(view);
 
-					g_object_unref( G_OBJECT( store ) );
+					store.unref();
 
-					g_signal_connect( G_OBJECT( view ), "key_press_event", G_CALLBACK( commands_key_press ), store );
+					view.connect( "key_press_event", G_CALLBACK( commands_key_press ), store );
 
-					g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( buildView ) ) ), "changed", G_CALLBACK( project_selection_changed ), store );
+					auto sel = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( buildView ) ));
+					sel.connect( "changed", G_CALLBACK( project_selection_changed ), store );
 				}
 			}
 		}
@@ -959,7 +953,7 @@ void DoBuildMenu(){
 
 	ProjectList projectList( g_build_project );
 
-	GtkWindow* window = BuildMenuDialog_construct( modal, projectList );
+	ui::Window window = BuildMenuDialog_construct( modal, projectList );
 
 	if ( modal_dialog_show( window, modal ) == eIDCANCEL ) {
 		build_commands_clear();
@@ -981,8 +975,6 @@ void DoBuildMenu(){
 #include "preferences.h"
 #include "qe3.h"
 
-typedef struct _GtkMenuItem GtkMenuItem;
-
 class BuildMenuItem
 {
 const char* m_name;
@@ -1001,9 +993,9 @@ typedef std::list<BuildMenuItem> BuildMenuItems;
 BuildMenuItems g_BuildMenuItems;
 
 
-GtkMenu* g_bsp_menu;
+ui::Menu g_bsp_menu{ui::null};
 
-void Build_constructMenu( GtkMenu* menu ){
+void Build_constructMenu( ui::Menu menu ){
 	for ( Project::iterator i = g_build_project.begin(); i != g_build_project.end(); ++i )
 	{
 		g_BuildMenuItems.push_back( BuildMenuItem( ( *i ).first.c_str(), 0 ) );
@@ -1018,10 +1010,10 @@ void Build_constructMenu( GtkMenu* menu ){
 }
 
 
-void Build_refreshMenu( GtkMenu* menu ){
+void Build_refreshMenu( ui::Menu menu ){
 	for ( BuildMenuItems::iterator i = g_BuildMenuItems.begin(); i != g_BuildMenuItems.end(); ++i )
 	{
-		gtk_container_remove( GTK_CONTAINER( menu ), GTK_WIDGET( ( *i ).m_item ) );
+		gtk_container_remove( menu, GTK_WIDGET( ( *i ).m_item ) );
 	}
 
 	g_BuildMenuItems.clear();

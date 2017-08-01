@@ -23,10 +23,8 @@
 
 #include "iselection.h"
 
-#include <gtk/gtktreemodel.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtktreeselection.h>
-#include <gtk/gtkcellrenderertext.h>
+#include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "string/string.h"
 #include "scenelib.h"
@@ -45,7 +43,6 @@
 void RedrawEntityList();
 typedef FreeCaller<RedrawEntityList> RedrawEntityListCaller;
 
-typedef struct _GtkTreeView GtkTreeView;
 
 class EntityList
 {
@@ -62,7 +59,7 @@ EDirty m_dirty;
 IdleDraw m_idleDraw;
 WindowPositionTracker m_positionTracker;
 
-GtkWindow* m_window;
+ui::Window m_window;
 GtkTreeView* m_tree_view;
 GraphTreeModel* m_tree_model;
 bool m_selection_disabled;
@@ -75,7 +72,7 @@ EntityList() :
 }
 
 bool visible() const {
-	return GTK_WIDGET_VISIBLE( GTK_WIDGET( m_window ) );
+	return gtk_widget_get_visible( m_window );
 }
 };
 
@@ -247,7 +244,7 @@ void entitylist_treeview_row_expanded( GtkTreeView* view, GtkTreeIter* iter, Gtk
 
 
 void EntityList_SetShown( bool shown ){
-	widget_set_visible( GTK_WIDGET( getEntityList().m_window ), shown );
+	widget_set_visible( getEntityList().m_window, shown );
 }
 
 void EntityList_toggleShown(){
@@ -282,12 +279,12 @@ void DetachEntityTreeModel(){
 	gtk_tree_view_set_model( getEntityList().m_tree_view, 0 );
 }
 
-void EntityList_constructWindow( GtkWindow* main_window ){
-	ASSERT_MESSAGE( getEntityList().m_window == 0, "error" );
+void EntityList_constructWindow( ui::Window main_window ){
+	ASSERT_TRUE( !getEntityList().m_window );
 
-	GtkWindow* window = create_persistent_floating_window( "Entity List", main_window );
+	auto window = ui::Window(create_persistent_floating_window( "Entity List", main_window ));
 
-	gtk_window_add_accel_group( window, global_accel );
+	window.add_accel_group(global_accel);
 
 	getEntityList().m_positionTracker.connect( window );
 
@@ -295,14 +292,14 @@ void EntityList_constructWindow( GtkWindow* main_window ){
 	getEntityList().m_window = window;
 
 	{
-		GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-		gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( scr ) );
+		auto scr = create_scrolled_window( ui::Policy::AUTOMATIC, ui::Policy::AUTOMATIC );
+		window.add(scr);
 
 		{
-			GtkWidget* view = gtk_tree_view_new();
+			ui::Widget view = ui::TreeView();
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-			GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
+			auto renderer = ui::CellRendererText();
 			GtkTreeViewColumn* column = gtk_tree_view_column_new();
 			gtk_tree_view_column_pack_start( column, renderer, TRUE );
 			gtk_tree_view_column_set_cell_data_func( column, renderer, entitylist_treeviewcolumn_celldatafunc, 0, 0 );
@@ -310,13 +307,13 @@ void EntityList_constructWindow( GtkWindow* main_window ){
 			GtkTreeSelection* select = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
 			gtk_tree_selection_set_mode( select, GTK_SELECTION_MULTIPLE );
 
-			g_signal_connect( G_OBJECT( view ), "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );
-			g_signal_connect( G_OBJECT( view ), "row_collapsed", G_CALLBACK( entitylist_treeview_rowcollapsed ), 0 );
+			view.connect( "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );
+			view.connect( "row_collapsed", G_CALLBACK( entitylist_treeview_rowcollapsed ), 0 );
 
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 
-			gtk_widget_show( view );
-			gtk_container_add( GTK_CONTAINER( scr ), view );
+			view.show();
+			scr.add(view);
 			getEntityList().m_tree_view = GTK_TREE_VIEW( view );
 		}
 	}

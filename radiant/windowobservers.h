@@ -24,16 +24,14 @@
 
 #include "windowobserver.h"
 
-#include <gdk/gdktypes.h>
+#include <uilib/uilib.h>
 
 #include "math/vector.h"
 
 class WindowObserver;
 void GlobalWindowObservers_add( WindowObserver* observer );
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkWindow GtkWindow;
-void GlobalWindowObservers_connectWidget( GtkWidget* widget );
-void GlobalWindowObservers_connectTopLevel( GtkWindow* window );
+void GlobalWindowObservers_connectWidget( ui::Widget widget );
+void GlobalWindowObservers_connectTopLevel( ui::Window window );
 
 inline ButtonIdentifier button_for_button( unsigned int button ){
 	switch ( button )
@@ -48,19 +46,7 @@ inline ButtonIdentifier button_for_button( unsigned int button ){
 	return c_buttonInvalid;
 }
 
-inline ModifierFlags modifiers_for_state( unsigned int state ){
-	ModifierFlags modifiers = c_modifierNone;
-	if ( state & GDK_SHIFT_MASK ) {
-		modifiers |= c_modifierShift;
-	}
-	if ( state & GDK_CONTROL_MASK ) {
-		modifiers |= c_modifierControl;
-	}
-	if ( state & GDK_MOD1_MASK ) {
-		modifiers |= c_modifierAlt;
-	}
-	return modifiers;
-}
+ModifierFlags modifiers_for_state( unsigned int state );
 
 inline WindowVector WindowVector_forDouble( double x, double y ){
 	return WindowVector( static_cast<float>( x ), static_cast<float>( y ) );

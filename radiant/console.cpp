@@ -22,10 +22,8 @@
 #include "console.h"
 
 #include <time.h>
-#include <gtk/gtktextbuffer.h>
-#include <gtk/gtktextview.h>
-#include <gtk/gtkmenuitem.h>
-#include <gtk/gtkscrolledwindow.h>
+#include <uilib/uilib.h>
+#include <gtk/gtk.h>
 
 #include "gtkutil/accelerator.h"
 #include "gtkutil/messagebox.h"
@@ -69,8 +67,8 @@ void Sys_LogFile( bool enable ){
 								 << "This is NetRadiant '" RADIANT_VERSION "' compiled " __DATE__ "\n" RADIANT_ABOUTMSG "\n";
 		}
 		else{
-			gtk_MessageBox( 0, "Failed to create log file, check write permissions in Radiant directory.\n",
-							"Console logging", eMB_OK, eMB_ICONERROR );
+			ui::root.alert( "Failed to create log file, check write permissions in Radiant directory.\n",
+							"Console logging", ui::alert_type::OK, ui::alert_icon::Error );
 		}
 	}
 	else if ( !enable && g_hLogFile != 0 ) {
@@ -83,42 +81,42 @@ void Sys_LogFile( bool enable ){
 	}
 }
 
-GtkWidget* g_console = 0;
+ui::Widget g_console;
 
 void console_clear(){
 	GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( g_console ) );
 	gtk_text_buffer_set_text( buffer, "", -1 );
 }
 
-void console_populate_popup( GtkTextView* textview, GtkMenu* menu, gpointer user_data ){
+void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user_data ){
 	menu_separator( menu );
 
-	GtkWidget* item = gtk_menu_item_new_with_label( "Clear" );
-	g_signal_connect( G_OBJECT( item ), "activate", G_CALLBACK( console_clear ), 0 );
-	gtk_widget_show( item );
-	container_add_widget( GTK_CONTAINER( menu ), item );
+	ui::Widget item(ui::MenuItem( "Clear" ));
+	item.connect( "activate", G_CALLBACK( console_clear ), 0 );
+	item.show();
+	menu.add(item);
 }
 
-gboolean destroy_set_null( GtkWindow* widget, GtkWidget** p ){
-	*p = 0;
+gboolean destroy_set_null( ui::Window widget, ui::Widget* p ){
+	*p = ui::Widget();
 	return FALSE;
 }
 
 WidgetFocusPrinter g_consoleWidgetFocusPrinter( "console" );
 
-GtkWidget* Console_constructWindow( GtkWindow* toplevel ){
-	GtkWidget* scr = gtk_scrolled_window_new( 0, 0 );
+ui::Widget Console_constructWindow( ui::Window toplevel ){
+	auto scr = ui::ScrolledWindow();
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
-	gtk_widget_show( scr );
+	scr.show();
 
 	{
-		GtkWidget* text = gtk_text_view_new();
+		ui::Widget text = ui::TextView();
 		gtk_widget_set_size_request( text, 0, -1 ); // allow shrinking
 		gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text ), GTK_WRAP_WORD );
 		gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), FALSE );
-		gtk_container_add( GTK_CONTAINER( scr ), text );
-		gtk_widget_show( text );
+		scr.add(text);
+		text.show();
 		g_console = text;
 
 		//globalExtendedASCIICharacterSet().print();
@@ -127,8 +125,8 @@ GtkWidget* Console_constructWindow( GtkWindow* toplevel ){
 
 		//g_consoleWidgetFocusPrinter.connect(g_console);
 
-		g_signal_connect( G_OBJECT( g_console ), "populate-popup", G_CALLBACK( console_populate_popup ), 0 );
-		g_signal_connect( G_OBJECT( g_console ), "destroy", G_CALLBACK( destroy_set_null ), &g_console );
+		g_console.connect( "populate-popup", G_CALLBACK( console_populate_popup ), 0 );
+		g_console.connect( "destroy", G_CALLBACK( destroy_set_null ), &g_console );
 	}
 
 	gtk_container_set_focus_chain( GTK_CONTAINER( scr ), NULL );
@@ -212,7 +210,7 @@ std::size_t Sys_Print( int level, const char* buf, std::size_t length ){
 			if ( contains_newline ) {
 				gtk_text_view_scroll_mark_onscreen( GTK_TEXT_VIEW( g_console ), end );
 
-				if ( !ScreenUpdates_Enabled() && GTK_WIDGET_REALIZED( g_console ) ) {
+				if ( !ScreenUpdates_Enabled() && gtk_widget_get_realized( g_console ) ) {
 					ScreenUpdates_process();
 				}
 			}

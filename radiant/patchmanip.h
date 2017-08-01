@@ -22,13 +22,12 @@
 #if !defined ( INCLUDED_PATCHMANIP_H )
 #define INCLUDED_PATCHMANIP_H
 
+#include <uilib/uilib.h>
 #include "string/stringfwd.h"
 
 void Patch_registerCommands();
-typedef struct _GtkToolbar GtkToolbar;
-typedef struct _GtkMenu GtkMenu;
-void Patch_constructToolbar( GtkToolbar* toolbar );
-void Patch_constructMenu( GtkMenu* menu );
+void Patch_constructToolbar( ui::Toolbar toolbar );
+void Patch_constructMenu( ui::Menu menu );
 
 namespace scene
 {

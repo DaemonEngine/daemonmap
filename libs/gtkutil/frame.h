@@ -19,11 +19,11 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_GTKUTIL_FRAME_H )
 #define INCLUDED_GTKUTIL_FRAME_H
 
-typedef struct _GtkWidget GtkWidget;
-typedef struct _GtkFrame GtkFrame;
-GtkFrame* create_framed_widget( GtkWidget* widget );
+ui::Frame create_framed_widget( ui::Widget widget );
 
 #endif

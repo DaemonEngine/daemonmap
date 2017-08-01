@@ -27,17 +27,12 @@
 
 #include "feedback.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "igl.h"
 #include "iselection.h"
-
-#include <gtk/gtktreeview.h>
-#include <gtk/gtktreeselection.h>
-#include <gtk/gtkliststore.h>
-#include <gtk/gtkcellrenderertext.h>
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkscrolledwindow.h>
 
 #include "map.h"
 #include "dialog.h"
@@ -270,7 +265,7 @@ void CDbgDlg::Init(){
 		g_ptr_array_remove_index( m_pFeedbackElements, 0 );
 	}
 
-	if ( m_clist != NULL ) {
+	if ( m_clist ) {
 		gtk_list_store_clear( m_clist );
 	}
 }
@@ -279,7 +274,7 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 	// push in the list
 	g_ptr_array_add( m_pFeedbackElements, (void *)pHandler );
 
-	if ( GetWidget() == 0 ) {
+	if ( !GetWidget() ) {
 		Create();
 	}
 
@@ -295,38 +290,38 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 	ShowDlg();
 }
 
-GtkWindow* CDbgDlg::BuildDialog(){
-	GtkWindow* window = create_floating_window( "Q3Map debug window", MainFrame_getWindow() );
+ui::Window CDbgDlg::BuildDialog(){
+	auto window = MainFrame_getWindow().create_floating_window("Q3Map debug window" );
 
-	GtkWidget* scr = gtk_scrolled_window_new( NULL, NULL );
-	gtk_widget_show( scr );
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( scr ) );
+	auto scr = ui::ScrolledWindow();
+	scr.show();
+	window.add(scr);
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 	{
-		GtkListStore* store = gtk_list_store_new( 1, G_TYPE_STRING );
+		ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-		GtkWidget* view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
+		ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 		gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 		{
-			GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
-			GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "", renderer, "text", 0, NULL );
+			auto renderer = ui::CellRendererText();
+			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 		}
 
 		{
-			GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
+			auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
-			g_signal_connect( G_OBJECT( selection ), "changed", G_CALLBACK( feedback_selection_changed ), NULL );
+			selection.connect( "changed", G_CALLBACK( feedback_selection_changed ), NULL );
 		}
 
-		gtk_widget_show( view );
+		view.show();
 
-		gtk_container_add( GTK_CONTAINER( scr ), view );
+		scr.add(view);
 
-		g_object_unref( G_OBJECT( store ) );
+		store.unref();
 
 		m_clist = store;
 	}

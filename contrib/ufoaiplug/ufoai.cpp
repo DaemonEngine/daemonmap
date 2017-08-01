@@ -59,10 +59,10 @@ UFOAIPluginDependencies( void ) :
 
 namespace UFOAI
 {
-GtkWindow* g_mainwnd;
+	ui::Window g_mainwnd{ui::null};
 
 const char* init( void* hApp, void* pMainWidget ){
-	g_mainwnd = GTK_WINDOW( pMainWidget );
+	g_mainwnd = ui::Window(GTK_WINDOW( pMainWidget ));
 	return "Initializing GTKRadiant UFOAI plugin";
 }
 const char* getName(){
@@ -78,8 +78,12 @@ const char* getCommandTitleList(){
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
 	char *message = NULL;
 	if ( string_equal( command, "About" ) ) {
-		GlobalRadiant().m_pfnMessageBox( GTK_WIDGET( g_mainwnd ),
-										 "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__ "\nRadiant version: " RADIANT_VERSION "\nPlugin version: " PLUGIN_VERSION "\nAuthor: Martin Gerhardy (tlh2000/mattn)\n", "About",
+		char const *version_string = "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__
+			"\nRadiant version: " RADIANT_VERSION
+			"\nPlugin version: " PLUGIN_VERSION
+			"\nAuthor: Martin Gerhardy (tlh2000/mattn)\n";
+		GlobalRadiant().m_pfnMessageBox( g_mainwnd,
+										 version_string, "About",
 										 eMB_OK, eMB_ICONDEFAULT );
 	}
 	else if ( string_equal( command, "Level 1" ) ) {
@@ -129,7 +133,7 @@ void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush 
 	}
 
 	if ( message != NULL ) {
-		GlobalRadiant().m_pfnMessageBox( GTK_WIDGET( g_mainwnd ),
+		GlobalRadiant().m_pfnMessageBox( g_mainwnd,
 										 message, "Note",
 										 eMB_OK, eMB_ICONDEFAULT );
 	}

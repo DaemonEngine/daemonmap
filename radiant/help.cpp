@@ -51,13 +51,13 @@ void HandleHelpCommand( CopiedString& str ){
 	OpenURL( str.c_str() );
 }
 
-void process_xlink( const char* filename, const char *menu_name, const char *base_url, GtkMenu *menu ){
+void process_xlink( const char* filename, const char *menu_name, const char *base_url, ui::Menu menu ){
 	if ( file_exists( filename ) ) {
 		xmlDocPtr pDoc = xmlParseFile( filename );
 		if ( pDoc ) {
 			globalOutputStream() << "Processing .xlink file '" << filename << "'\n";
 			// create sub menu
-			GtkMenu* menu_in_menu = create_sub_menu_with_mnemonic( menu, menu_name );
+			auto menu_in_menu = create_sub_menu_with_mnemonic( menu, menu_name );
 			if ( g_Layout_enableDetachableMenus.m_value ) {
 				menu_tearoff( menu_in_menu );
 			}
@@ -113,7 +113,7 @@ void process_xlink( const char* filename, const char *menu_name, const char *bas
 	}
 }
 
-void create_game_help_menu( GtkMenu *menu ){
+void create_game_help_menu( ui::Menu menu ){
 	StringOutputStream filename( 256 );
 	filename << AppPath_get() << "global.xlink";
 	process_xlink( filename.c_str(), "General", AppPath_get(), menu );

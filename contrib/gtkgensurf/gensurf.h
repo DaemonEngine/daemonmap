@@ -48,8 +48,6 @@ extern _QERBrushTable __BRUSHTABLENAME;
 #include "igl.h"
 #include "ientity.h"
 
-#include <gtk/gtk.h>
-
 #include "iui_gtk.h"
 
 #include "gendlgs.h"
@@ -414,7 +412,7 @@ extern int SP;       // ^Fishman - Snap to grid.
    extern HCURSOR   ghCursorVertex;
    extern HINSTANCE ghInst;*/
 extern GtkWidget *g_pRadiantWnd;
-extern GtkWidget *g_pWnd;
+extern ui::Window g_pWnd;
 /*extern HWND      ghwndAngles;
    extern HWND      ghwndFix;
  */extern GtkWidget     *g_pWndPreview;

@@ -2,8 +2,8 @@ add_library(gtkutil
         accelerator.cpp accelerator.h
         button.cpp button.h
         clipboard.cpp clipboard.h
-        closure.cpp closure.h
-        container.cpp container.h
+        closure.h
+        container.h
         cursor.cpp cursor.h
         dialog.cpp dialog.h
         entry.cpp entry.h
@@ -11,13 +11,13 @@ add_library(gtkutil
         frame.cpp frame.h
         glfont.cpp glfont.h
         glwidget.cpp glwidget.h
-        idledraw.cpp idledraw.h
+        idledraw.h
         image.cpp image.h
         menu.cpp menu.h
         messagebox.cpp messagebox.h
         nonmodal.cpp nonmodal.h
         paned.cpp paned.h
-        pointer.cpp pointer.h
+        pointer.h
         toolbar.cpp toolbar.h
         widget.cpp widget.h
         window.cpp window.h
@@ -27,9 +27,11 @@ add_library(gtkutil
 target_include_directories(gtkutil PRIVATE uilib)
 target_link_libraries(gtkutil PRIVATE uilib)
 
-target_include_directories(gtkutil PRIVATE ${${GTK_NS}_INCLUDE_DIRS})
-target_link_libraries(gtkutil PRIVATE ${${GTK_NS}_LIBRARIES})
+target_include_directories(gtkutil PRIVATE ${GTK${GTK_TARGET}_INCLUDE_DIRS})
+target_link_libraries(gtkutil PRIVATE ${GTK${GTK_TARGET}_LIBRARIES})
 
-find_package(GtkGLExt REQUIRED)
-target_include_directories(gtkutil PRIVATE ${GTKGL_INCLUDE_DIRS})
-target_link_libraries(gtkutil PRIVATE ${GTKGL_LIBRARIES})
+if (GTK_TARGET EQUAL 2)
+    find_package(GtkGLExt REQUIRED)
+    target_include_directories(gtkutil PRIVATE ${GtkGLExt_INCLUDE_DIRS})
+    target_link_libraries(gtkutil PRIVATE ${GtkGLExt_LIBRARIES})
+endif ()

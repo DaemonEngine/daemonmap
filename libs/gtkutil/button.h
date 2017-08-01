@@ -22,23 +22,24 @@
 #if !defined( INCLUDED_GTKUTIL_BUTTON_H )
 #define INCLUDED_GTKUTIL_BUTTON_H
 
+#include <uilib/uilib.h>
 #include "generic/callbackfwd.h"
 
-typedef struct _GtkButton GtkButton;
-typedef struct _GtkToggleButton GtkToggleButton;
-typedef struct _GtkRadioButton GtkRadioButton;
 typedef int gint;
 typedef gint gboolean;
 typedef unsigned int guint;
 
-void button_connect_callback( GtkButton* button, const Callback& callback );
-guint toggle_button_connect_callback( GtkToggleButton* button, const Callback& callback );
+void button_connect_callback( ui::Button button, const Callback& callback );
+void button_connect_callback( ui::ToolButton button, const Callback& callback );
+guint toggle_button_connect_callback( ui::ToggleButton button, const Callback& callback );
+guint toggle_button_connect_callback( ui::ToggleToolButton button, const Callback& callback );
 
-void button_set_icon( GtkButton* button, const char* icon );
-void toggle_button_set_active_no_signal( GtkToggleButton* item, gboolean active );
+void button_set_icon( ui::Button button, const char* icon );
+void toggle_button_set_active_no_signal( ui::ToggleButton item, gboolean active );
+void toggle_button_set_active_no_signal( ui::ToggleToolButton item, gboolean active );
 
-void radio_button_set_active( GtkRadioButton* radio, int index );
-void radio_button_set_active_no_signal( GtkRadioButton* radio, int index );
-int radio_button_get_active( GtkRadioButton* radio );
+void radio_button_set_active( ui::RadioButton radio, int index );
+void radio_button_set_active_no_signal( ui::RadioButton radio, int index );
+int radio_button_get_active( ui::RadioButton radio );
 
 #endif

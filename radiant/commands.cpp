@@ -21,16 +21,14 @@
 
 #include "commands.h"
 
+#include "gtk/gtk.h"
 #include "debugging/debugging.h"
 #include "warnings.h"
 
 #include <map>
 #include "string/string.h"
 #include "versionlib.h"
-#include "gtkutil/accelerator.h"
 #include "gtkutil/messagebox.h"
-#include <gtk/gtktreeselection.h>
-#include <gtk/gtkbutton.h>
 #include "gtkmisc.h"
 
 typedef std::pair<Accelerator, int> ShortcutValue; // accelerator, isRegistered
@@ -150,13 +148,8 @@ void connect_accelerator( const char *name ){
 }
 
 
-#include <cctype>
-
-#include <gtk/gtkbox.h>
-#include <gtk/gtkliststore.h>
-#include <gtk/gtktreemodel.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkcellrenderertext.h>
+#include <uilib/uilib.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "gtkutil/dialog.h"
 #include "mainframe.h"
@@ -239,7 +232,7 @@ void accelerator_edit_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	dialog.m_waiting_for_key = true;
 }
 
-gboolean accelerator_window_key_press( GtkWidget *widget, GdkEventKey *event, gpointer dialogptr ){
+bool accelerator_window_key_press( ui::Widget widget, GdkEventKey *event, gpointer dialogptr ){
 	command_list_dialog_t &dialog = *(command_list_dialog_t *) dialogptr;
 
 	if ( !dialog.m_waiting_for_key ) {
@@ -253,20 +246,20 @@ gboolean accelerator_window_key_press( GtkWidget *widget, GdkEventKey *event, gp
 #else
 	switch ( event->keyval )
 	{
-	case GDK_Shift_L:
-	case GDK_Shift_R:
-	case GDK_Control_L:
-	case GDK_Control_R:
-	case GDK_Caps_Lock:
-	case GDK_Shift_Lock:
-	case GDK_Meta_L:
-	case GDK_Meta_R:
-	case GDK_Alt_L:
-	case GDK_Alt_R:
-	case GDK_Super_L:
-	case GDK_Super_R:
-	case GDK_Hyper_L:
-	case GDK_Hyper_R:
+	case GDK_KEY_Shift_L:
+	case GDK_KEY_Shift_R:
+	case GDK_KEY_Control_L:
+	case GDK_KEY_Control_R:
+	case GDK_KEY_Caps_Lock:
+	case GDK_KEY_Shift_Lock:
+	case GDK_KEY_Meta_L:
+	case GDK_KEY_Meta_R:
+	case GDK_KEY_Alt_L:
+	case GDK_KEY_Alt_R:
+	case GDK_KEY_Super_L:
+	case GDK_KEY_Super_R:
+	case GDK_KEY_Hyper_L:
+	case GDK_KEY_Hyper_R:
 		return false;
 	}
 #endif
@@ -293,11 +286,11 @@ gboolean accelerator_window_key_press( GtkWidget *widget, GdkEventKey *event, gp
 	{
 	const char *commandName;
 	const Accelerator &newAccel;
-	GtkWidget *widget;
+	ui::Widget widget;
 	GtkTreeModel *model;
 public:
 	bool allow;
-	VerifyAcceleratorNotTaken( const char *name, const Accelerator &accelerator, GtkWidget *w, GtkTreeModel *m ) : commandName( name ), newAccel( accelerator ), widget( w ), model( m ), allow( true ){
+	VerifyAcceleratorNotTaken( const char *name, const Accelerator &accelerator, ui::Widget w, GtkTreeModel *m ) : commandName( name ), newAccel( accelerator ), widget( w ), model( m ), allow( true ){
 	}
 	void visit( const char* name, Accelerator& accelerator ){
 		if ( !strcmp( name, commandName ) ) {
@@ -313,8 +306,8 @@ public:
 			StringOutputStream msg;
 			msg << "The command " << name << " is already assigned to the key " << accelerator << ".\n\n"
 				<< "Do you want to unassign " << name << " first?";
-			EMessageBoxReturn r = gtk_MessageBox( widget, msg.c_str(), "Key already used", eMB_YESNOCANCEL );
-			if ( r == eIDYES ) {
+			auto r = widget.alert( msg.c_str(), "Key already used", ui::alert_type::YESNOCANCEL );
+			if ( r == ui::alert_response::YES ) {
 				// clear the ACTUAL accelerator too!
 				disconnect_accelerator( name );
 				// delete the modifier
@@ -338,7 +331,7 @@ public:
 					}
 				}
 			}
-			else if ( r == eIDCANCEL ) {
+			else if ( r == ui::alert_response::CANCEL ) {
 				// aborted
 				allow = false;
 			}
@@ -394,41 +387,43 @@ public:
 void DoCommandListDlg(){
 	command_list_dialog_t dialog;
 
-	GtkWindow* window = create_modal_dialog_window( MainFrame_getWindow(), "Mapped Commands", dialog, -1, 400 );
-	g_signal_connect( G_OBJECT( window ), "key-press-event", (GCallback) accelerator_window_key_press, &dialog );
+	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Mapped Commands", dialog, -1, 400);
+	window.on_key_press([](ui::Widget widget, GdkEventKey *event, gpointer dialogptr) {
+		return accelerator_window_key_press(widget, event, dialogptr);
+	}, &dialog);
 
-	GtkAccelGroup* accel = gtk_accel_group_new();
-	gtk_window_add_accel_group( window, accel );
+	auto accel = ui::AccelGroup();
+	window.add_accel_group( accel );
 
-	GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-	gtk_container_add( GTK_CONTAINER( window ), GTK_WIDGET( hbox ) );
+	auto hbox = create_dialog_hbox( 4, 4 );
+	window.add(hbox);
 
 	{
-		GtkScrolledWindow* scr = create_scrolled_window( GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
+		auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC );
 		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
 
 		{
-			GtkListStore* store = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT );
+			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
 
-			GtkWidget* view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
+			ui::Widget view = ui::TreeView(ui::TreeModel(GTK_TREE_MODEL(store)));
 			dialog.m_list = GTK_TREE_VIEW( view );
 
 			gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), false ); // annoying
 
 			{
-				GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
-				GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "Command", renderer, "text", 0, "weight-set", 2, "weight", 3, NULL );
+				auto renderer = ui::CellRendererText();
+				GtkTreeViewColumn* column = ui::TreeViewColumn( "Command", renderer, {{"text", 0}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 			}
 
 			{
-				GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
-				GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes( "Key", renderer, "text", 1, "weight-set", 2, "weight", 3, NULL );
+				auto renderer = ui::CellRendererText();
+				GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 1}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 			}
 
-			gtk_widget_show( view );
-			gtk_container_add( GTK_CONTAINER( scr ), view );
+			view.show();
+			scr.add(view);
 
 			{
 				// Initialize dialog
@@ -438,9 +433,9 @@ void DoCommandListDlg(){
 				class BuildCommandList : public CommandVisitor
 				{
 				TextFileOutputStream m_commandList;
-				GtkListStore* m_store;
+				ui::ListStore m_store;
 public:
-				BuildCommandList( const char* filename, GtkListStore* store ) : m_commandList( filename ), m_store( store ){
+				BuildCommandList( const char* filename, ui::ListStore store ) : m_commandList( filename ), m_store( store ){
 				}
 				void visit( const char* name, Accelerator& accelerator ){
 					StringOutputStream modifiers;
@@ -465,7 +460,7 @@ public:
 				GlobalShortcuts_foreach( visitor );
 			}
 
-			g_object_unref( G_OBJECT( store ) );
+			store.unref();
 		}
 	}
 
@@ -478,16 +473,16 @@ public:
 		GtkButton* clearbutton = create_dialog_button( "Clear", (GCallback) accelerator_clear_button_clicked, &dialog );
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( clearbutton ), FALSE, FALSE, 0 );
 
-		GtkWidget *spacer = gtk_image_new();
-		gtk_widget_show( spacer );
+		ui::Widget spacer = ui::Image();
+		spacer.show();
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( spacer ), TRUE, TRUE, 0 );
 
-		GtkButton* button = create_modal_dialog_button( "Close", dialog.m_close_button );
+		auto button = create_modal_dialog_button( "Close", dialog.m_close_button );
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-		widget_make_default( GTK_WIDGET( button ) );
+		widget_make_default( button );
 		gtk_widget_grab_default( GTK_WIDGET( button ) );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 	}
 
 	modal_dialog_show( window, dialog );

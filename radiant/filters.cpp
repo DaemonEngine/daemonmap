@@ -171,7 +171,7 @@ void ResetFilters(){
 	}
 }
 
-void Filters_constructMenu( GtkMenu* menu_in_menu ){
+void Filters_constructMenu( ui::Menu menu_in_menu ){
 	create_check_menu_item_with_mnemonic( menu_in_menu, "World", "FilterWorldBrushes" );
 	create_check_menu_item_with_mnemonic( menu_in_menu, "Entities", "FilterEntities" );
 	if ( g_pGameDescription->mGameType == "doom3" ) {

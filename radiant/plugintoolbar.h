@@ -19,15 +19,15 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <uilib/uilib.h>
+
 #if !defined( INCLUDED_PLUGINTOOLBAR_H )
 #define INCLUDED_PLUGINTOOLBAR_H
 
-typedef struct _GtkToolbar GtkToolbar;
-GtkToolbar* create_plugin_toolbar();
+ui::Toolbar create_plugin_toolbar();
 void PluginToolbar_populate();
 void PluginToolbar_clear();
 
-typedef struct _GtkImage GtkImage;
-GtkImage* new_plugin_image( const char* filename ); // filename is relative to plugin bitmaps path
+ui::Image new_plugin_image( const char* filename ); // filename is relative to plugin bitmaps path
 
 #endif

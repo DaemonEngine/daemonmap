@@ -22,22 +22,21 @@
 #if !defined( INCLUDED_IGTKGL_H )
 #define INCLUDED_IGTKGL_H
 
+#include <uilib/uilib.h>
 #include "generic/constant.h"
 
-typedef struct _GtkWidget GtkWidget;
-typedef int gint;
-typedef gint gboolean;
+template<class T>
+using func = T *;
 
-struct _QERGtkGLTable
-{
-	INTEGER_CONSTANT( Version, 1 );
-	STRING_CONSTANT( Name, "gtkgl" );
+struct _QERGtkGLTable {
+    STRING_CONSTANT(Name, "gtkgl");
+    INTEGER_CONSTANT(Version, 1);
 
-	GtkWidget* ( *glwidget_new )(gboolean zbufffer);
-	void ( *glwidget_swap_buffers )( GtkWidget* widget );
-	gboolean ( *glwidget_make_current )( GtkWidget* widget );
-	void ( *glwidget_destroy_context )( GtkWidget* widget );
-	void ( *glwidget_create_context )( GtkWidget* widget );
+    func<ui::GLArea(bool zbufffer)> glwidget_new;
+    func<void(ui::GLArea self)> glwidget_swap_buffers;
+    func<bool(ui::GLArea self)> glwidget_make_current;
+    func<void(ui::GLArea self)> glwidget_destroy_context;
+    func<void(ui::GLArea self)> glwidget_create_context;
 };
 
 #endif

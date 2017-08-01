@@ -90,11 +90,9 @@ struct MakeChainRS {
 	int linkNum;
 };
 
-typedef struct _GtkWidget GtkWidget;
-
 struct TwinWidget {
-	GtkWidget* one;
-	GtkWidget* two;
+	ui::Widget one{ui::null};
+	ui::ComboBox two{ui::null};
 };
 
 EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMessageBoxType type );

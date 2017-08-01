@@ -144,9 +144,8 @@ FunctionPointer findSymbol( const char* symbol ){
 
 #include <dlfcn.h>
 
-class DynamicLibrary
-{
-void* m_library;
+class DynamicLibrary {
+	void *m_library;
 public:
 typedef int ( *FunctionPointer )();
 

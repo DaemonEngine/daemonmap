@@ -1,22 +1,112 @@
-/*
-   Copyright (C) 2001-2006, William Joseph.
-   All Rights Reserved.
-
-   This file is part of GtkRadiant.
-
-   GtkRadiant is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   GtkRadiant is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with GtkRadiant; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
 #include "nonmodal.h"
+
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+
+gboolean escape_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpointer data)
+{
+    if (event->keyval == GDK_KEY_Escape) {
+        gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(widget))), NULL);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void widget_connect_escape_clear_focus_widget(ui::Widget widget)
+{
+    widget.connect("key_press_event", G_CALLBACK(escape_clear_focus_widget), 0);
+}
+
+gboolean NonModalEntry::focus_in(ui::Entry entry, GdkEventFocus *event, NonModalEntry *self)
+{
+    self->m_editing = false;
+    return FALSE;
+}
+
+gboolean NonModalEntry::focus_out(ui::Entry entry, GdkEventFocus *event, NonModalEntry *self)
+{
+    if (self->m_editing && gtk_widget_get_visible(GTK_WIDGET(entry))) {
+        self->m_apply();
+    }
+    self->m_editing = false;
+    return FALSE;
+}
+
+gboolean NonModalEntry::changed(ui::Entry entry, NonModalEntry *self)
+{
+    self->m_editing = true;
+    return FALSE;
+}
+
+gboolean NonModalEntry::enter(ui::Entry entry, GdkEventKey *event, NonModalEntry *self)
+{
+    if (event->keyval == GDK_KEY_Return) {
+        self->m_apply();
+        self->m_editing = false;
+        gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(entry))), NULL);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+gboolean NonModalEntry::escape(ui::Entry entry, GdkEventKey *event, NonModalEntry *self)
+{
+    if (event->keyval == GDK_KEY_Escape) {
+        self->m_cancel();
+        self->m_editing = false;
+        gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(entry))), NULL);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void NonModalEntry::connect(ui::Entry entry)
+{
+    entry.connect("focus_in_event", G_CALLBACK(focus_in), this);
+    entry.connect("focus_out_event", G_CALLBACK(focus_out), this);
+    entry.connect("key_press_event", G_CALLBACK(enter), this);
+    entry.connect("key_press_event", G_CALLBACK(escape), this);
+    entry.connect("changed", G_CALLBACK(changed), this);
+}
+
+gboolean NonModalSpinner::changed(ui::SpinButton spin, NonModalSpinner *self)
+{
+    self->m_apply();
+    return FALSE;
+}
+
+gboolean NonModalSpinner::enter(ui::SpinButton spin, GdkEventKey *event, NonModalSpinner *self)
+{
+    if (event->keyval == GDK_KEY_Return) {
+        gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(spin))), NULL);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+gboolean NonModalSpinner::escape(ui::SpinButton spin, GdkEventKey *event, NonModalSpinner *self)
+{
+    if (event->keyval == GDK_KEY_Escape) {
+        self->m_cancel();
+        gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(spin))), NULL);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void NonModalSpinner::connect(ui::SpinButton spin)
+{
+    auto adj = ui::Adjustment(gtk_spin_button_get_adjustment(spin));
+    guint handler = adj.connect("value_changed", G_CALLBACK(changed), this);
+    g_object_set_data(G_OBJECT(spin), "handler", gint_to_pointer(handler));
+    spin.connect("key_press_event", G_CALLBACK(enter), this);
+    spin.connect("key_press_event", G_CALLBACK(escape), this);
+}
+
+void NonModalRadio::connect(ui::RadioButton radio)
+{
+    GSList *group = gtk_radio_button_get_group(radio);
+    for (; group != 0; group = g_slist_next(group)) {
+        toggle_button_connect_callback(ui::ToggleButton(GTK_TOGGLE_BUTTON(group->data)), m_changed);
+    }
+}

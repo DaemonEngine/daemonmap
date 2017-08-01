@@ -31,45 +31,30 @@
 #if !defined( INCLUDED_GTKMISC_H )
 #define INCLUDED_GTKMISC_H
 
-#include <gtk/gtkmain.h>
-
-inline void process_gui(){
-	while ( gtk_events_pending() )
-	{
-		gtk_main_iteration();
-	}
-}
+#include <uilib/uilib.h>
 
 void command_connect_accelerator( const char* commandName );
 void command_disconnect_accelerator( const char* commandName );
 void toggle_add_accelerator( const char* commandName );
 void toggle_remove_accelerator( const char* name );
 
-typedef struct _GtkMenu GtkMenu;
-typedef struct _GtkMenuItem GtkMenuItem;
-typedef struct _GtkCheckMenuItem GtkCheckMenuItem;
-
 // this also sets up the shortcut using command_connect_accelerator
-GtkMenuItem* create_menu_item_with_mnemonic( GtkMenu *menu, const char *mnemonic, const char* commandName );
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const char* commandName );
 // this also sets up the shortcut using command_connect_accelerator
-GtkCheckMenuItem* create_check_menu_item_with_mnemonic( GtkMenu* menu, const char* mnemonic, const char* commandName );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const char* commandName );
 
-typedef struct _GtkButton GtkButton;
-typedef struct _GtkToggleButton GtkToggleButton;
-typedef struct _GtkToolbar GtkToolbar;
 
 // this DOES NOT set up the shortcut using command_connect_accelerator
-GtkButton* toolbar_append_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName );
+ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* description, const char* icon, const char* commandName );
 // this DOES NOT set up the shortcut using command_connect_accelerator
-GtkToggleButton* toolbar_append_toggle_button( GtkToolbar* toolbar, const char* description, const char* icon, const char* commandName );
+ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const char* commandName );
 
 
 template<typename Element> class BasicVector3;
 typedef BasicVector3<float> Vector3;
-bool color_dialog( GtkWidget *parent, Vector3& color, const char* title = "Choose Color" );
+bool color_dialog( ui::Widget parent, Vector3& color, const char* title = "Choose Color" );
 
-typedef struct _GtkEntry GtkEntry;
-void button_clicked_entry_browse_file( GtkWidget* widget, GtkEntry* entry );
-void button_clicked_entry_browse_directory( GtkWidget* widget, GtkEntry* entry );
+void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry );
+void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry );
 
 #endif

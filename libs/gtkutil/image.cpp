@@ -21,8 +21,7 @@
 
 #include "image.h"
 
-#include <gtk/gtkimage.h>
-#include <gtk/gtkstock.h>
+#include <gtk/gtk.h>
 
 #include "string/string.h"
 #include "stream/stringstream.h"
@@ -46,40 +45,36 @@ GdkPixbuf* pixbuf_new_from_file_with_mask( const char* filename ){
 	else
 	{
 		GdkPixbuf* rgba = gdk_pixbuf_add_alpha( rgb, FALSE, 255, 0, 255 );
-		gdk_pixbuf_unref( rgb );
+		g_object_unref( rgb );
 		return rgba;
 	}
 }
 
-GtkImage* image_new_from_file_with_mask( const char* filename ){
+ui::Image image_new_from_file_with_mask( const char* filename ){
 	GdkPixbuf* rgba = pixbuf_new_from_file_with_mask( filename );
 	if ( rgba == 0 ) {
-		return 0;
+		return ui::Image(0);
 	}
 	else
 	{
-		GtkImage* image = GTK_IMAGE( gtk_image_new_from_pixbuf( rgba ) );
-		gdk_pixbuf_unref( rgba );
+		auto image = ui::Image(GTK_IMAGE( gtk_image_new_from_pixbuf( rgba ) ));
+		g_object_unref( rgba );
 		return image;
 	}
 }
 
-GtkImage* image_new_missing(){
-	return GTK_IMAGE( gtk_image_new_from_stock( GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_SMALL_TOOLBAR ) );
+ui::Image image_new_missing(){
+	return ui::Image(GTK_IMAGE( gtk_image_new_from_stock( GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_SMALL_TOOLBAR ) ));
 }
 
-GtkImage* new_image( const char* filename ){
-	{
-		GtkImage* image = image_new_from_file_with_mask( filename );
-		if ( image != 0 ) {
-			return image;
-		}
+ui::Image new_image( const char* filename ){
+	if ( auto image = image_new_from_file_with_mask( filename ) ) {
+		return image;
 	}
-
 	return image_new_missing();
 }
 
-GtkImage* new_local_image( const char* filename ){
+ui::Image new_local_image( const char* filename ){
 	StringOutputStream fullPath( 256 );
 	fullPath << g_bitmapsPath.c_str() << filename;
 	return new_image( fullPath.c_str() );

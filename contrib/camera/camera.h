@@ -48,7 +48,6 @@ extern _QERQglTable __QGLTABLENAME;
 #include "bytebool.h"
 
 class CCamera;
-#include <gtk/gtk.h>
 
 #include "str.h"
 

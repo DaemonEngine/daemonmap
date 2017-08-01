@@ -36,6 +36,7 @@
 #include "preferences.h"
 
 #include <list>
+#include <gdk/gdkkeysyms.h>
 
 void Brush_ConstructCuboid( Brush& brush, const AABB& bounds, const char* shader, const TextureProjection& projection ){
 	const unsigned char box[3][2] = { { 0, 1 }, { 2, 0 }, { 1, 2 } };
@@ -1367,22 +1368,22 @@ void Brush_registerCommands(){
 	GlobalCommands_insert( "Brush8Sided", BrushMakeSided::SetCaller( g_brushmakesided8 ), Accelerator( '8', (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "Brush9Sided", BrushMakeSided::SetCaller( g_brushmakesided9 ), Accelerator( '9', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "ClipSelected", FreeCaller<ClipSelected>(), Accelerator( GDK_Return ) );
-	GlobalCommands_insert( "SplitSelected", FreeCaller<SplitSelected>(), Accelerator( GDK_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "FlipClip", FreeCaller<FlipClipper>(), Accelerator( GDK_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "ClipSelected", FreeCaller<ClipSelected>(), Accelerator( GDK_KEY_Return ) );
+	GlobalCommands_insert( "SplitSelected", FreeCaller<SplitSelected>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "FlipClip", FreeCaller<FlipClipper>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
 
 	GlobalCommands_insert( "MakeDetail", FreeCaller<Select_MakeDetail>(), Accelerator( 'M', (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "MakeStructural", FreeCaller<Select_MakeStructural>(), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 }
 
-void Brush_constructMenu( GtkMenu* menu ){
+void Brush_constructMenu( ui::Menu menu ){
 	create_menu_item_with_mnemonic( menu, "Prism...", "BrushPrism" );
 	create_menu_item_with_mnemonic( menu, "Cone...", "BrushCone" );
 	create_menu_item_with_mnemonic( menu, "Sphere...", "BrushSphere" );
 	create_menu_item_with_mnemonic( menu, "Rock...", "BrushRock" );
 	menu_separator( menu );
 	{
-		GtkMenu* menu_in_menu = create_sub_menu_with_mnemonic( menu, "CSG" );
+		auto menu_in_menu = create_sub_menu_with_mnemonic( menu, "CSG" );
 		if ( g_Layout_enableDetachableMenus.m_value ) {
 			menu_tearoff( menu_in_menu );
 		}
@@ -1392,7 +1393,7 @@ void Brush_constructMenu( GtkMenu* menu ){
 	}
 	menu_separator( menu );
 	{
-		GtkMenu* menu_in_menu = create_sub_menu_with_mnemonic( menu, "Clipper" );
+		auto menu_in_menu = create_sub_menu_with_mnemonic( menu, "Clipper" );
 		if ( g_Layout_enableDetachableMenus.m_value ) {
 			menu_tearoff( menu_in_menu );
 		}

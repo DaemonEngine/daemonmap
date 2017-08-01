@@ -20,6 +20,7 @@
 #include "AboutDialog.h"
 #include <gtk/gtk.h>
 #include <gtkutil/pointer.h>
+#include <uilib/uilib.h>
 #include "version.h"
 #include "gtkutil/pointer.h"
 
@@ -49,43 +50,42 @@ static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer
 }
 
 void DoAboutDlg(){
-	GtkWidget *dlg, *hbox, *vbox, *button, *label;
+	GtkWidget *vbox, *label;
 	int loop = 1, ret = IDCANCEL;
 
-	dlg = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+	auto dlg = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( GTK_WINDOW( dlg ), "About Portal Viewer" );
-	gtk_signal_connect( GTK_OBJECT( dlg ), "delete_event",
-						GTK_SIGNAL_FUNC( dialog_delete_callback ), NULL );
-	gtk_signal_connect( GTK_OBJECT( dlg ), "destroy",
-						GTK_SIGNAL_FUNC( gtk_widget_destroy ), NULL );
+	dlg.connect( "delete_event",
+					  G_CALLBACK( dialog_delete_callback ), NULL );
+	dlg.connect( "destroy",
+						G_CALLBACK( gtk_widget_destroy ), NULL );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
-	hbox = gtk_hbox_new( FALSE, 10 );
-	gtk_widget_show( hbox );
-	gtk_container_add( GTK_CONTAINER( dlg ), hbox );
+	auto hbox = ui::HBox( FALSE, 10 );
+	hbox.show();
+	dlg.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 10 );
 
-	label = gtk_label_new( "Version 1.000\n\n"
+	char const *label_text = "Version 1.000\n\n"
 						   "Gtk port by Leonardo Zide\nleo@lokigames.com\n\n"
 						   "Written by Geoffrey DeWan\ngdewan@prairienet.org\n\n"
 						   "Built against NetRadiant " RADIANT_VERSION "\n"
-						   __DATE__
-						   );
+						   __DATE__;
 	gtk_widget_show( label );
 	gtk_box_pack_start( GTK_BOX( hbox ), label, TRUE, TRUE, 0 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT );
 
-	vbox = gtk_vbox_new( FALSE, 0 );
+	vbox = ui::VBox( FALSE, 0 );
 	gtk_widget_show( vbox );
 	gtk_box_pack_start( GTK_BOX( hbox ), vbox, FALSE, FALSE, 0 );
 
-	button = gtk_button_new_with_label( "OK" );
+	auto button = ui::Button( "OK" );
 	gtk_widget_show( button );
 	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
-	gtk_signal_connect( GTK_OBJECT( button ), "clicked",
-						GTK_SIGNAL_FUNC( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
-	gtk_widget_set_usize( button, 60, -2 );
+	button.connect( "clicked",
+						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
+	gtk_widget_set_size_request( button, 60, -1 );
 
 	gtk_grab_add( dlg );
 	gtk_widget_show( dlg );

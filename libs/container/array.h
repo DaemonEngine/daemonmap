@@ -166,5 +166,4 @@ inline void swap( Array<Element, Allocator>& self, Array<Element, Allocator>& ot
 	self.swap( other );
 }
 }
-
 #endif

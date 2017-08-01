@@ -21,6 +21,8 @@
 
 #include "select.h"
 
+#include <gtk/gtk.h>
+
 #include "debugging/debugging.h"
 
 #include "ientity.h"
@@ -830,10 +832,6 @@ void Selection_destroy(){
 
 
 #include "gtkdlgs.h"
-#include <gtk/gtkbox.h>
-#include <gtk/gtkspinbutton.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtklabel.h>
 #include <gdk/gdkkeysyms.h>
 
 
@@ -870,10 +868,10 @@ struct RotateDialog
 	GtkSpinButton* x;
 	GtkSpinButton* y;
 	GtkSpinButton* z;
-	GtkWindow *window;
+	ui::Window window{ui::null};
 };
 
-static gboolean rotatedlg_apply( GtkWidget *widget, RotateDialog* rotateDialog ){
+static gboolean rotatedlg_apply( ui::Widget widget, RotateDialog* rotateDialog ){
 	Vector3 eulerXYZ;
 
 	eulerXYZ[0] = static_cast<float>( gtk_spin_button_get_value( rotateDialog->x ) );
@@ -888,7 +886,7 @@ static gboolean rotatedlg_apply( GtkWidget *widget, RotateDialog* rotateDialog )
 	return TRUE;
 }
 
-static gboolean rotatedlg_cancel( GtkWidget *widget, RotateDialog* rotateDialog ){
+static gboolean rotatedlg_cancel( ui::Widget widget, RotateDialog* rotateDialog ){
 	gtk_widget_hide( GTK_WIDGET( rotateDialog->window ) );
 
 	gtk_spin_button_set_value( rotateDialog->x, 0.0f ); // reset to 0 on close
@@ -898,56 +896,56 @@ static gboolean rotatedlg_cancel( GtkWidget *widget, RotateDialog* rotateDialog 
 	return TRUE;
 }
 
-static gboolean rotatedlg_ok( GtkWidget *widget, RotateDialog* rotateDialog ){
+static gboolean rotatedlg_ok( ui::Widget widget, RotateDialog* rotateDialog ){
 	rotatedlg_apply( widget, rotateDialog );
 	gtk_widget_hide( GTK_WIDGET( rotateDialog->window ) );
 	return TRUE;
 }
 
-static gboolean rotatedlg_delete( GtkWidget *widget, GdkEventAny *event, RotateDialog* rotateDialog ){
+static gboolean rotatedlg_delete( ui::Widget widget, GdkEventAny *event, RotateDialog* rotateDialog ){
 	rotatedlg_cancel( widget, rotateDialog );
 	return TRUE;
 }
 
 RotateDialog g_rotate_dialog;
 void DoRotateDlg(){
-	if ( g_rotate_dialog.window == NULL ) {
-		g_rotate_dialog.window = create_dialog_window( MainFrame_getWindow(), "Arbitrary rotation", G_CALLBACK( rotatedlg_delete ), &g_rotate_dialog );
+	if ( !g_rotate_dialog.window ) {
+		g_rotate_dialog.window = MainFrame_getWindow().create_dialog_window("Arbitrary rotation", G_CALLBACK(rotatedlg_delete ), &g_rotate_dialog );
 
-		GtkAccelGroup* accel = gtk_accel_group_new();
-		gtk_window_add_accel_group( g_rotate_dialog.window, accel );
+		auto accel = ui::AccelGroup();
+		g_rotate_dialog.window.add_accel_group( accel );
 
 		{
-			GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-			gtk_container_add( GTK_CONTAINER( g_rotate_dialog.window ), GTK_WIDGET( hbox ) );
+			auto hbox = create_dialog_hbox( 4, 4 );
+			g_rotate_dialog.window.add(hbox);
 			{
 				GtkTable* table = create_dialog_table( 3, 2, 4, 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				{
-					GtkWidget* label = gtk_label_new( "  X  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  X  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkWidget* label = gtk_label_new( "  Y  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  Y  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkWidget* label = gtk_label_new( "  Z  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  Z  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 2, 3,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkAdjustment* adj = GTK_ADJUSTMENT( gtk_adjustment_new( 0, -359, 359, 1, 10, 0 ) );
-					GtkSpinButton* spin = GTK_SPIN_BUTTON( gtk_spin_button_new( adj, 1, 0 ) );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -959,9 +957,9 @@ void DoRotateDlg(){
 					g_rotate_dialog.x = spin;
 				}
 				{
-					GtkAdjustment* adj = GTK_ADJUSTMENT( gtk_adjustment_new( 0, -359, 359, 1, 10, 0 ) );
-					GtkSpinButton* spin = GTK_SPIN_BUTTON( gtk_spin_button_new( adj, 1, 0 ) );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -971,9 +969,9 @@ void DoRotateDlg(){
 					g_rotate_dialog.y = spin;
 				}
 				{
-					GtkAdjustment* adj = GTK_ADJUSTMENT( gtk_adjustment_new( 0, -359, 359, 1, 10, 0 ) );
-					GtkSpinButton* spin = GTK_SPIN_BUTTON( gtk_spin_button_new( adj, 1, 0 ) );
-					gtk_widget_show( GTK_WIDGET( spin ) );
+					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
+					auto spin = ui::SpinButton( adj, 1, 0 );
+					spin.show();
 					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -987,15 +985,15 @@ void DoRotateDlg(){
 				GtkVBox* vbox = create_dialog_vbox( 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 				{
-					GtkButton* button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
+					auto button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					widget_make_default( GTK_WIDGET( button ) );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					widget_make_default( button );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( rotatedlg_cancel ), &g_rotate_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Apply", G_CALLBACK( rotatedlg_apply ), &g_rotate_dialog );
@@ -1005,7 +1003,7 @@ void DoRotateDlg(){
 		}
 	}
 
-	gtk_widget_show( GTK_WIDGET( g_rotate_dialog.window ) );
+	g_rotate_dialog.window.show();
 }
 
 
@@ -1018,13 +1016,13 @@ void DoRotateDlg(){
 
 struct ScaleDialog
 {
-	GtkWidget* x;
-	GtkWidget* y;
-	GtkWidget* z;
-	GtkWindow *window;
+	ui::Widget x;
+	ui::Widget y;
+	ui::Widget z;
+	ui::Window window{ui::null};
 };
 
-static gboolean scaledlg_apply( GtkWidget *widget, ScaleDialog* scaleDialog ){
+static gboolean scaledlg_apply( ui::Widget widget, ScaleDialog* scaleDialog ){
 	float sx, sy, sz;
 
 	sx = static_cast<float>( atof( gtk_entry_get_text( GTK_ENTRY( scaleDialog->x ) ) ) );
@@ -1040,7 +1038,7 @@ static gboolean scaledlg_apply( GtkWidget *widget, ScaleDialog* scaleDialog ){
 	return TRUE;
 }
 
-static gboolean scaledlg_cancel( GtkWidget *widget, ScaleDialog* scaleDialog ){
+static gboolean scaledlg_cancel( ui::Widget widget, ScaleDialog* scaleDialog ){
 	gtk_widget_hide( GTK_WIDGET( scaleDialog->window ) );
 
 	gtk_entry_set_text( GTK_ENTRY( scaleDialog->x ), "1.0" );
@@ -1050,13 +1048,13 @@ static gboolean scaledlg_cancel( GtkWidget *widget, ScaleDialog* scaleDialog ){
 	return TRUE;
 }
 
-static gboolean scaledlg_ok( GtkWidget *widget, ScaleDialog* scaleDialog ){
+static gboolean scaledlg_ok( ui::Widget widget, ScaleDialog* scaleDialog ){
 	scaledlg_apply( widget, scaleDialog );
 	gtk_widget_hide( GTK_WIDGET( scaleDialog->window ) );
 	return TRUE;
 }
 
-static gboolean scaledlg_delete( GtkWidget *widget, GdkEventAny *event, ScaleDialog* scaleDialog ){
+static gboolean scaledlg_delete( ui::Widget widget, GdkEventAny *event, ScaleDialog* scaleDialog ){
 	scaledlg_cancel( widget, scaleDialog );
 	return TRUE;
 }
@@ -1064,43 +1062,43 @@ static gboolean scaledlg_delete( GtkWidget *widget, GdkEventAny *event, ScaleDia
 ScaleDialog g_scale_dialog;
 
 void DoScaleDlg(){
-	if ( g_scale_dialog.window == NULL ) {
-		g_scale_dialog.window = create_dialog_window( MainFrame_getWindow(), "Arbitrary scale", G_CALLBACK( scaledlg_delete ), &g_scale_dialog );
+	if ( !g_scale_dialog.window ) {
+		g_scale_dialog.window = MainFrame_getWindow().create_dialog_window("Arbitrary scale", G_CALLBACK(scaledlg_delete ), &g_scale_dialog );
 
-		GtkAccelGroup* accel = gtk_accel_group_new();
-		gtk_window_add_accel_group( g_scale_dialog.window, accel );
+		auto accel = ui::AccelGroup();
+		g_scale_dialog.window.add_accel_group( accel );
 
 		{
-			GtkHBox* hbox = create_dialog_hbox( 4, 4 );
-			gtk_container_add( GTK_CONTAINER( g_scale_dialog.window ), GTK_WIDGET( hbox ) );
+			auto hbox = create_dialog_hbox( 4, 4 );
+			g_scale_dialog.window.add(hbox);
 			{
 				GtkTable* table = create_dialog_table( 3, 2, 4, 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 				{
-					GtkWidget* label = gtk_label_new( "  X  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  X  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 0, 1,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkWidget* label = gtk_label_new( "  Y  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  Y  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 1, 2,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkWidget* label = gtk_label_new( "  Z  " );
-					gtk_widget_show( label );
+					ui::Widget label = ui::Label( "  Z  " );
+					label.show();
 					gtk_table_attach( table, label, 0, 1, 2, 3,
 									  (GtkAttachOptions) ( 0 ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					GtkWidget* entry = gtk_entry_new();
+					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1108,9 +1106,9 @@ void DoScaleDlg(){
 					g_scale_dialog.x = entry;
 				}
 				{
-					GtkWidget* entry = gtk_entry_new();
+					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1118,9 +1116,9 @@ void DoScaleDlg(){
 					g_scale_dialog.y = entry;
 				}
 				{
-					GtkWidget* entry = gtk_entry_new();
+					ui::Widget entry = ui::Entry();
 					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
-					gtk_widget_show( entry );
+					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -1132,15 +1130,15 @@ void DoScaleDlg(){
 				GtkVBox* vbox = create_dialog_vbox( 4 );
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 				{
-					GtkButton* button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
+					auto button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					widget_make_default( GTK_WIDGET( button ) );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					widget_make_default( button );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( scaledlg_cancel ), &g_scale_dialog );
 					gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					GtkButton* button = create_dialog_button( "Apply", G_CALLBACK( scaledlg_apply ), &g_scale_dialog );
@@ -1150,5 +1148,5 @@ void DoScaleDlg(){
 		}
 	}
 
-	gtk_widget_show( GTK_WIDGET( g_scale_dialog.window ) );
+	g_scale_dialog.window.show();
 }

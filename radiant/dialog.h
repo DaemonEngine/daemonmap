@@ -23,6 +23,7 @@
 #define INCLUDED_DIALOG_H
 
 #include <list>
+#include <uilib/uilib.h>
 
 #include "gtkutil/dialog.h"
 #include "generic/callback.h"
@@ -92,13 +93,6 @@ struct DLG_DATA
 	virtual void exportData() const = 0;
 };
 
-typedef struct _GtkWindow GtkWindow;
-typedef struct _GtkToggleButton GtkToggleButton;
-typedef struct _GtkRadioButton GtkRadioButton;
-typedef struct _GtkSpinButton GtkSpinButton;
-typedef struct _GtkComboBox GtkComboBox;
-typedef struct _GtkEntry GtkEntry;
-typedef struct _GtkAdjustment GtkAdjustment;
 
 template<typename FirstArgument>
 class CallbackDialogData;
@@ -107,11 +101,11 @@ typedef std::list<DLG_DATA*> DialogDataList;
 
 class Dialog
 {
-GtkWindow* m_window;
+ui::Window m_window;
 DialogDataList m_data;
 public:
 ModalDialog m_modal;
-GtkWindow* m_parent;
+ui::Window m_parent;
 
 Dialog();
 virtual ~Dialog();
@@ -122,7 +116,7 @@ virtual ~Dialog();
  */
 EMessageBoxReturn DoModal();
 void EndModal( EMessageBoxReturn code );
-virtual GtkWindow* BuildDialog() = 0;
+virtual ui::Window BuildDialog() = 0;
 virtual void exportData();
 virtual void importData();
 virtual void PreModal() { };
@@ -131,63 +125,63 @@ virtual void ShowDlg();
 virtual void HideDlg();
 void Create();
 void Destroy();
-GtkWindow* GetWidget(){
+ui::Window GetWidget(){
 	return m_window;
 }
-const GtkWindow* GetWidget() const {
+const ui::Window GetWidget() const {
 	return m_window;
 }
 
-GtkWidget* addCheckBox( GtkWidget* vbox, const char* name, const char* flag, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
-GtkWidget* addCheckBox( GtkWidget* vbox, const char* name, const char* flag, bool& data );
-void addCombo( GtkWidget* vbox, const char* name, StringArrayRange values, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addCombo( GtkWidget* vbox, const char* name, int& data, StringArrayRange values );
-void addSlider( GtkWidget* vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment );
-void addRadio( GtkWidget* vbox, const char* name, StringArrayRange names, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addRadio( GtkWidget* vbox, const char* name, int& data, StringArrayRange names );
-void addRadioIcons( GtkWidget* vbox, const char* name, StringArrayRange icons, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addRadioIcons( GtkWidget* vbox, const char* name, int& data, StringArrayRange icons );
-GtkWidget* addIntEntry( GtkWidget* vbox, const char* name, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-GtkWidget* addEntry( GtkWidget* vbox, const char* name, int& data ){
+ui::CheckButton addCheckBox( ui::Widget vbox, const char* name, const char* flag, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
+ui::CheckButton addCheckBox( ui::Widget vbox, const char* name, const char* flag, bool& data );
+void addCombo( ui::Widget vbox, const char* name, StringArrayRange values, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addCombo( ui::Widget vbox, const char* name, int& data, StringArrayRange values );
+void addSlider( ui::Widget vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment );
+void addRadio( ui::Widget vbox, const char* name, StringArrayRange names, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addRadio( ui::Widget vbox, const char* name, int& data, StringArrayRange names );
+void addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange icons, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addRadioIcons( ui::Widget vbox, const char* name, int& data, StringArrayRange icons );
+ui::Widget addIntEntry( ui::Widget vbox, const char* name, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+ui::Widget addEntry( ui::Widget vbox, const char* name, int& data ){
 	return addIntEntry( vbox, name, IntImportCaller( data ), IntExportCaller( data ) );
 }
-GtkWidget* addSizeEntry( GtkWidget* vbox, const char* name, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
-GtkWidget* addEntry( GtkWidget* vbox, const char* name, std::size_t& data ){
+ui::Widget addSizeEntry( ui::Widget vbox, const char* name, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
+ui::Widget addEntry( ui::Widget vbox, const char* name, std::size_t& data ){
 	return addSizeEntry( vbox, name, SizeImportCaller( data ), SizeExportCaller( data ) );
 }
-GtkWidget* addFloatEntry( GtkWidget* vbox, const char* name, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-GtkWidget* addEntry( GtkWidget* vbox, const char* name, float& data ){
+ui::Widget addFloatEntry( ui::Widget vbox, const char* name, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+ui::Widget addEntry( ui::Widget vbox, const char* name, float& data ){
 	return addFloatEntry( vbox, name, FloatImportCaller( data ), FloatExportCaller( data ) );
 }
-GtkWidget* addPathEntry( GtkWidget* vbox, const char* name, bool browse_directory, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
-GtkWidget* addPathEntry( GtkWidget* vbox, const char* name, CopiedString& data, bool directory );
-GtkWidget* addSpinner( GtkWidget* vbox, const char* name, int& data, double value, double lower, double upper );
-GtkWidget* addSpinner( GtkWidget* vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-GtkWidget* addSpinner( GtkWidget* vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+ui::Widget addPathEntry( ui::Widget vbox, const char* name, bool browse_directory, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
+ui::Widget addPathEntry( ui::Widget vbox, const char* name, CopiedString& data, bool directory );
+ui::SpinButton addSpinner( ui::Widget vbox, const char* name, int& data, double value, double lower, double upper );
+ui::SpinButton addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+ui::SpinButton addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
 
 protected:
 
-void AddBoolToggleData( GtkToggleButton& object, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
-void AddIntRadioData( GtkRadioButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddTextEntryData( GtkEntry& object, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
-void AddIntEntryData( GtkEntry& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddSizeEntryData( GtkEntry& object, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
-void AddFloatEntryData( GtkEntry& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-void AddFloatSpinnerData( GtkSpinButton& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-void AddIntSpinnerData( GtkSpinButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddIntAdjustmentData( GtkAdjustment& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void AddIntComboData( GtkComboBox& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddBoolToggleData( struct _GtkToggleButton& object, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
+void AddIntRadioData( struct _GtkRadioButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddTextEntryData( struct _GtkEntry& object, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
+void AddIntEntryData( struct _GtkEntry& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddSizeEntryData( struct _GtkEntry& object, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
+void AddFloatEntryData( struct _GtkEntry& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+void AddFloatSpinnerData( struct _GtkSpinButton& object, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+void AddIntSpinnerData( struct _GtkSpinButton& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddIntAdjustmentData( struct _GtkAdjustment& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void AddIntComboData( struct _GtkComboBox& object, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
 
-void AddDialogData( GtkToggleButton& object, bool& data );
-void AddDialogData( GtkRadioButton& object, int& data );
-void AddDialogData( GtkEntry& object, CopiedString& data );
-void AddDialogData( GtkEntry& object, int& data );
-void AddDialogData( GtkEntry& object, std::size_t& data );
-void AddDialogData( GtkEntry& object, float& data );
-void AddDialogData( GtkSpinButton& object, float& data );
-void AddDialogData( GtkSpinButton& object, int& data );
-void AddDialogData( GtkAdjustment& object, int& data );
-void AddDialogData( GtkComboBox& object, int& data );
+void AddDialogData( struct _GtkToggleButton& object, bool& data );
+void AddDialogData( struct _GtkRadioButton& object, int& data );
+void AddDialogData( struct _GtkEntry& object, CopiedString& data );
+void AddDialogData( struct _GtkEntry& object, int& data );
+void AddDialogData( struct _GtkEntry& object, std::size_t& data );
+void AddDialogData( struct _GtkEntry& object, float& data );
+void AddDialogData( struct _GtkSpinButton& object, float& data );
+void AddDialogData( struct _GtkSpinButton& object, int& data );
+void AddDialogData( struct _GtkAdjustment& object, int& data );
+void AddDialogData( struct _GtkComboBox& object, int& data );
 };
 
 #endif

@@ -23,7 +23,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <gtk/gtklabel.h>
+#include <gtk/gtk.h>
 
 #include "os/file.h"
 #include "generic/callback.h"
@@ -121,7 +121,7 @@ void MRU_AddFile( const char *str ){
 
 	MRU_SetText( 0, str );
 	gtk_widget_set_sensitive( GTK_WIDGET( MRU_items[0] ), TRUE );
-	gtk_widget_show( GTK_WIDGET( MRU_items[MRU_used - 1] ) );
+	ui::Widget(GTK_WIDGET( MRU_items[MRU_used - 1] )).show();
 }
 
 void MRU_Init(){
@@ -136,7 +136,7 @@ void MRU_AddWidget( GtkMenuItem *widget, std::size_t pos ){
 		if ( pos < MRU_used ) {
 			MRU_updateWidget( pos, MRU_GetText( pos ) );
 			gtk_widget_set_sensitive( GTK_WIDGET( MRU_items[0] ), TRUE );
-			gtk_widget_show( GTK_WIDGET( MRU_items[pos] ) );
+			ui::Widget(GTK_WIDGET( MRU_items[pos] )).show();
 		}
 	}
 }
@@ -159,7 +159,7 @@ void MRU_Activate( std::size_t index ){
 			MRU_SetText( i, MRU_GetText( i + 1 ) );
 
 		if ( MRU_used == 0 ) {
-			gtk_label_set_text( GTK_LABEL( GTK_BIN( MRU_items[0] )->child ), "Recent Files" );
+			gtk_label_set_text( GTK_LABEL( gtk_bin_get_child(GTK_BIN( MRU_items[0] )) ), "Recent Files" );
 			gtk_widget_set_sensitive( GTK_WIDGET( MRU_items[0] ), FALSE );
 		}
 		else
@@ -191,7 +191,7 @@ LoadMRU g_load_mru2( 2 );
 LoadMRU g_load_mru3( 3 );
 LoadMRU g_load_mru4( 4 );
 
-void MRU_constructMenu( GtkMenu* menu ){
+void MRU_constructMenu( ui::Menu menu ){
 	{
 		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_1", LoadMRUCaller( g_load_mru1 ) );
 		gtk_widget_set_sensitive( GTK_WIDGET( item ), FALSE );
