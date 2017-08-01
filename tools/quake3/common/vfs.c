@@ -56,6 +56,7 @@ typedef struct
 {
 	char*   name;
 	unzFile zipfile;
+	unz_file_pos zippos;
 	guint32 size;
 } VFS_PAKFILE;
 
@@ -128,6 +129,11 @@ static void vfsInitPakFile( const char *filename ){
 		if ( err != UNZ_OK ) {
 			break;
 		}
+		unz_file_pos pos;
+		err = unzGetFilePos( uf, &pos );
+		if ( err != UNZ_OK ) {
+			break;
+		}
 
 		file = (VFS_PAKFILE*)safe_malloc( sizeof( VFS_PAKFILE ) );
 		g_pakFiles = g_slist_append( g_pakFiles, file );
@@ -138,6 +144,7 @@ static void vfsInitPakFile( const char *filename ){
 		file->name = strdup( filename_inzip );
 		file->size = file_info.uncompressed_size;
 		file->zipfile = uf;
+		file->zippos = pos;
 
 		if ( ( i + 1 ) < gi.number_entry ) {
 			err = unzGoToNextFile( uf );
@@ -383,6 +390,9 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 
 		if ( count == index ) {
 
+            if ( unzGoToFilePos( file->zipfile, &file->zippos ) != UNZ_OK ) {
+                return -1;
+            }
 			if ( unzOpenCurrentFile( file->zipfile ) != UNZ_OK ) {
 				return -1;
 			}
