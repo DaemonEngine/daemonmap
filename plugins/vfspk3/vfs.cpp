@@ -377,23 +377,43 @@ static Archives g_loaded_dpk_paks;
 // actual pak adding on initialise, deferred from InitDirectory
 // Daemon DPK filesystem doesn't need load all paks it finds
 static void LoadDpkPakWithDeps( const char* pakname ){
-	const char* und = strrchr( pakname, '_' );
-	if ( !und ) pakname = GetLatestDpkPakVersion( pakname );
-	if ( !pakname || g_loaded_dpk_paks.find( pakname ) != g_loaded_dpk_paks.end() ) return;
-
-	PakfilePaths::iterator i = g_pakfile_paths.find( pakname );
-	if ( i == g_pakfile_paths.end() ) return;
-
 	Archive* arc;
-	if ( i->second.is_pakfile ){
-		arc = InitPakFile( FileSystemQ3API_getArchiveModules(), i->second.fullpath.c_str() );
-	} else {
-		arc = AddDpkDir( i->second.fullpath.c_str() );
-	}
-	g_loaded_dpk_paks.insert( pakname );
+	ArchiveTextFile* depsFile;
 
-	ArchiveTextFile* depsFile = arc->openTextFile( "DEPS" );
-	if ( !depsFile ) return;
+	if (pakname == NULL) {
+		// load DEPS from game pack
+		StringOutputStream baseDirectory( 256 );
+		const char* basegame = GlobalRadiant().getRequiredGameDescriptionKeyValue( "basegame" );
+		baseDirectory << GlobalRadiant().getGameToolsPath() << basegame << '/';
+		arc = AddDpkDir( baseDirectory.c_str() );
+		depsFile = arc->openTextFile( "DEPS" );
+	} else {
+		const char* und = strrchr( pakname, '_' );
+		if ( !und ) {
+			pakname = GetLatestDpkPakVersion( pakname );
+		}
+		if ( !pakname || g_loaded_dpk_paks.find( pakname ) != g_loaded_dpk_paks.end() ) {
+			return;
+		}
+
+		PakfilePaths::iterator i = g_pakfile_paths.find( pakname );
+		if ( i == g_pakfile_paths.end() ) {
+			return;
+		}
+
+		if ( i->second.is_pakfile ){
+			arc = InitPakFile( FileSystemQ3API_getArchiveModules(), i->second.fullpath.c_str() );
+		} else {
+			arc = AddDpkDir( i->second.fullpath.c_str() );
+		}
+		g_loaded_dpk_paks.insert( pakname );
+
+		depsFile = arc->openTextFile( "DEPS" );
+	}
+
+	if ( !depsFile ) {
+		return;
+	}
 
 	{
 		TextLinesInputStream<TextInputStream> istream = depsFile->getInputStream();
@@ -790,10 +810,8 @@ void load(){
 		const char* pakname;
 		g_loaded_dpk_paks.clear();
 
-		pakname = GetLatestDpkPakVersion( "tex-common" );
-		if (pakname != NULL) {
-			LoadDpkPakWithDeps( pakname );
-		}
+		// Load DEPS from game pack
+		LoadDpkPakWithDeps( NULL );
 
 		// prevent VFS double start, for MapName="" and MapName="unnamed.map"
 		if ( string_length( GlobalRadiant().getMapName() ) ){
