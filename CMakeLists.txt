@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
 project(NetRadiant C CXX)
-option(BUILD_RADIANT "Build the gui" ON)
+
+option(BUILD_RADIANT "Build the GUI" ON)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
@@ -44,17 +44,18 @@ message(STATUS "Building ${PROJECT_NAME} ${RADIANT_VERSION_STRING} ${RADIANT_ABO
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# For some reason the above flags don't really work...
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
-    include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag(--std=c++${CMAKE_CXX_STANDARD} STD_CXX)
-    if (STD_CXX)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++${CMAKE_CXX_STANDARD}")
+if (CMAKE_VERSION VERSION_LESS "3.1")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
+        include(CheckCXXCompilerFlag)
+        check_cxx_compiler_flag(--std=c++${CMAKE_CXX_STANDARD} STD_CXX)
+        if (STD_CXX)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++${CMAKE_CXX_STANDARD}")
+        else ()
+            message(SEND_ERROR "Requires C++${CMAKE_CXX_STANDARD} or better")
+        endif ()
     else ()
-        message(SEND_ERROR "Requires C++${CMAKE_CXX_STANDARD} or better")
+        message(WARNING "Unrecognized compiler: ${CMAKE_CXX_COMPILER_ID}, make sure it supports C++${CMAKE_CXX_STANDARD}")
     endif ()
-else ()
-    message(WARNING "Unrecognized compiler: ${CMAKE_CXX_COMPILER_ID}, make sure it supports C++${CMAKE_CXX_STANDARD}")
 endif ()
 
 #-----------------------------------------------------------------------
@@ -195,15 +196,14 @@ macro(radiant_tool name)
                 COMMAND ln -f -s "$<TARGET_FILE_NAME:${name}>" "${PROJECT_BINARY_DIR}/${name}.${RADIANT_EXECUTABLE}"
                 VERBATIM
                 )
-        install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \
-            ${name}${CMAKE_EXECUTABLE_SUFFIX} \
-            ${CMAKE_INSTALL_PREFIX}/${name}.${RADIANT_EXECUTABLE} \
-        )")
+        install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+                ${name}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_INSTALL_PREFIX}/${name}.${RADIANT_EXECUTABLE})
+                ")
     endif ()
 endmacro()
 
 if (BUILD_RADIANT)
-    add_subdirectory(radiant build)
+    add_subdirectory(radiant _radiant)
     set_target_properties(radiant PROPERTIES
             COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
             )
