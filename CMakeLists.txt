@@ -246,14 +246,14 @@ install(
         "${PROJECT_BINARY_DIR}/RADIANT_MAJOR"
         "${PROJECT_BINARY_DIR}/RADIANT_MINOR"
         "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        DESTINATION .
 )
 
 install(
         DIRECTORY
-        ${PROJECT_SOURCE_DIR}/setup/data/tools/
-        ${PROJECT_SOURCE_DIR}/docs
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        setup/data/tools/
+        docs
+        DESTINATION .
 )
 
 set(GAME_FILES
@@ -283,6 +283,8 @@ set(GAME_FILES ${_tmp})
 install(
         DIRECTORY
         ${GAME_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        DESTINATION .
         OPTIONAL
 )
+
+include(cmake/scripts/package.cmake)
