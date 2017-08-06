@@ -25,4 +25,4 @@
 #include "../common/qfiles.h"
 
 void MD3_Dump( const char *filename );
-void MD3_ComputeTagFromTri( md3Tag_t *pTag, const float tri[3][3] );
+void MD3_ComputeTagFromTri( md3Tag_t *pTag, float tri[3][3] );

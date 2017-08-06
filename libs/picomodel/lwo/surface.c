@@ -93,18 +93,19 @@ void lwFreeSurface( lwSurface *surf ){
 			_pico_free( surf->srcname );
 		}
 
-		lwListFree( surf->shader, (void *) lwFreePlugin );
+		lwListFree(surf->shader, (void (*)(void *)) lwFreePlugin);
 
-		lwListFree( surf->color.tex, (void *) lwFreeTexture );
-		lwListFree( surf->luminosity.tex, (void *) lwFreeTexture );
-		lwListFree( surf->diffuse.tex, (void *) lwFreeTexture );
-		lwListFree( surf->specularity.tex, (void *) lwFreeTexture );
-		lwListFree( surf->glossiness.tex, (void *) lwFreeTexture );
-		lwListFree( surf->reflection.val.tex, (void *) lwFreeTexture );
-		lwListFree( surf->transparency.val.tex, (void *) lwFreeTexture );
-		lwListFree( surf->eta.tex, (void *) lwFreeTexture );
-		lwListFree( surf->translucency.tex, (void *) lwFreeTexture );
-		lwListFree( surf->bump.tex, (void *) lwFreeTexture );
+		void (*freeTexture)(void *) = (void (*)(void *)) lwFreeTexture;
+		lwListFree(surf->color.tex, freeTexture);
+		lwListFree(surf->luminosity.tex, freeTexture);
+		lwListFree(surf->diffuse.tex, freeTexture);
+		lwListFree(surf->specularity.tex, freeTexture);
+		lwListFree(surf->glossiness.tex, freeTexture);
+		lwListFree(surf->reflection.val.tex, freeTexture);
+		lwListFree(surf->transparency.val.tex, freeTexture);
+		lwListFree(surf->eta.tex, freeTexture);
+		lwListFree(surf->translucency.tex, freeTexture);
+		lwListFree(surf->bump.tex, freeTexture);
 
 		_pico_free( surf );
 	}
@@ -817,7 +818,7 @@ static int add_texture( lwSurface *surf, lwTexture *tex ){
 	default:  return 0;
 	}
 
-	lwListInsert( (void **) list, tex, ( void *) compare_textures );
+	lwListInsert((void **) list, tex, (int (*)(void *, void *)) compare_textures);
 	return 1;
 }
 
@@ -1057,7 +1058,7 @@ lwSurface *lwGetSurface( picoMemStream_t *fp, int cksize ){
 				if ( !shdr ) {
 					goto Fail;
 				}
-				lwListInsert( (void **) &surf->shader, shdr, (void *) compare_shaders );
+				lwListInsert((void **) &surf->shader, shdr, (int (*)(void *, void *)) compare_shaders);
 				++surf->nshaders;
 				set_flen( 4 + get_flen() );
 				break;

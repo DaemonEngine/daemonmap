@@ -271,7 +271,7 @@ void CPortals::Load(){
 		}
 
 		if ( !portal[n].Build( buf ) ) {
-			if ( first && sscanf( buf, "%d %d", &test_vals_1, &test_vals_2 ) == 1 ) { // skip additional counts of later data, not needed
+			if ( first && sscanf( buf, "%d %d", (int *) &test_vals_1, (int *) &test_vals_2 ) == 1 ) { // skip additional counts of later data, not needed
 				// We can count on hint flags being in the file
 				hint_flags = true;
 				continue;

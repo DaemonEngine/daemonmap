@@ -90,8 +90,10 @@ enum
 	RADIANT_CLIPPINGS = 23,
 };
 
+static char RADIANT_CLIPPINGS_STR[] = "RADIANT_CLIPPINGS";
+
 static const GtkTargetEntry clipboard_targets[] = {
-	{ "RADIANT_CLIPPINGS", 0, RADIANT_CLIPPINGS, },
+	{RADIANT_CLIPPINGS_STR, 0, RADIANT_CLIPPINGS, },
 };
 
 static void clipboard_get( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer data ){

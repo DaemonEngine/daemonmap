@@ -359,7 +359,7 @@ namespace ui {
         for (auto &it : attributes) {
             gtk_tree_view_column_add_attribute(this, renderer, it.attribute, it.column);
         }
-    };
+    }
 
     IMPL(AccelGroup, GTK_ACCEL_GROUP);
 
@@ -391,6 +391,6 @@ namespace ui {
 #if GTK_TARGET == 2
         return this.connect("expose_event", pFunction, data);
 #endif
-    };
+    }
 
 }

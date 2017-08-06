@@ -58,7 +58,7 @@ static int ReadChunkAndLength( FILE *fp, short *chunk, long *len ){
 }
 
 static void LoadMapName( FILE *fp, char *buffer, int thisChunkLen ){
-	unsigned short chunkID;
+	short chunkID;
 	long chunkLen;
 	long bytesRead = 0;
 
@@ -82,7 +82,7 @@ static void LoadMapName( FILE *fp, char *buffer, int thisChunkLen ){
 
 static void LoadMaterialList( FILE *fp, long thisChunkLen, _3DSMaterial_t *pMat ){
 	long chunkLen;
-	unsigned short chunkID;
+	short chunkID;
 	long bytesRead = 0;
 	_3DSMaterial_t mat;
 	char curdir[1024];
@@ -230,7 +230,7 @@ static void LoadMeshMaterialGroup( FILE *fp, long thisChunkLen, _3DSMeshMaterial
 
 static void LoadNamedTriObject( FILE *fp, long thisChunkLen, _3DSTriObject_t *pTO ){
 	long chunkLen;
-	unsigned short chunkID;
+	short chunkID;
 	int i = 0;
 	long bytesRead = 0;
 	_3DSTriObject_t triObj;
@@ -347,7 +347,7 @@ static void LoadNamedTriObject( FILE *fp, long thisChunkLen, _3DSTriObject_t *pT
 
 static void LoadNamedObject( FILE *fp, long thisChunkLen, _3DSNamedObject_t *pNO ){
 	long chunkLen;
-	unsigned short chunkID;
+	short chunkID;
 	int i = 0;
 	long bytesRead = 0;
 	char name[100];
@@ -391,7 +391,7 @@ static void LoadNamedObject( FILE *fp, long thisChunkLen, _3DSNamedObject_t *pNO
 }
 
 static void LoadEditChunk( FILE *fp, long thisChunkLen, _3DSEditChunk_t *pEC ){
-	unsigned short chunkID;
+	short chunkID;
 	long chunkLen;
 	long bytesRead = 0;
 	_3DSEditChunk_t editChunk;
@@ -451,7 +451,7 @@ static void LoadEditChunk( FILE *fp, long thisChunkLen, _3DSEditChunk_t *pEC ){
 
 static void Load3DS( const char *filename, _3DS_t *p3DS, qboolean verbose ){
 	FILE *fp;
-	unsigned short chunkID;
+	short chunkID;
 	long chunkLen;
 	_3DSEditChunk_t editChunk;
 

@@ -32,7 +32,7 @@
 /*
 ** MD3_ComputeTagFromTri
 */
-void MD3_ComputeTagFromTri( md3Tag_t *pTag, const float pTri[3][3] ){
+void MD3_ComputeTagFromTri( md3Tag_t *pTag, float pTri[3][3] ){
 	float len[3];
 	vec3_t axes[3], sides[3];
 	int longestSide, shortestSide, hypotSide;

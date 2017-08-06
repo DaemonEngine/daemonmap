@@ -98,7 +98,7 @@ inline void istream_read_zip_file_header( SeekableInputStream& istream, zip_file
 	file_header.z_namlen = istream_read_uint16_le( istream );
 	file_header.z_extras = istream_read_uint16_le( istream );
 	istream.seek( file_header.z_namlen + file_header.z_extras, SeekableInputStream::cur );
-};
+}
 
 /* B. data descriptor
  * the data descriptor exists only if bit 3 of z_flags is set. It is byte aligned
@@ -120,7 +120,7 @@ inline void istream_read_zip_file_trailer( InputStream& istream, zip_file_traile
 	file_trailer.z_crc32 = istream_read_uint32_le( istream );
 	file_trailer.z_csize = istream_read_uint32_le( istream );
 	file_trailer.z_usize = istream_read_uint32_le( istream );
-};
+}
 
 
 /* C. central directory structure:

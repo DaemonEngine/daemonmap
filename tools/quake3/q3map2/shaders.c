@@ -2039,7 +2039,7 @@ static void ParseCustomInfoParms( void ){
 		custSurfaceParms[ numCustSurfaceParms ].name = safe_malloc( MAX_OS_PATH );
 		strcpy( custSurfaceParms[ numCustSurfaceParms ].name, token );
 		GetToken( qfalse );
-		sscanf( token, "%x", &custSurfaceParms[ numCustSurfaceParms ].contentFlags );
+		sscanf( token, "%x", (unsigned int *) &custSurfaceParms[ numCustSurfaceParms ].contentFlags );
 		numCustSurfaceParms++;
 	}
 
@@ -2065,7 +2065,7 @@ static void ParseCustomInfoParms( void ){
 		custSurfaceParms[ numCustSurfaceParms ].name = safe_malloc( MAX_OS_PATH );
 		strcpy( custSurfaceParms[ numCustSurfaceParms ].name, token );
 		GetToken( qfalse );
-		sscanf( token, "%x", &custSurfaceParms[ numCustSurfaceParms ].surfaceFlags );
+		sscanf( token, "%x", (unsigned int *) &custSurfaceParms[ numCustSurfaceParms ].surfaceFlags );
 		numCustSurfaceParms++;
 	}
 

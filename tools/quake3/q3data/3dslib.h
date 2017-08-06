@@ -88,52 +88,52 @@ typedef struct
 	_3DSEditChunk_t editChunk;
 } _3DS_t;
 
-#define _3DS_CHUNK_NULL                     0x0000
-#define _3DS_CHUNK_UNKNOWN0                 0x0001
-#define _3DS_CHUNK_M3D_VERSION              0x0002
-#define _3DS_CHUNK_M3D_KFVERSION            0x0005
-#define _3DS_CHUNK_COLOR_F                  0x0010
-#define _3DS_CHUNK_COLOR_24                 0x0011
-#define _3DS_CHUNK_LIN_COLOR_24             0x0012
-#define _3DS_CHUNK_LIN_COLOR_F              0x0013
-#define _3DS_CHUNK_INT_PERCENTAGE           0x0030
-#define _3DS_CHUNK_FLOAT_PERCENT            0x0031
-#define _3DS_CHUNK_MASTER_SCALE             0x0100
-#define _3DS_CHUNK_CHUNK_TYPE               0x0995
-#define _3DS_CHUNK_CHUNK_UNIQUE             0x0996
-#define _3DS_CHUNK_NOT_CHUNK                0x0997
-#define _3DS_CHUNK_CONTAINER                0x0998
-#define _3DS_CHUNK_IS_CHUNK                 0x0999
-#define _3DS_CHUNK_C_SXP_SELFI_MASKDATA     0x0c3c
+#define _3DS_CHUNK_NULL                     ((short) 0x0000)
+#define _3DS_CHUNK_UNKNOWN0                 ((short) 0x0001)
+#define _3DS_CHUNK_M3D_VERSION              ((short) 0x0002)
+#define _3DS_CHUNK_M3D_KFVERSION            ((short) 0x0005)
+#define _3DS_CHUNK_COLOR_F                  ((short) 0x0010)
+#define _3DS_CHUNK_COLOR_24                 ((short) 0x0011)
+#define _3DS_CHUNK_LIN_COLOR_24             ((short) 0x0012)
+#define _3DS_CHUNK_LIN_COLOR_F              ((short) 0x0013)
+#define _3DS_CHUNK_INT_PERCENTAGE           ((short) 0x0030)
+#define _3DS_CHUNK_FLOAT_PERCENT            ((short) 0x0031)
+#define _3DS_CHUNK_MASTER_SCALE             ((short) 0x0100)
+#define _3DS_CHUNK_CHUNK_TYPE               ((short) 0x0995)
+#define _3DS_CHUNK_CHUNK_UNIQUE             ((short) 0x0996)
+#define _3DS_CHUNK_NOT_CHUNK                ((short) 0x0997)
+#define _3DS_CHUNK_CONTAINER                ((short) 0x0998)
+#define _3DS_CHUNK_IS_CHUNK                 ((short) 0x0999)
+#define _3DS_CHUNK_C_SXP_SELFI_MASKDATA     ((short) 0x0c3c)
 
-#define _3DS_CHUNK_BITMAP                   0x1100
-#define _3DS_CHUNK_USE_BITMAP               0x1101
-#define _3DS_CHUNK_SOLID_BGND               0x1200
-#define _3DS_CHUNK_USE_SOLID_BGND           0x1201
+#define _3DS_CHUNK_BITMAP                   ((short) 0x1100)
+#define _3DS_CHUNK_USE_BITMAP               ((short) 0x1101)
+#define _3DS_CHUNK_SOLID_BGND               ((short) 0x1200)
+#define _3DS_CHUNK_USE_SOLID_BGND           ((short) 0x1201)
 
-#define _3DS_CHUNK_EDIT                     0x3d3d
-#define _3DS_CHUNK_MESH_VERSION             0x3d3e
+#define _3DS_CHUNK_EDIT                     ((short) 0x3d3d)
+#define _3DS_CHUNK_MESH_VERSION             ((short) 0x3d3e)
 
-#define _3DS_CHUNK_NAMED_OBJECT             0x4000
-#define _3DS_CHUNK_NAMED_TRI_OBJECT         0x4100
-#define _3DS_CHUNK_POINT_ARRAY              0x4110
-#define _3DS_CHUNK_POINT_FLAG_ARRAY         0x4111
-#define _3DS_CHUNK_FACE_ARRAY               0x4120
-#define _3DS_CHUNK_MSH_MAT_GROUP            0x4130
-#define _3DS_CHUNK_TEX_VERTS                0x4140
-#define _3DS_CHUNK_SMOOTH_GROUP             0x4150
-#define _3DS_CHUNK_MESH_MATRIX              0x4160
-#define _3DS_CHUNK_MAGIC                    0x4d4d
+#define _3DS_CHUNK_NAMED_OBJECT             ((short) 0x4000)
+#define _3DS_CHUNK_NAMED_TRI_OBJECT         ((short) 0x4100)
+#define _3DS_CHUNK_POINT_ARRAY              ((short) 0x4110)
+#define _3DS_CHUNK_POINT_FLAG_ARRAY         ((short) 0x4111)
+#define _3DS_CHUNK_FACE_ARRAY               ((short) 0x4120)
+#define _3DS_CHUNK_MSH_MAT_GROUP            ((short) 0x4130)
+#define _3DS_CHUNK_TEX_VERTS                ((short) 0x4140)
+#define _3DS_CHUNK_SMOOTH_GROUP             ((short) 0x4150)
+#define _3DS_CHUNK_MESH_MATRIX              ((short) 0x4160)
+#define _3DS_CHUNK_MAGIC                    ((short) 0x4d4d)
 
-#define _3DS_CHUNK_MAT_NAME                 0xa000
-#define _3DS_CHUNK_TEXMAP                   0xa200
-#define _3DS_CHUNK_SPECMAP                  0xa204
-#define _3DS_CHUNK_OPACMAP                  0xa210
-#define _3DS_CHUNK_REFLMAP                  0xa220
-#define _3DS_CHUNK_BUMPMAP                  0xa230
-#define _3DS_CHUNK_MAT_MAPNAME              0xa300
-#define _3DS_CHUNK_MAT_LIST                 0xafff
+#define _3DS_CHUNK_MAT_NAME                 ((short) 0xa000)
+#define _3DS_CHUNK_TEXMAP                   ((short) 0xa200)
+#define _3DS_CHUNK_SPECMAP                  ((short) 0xa204)
+#define _3DS_CHUNK_OPACMAP                  ((short) 0xa210)
+#define _3DS_CHUNK_REFLMAP                  ((short) 0xa220)
+#define _3DS_CHUNK_BUMPMAP                  ((short) 0xa230)
+#define _3DS_CHUNK_MAT_MAPNAME              ((short) 0xa300)
+#define _3DS_CHUNK_MAT_LIST                 ((short) 0xafff)
 
-#define _3DS_CHUNK_KEYFRAME_DATA            0xb000
+#define _3DS_CHUNK_KEYFRAME_DATA            ((short) 0xb000)
 
 void _3DS_LoadPolysets( const char *filename, polyset_t **ppPSET, int *numpsets, qboolean verbose );

@@ -54,7 +54,7 @@ bool operator !=( DPlane& other );
 bool operator ==( DPlane& other );
 
 bool IsRedundant( std::list<DPoint*>& pointList );
-bool PlaneIntersection( DPlane* pl1, DPlane* pl2, vec3_t out );;
+bool PlaneIntersection( DPlane* pl1, DPlane* pl2, vec3_t out );
 
 vec_t DistanceToPoint( vec3_t pnt );
 

@@ -42,7 +42,7 @@ virtual bool isSelected() const = 0;
 namespace scene
 {
 class Instance;
-};
+}
 
 class InstanceSelectionObserver
 {

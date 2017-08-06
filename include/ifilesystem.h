@@ -124,7 +124,7 @@ inline VirtualFileSystem& GlobalFileSystem(){
 /// \deprecated Use \c openFile.
 inline int vfsLoadFile( const char* filename, void** buffer, int index = 0 ){
 	return static_cast<int>( GlobalFileSystem().loadFile( filename, buffer ) );
-};
+}
 
 /// \deprecated Deprecated.
 inline void vfsFreeFile( void* p ){
