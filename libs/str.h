@@ -427,7 +427,7 @@ bool operator >( char* pStr ) const { return ( m_bIgnoreCase ) ? stricmp( m_pStr
 bool operator >( const char* pStr ) const { return ( m_bIgnoreCase ) ? stricmp( m_pStr, pStr ) > 0 : strcmp( m_pStr, pStr ) > 0; }
 char& operator []( std::size_t nIndex ) { return m_pStr[nIndex]; }
 const char& operator []( std::size_t nIndex ) const { return m_pStr[nIndex]; }
-const char GetAt( std::size_t nIndex ) { return m_pStr[nIndex]; }
+char GetAt( std::size_t nIndex ) { return m_pStr[nIndex]; }
 };
 
 

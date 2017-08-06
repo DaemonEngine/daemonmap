@@ -118,11 +118,11 @@ struct rebind
 	typedef NamedAllocator<Other> other;
 };
 
-explicit NamedAllocator( const char* name ) : m_name( name ){
+explicit NamedAllocator( const char* name ) : DefaultAllocator<Type>(), m_name( name ){
 }
-NamedAllocator( const NamedAllocator<Type>& other ) : m_name( other.m_name ){
+NamedAllocator( const NamedAllocator<Type>& other ) : DefaultAllocator<Type>(), m_name( other.m_name ){
 }
-template<typename Other> NamedAllocator( const NamedAllocator<Other>& other ) : m_name( other.m_name ){
+template<typename Other> NamedAllocator( const NamedAllocator<Other>& other ) : DefaultAllocator<Type>(), m_name( other.m_name ){
 }
 ~NamedAllocator(){
 }
