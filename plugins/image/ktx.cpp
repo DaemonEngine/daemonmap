@@ -47,6 +47,7 @@
 class KTX_Decoder
 {
 public:
+	virtual ~KTX_Decoder() = default;
 	virtual void Decode( PointerInputStream& istream, byte* out ) = 0;
 	virtual unsigned int GetPixelSize() = 0;
 };

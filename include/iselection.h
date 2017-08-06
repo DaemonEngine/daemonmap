@@ -63,6 +63,7 @@ typedef SignalHandler1<const Selectable&> SelectionChangeHandler;
 class SelectionSystem
 {
 public:
+virtual ~SelectionSystem() = default;
 INTEGER_CONSTANT( Version, 1 );
 STRING_CONSTANT( Name, "selection" );
 

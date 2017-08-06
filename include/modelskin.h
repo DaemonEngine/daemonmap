@@ -40,6 +40,7 @@ class ModuleObserver;
 class ModelSkin
 {
 public:
+virtual ~ModelSkin() = default;
 STRING_CONSTANT( Name, "ModelSkin" );
 /// \brief Attach an \p observer whose realise() and unrealise() methods will be called when the skin is loaded or unloaded.
 virtual void attach( ModuleObserver& observer ) = 0;
@@ -64,6 +65,7 @@ virtual void skinChanged() = 0;
 class ModelSkinCache
 {
 public:
+virtual ~ModelSkinCache() = default;
 INTEGER_CONSTANT( Version, 1 );
 STRING_CONSTANT( Name, "modelskin" );
 /// \brief Increments the reference count of and returns a reference to the skin uniquely identified by 'name'.

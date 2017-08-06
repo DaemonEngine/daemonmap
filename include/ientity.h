@@ -34,6 +34,7 @@ typedef Callback1<const char*> KeyObserver;
 class EntityKeyValue
 {
 public:
+virtual ~EntityKeyValue() = default;
 virtual const char* c_str() const = 0;
 virtual void assign( const char* other ) = 0;
 virtual void attach( const KeyObserver& observer ) = 0;

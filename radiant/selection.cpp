@@ -206,6 +206,7 @@ void transform_local2object( Matrix4& object, const Matrix4& local, const Matrix
 class Rotatable
 {
 public:
+virtual ~Rotatable() = default;
 virtual void rotate( const Quaternion& rotation ) = 0;
 };
 
@@ -270,6 +271,7 @@ void translation_local2object( Vector3& object, const Vector3& local, const Matr
 class Translatable
 {
 public:
+virtual ~Translatable() = default;
 virtual void translate( const Vector3& translation ) = 0;
 };
 
@@ -329,6 +331,7 @@ void Transform( const Matrix4& manip2object, const Matrix4& device2manip, const 
 class Scalable
 {
 public:
+virtual ~Scalable() = default;
 virtual void scale( const Vector3& scaling ) = 0;
 };
 

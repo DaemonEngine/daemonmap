@@ -99,8 +99,6 @@ addflags_c("-Wno-int-conversion")
 addflags_c("-Wno-pointer-to-int-cast")
 addflags_c("-Wno-incompatible-pointer-types")
 
-addflags_cxx("-Wno-delete-non-virtual-dtor")
-
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 set(GTK_TARGET 2 CACHE STRING "GTK target")
 add_definitions(-DGTK_TARGET=${GTK_TARGET})

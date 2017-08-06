@@ -39,6 +39,7 @@
 class IGL2DWindow
 {
 public:
+virtual ~IGL2DWindow() = default;
 // Increment the number of references to this object
 virtual void IncRef() = 0;
 // Decrement the reference count

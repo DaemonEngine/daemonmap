@@ -59,6 +59,7 @@ typedef void ( *GraphTraversalFunc )( scene::Node& root, const scene::Traversabl
 class MapFormat
 {
 public:
+virtual ~MapFormat() = default;
 INTEGER_CONSTANT( Version, 2 );
 STRING_CONSTANT( Name, "map" );
 mutable bool wrongFormat;

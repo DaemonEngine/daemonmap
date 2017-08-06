@@ -107,6 +107,7 @@ const int c_attr_Binormal = 4;
 class OpenGLRenderable
 {
 public:
+virtual ~OpenGLRenderable() = default;
 virtual void render( RenderStateFlags state ) const = 0;
 };
 
@@ -119,6 +120,7 @@ class ModuleObserver;
 class Shader
 {
 public:
+virtual ~Shader() = default;
 virtual void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const LightList* lights = 0 ) = 0;
 virtual void incrementUsed() = 0;
 virtual void decrementUsed() = 0;

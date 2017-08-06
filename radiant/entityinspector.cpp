@@ -104,6 +104,7 @@ void Scene_EntitySetKeyValue_Selected_Undoable( const char* key, const char* val
 class EntityAttribute
 {
 public:
+virtual ~EntityAttribute() = default;
 virtual ui::Widget getWidget() const = 0;
 virtual void update() = 0;
 virtual void release() = 0;

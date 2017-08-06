@@ -31,6 +31,7 @@ class InputStream;
 class ArchiveFile
 {
 public:
+virtual ~ArchiveFile() = default;
 /// \brief Destroys the file object.
 virtual void release() = 0;
 /// \brief Returns the size of the file data in bytes.
@@ -50,6 +51,7 @@ class TextInputStream;
 class ArchiveTextFile
 {
 public:
+virtual ~ArchiveTextFile() = default;
 /// \brief Destroys the file object.
 virtual void release() = 0;
 /// \brief Returns the stream associated with this file.
@@ -75,6 +77,7 @@ class CustomArchiveVisitor;
 class Archive
 {
 public:
+virtual ~Archive() = default;
 
 class Visitor
 {

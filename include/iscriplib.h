@@ -33,6 +33,7 @@
 class Tokeniser
 {
 public:
+virtual ~Tokeniser() = default;
 virtual void release() = 0;
 virtual void nextLine() = 0;
 virtual const char* getToken() = 0;
@@ -46,6 +47,7 @@ class TextInputStream;
 class TokenWriter
 {
 public:
+virtual ~TokenWriter() = default;
 virtual void release() = 0;
 virtual void nextLine() = 0;
 virtual void writeToken( const char* token ) = 0;

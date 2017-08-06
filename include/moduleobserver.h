@@ -25,6 +25,7 @@
 class ModuleObserver
 {
 public:
+virtual ~ModuleObserver() = default;
 virtual void unrealise() = 0;
 virtual void realise() = 0;
 };

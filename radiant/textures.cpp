@@ -409,6 +409,7 @@ TexturesCacheObserver* m_observer;
 std::size_t m_unrealised;
 
 public:
+virtual ~TexturesMap() = default;
 TexturesMap() : m_qtextures( TextureConstructor( this ) ), m_observer( 0 ), m_unrealised( 1 ){
 }
 typedef qtextures_t::iterator iterator;

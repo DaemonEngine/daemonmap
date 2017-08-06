@@ -59,6 +59,7 @@ virtual void realise() = 0;
 class TexturesCache
 {
 public:
+virtual ~TexturesCache() = default;
 INTEGER_CONSTANT( Version, 1 );
 STRING_CONSTANT( Name, "textures" );
 virtual LoadImageCallback defaultLoader() const = 0;

@@ -56,6 +56,7 @@ const char* build_get_variable( const char* name ){
 class Evaluatable
 {
 public:
+virtual ~Evaluatable() = default;
 virtual void evaluate( StringBuffer& output ) = 0;
 virtual void exportXML( XMLImporter& importer ) = 0;
 };
@@ -172,6 +173,7 @@ void exportXML( XMLImporter& importer ){
 class XMLElementParser : public TextOutputStream
 {
 public:
+virtual ~XMLElementParser() = default;
 virtual XMLElementParser& pushElement( const XMLElement& element ) = 0;
 virtual void popElement( const char* name ) = 0;
 };

@@ -68,6 +68,7 @@ class IGL2DWindow;
 class ISAXHandler
 {
 public:
+virtual ~ISAXHandler() = default;
 virtual void Release(){}
 virtual void saxStartElement( message_info_t* ctx, const xmlChar* name, const xmlChar** attrs ) = 0;
 virtual void saxEndElement( message_info_t* ctx, const xmlChar* name ) = 0;

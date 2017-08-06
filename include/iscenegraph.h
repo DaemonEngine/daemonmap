@@ -70,6 +70,7 @@ typedef Stack<NodeReference> Path;
 class Graph
 {
 public:
+virtual ~Graph() = default;
 INTEGER_CONSTANT( Version, 1 );
 STRING_CONSTANT( Name, "scenegraph" );
 

@@ -60,6 +60,7 @@ class VolumeTest;
 class Renderable
 {
 public:
+virtual ~Renderable() = default;
 STRING_CONSTANT( Name, "Renderable" );
 
 virtual void renderSolid( Renderer& renderer, const VolumeTest& volume ) const = 0;
