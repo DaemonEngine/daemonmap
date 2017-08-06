@@ -76,7 +76,7 @@ const char* getCommandTitleList(){
 	return "";
 }
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
-	char *message = NULL;
+	char const *message = NULL;
 	if ( string_equal( command, "About" ) ) {
 		char const *version_string = "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__
 			"\nRadiant version: " RADIANT_VERSION
