@@ -83,8 +83,8 @@ friend mat3_t   SkewSymmetric( idVec3 const &src );
 ID_INLINE mat3_t::mat3_t() {
 }
 
-ID_INLINE mat3_t::mat3_t( float src[ 3 ][ 3 ] ) {
-	memcpy( mat, src, sizeof( src ) );
+ID_INLINE mat3_t::mat3_t(float src[3][3]) {
+    memcpy(mat, src, sizeof(float) * 3 * 3);
 }
 
 ID_INLINE mat3_t::mat3_t( idVec3 const &x, idVec3 const &y, idVec3 const &z ) {

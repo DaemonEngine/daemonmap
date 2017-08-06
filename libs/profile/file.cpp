@@ -271,7 +271,7 @@ int MemStream::Seek( offset_type lOff, int nFrom ){
 		lNewPos = m_nFileSize + lOff;
 	}
 	else{
-		return ( position_type ) - 1;
+		return -1;
 	}
 
 	m_nPosition = lNewPos;

@@ -1989,7 +1989,7 @@ void TextureBrowser_SetNotex(){
 	name << GlobalRadiant().getAppPath() << "bitmaps/" NOTEX_BASENAME ".png";
 	g_notex = name.c_str();
 
-	name = NULL;
+	name = StringOutputStream(256);
 	name << GlobalRadiant().getAppPath() << "bitmaps/" SHADERNOTEX_BASENAME " .png";
 	g_shadernotex = name.c_str();
 }

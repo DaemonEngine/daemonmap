@@ -476,7 +476,7 @@ void XmlTagBuilder::GetShaderTags( const char* shader, std::vector<CopiedString>
 	   returns a vector containing the tags
 	 */
 
-	char* expression;
+	char const *expression;
 
 	if ( shader == NULL ) { // get all tags from all shaders
 		expression = "/root/*/*/tag";
@@ -510,7 +510,7 @@ void XmlTagBuilder::GetUntagged( std::set<CopiedString>& shaders ){
 	   returns a set containing the shaders (with path)
 	 */
 
-	char* expression = "/root/*/*[not(child::tag)]";
+	char const *expression = "/root/*/*[not(child::tag)]";
 
 	xmlXPathObjectPtr xpathPtr = XpathEval( expression );
 	xmlNodeSetPtr nodePtr;
@@ -540,7 +540,7 @@ void XmlTagBuilder::GetAllTags( std::set<CopiedString>& tags ){
 	   returns a set containing all used tags
 	 */
 
-	char* expression = "/root/*/*/tag";
+	char const *expression = "/root/*/*/tag";
 
 	xmlXPathObjectPtr xpathPtr = XpathEval( expression );
 	xmlNodeSetPtr nodePtr;

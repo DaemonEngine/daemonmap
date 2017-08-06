@@ -593,7 +593,7 @@ int main( int argc, char* argv[] ){
 
 	GlobalDebugMessageHandler::instance().setHandler( GlobalPopupDebugMessageHandler::instance() );
 
-	environment_init( argc, argv );
+	environment_init(argc, (char const **) argv);
 
 	paths_init();
 
