@@ -19,8 +19,8 @@
 #if !defined( INCLUDED_UFOAI_LEVEL_H )
 #define INCLUDED_UFOAI_LEVEL_H
 
-void assign_default_values_to_worldspawn( bool override, char **returnMsg );
-void check_map_values( char **returnMsg );
-void get_team_count( const char *classname, int *count, int *team );
+void assign_default_values_to_worldspawn(bool override, char const **returnMsg);
+void check_map_values(char const **returnMsg);
+void get_team_count(const char *classname, int *count, int *team);
 
 #endif
