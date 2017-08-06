@@ -213,10 +213,10 @@ void instantiate(){
 		b = makeCallback0( Test::Test0(), test );
 		Callback c = Test::Test0ConstCaller( testconst );
 		c = makeCallback0( Test::Test0Const(), test );
-		Callback d = Test0Caller( test );
-		Callback e = Test0ConstCaller( testconst );
-		Callback f = Test0PCaller( &test );
-		Callback g = Test0ConstPCaller( &testconst );
+		Test0Caller{ test };
+		Test0ConstCaller{ testconst };
+		Test0PCaller{ &test };
+		Test0ConstPCaller{ &testconst };
 		a();
 		bool u = a != b;
 	}
@@ -227,10 +227,10 @@ void instantiate(){
 		b = makeCallback1( Test::Test1(), test );
 		TestCallback1 c = Test::Test1ConstCaller( testconst );
 		c = makeCallback1( Test::Test1Const(), test );
-		TestCallback1 d = Test1Caller( test );
-		TestCallback1 e = Test1ConstCaller( testconst );
-		TestCallback1 f = Test1PCaller( &test );
-		TestCallback1 g = Test1ConstPCaller( &testconst );
+		Test1Caller{ test };
+		Test1ConstCaller{ testconst };
+		Test1PCaller{ &test };
+		Test1ConstPCaller{ &testconst };
 		a( A1() );
 		bool u = a != b;
 	}
@@ -238,8 +238,8 @@ void instantiate(){
 		typedef Callback2<A1, A2> TestCallback2;
 		TestCallback2 a = makeStatelessCallback2( Test2Free() );
 		TestCallback2 b = makeCallback2( Test2(), test );
-		TestCallback2 c = makeCallback2( Test::Test2(), test );
-		TestCallback2 d = makeCallback2( Test::Test2Const(), test );
+		makeCallback2( Test::Test2(), test );
+		makeCallback2( Test::Test2Const(), test );
 		a( A1(), A2() );
 		bool u = a != b;
 	}
@@ -247,8 +247,8 @@ void instantiate(){
 		typedef Callback3<A1, A2, A3> TestCallback3;
 		TestCallback3 a = makeStatelessCallback3( Test3Free() );
 		TestCallback3 b = makeCallback3( Test3(), test );
-		TestCallback3 c = makeCallback3( Test::Test3(), test );
-		TestCallback3 d = makeCallback3( Test::Test3Const(), test );
+		makeCallback3( Test::Test3(), test );
+		makeCallback3( Test::Test3Const(), test );
 		a( A1(), A2(), A3() );
 		bool u = a != b;
 	}

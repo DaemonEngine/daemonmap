@@ -2183,7 +2183,8 @@ int FilterWindingIntoTree_r( winding_t *w, mapDrawSurface_t *ds, node_t *node ){
 			if ( DotProduct( plane1, reverse ) > 0.999f && fabs( plane1[ 3 ] - reverse[ 3 ] ) < 0.001f ) {
 				return FilterWindingIntoTree_r( w, ds, node->children[ 1 ] );
 			}
-			#else
+            #else
+			(void) plane2;
 			/* div0: this is the cholera (doesn't hit enough) */
 
 			/* the drawsurf might have an associated plane, if so, force a filter here */

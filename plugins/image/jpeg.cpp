@@ -316,6 +316,7 @@ static void j_putRGBAScanline( unsigned char* jpegline, int widthPix, unsigned c
 
 		//!\todo fix jpeglib, it leaves alpha channel uninitialised
 #if 1
+		(void) iAlp;
 		*oAlp = 255;
 #else
 		*oAlp = iAlp;

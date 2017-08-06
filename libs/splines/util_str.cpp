@@ -475,6 +475,7 @@ void TestStringClass
 	void
 ){
 	char ch;                            // ch == ?
+	(void) ch;
 	idStr   *t;                         // t == ?
 	idStr a;                                // a.len == 0, a.data == "\0"
 	idStr b;                                // b.len == 0, b.data == "\0"
@@ -483,6 +484,7 @@ void TestStringClass
 	idStr e( reinterpret_cast<const char *>( NULL ) );
 	// e.len == 0, e.data == "\0"					ASSERT!
 	int i;                              // i == ?
+	(void) i;
 
 	i = a.length();                 // i == 0
 	i = c.length();                 // i == 4

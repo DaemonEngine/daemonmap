@@ -208,6 +208,7 @@ virtual void exportXML( XMLImporter& importer ){
 		xmlFreeParserCtxt( ctxt );
 	}
 
+	(void) wellFormed;
 	//return wellFormed;
 }
 private:

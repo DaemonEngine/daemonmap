@@ -322,17 +322,8 @@ void Camera_FreeMove( camera_t& camera, int dx, int dy ){
 }
 
 void Cam_MouseControl( camera_t& camera, int x, int y ){
-	int xl, xh;
-	int yl, yh;
-	float xf, yf;
-
-	xf = (float)( x - camera.width / 2 ) / ( camera.width / 2 );
-	yf = (float)( y - camera.height / 2 ) / ( camera.height / 2 );
-
-	xl = camera.width / 3;
-	xh = xl * 2;
-	yl = camera.height / 3;
-	yh = yl * 2;
+	float xf = (float)( x - camera.width / 2 ) / ( camera.width / 2 );
+	float yf = (float)( y - camera.height / 2 ) / ( camera.height / 2 );
 
 	xf *= 1.0f - fabsf( yf );
 	if ( xf < 0 ) {

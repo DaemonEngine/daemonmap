@@ -87,12 +87,12 @@ addflags("-Wall")
 addflags("-Wextra")
 addflags("-pedantic")
 
+addflags_c("-Wno-deprecated-declarations") # vfs.c: g_strdown
+
 addflags("-Wno-sign-compare")
 addflags("-Wno-unused-function")
 addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
-addflags("-Wno-deprecated-declarations")
-addflags("-Wno-unused-but-set-variable")
 addflags("-Wno-missing-field-initializers")
 
 addflags_c("-Wno-int-conversion")
