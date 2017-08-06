@@ -349,11 +349,11 @@ int getTextureHeight( qtexture_t* tex ){
 TextureBrowser() :
 	m_texture_scroll( 0 ),
 	m_hideunused_item( TextureBrowserHideUnusedExport() ),
+	m_hidenotex_item( TextureBrowserFilterFallbackExport() ),
 	m_showshaders_item( TextureBrowserShowShadersExport() ),
 	m_showshaderlistonly_item( TextureBrowserShowShaderlistOnlyExport() ),
 	m_fixedsize_item( TextureBrowserFixedSizeExport() ),
 	m_filternotex_item( TextureBrowserFilterMissingExport() ),
-	m_hidenotex_item( TextureBrowserFilterFallbackExport() ),
 	m_enablealpha_item( TextureBrowserEnableAlphaExport() ),
 	m_heightChanged( true ),
 	m_originInvalid( true ),

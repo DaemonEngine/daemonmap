@@ -99,7 +99,6 @@ addflags_c("-Wno-int-conversion")
 addflags_c("-Wno-pointer-to-int-cast")
 addflags_c("-Wno-incompatible-pointer-types")
 
-addflags_cxx("-Wno-reorder")
 addflags_cxx("-Wno-delete-non-virtual-dtor")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
