@@ -148,6 +148,8 @@ void VFS_Refresh(){
 	QE_InitVFS();
 	GlobalFileSystem().refresh();
 	g_vfsInitialized = true;
+	// also refresg models
+	RefreshReferences();
 	// also refresh texture browser
 	TextureBrowser_RefreshShaders();
 }
@@ -3180,7 +3182,7 @@ void MainFrame_Construct(){
 	GlobalCommands_insert( "SaveMapAs", FreeCaller<SaveMapAs>() );
 	GlobalCommands_insert( "ExportSelected", FreeCaller<ExportMap>() );
 	GlobalCommands_insert( "SaveRegion", FreeCaller<SaveRegion>() );
-	GlobalCommands_insert( "RefreshReferences", FreeCaller<RefreshReferences>() );
+	GlobalCommands_insert( "RefreshReferences", FreeCaller<VFS_Refresh>() );
 	GlobalCommands_insert( "ProjectSettings", FreeCaller<DoProjectSettings>() );
 	GlobalCommands_insert( "Exit", FreeCaller<Exit>() );
 
