@@ -716,7 +716,7 @@ void QDECL Com_sprintf( char *dest, int size, const char *fmt, ... ) {
    FIXME: make this buffer size safe someday
    ============
  */
-char    * QDECL va( char *format, ... ) {
+char *QDECL va( const char *format, ... ) {
 	va_list argptr;
 	static char string[2][32000];       // in case va is called by nested functions
 	static int index = 0;
@@ -750,7 +750,7 @@ char    * QDECL va( char *format, ... ) {
    FIXME: overflow check?
    ===============
  */
-char *Info_ValueForKey( const char *s, const char *key ) {
+const char *Info_ValueForKey( const char *s, const char *key ) {
 	char pkey[MAX_INFO_KEY];
 	static char value[2][MAX_INFO_VALUE];   // use two buffers so compares
 	                                        // work without stomping on each other

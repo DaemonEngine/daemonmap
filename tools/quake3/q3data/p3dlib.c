@@ -31,9 +31,10 @@
 #define MAX_POLYSETS 64
 
 #if defined ( __linux__ ) || defined ( __APPLE__ )
-#define _strcmpi Q_stricmp
-#define filelength Q_filelength
-#define strlwr strlower
+	#include "cmdlib.h"
+	#define _strcmpi Q_stricmp
+	#define filelength Q_filelength
+	#define strlwr strlower
 #endif
 typedef struct
 {

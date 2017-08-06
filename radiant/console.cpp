@@ -143,7 +143,7 @@ public:
 GtkTextBufferOutputStream( GtkTextBuffer* textBuffer, GtkTextIter* iter, GtkTextTag* tag ) : textBuffer( textBuffer ), iter( iter ), tag( tag ){
 }
 std::size_t write( const char* buffer, std::size_t length ){
-	gtk_text_buffer_insert_with_tags( textBuffer, iter, buffer, gint( length ), tag, 0 );
+	gtk_text_buffer_insert_with_tags( textBuffer, iter, buffer, gint( length ), tag, NULL );
 	return length;
 }
 };
@@ -174,9 +174,9 @@ std::size_t Sys_Print( int level, const char* buf, std::size_t length ){
 			const GdkColor yellow = { 0, 0xb0ff, 0xb0ff, 0x0000 };
 			const GdkColor red = { 0, 0xffff, 0x0000, 0x0000 };
 
-			static GtkTextTag* error_tag = gtk_text_buffer_create_tag( buffer, "red_foreground", "foreground-gdk", &red, 0 );
-			static GtkTextTag* warning_tag = gtk_text_buffer_create_tag( buffer, "yellow_foreground", "foreground-gdk", &yellow, 0 );
-			static GtkTextTag* standard_tag = gtk_text_buffer_create_tag( buffer, "black_foreground", 0 );
+			static GtkTextTag* error_tag = gtk_text_buffer_create_tag( buffer, "red_foreground", "foreground-gdk", &red, NULL );
+			static GtkTextTag* warning_tag = gtk_text_buffer_create_tag( buffer, "yellow_foreground", "foreground-gdk", &yellow, NULL );
+			static GtkTextTag* standard_tag = gtk_text_buffer_create_tag( buffer, "black_foreground", NULL );
 			GtkTextTag* tag;
 			switch ( level )
 			{
