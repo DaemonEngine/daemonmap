@@ -65,7 +65,7 @@
 #include "groupdialog.h"
 
 ui::Entry numeric_entry_new(){
-	auto entry = ui::Entry();
+	auto entry = ui::Entry(ui::New);
 	entry.show();
 	entry.dimensions(64, -1);
 	return entry;
@@ -122,7 +122,7 @@ public:
 BooleanAttribute( const char* key ) :
 	m_key( key ),
 	m_check( ui::null ){
-	auto check = ui::CheckButton();
+	auto check = ui::CheckButton(ui::New);
 	check.show();
 
 	m_check = check;
@@ -167,7 +167,7 @@ StringAttribute( const char* key ) :
 	m_key( key ),
 	m_entry( ui::null ),
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
-	auto entry = ui::Entry();
+	auto entry = ui::Entry(ui::New);
 	entry.show();
 	entry.dimensions(50, -1);
 
@@ -662,7 +662,7 @@ ListAttribute( const char* key, const ListAttributeType& type ) :
 	m_combo( 0 ),
 	m_nonModal( ApplyCaller( *this ) ),
 	m_type( type ){
-	auto combo = ui::ComboBoxText();
+	auto combo = ui::ComboBoxText(ui::New);
 
 	for ( ListAttributeType::const_iterator i = type.begin(); i != type.end(); ++i )
 	{
@@ -702,20 +702,20 @@ typedef MemberCaller<ListAttribute, &ListAttribute::update> UpdateCaller;
 
 namespace
 {
-ui::Widget g_entity_split1;
-ui::Widget g_entity_split2;
+ui::Widget g_entity_split1{ui::null};
+ui::Widget g_entity_split2{ui::null};
 int g_entitysplit1_position;
 int g_entitysplit2_position;
 
 bool g_entityInspector_windowConstructed = false;
 
 GtkTreeView* g_entityClassList;
-ui::TextView g_entityClassComment;
+ui::TextView g_entityClassComment{ui::null};
 
 GtkCheckButton* g_entitySpawnflagsCheck[MAX_FLAGS];
 
-ui::Entry g_entityKeyEntry;
-ui::Entry g_entityValueEntry;
+ui::Entry g_entityKeyEntry{ui::null};
+ui::Entry g_entityValueEntry{ui::null};
 
 ui::ListStore g_entlist_store{ui::null};
 ui::ListStore g_entprops_store{ui::null};
@@ -1297,14 +1297,14 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 	vbox.connect( "destroy", G_CALLBACK( EntityInspector_destroyWindow ), 0 );
 
 	{
-		ui::Widget split1 = ui::VPaned();
+		ui::Widget split1 = ui::VPaned(ui::New);
 		gtk_box_pack_start( GTK_BOX( vbox ), split1, TRUE, TRUE, 0 );
 		split1.show();
 
 		g_entity_split1 = split1;
 
 		{
-			ui::Widget split2 = ui::VPaned();
+			ui::Widget split2 = ui::VPaned(ui::New);
 			gtk_paned_add1( GTK_PANED( split1 ), split2 );
 			split2.show();
 
@@ -1312,7 +1312,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 			{
 				// class list
-				auto scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow(ui::New);
 				scr.show();
 				gtk_paned_add1( GTK_PANED( split2 ), scr );
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
@@ -1328,7 +1328,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					view.connect( "key_press_event", G_CALLBACK( EntityClassList_keypress ), 0 );
 
 					{
-						auto renderer = ui::CellRendererText();
+						auto renderer = ui::CellRendererText(ui::New);
 						GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 0}} );
 						gtk_tree_view_append_column( view, column );
 					}
@@ -1349,14 +1349,14 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 			}
 
 			{
-				auto scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow(ui::New);
 				scr.show();
 				gtk_paned_add2( GTK_PANED( split2 ), scr );
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 				gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 				{
-					auto text = ui::TextView();
+					auto text = ui::TextView(ui::New);
 					gtk_widget_set_size_request( GTK_WIDGET( text ), 0, -1 ); // allow shrinking
 					gtk_text_view_set_wrap_mode( text, GTK_WRAP_WORD );
 					gtk_text_view_set_editable( text, FALSE );
@@ -1368,7 +1368,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 		}
 
 		{
-			ui::Widget split2 = ui::VPaned();
+			ui::Widget split2 = ui::VPaned(ui::New);
 			gtk_paned_add2( GTK_PANED( split1 ), split2 );
 			split2.show();
 
@@ -1396,7 +1396,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 				{
 					// key/value list
-					auto scr = ui::ScrolledWindow();
+					auto scr = ui::ScrolledWindow(ui::New);
 					scr.show();
 					gtk_box_pack_start( GTK_BOX( vbox2 ), scr, TRUE, TRUE, 0 );
 					gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
@@ -1410,13 +1410,13 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 						gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 						{
-							auto renderer = ui::CellRendererText();
+							auto renderer = ui::CellRendererText(ui::New);
 							GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 							gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 						}
 
 						{
-							auto renderer = ui::CellRendererText();
+							auto renderer = ui::CellRendererText(ui::New);
 							GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 1}} );
 							gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 						}
@@ -1445,7 +1445,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					gtk_table_set_col_spacings( table, 5 );
 
 					{
-						auto entry = ui::Entry();
+						auto entry = ui::Entry(ui::New);
 						entry.show();
 						gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
@@ -1456,7 +1456,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					}
 
 					{
-						auto entry = ui::Entry();
+						auto entry = ui::Entry(ui::New);
 						entry.show();
 						gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
@@ -1506,7 +1506,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 			}
 
 			{
-				auto scr = ui::ScrolledWindow();
+				auto scr = ui::ScrolledWindow(ui::New);
 				scr.show();
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 

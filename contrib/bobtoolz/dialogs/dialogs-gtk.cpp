@@ -34,17 +34,17 @@
    ---------------------------------*/
 
 typedef struct {
-	ui::Widget cbTexChange;
-	ui::Widget editTexOld, editTexNew;
+	ui::Widget cbTexChange{ui::null};
+	ui::Widget editTexOld{ui::null}, editTexNew{ui::null};
 
-	ui::Widget cbScaleHor, cbScaleVert;
-	ui::Widget editScaleHor, editScaleVert;
+	ui::Widget cbScaleHor{ui::null}, cbScaleVert{ui::null};
+	ui::Widget editScaleHor{ui::null}, editScaleVert{ui::null};
 
-	ui::Widget cbShiftHor, cbShiftVert;
-	ui::Widget editShiftHor, editShiftVert;
+	ui::Widget cbShiftHor{ui::null}, cbShiftVert{ui::null};
+	ui::Widget editShiftHor{ui::null}, editShiftVert{ui::null};
 
-	ui::Widget cbRotation;
-	ui::Widget editRotation;
+	ui::Widget cbRotation{ui::null};
+	ui::Widget editRotation{ui::null};
 }dlg_texReset_t;
 
 dlg_texReset_t dlgTexReset;
@@ -209,7 +209,7 @@ bool ValidateTextInt( const char* pData, const char* error_title, int* value ){
  */
 
 EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMessageBoxType type ){
-	ui::Widget w, vbox, hbox;
+	ui::Widget w{ui::null};
 	EMessageBoxReturn ret;
 	int loop = 1;
 
@@ -222,7 +222,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	g_object_set_data( G_OBJECT( window ), "ret", &ret );
 	gtk_widget_realize( window );
 
-	vbox = ui::VBox( FALSE, 10 );
+	auto vbox = ui::VBox( FALSE, 10 );
 	window.add(vbox);
 	gtk_widget_show( vbox );
 
@@ -235,7 +235,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	gtk_box_pack_start( GTK_BOX( vbox ), w, FALSE, FALSE, 2 );
 	gtk_widget_show( w );
 
-	hbox = ui::HBox( FALSE, 10 );
+	auto hbox = ui::HBox( FALSE, 10 );
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 2 );
 	gtk_widget_show( hbox );
 
@@ -1044,10 +1044,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 }
 
 EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
-	ui::Widget w, hbox;
-
-	ui::Entry text1, text2, text3;
-	ui::Widget check1, check2;
+	ui::Widget w{ui::null};
 
 	EMessageBoxReturn ret;
 	int loop = 1;
@@ -1073,13 +1070,13 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ---- vbox ----
 
-	hbox = ui::HBox( FALSE, 10 );
+	auto hbox = ui::HBox( FALSE, 10 );
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 2 );
 	gtk_widget_show( hbox );
 
 	// ---- hbox ----
 
-	text1 = ui::Entry( 256 );
+	auto text1 = ui::Entry( 256 );
 	gtk_entry_set_text( text1, "25" );
 	gtk_box_pack_start( GTK_BOX( hbox ), text1, FALSE, FALSE, 2 );
 	gtk_widget_show( text1 );
@@ -1097,7 +1094,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ---- hbox ----
 
-	text2 = ui::Entry( 256 );
+	auto text2 = ui::Entry( 256 );
 	gtk_entry_set_text( text2, "3" );
 	gtk_box_pack_start( GTK_BOX( hbox ), text2, FALSE, FALSE, 2 );
 	gtk_widget_show( text2 );
@@ -1120,7 +1117,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ---- hbox ----
 
-	text3 = ui::Entry( 256 );
+	auto text3 = ui::Entry( 256 );
 	gtk_entry_set_text( text3, "-800" );
 	gtk_box_pack_start( GTK_BOX( hbox ), text3, FALSE, FALSE, 2 );
 	gtk_widget_show( text3 );
@@ -1136,11 +1133,11 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 	gtk_box_pack_start( GTK_BOX( vbox ), w, FALSE, FALSE, 0 );
 	gtk_widget_show( w );
 
-	check1 = ui::CheckButton( "No Dynamic Update" );
+	auto check1 = ui::CheckButton( "No Dynamic Update" );
 	gtk_box_pack_start( GTK_BOX( vbox ), check1, FALSE, FALSE, 0 );
 	gtk_widget_show( check1 );
 
-	check2 = ui::CheckButton( "Show Bounding Lines" );
+	auto check2 = ui::CheckButton( "Show Bounding Lines" );
 	gtk_box_pack_start( GTK_BOX( vbox ), check2, FALSE, FALSE, 0 );
 	gtk_widget_show( check2 );
 
@@ -1219,7 +1216,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 }
 
 EMessageBoxReturn DoCTFColourChangeBox(){
-	ui::Widget w, hbox;
+	ui::Widget w{ui::null};
 	EMessageBoxReturn ret;
 	int loop = 1;
 
@@ -1244,7 +1241,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 
 	// ---- vbox ----
 
-	hbox = ui::HBox( FALSE, 10 );
+	auto hbox = ui::HBox( FALSE, 10 );
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, TRUE, TRUE, 0 );
 	gtk_widget_show( hbox );
 
@@ -1289,7 +1286,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	Str texSelected;
 
-	ui::Widget w, hbox;
+	ui::Widget w{ui::null};
 
 	EMessageBoxReturn ret;
 	int loop = 1;
@@ -1313,7 +1310,7 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 
 	// ---- vbox ----
 
-	hbox = ui::HBox( FALSE, 10 );
+	auto hbox = ui::HBox( FALSE, 10 );
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 2 );
 	gtk_widget_show( hbox );
 
@@ -1620,12 +1617,12 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	Str texSelected;
 
-	ui::Widget w, hbox;
+	ui::Widget w{ui::null};
 
-	ui::Widget radiusX, radiusY;
-	ui::Widget angleStart, angleEnd;
-	ui::Widget heightStart, heightEnd;
-	ui::Widget numPoints;
+	ui::Widget radiusX{ui::null}, radiusY{ui::null};
+	ui::Widget angleStart{ui::null}, angleEnd{ui::null};
+	ui::Widget heightStart{ui::null}, heightEnd{ui::null};
+	ui::Widget numPoints{ui::null};
 
 	EMessageBoxReturn ret;
 	int loop = 1;
@@ -1649,7 +1646,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 
 	// ---- vbox ----
 
-	hbox = ui::HBox( FALSE, 10 );
+	auto hbox = ui::HBox( FALSE, 10 );
 	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 2 );
 	gtk_widget_show( hbox );
 
@@ -1886,8 +1883,8 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 // ailmanki
 // add a simple input for the MakeChain thing..
 EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
-	ui::Widget   w;
-	ui::Entry textlinkNum, textlinkName;
+	ui::Widget   w{ui::null};
+	ui::Entry textlinkNum{ui::null}, textlinkName{ui::null};
 	EMessageBoxReturn ret;
 	int loop = 1;
 

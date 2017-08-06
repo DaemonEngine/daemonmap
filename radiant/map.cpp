@@ -763,8 +763,8 @@ WindowPosition g_posMapInfoWnd( c_default_window_pos );
 
 void DoMapInfo(){
 	ModalDialog dialog;
-	ui::Entry brushes_entry;
-	ui::Entry entities_entry;
+	ui::Entry brushes_entry{ui::null};
+	ui::Entry entities_entry{ui::null};
 	ui::ListStore EntityBreakdownWalker{ui::null};
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Map Info", G_CALLBACK(dialog_delete_callback ), &dialog );
@@ -784,7 +784,7 @@ void DoMapInfo(){
 				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
 
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -794,7 +794,7 @@ void DoMapInfo(){
 					brushes_entry = entry;
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -847,14 +847,14 @@ void DoMapInfo(){
 				gtk_tree_view_set_headers_clickable( GTK_TREE_VIEW( view ), TRUE );
 
 				{
-					auto renderer = ui::CellRendererText();
+					auto renderer = ui::CellRendererText(ui::New);
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "Entity", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 					gtk_tree_view_column_set_sort_column_id( column, 0 );
 				}
 
 				{
-					auto renderer = ui::CellRendererText();
+					auto renderer = ui::CellRendererText(ui::New);
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "Count", renderer, {{"text", 1}} );
 					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 					gtk_tree_view_column_set_sort_column_id( column, 1 );
@@ -2036,12 +2036,12 @@ static void GetSelectionIndex( int *ent, int *brush ){
 
 void DoFind(){
 	ModalDialog dialog;
-	ui::Entry entity;
-	ui::Entry brush;
+	ui::Entry entity{ui::null};
+	ui::Entry brush{ui::null};
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Find Brush", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	{
@@ -2065,7 +2065,7 @@ void DoFind(){
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 			}
 			{
-				auto entry = ui::Entry();
+				auto entry = ui::Entry(ui::New);
 				entry.show();
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -2074,7 +2074,7 @@ void DoFind(){
 				entity = entry;
 			}
 			{
-				auto entry = ui::Entry();
+				auto entry = ui::Entry(ui::New);
 				entry.show();
 				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),

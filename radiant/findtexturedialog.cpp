@@ -128,8 +128,8 @@ FindTextureDialog::~FindTextureDialog(){
 }
 
 ui::Window FindTextureDialog::BuildDialog(){
-	ui::Widget vbox, hbox, table, label;
-	ui::Widget button;
+	ui::Widget vbox{ui::null}, hbox{ui::null}, table{ui::null}, label{ui::null};
+	ui::Widget button{ui::null};
 	ui::Entry entry{ui::null};
 
 	auto dlg = ui::Window(create_floating_window( "Find / Replace Texture(s)", m_parent ));
@@ -163,7 +163,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 
-	entry = ui::Entry();
+	entry = ui::Entry(ui::New);
 	entry.show();
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -173,7 +173,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 	AddDialogData( *GTK_ENTRY(entry), m_strFind );
 	GlobalTextureEntryCompletion::instance().connect( entry );
 
-	entry = ui::Entry();
+	entry = ui::Entry(ui::New);
 	entry.show();
 	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),

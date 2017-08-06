@@ -840,7 +840,7 @@ gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStor
 ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Build Menu", G_CALLBACK(dialog_delete_callback ), &modal, -1, 400 );
 
-	ui::Widget buildView;
+	ui::Widget buildView{ui::null};
 
 	{
 		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
@@ -874,7 +874,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					ui::Widget view = ui::TreeView( ui::TreeModel(GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-					auto renderer = ui::CellRendererText();
+					auto renderer = ui::CellRendererText(ui::New);
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect("edited", G_CALLBACK( project_cell_edited ), &projectList );
 
@@ -911,7 +911,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-					auto renderer = ui::CellRendererText();
+					auto renderer = ui::CellRendererText(ui::New);
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect( "edited", G_CALLBACK( commands_cell_edited ), store );
 

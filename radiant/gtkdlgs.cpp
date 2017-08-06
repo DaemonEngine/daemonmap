@@ -154,8 +154,8 @@ inline void path_copy_clean( char* destination, const char* source ){
 
 struct GameCombo
 {
-	ui::ComboBoxText game_select;
-	ui::Entry fsgame_entry;
+	ui::ComboBoxText game_select{ui::null};
+	ui::Entry fsgame_entry{ui::null};
 };
 
 gboolean OnSelchangeComboWhatgame( ui::Widget widget, GameCombo* combo ){
@@ -239,7 +239,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
-					dialog.game_combo.game_select = ui::ComboBoxText();
+					dialog.game_combo.game_select = ui::ComboBoxText(ui::New);
 
 					gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().basegame );
 					if ( globalGameComboConfiguration().known[0] != '\0' ) {
@@ -264,7 +264,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.show();
 					gtk_table_attach( table2, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -281,7 +281,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
-					auto combo = ui::ComboBoxText();
+					auto combo = ui::ComboBoxText(ui::New);
 					gtk_combo_box_text_append_text( combo, globalMappingMode().sp_mapping_mode );
 					gtk_combo_box_text_append_text( combo, globalMappingMode().mp_mapping_mode );
 
@@ -372,7 +372,7 @@ void DoSides( int type, int axis ){
 
 	auto window = MainFrame_getWindow().create_dialog_window("Arbitrary sides", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	{
@@ -384,7 +384,7 @@ void DoSides( int type, int axis ){
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 		}
 		{
-			auto entry = ui::Entry();
+			auto entry = ui::Entry(ui::New);
 			entry.show();
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), FALSE, FALSE, 0 );
 			sides_entry = entry;
@@ -566,7 +566,7 @@ void DoAbout(){
 					auto sc_extensions = create_scrolled_window( ui::Policy::AUTOMATIC, ui::Policy::ALWAYS, 4 );
 					frame.add(sc_extensions);
 					{
-						auto text_extensions = ui::TextView();
+						auto text_extensions = ui::TextView(ui::New);
 						gtk_text_view_set_editable( GTK_TEXT_VIEW( text_extensions ), FALSE );
 						sc_extensions.add(text_extensions);
 						text_extensions.text(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
@@ -594,12 +594,12 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
-	ui::Entry x;
-	ui::Entry y;
+	ui::Entry x{ui::null};
+	ui::Entry y{ui::null};
 
 	auto window = MainFrame_getWindow().create_modal_dialog_window("Patch texture layout", dialog );
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	{
@@ -638,7 +638,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -647,7 +647,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 					x = entry;
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.show();
 					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -705,8 +705,8 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 // Text Editor dialog
 
 // master window widget
-static ui::Widget text_editor;
-static ui::Widget text_widget; // slave, text widget from the gtk editor
+static ui::Widget text_editor{ui::null};
+static ui::Widget text_widget{ui::null}; // slave, text widget from the gtk editor
 
 static gint editor_delete( ui::Widget widget, gpointer data ){
 	if ( widget.alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
@@ -741,36 +741,34 @@ static void editor_close( ui::Widget widget, gpointer data ){
 }
 
 static void CreateGtkTextEditor(){
-	ui::Widget vbox, hbox, button, text;
-
 	auto dlg = ui::Window( ui::window_type::TOP );
 
 	dlg.connect( "delete_event",
 					  G_CALLBACK( editor_delete ), 0 );
 	gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 300 );
 
-	vbox = ui::VBox( FALSE, 5 );
+	auto vbox = ui::VBox( FALSE, 5 );
 	vbox.show();
 	dlg.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
-	auto scr = ui::ScrolledWindow();
+	auto scr = ui::ScrolledWindow(ui::New);
 	scr.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), scr, TRUE, TRUE, 0 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
-	text = ui::TextView();
+	auto text = ui::TextView(ui::New);
 	scr.add(text);
 	text.show();
 	g_object_set_data( G_OBJECT( dlg ), "text", (gpointer) text );
 	gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), TRUE );
 
-	hbox = ui::HBox( FALSE, 5 );
+	auto hbox = ui::HBox( FALSE, 5 );
 	hbox.show();
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
 
-	button = ui::Button( "Close" );
+	auto button = ui::Button( "Close" );
 	button.show();
 	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
 	button.connect( "clicked",
@@ -853,13 +851,13 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 
 EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 	ModalDialog dialog;
-	ui::Entry intensity_entry;
+	ui::Entry intensity_entry{ui::null};
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Light intensity", dialog, -1, -1 );
 
-	auto accel_group = ui::AccelGroup();
+	auto accel_group = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel_group );
 
 	{
@@ -874,7 +872,7 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				auto entry = ui::Entry();
+				auto entry = ui::Entry(ui::New);
 				entry.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
@@ -926,7 +924,7 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 
 	auto window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	auto accel_group = ui::AccelGroup();
+	auto accel_group = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel_group );
 
 	{
@@ -942,7 +940,7 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
 			}
 			{
-				auto entry = ui::Entry();
+				auto entry = ui::Entry(ui::New);
 				entry.show();
 				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
@@ -985,7 +983,7 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const
 
 	auto window = MainFrame_getWindow().create_modal_dialog_window(title, dialog, -1, -1 );
 
-	auto accel_group = ui::AccelGroup();
+	auto accel_group = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel_group );
 
 	{

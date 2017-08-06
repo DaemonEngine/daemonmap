@@ -48,7 +48,7 @@
 
 
 ui::Entry DialogEntry_new(){
-	auto entry = ui::Entry();
+	auto entry = ui::Entry(ui::New);
 	entry.show();
 	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
 	return entry;
@@ -470,7 +470,7 @@ void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange value
 	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 	{
-		auto combo = ui::ComboBoxText();
+		auto combo = ui::ComboBoxText(ui::New);
 
 		for ( StringArrayRange::Iterator i = values.first; i != values.last; ++i )
 		{

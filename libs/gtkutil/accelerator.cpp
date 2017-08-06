@@ -468,7 +468,7 @@ void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerat
 	}
 }
 
-ui::AccelGroup global_accel = ui::AccelGroup();
+ui::AccelGroup global_accel{ui::New};
 
 GClosure* global_accel_group_add_accelerator( Accelerator accelerator, const Callback& callback ){
 	if ( !global_accel_enabled() ) {

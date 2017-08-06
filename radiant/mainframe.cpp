@@ -957,13 +957,13 @@ void OpenBugReportURL(){
 }
 
 
-ui::Widget g_page_console;
+ui::Widget g_page_console{ui::null};
 
 void Console_ToggleShow(){
 	GroupDialog_showPage( g_page_console );
 }
 
-ui::Widget g_page_entity;
+ui::Widget g_page_entity{ui::null};
 
 void EntityInspector_ToggleShow(){
 	GroupDialog_showPage( g_page_entity );
@@ -1877,10 +1877,10 @@ void fill_view_xz_front_menu( ui::Menu menu ){
 }
 
 
-ui::Widget g_toggle_z_item;
-ui::Widget g_toggle_console_item;
-ui::Widget g_toggle_entity_item;
-ui::Widget g_toggle_entitylist_item;
+ui::Widget g_toggle_z_item{ui::null};
+ui::Widget g_toggle_console_item{ui::null};
+ui::Widget g_toggle_entity_item{ui::null};
+ui::Widget g_toggle_entitylist_item{ui::null};
 
 ui::MenuItem create_view_menu( MainFrame::EViewStyle style ){
 	// View menu
@@ -2511,7 +2511,7 @@ ui::Window MainFrame_getWindow()
 
 std::vector<ui::Widget> g_floating_windows;
 
-MainFrame::MainFrame() : m_window( 0 ), m_idleRedrawStatusText( RedrawStatusTextCaller( *this ) ){
+MainFrame::MainFrame() : m_idleRedrawStatusText( RedrawStatusTextCaller( *this ) ){
 	m_pXYWnd = 0;
 	m_pCamWnd = 0;
 	m_pZWnd = 0;
@@ -2519,9 +2519,8 @@ MainFrame::MainFrame() : m_window( 0 ), m_idleRedrawStatusText( RedrawStatusText
 	m_pXZWnd = 0;
 	m_pActiveXY = 0;
 
-	for ( int n = 0; n < c_count_status; n++ )
-	{
-		m_pStatusLabel[n] = ui::Label(ui::null);
+	for (auto &n : m_pStatusLabel) {
+        n = ui::Label{ui::null};
 	}
 
 	m_bSleeping = false;
@@ -2758,7 +2757,7 @@ void MainFrame::Create(){
 	}
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( plugin_toolbar ), FALSE, FALSE, 0 );
 
-	ui::Widget main_statusbar = create_main_statusbar( m_pStatusLabel );
+	ui::Widget main_statusbar = create_main_statusbar(reinterpret_cast<ui::Widget *>(m_pStatusLabel));
 	gtk_box_pack_end( GTK_BOX( vbox ), main_statusbar, FALSE, TRUE, 2 );
 
 	GroupDialog_constructWindow( window );
@@ -2791,7 +2790,7 @@ void MainFrame::Create(){
 
 	if ( CurrentStyle() == eRegular || CurrentStyle() == eRegularLeft ) {
 		{
-			ui::Widget vsplit = ui::VPaned();
+			ui::Widget vsplit = ui::VPaned(ui::New);
 			m_vSplit = vsplit;
 			gtk_box_pack_start( GTK_BOX( vbox ), vsplit, TRUE, TRUE, 0 );
 			vsplit.show();
@@ -2801,7 +2800,7 @@ void MainFrame::Create(){
 			gtk_paned_pack2( GTK_PANED( vsplit ), console_window, FALSE, TRUE );
 
 			{
-				ui::Widget hsplit = ui::HPaned();
+				ui::Widget hsplit = ui::HPaned(ui::New);
 				hsplit.show();
 				m_hSplit = hsplit;
 				gtk_paned_add1( GTK_PANED( vsplit ), hsplit );
@@ -2812,7 +2811,7 @@ void MainFrame::Create(){
 				ui::Widget xy_window = ui::Widget(GTK_WIDGET( create_framed_widget( m_pXYWnd->GetWidget() ) ));
 
 				{
-					ui::Widget vsplit2 = ui::VPaned();
+					ui::Widget vsplit2 = ui::VPaned(ui::New);
 					vsplit2.show();
 					m_vSplit2 = vsplit2;
 

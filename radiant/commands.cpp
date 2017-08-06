@@ -392,7 +392,7 @@ void DoCommandListDlg(){
 		return accelerator_window_key_press(widget, event, dialogptr);
 	}, &dialog);
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	auto hbox = create_dialog_hbox( 4, 4 );
@@ -411,13 +411,13 @@ void DoCommandListDlg(){
 			gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), false ); // annoying
 
 			{
-				auto renderer = ui::CellRendererText();
+				auto renderer = ui::CellRendererText(ui::New);
 				GtkTreeViewColumn* column = ui::TreeViewColumn( "Command", renderer, {{"text", 0}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 			}
 
 			{
-				auto renderer = ui::CellRendererText();
+				auto renderer = ui::CellRendererText(ui::New);
 				GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 1}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 			}
@@ -473,7 +473,7 @@ public:
 		GtkButton* clearbutton = create_dialog_button( "Clear", (GCallback) accelerator_clear_button_clicked, &dialog );
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( clearbutton ), FALSE, FALSE, 0 );
 
-		ui::Widget spacer = ui::Image();
+		ui::Widget spacer = ui::Image(ui::New);
 		spacer.show();
 		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( spacer ), TRUE, TRUE, 0 );
 

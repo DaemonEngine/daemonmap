@@ -293,7 +293,7 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 ui::Window CDbgDlg::BuildDialog(){
 	auto window = MainFrame_getWindow().create_floating_window("Q3Map debug window" );
 
-	auto scr = ui::ScrolledWindow();
+	auto scr = ui::ScrolledWindow(ui::New);
 	scr.show();
 	window.add(scr);
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
@@ -306,7 +306,7 @@ ui::Window CDbgDlg::BuildDialog(){
 		gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 		{
-			auto renderer = ui::CellRendererText();
+			auto renderer = ui::CellRendererText(ui::New);
 			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 		}

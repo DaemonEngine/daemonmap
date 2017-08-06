@@ -137,7 +137,7 @@ void window_remove_minmax( ui::Window window ){
 
 
 ui::ScrolledWindow create_scrolled_window( ui::Policy hscrollbar_policy, ui::Policy vscrollbar_policy, int border ){
-	auto scr = ui::ScrolledWindow();
+	auto scr = ui::ScrolledWindow(ui::New);
 	gtk_widget_show( GTK_WIDGET( scr ) );
 	gtk_scrolled_window_set_policy( scr, (GtkPolicyType) hscrollbar_policy, (GtkPolicyType) vscrollbar_policy );
 	gtk_scrolled_window_set_shadow_type( scr, GTK_SHADOW_IN );

@@ -329,7 +329,7 @@ void DoConfigDialog(){
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	polyscheck.connect( "toggled", G_CALLBACK( OnPoly ), NULL );
 
-	auto zlist = ui::ComboBoxText();
+	auto zlist = ui::ComboBoxText(ui::New);
 	gtk_widget_show( zlist );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), zlist, TRUE, FALSE, 0 );
 

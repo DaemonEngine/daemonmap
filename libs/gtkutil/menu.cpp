@@ -57,7 +57,7 @@ ui::MenuItem new_sub_menu_item_with_mnemonic( const char* mnemonic ){
 	auto item = ui::MenuItem( mnemonic, true );
 	item.show();
 
-	auto sub_menu = ui::Menu();
+	auto sub_menu = ui::Menu(ui::New);
 	gtk_menu_item_set_submenu( item, sub_menu );
 
 	return item;

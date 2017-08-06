@@ -104,21 +104,21 @@ create_w_plugplug2( void ){
 	gtk_widget_show( label1 );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), label1, FALSE, FALSE, 0 );
 
-	auto scrolledwindow1 = ui::ScrolledWindow();
+	auto scrolledwindow1 = ui::ScrolledWindow(ui::New);
 	gtk_widget_set_name( scrolledwindow1, "scrolledwindow1" );
 	scrolledwindow1.show();
 	gtk_box_pack_start( GTK_BOX( vbox2 ), scrolledwindow1, TRUE, TRUE, 0 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledwindow1 ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledwindow1 ), GTK_SHADOW_IN );
 
-	auto t_materialist = ui::TreeView();
+	auto t_materialist = ui::TreeView(ui::New);
 	gtk_widget_set_name( t_materialist, "t_materialist" );
 	t_materialist.show();
 	scrolledwindow1.add(t_materialist);
 	gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( t_materialist ), FALSE );
 	gtk_tree_view_set_enable_search( GTK_TREE_VIEW( t_materialist ), FALSE );
 
-	ed_materialname = ui::Entry();
+	ed_materialname = ui::Entry(ui::New);
 	gtk_widget_set_name( ed_materialname, "ed_materialname" );
 	gtk_widget_show( ed_materialname );
 	gtk_box_pack_start( GTK_BOX( vbox2 ), ed_materialname, FALSE, FALSE, 0 );
@@ -202,7 +202,7 @@ void CreateWindow( void ){
 	GtkTreeViewColumn* col = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title( col, "materials" );
 	gtk_tree_view_append_column( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), col );
-	auto renderer = ui::CellRendererText();
+	auto renderer = ui::CellRendererText(ui::New);
 	gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), -1, "", renderer, "text", 0, NULL );
 
 	// list store

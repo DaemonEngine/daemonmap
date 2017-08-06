@@ -296,10 +296,10 @@ void EntityList_constructWindow( ui::Window main_window ){
 		window.add(scr);
 
 		{
-			ui::Widget view = ui::TreeView();
+			ui::Widget view = ui::TreeView(ui::New);
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
-			auto renderer = ui::CellRendererText();
+			auto renderer = ui::CellRendererText(ui::New);
 			GtkTreeViewColumn* column = gtk_tree_view_column_new();
 			gtk_tree_view_column_pack_start( column, renderer, TRUE );
 			gtk_tree_view_column_set_cell_data_func( column, renderer, entitylist_treeviewcolumn_celldatafunc, 0, 0 );

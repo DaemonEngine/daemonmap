@@ -850,7 +850,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Patch density", G_CALLBACK(dialog_delete_callback ), &dialog );
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	{
@@ -877,7 +877,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			}
 
 			{
-				auto combo = ui::ComboBoxText();
+				auto combo = ui::ComboBoxText(ui::New);
 #define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_text_append_text( combo, # x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
@@ -903,7 +903,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				width = combo;
 			}
 			{
-				auto combo = ui::ComboBoxText();
+				auto combo = ui::ComboBoxText(ui::New);
 #define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_text_append_text( combo, # x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
@@ -969,15 +969,15 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
-	ui::Widget bevel;
-	ui::Widget ibevel;
-	ui::Widget endcap;
-	ui::Widget iendcap;
-	ui::Widget cylinder;
+	ui::Widget bevel{ui::null};
+	ui::Widget ibevel{ui::null};
+	ui::Widget endcap{ui::null};
+	ui::Widget iendcap{ui::null};
+	ui::Widget cylinder{ui::null};
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window( "Cap", dialog );
 
-	auto accel_group = ui::AccelGroup();
+	auto accel_group = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel_group );
 
 	{

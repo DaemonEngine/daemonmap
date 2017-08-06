@@ -1112,7 +1112,7 @@ void pushMenu( const CopiedString& name ){
 	item.show();
 	m_stack.back().first.add(item);
 
-	auto submenu = ui::Menu();
+	auto submenu = ui::Menu(ui::New);
 	gtk_menu_item_set_submenu( item, GTK_WIDGET( submenu ) );
 
 	m_stack.push_back( MenuPair( submenu, name ) );
@@ -1155,7 +1155,7 @@ void XYWnd::OnContextMenu(){
 	}
 
 	if ( !m_mnuDrop ) { // first time, load it up
-		auto menu = m_mnuDrop = ui::Menu();
+		auto menu = m_mnuDrop = ui::Menu(ui::New);
 
 		EntityClassMenuInserter inserter( menu );
 		GlobalEntityClassManager().forEach( inserter );

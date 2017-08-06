@@ -67,7 +67,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 		gtk_window_deiconify( parentWindow );
 	}
 
-	auto accel = ui::AccelGroup();
+	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
 	auto vbox = create_dialog_vbox( 8, 8 );

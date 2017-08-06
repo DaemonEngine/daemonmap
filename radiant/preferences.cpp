@@ -547,7 +547,7 @@ static void treeSelection( GtkTreeSelection* selection, gpointer data ){
 	GtkTreeModel* model;
 	GtkTreeIter selected;
 	if ( gtk_tree_selection_get_selected( selection, &model, &selected ) ) {
-		ui::Widget prefpage;
+		ui::Widget prefpage{ui::null};
 		gtk_tree_model_get( model, &selected, 1, (gpointer*)&prefpage, -1 );
 		dlg->showPrefPage( prefpage );
 	}
@@ -715,7 +715,7 @@ ui::Window PrefsDlg::BuildDialog(){
 			hbox.show();
 
 			{
-				auto sc_win = ui::ScrolledWindow();
+				auto sc_win = ui::ScrolledWindow(ui::New);
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( sc_win ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 				gtk_box_pack_start( GTK_BOX( hbox ), sc_win, FALSE, FALSE, 0 );
 				sc_win.show();
@@ -736,7 +736,7 @@ ui::Window PrefsDlg::BuildDialog(){
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 					{
-						auto renderer = ui::CellRendererText();
+						auto renderer = ui::CellRendererText(ui::New);
 						GtkTreeViewColumn* column = ui::TreeViewColumn( "Preferences", renderer, {{"text", 0}} );
 						gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
 					}

@@ -98,11 +98,10 @@ ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const ch
 // File dialog
 
 bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
-	ui::Widget dlg;
 	GdkColor clr = { 0, guint16(color[0] * 65535), guint16(color[1] * 65535), guint16(color[2] * 65535) };
 	ModalDialog dialog;
 
-	dlg = ui::Widget(gtk_color_selection_dialog_new( title ));
+	auto dlg = ui::Widget(gtk_color_selection_dialog_new( title ));
 	gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
 	dlg.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), &dialog );
 	GtkWidget *ok_button, *cancel_button;

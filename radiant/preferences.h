@@ -328,7 +328,7 @@ std::list<CGameDescription *> mGames;
 
 public:
 
-ui::Widget m_notebook;
+ui::Widget m_notebook{ui::null};
 
 virtual ~PrefsDlg(){
 	g_string_free( m_rc_path, true );

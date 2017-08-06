@@ -912,7 +912,7 @@ void DoRotateDlg(){
 	if ( !g_rotate_dialog.window ) {
 		g_rotate_dialog.window = MainFrame_getWindow().create_dialog_window("Arbitrary rotation", G_CALLBACK(rotatedlg_delete ), &g_rotate_dialog );
 
-		auto accel = ui::AccelGroup();
+		auto accel = ui::AccelGroup(ui::New);
 		g_rotate_dialog.window.add_accel_group( accel );
 
 		{
@@ -1016,9 +1016,9 @@ void DoRotateDlg(){
 
 struct ScaleDialog
 {
-	ui::Entry x;
-	ui::Entry y;
-	ui::Entry z;
+	ui::Entry x{ui::null};
+	ui::Entry y{ui::null};
+	ui::Entry z{ui::null};
 	ui::Window window{ui::null};
 };
 
@@ -1065,7 +1065,7 @@ void DoScaleDlg(){
 	if ( !g_scale_dialog.window ) {
 		g_scale_dialog.window = MainFrame_getWindow().create_dialog_window("Arbitrary scale", G_CALLBACK(scaledlg_delete ), &g_scale_dialog );
 
-		auto accel = ui::AccelGroup();
+		auto accel = ui::AccelGroup(ui::New);
 		g_scale_dialog.window.add_accel_group( accel );
 
 		{
@@ -1096,7 +1096,7 @@ void DoScaleDlg(){
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 0, 1,
@@ -1106,7 +1106,7 @@ void DoScaleDlg(){
 					g_scale_dialog.x = entry;
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 1, 2,
@@ -1116,7 +1116,7 @@ void DoScaleDlg(){
 					g_scale_dialog.y = entry;
 				}
 				{
-					auto entry = ui::Entry();
+					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 2, 3,

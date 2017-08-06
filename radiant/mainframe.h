@@ -59,7 +59,7 @@ enum EViewStyle
 MainFrame();
 ~MainFrame();
 
-ui::Window m_window;
+ui::Window m_window{ui::null};
 
 CopiedString m_command_status;
 CopiedString m_position_status;
@@ -72,9 +72,9 @@ void Create();
 void SaveWindowInfo();
 void Shutdown();
 
-ui::Widget m_vSplit;
-ui::Widget m_hSplit;
-ui::Widget m_vSplit2;
+ui::Widget m_vSplit{ui::null};
+ui::Widget m_hSplit{ui::null};
+ui::Widget m_vSplit2{ui::null};
 
 XYWnd* m_pXYWnd;
 XYWnd* m_pYZWnd;
@@ -85,7 +85,7 @@ XYWnd* m_pActiveXY;
 
 bool m_bSleeping;
 
-ui::Widget m_pStatusLabel[c_count_status];
+void *m_pStatusLabel[c_count_status];
 
 
 EViewStyle m_nCurrentStyle;

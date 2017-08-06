@@ -36,7 +36,7 @@ namespace ui {
         }
     }
 
-    Widget root;
+    Widget root{ui::null};
 
 #define IMPL(T, F) template<> _IMPL(T, F)
 #define _IMPL(T, F) struct verify<T *> { using self = T; static self test(self it) { return self(F(it)); } }
@@ -57,7 +57,7 @@ namespace ui {
 
     IMPL(Widget, GTK_WIDGET);
 
-    Widget::Widget() : Widget(nullptr)
+    Widget::Widget(ui::New_t) : Widget(nullptr)
     {}
 
     alert_response IWidget::alert(std::string text, std::string title, alert_type type, alert_icon icon)
@@ -187,7 +187,7 @@ namespace ui {
 
     IMPL(Button, GTK_BUTTON);
 
-    Button::Button() : Button(GTK_BUTTON(gtk_button_new()))
+    Button::Button(ui::New_t) : Button(GTK_BUTTON(gtk_button_new()))
     {}
 
     Button::Button(const char *label) : Button(GTK_BUTTON(gtk_button_new_with_label(label)))
@@ -202,7 +202,7 @@ namespace ui {
 
     IMPL(CheckButton, GTK_CHECK_BUTTON);
 
-    CheckButton::CheckButton() : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new()))
+    CheckButton::CheckButton(ui::New_t) : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new()))
     {}
 
     CheckButton::CheckButton(const char *label) : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_label(label)))
@@ -210,7 +210,7 @@ namespace ui {
 
     IMPL(MenuItem, GTK_MENU_ITEM);
 
-    MenuItem::MenuItem() : MenuItem(GTK_MENU_ITEM(gtk_menu_item_new()))
+    MenuItem::MenuItem(ui::New_t) : MenuItem(GTK_MENU_ITEM(gtk_menu_item_new()))
     {}
 
     MenuItem::MenuItem(const char *label, bool mnemonic) : MenuItem(
@@ -219,17 +219,17 @@ namespace ui {
 
     IMPL(TearoffMenuItem, GTK_TEAROFF_MENU_ITEM);
 
-    TearoffMenuItem::TearoffMenuItem() : TearoffMenuItem(GTK_TEAROFF_MENU_ITEM(gtk_tearoff_menu_item_new()))
+    TearoffMenuItem::TearoffMenuItem(ui::New_t) : TearoffMenuItem(GTK_TEAROFF_MENU_ITEM(gtk_tearoff_menu_item_new()))
     {}
 
     IMPL(ComboBoxText, GTK_COMBO_BOX_TEXT);
 
-    ComboBoxText::ComboBoxText() : ComboBoxText(GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new()))
+    ComboBoxText::ComboBoxText(ui::New_t) : ComboBoxText(GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new()))
     {}
 
     IMPL(ScrolledWindow, GTK_SCROLLED_WINDOW);
 
-    ScrolledWindow::ScrolledWindow() : ScrolledWindow(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(nullptr, nullptr)))
+    ScrolledWindow::ScrolledWindow(ui::New_t) : ScrolledWindow(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(nullptr, nullptr)))
     {}
 
     void IScrolledWindow::overflow(Policy x, Policy y)
@@ -249,17 +249,17 @@ namespace ui {
 
     IMPL(HPaned, GTK_HPANED);
 
-    HPaned::HPaned() : HPaned(GTK_HPANED(gtk_hpaned_new()))
+    HPaned::HPaned(ui::New_t) : HPaned(GTK_HPANED(gtk_hpaned_new()))
     {}
 
     IMPL(VPaned, GTK_VPANED);
 
-    VPaned::VPaned() : VPaned(GTK_VPANED(gtk_vpaned_new()))
+    VPaned::VPaned(ui::New_t) : VPaned(GTK_VPANED(gtk_vpaned_new()))
     {}
 
     IMPL(Menu, GTK_MENU);
 
-    Menu::Menu() : Menu(GTK_MENU(gtk_menu_new()))
+    Menu::Menu(ui::New_t) : Menu(GTK_MENU(gtk_menu_new()))
     {}
 
     IMPL(Table, GTK_TABLE);
@@ -271,7 +271,7 @@ namespace ui {
 
     IMPL(TextView, GTK_TEXT_VIEW);
 
-    TextView::TextView() : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))
+    TextView::TextView(ui::New_t) : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))
     {}
 
     void ITextView::text(char const *str)
@@ -280,7 +280,7 @@ namespace ui {
         gtk_text_buffer_set_text(buffer, str, -1);
     }
 
-    TreeView::TreeView() : TreeView(GTK_TREE_VIEW(gtk_tree_view_new()))
+    TreeView::TreeView(ui::New_t) : TreeView(GTK_TREE_VIEW(gtk_tree_view_new()))
     {}
 
     TreeView::TreeView(TreeModel model) : TreeView(GTK_TREE_VIEW(gtk_tree_view_new_with_model(model)))
@@ -298,15 +298,15 @@ namespace ui {
 
     IMPL(Image, GTK_IMAGE);
 
-    Image::Image() : Image(GTK_IMAGE(gtk_image_new()))
+    Image::Image(ui::New_t) : Image(GTK_IMAGE(gtk_image_new()))
     {}
 
     IMPL(Entry, GTK_ENTRY);
 
-    Entry::Entry() : Entry(GTK_ENTRY(gtk_entry_new()))
+    Entry::Entry(ui::New_t) : Entry(GTK_ENTRY(gtk_entry_new()))
     {}
 
-    Entry::Entry(std::size_t max_length) : Entry()
+    Entry::Entry(std::size_t max_length) : Entry(ui::New)
     {
         gtk_entry_set_max_length(this, static_cast<gint>(max_length));
     }
@@ -347,7 +347,7 @@ namespace ui {
 
     IMPL(CellRendererText, GTK_CELL_RENDERER_TEXT);
 
-    CellRendererText::CellRendererText() : CellRendererText(GTK_CELL_RENDERER_TEXT(gtk_cell_renderer_text_new()))
+    CellRendererText::CellRendererText(ui::New_t) : CellRendererText(GTK_CELL_RENDERER_TEXT(gtk_cell_renderer_text_new()))
     {}
 
     IMPL(TreeViewColumn, GTK_TREE_VIEW_COLUMN);
@@ -363,7 +363,7 @@ namespace ui {
 
     IMPL(AccelGroup, GTK_ACCEL_GROUP);
 
-    AccelGroup::AccelGroup() : AccelGroup(GTK_ACCEL_GROUP(gtk_accel_group_new()))
+    AccelGroup::AccelGroup(ui::New_t) : AccelGroup(GTK_ACCEL_GROUP(gtk_accel_group_new()))
     {}
 
     IMPL(ListStore, GTK_LIST_STORE);
@@ -375,7 +375,7 @@ namespace ui {
 
     // IMPL(TreePath, GTK_TREE_PATH);
 
-    TreePath::TreePath() : TreePath(gtk_tree_path_new())
+    TreePath::TreePath(ui::New_t) : TreePath(gtk_tree_path_new())
     {}
 
     TreePath::TreePath(const char *path) : TreePath(gtk_tree_path_new_from_string(path))

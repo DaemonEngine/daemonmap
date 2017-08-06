@@ -97,20 +97,20 @@ void console_populate_popup( ui::TextView textview, ui::Menu menu, gpointer user
 }
 
 gboolean destroy_set_null( ui::Window widget, ui::Widget* p ){
-	*p = ui::Widget();
+	*p = ui::Widget{ui::null};
 	return FALSE;
 }
 
 WidgetFocusPrinter g_consoleWidgetFocusPrinter( "console" );
 
 ui::Widget Console_constructWindow( ui::Window toplevel ){
-	auto scr = ui::ScrolledWindow();
+	auto scr = ui::ScrolledWindow(ui::New);
 	scr.overflow(ui::Policy::AUTOMATIC, ui::Policy::AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 	scr.show();
 
 	{
-		auto text = ui::TextView();
+		auto text = ui::TextView(ui::New);
 		gtk_widget_set_size_request( text, 0, -1 ); // allow shrinking
 		gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text ), GTK_WRAP_WORD );
 		gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), FALSE );

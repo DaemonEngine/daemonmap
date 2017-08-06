@@ -166,6 +166,7 @@ namespace ui {
     }
 
     extern struct Null {} null;
+    extern struct New_t {} New;
 
     class Object :
             public details::Convertible<Object, _GtkObject *, details::Convert::Explicit>,
@@ -208,6 +209,7 @@ namespace ui {
         using native = T *; \
         explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
         explicit name(Null n) : name((native) nullptr) {} \
+        explicit name(New_t); \
         static name from(void *ptr) { return name((native) ptr); } \
         ctors \
     }; \
@@ -223,7 +225,6 @@ namespace ui {
     );
 
     WRAP(Editable, Object, _GtkEditable, (),
-         explicit Editable();
     ,
          void editable(bool value);
     );
@@ -240,7 +241,6 @@ namespace ui {
     };
 
     WRAP(Widget, Object, _GtkWidget, (),
-         explicit Widget();
     ,
          alert_response alert(
                  std::string text,
@@ -321,7 +321,6 @@ namespace ui {
     );
 
     WRAP(Button, Bin, _GtkButton, (),
-         explicit Button();
          explicit Button(const char *label);
     ,
     );
@@ -332,7 +331,6 @@ namespace ui {
     );
 
     WRAP(CheckButton, ToggleButton, _GtkCheckButton, (),
-         explicit CheckButton();
          explicit CheckButton(const char *label);
     ,
     );
@@ -346,7 +344,6 @@ namespace ui {
     );
 
     WRAP(MenuItem, Item, _GtkMenuItem, (),
-         explicit MenuItem();
          explicit MenuItem(const char *label, bool mnemonic = false);
     ,
     );
@@ -360,7 +357,6 @@ namespace ui {
     );
 
     WRAP(TearoffMenuItem, MenuItem, _GtkTearoffMenuItem, (),
-         explicit TearoffMenuItem();
     ,
     );
 
@@ -369,7 +365,6 @@ namespace ui {
     );
 
     WRAP(ComboBoxText, ComboBox, _GtkComboBoxText, (),
-         explicit ComboBoxText();
     ,
     );
 
@@ -390,7 +385,6 @@ namespace ui {
     );
 
     WRAP(ScrolledWindow, Bin, _GtkScrolledWindow, (),
-         explicit ScrolledWindow();
     ,
          void overflow(Policy x, Policy y);
     );
@@ -414,12 +408,10 @@ namespace ui {
     );
 
     WRAP(HPaned, Paned, _GtkHPaned, (),
-         explicit HPaned();
     ,
     );
 
     WRAP(VPaned, Paned, _GtkVPaned, (),
-         explicit VPaned();
     ,
     );
 
@@ -432,7 +424,6 @@ namespace ui {
     );
 
     WRAP(Menu, MenuShell, _GtkMenu, (),
-         explicit Menu();
     ,
     );
 
@@ -442,7 +433,6 @@ namespace ui {
     );
 
     WRAP(TextView, Container, _GtkTextView, (),
-         explicit TextView();
     ,
          void text(char const *str);
     );
@@ -453,7 +443,6 @@ namespace ui {
 
     class TreeModel;
     WRAP(TreeView, Widget, _GtkTreeView, (),
-         explicit TreeView();
          TreeView(TreeModel model);
     ,
     );
@@ -469,12 +458,10 @@ namespace ui {
     );
 
     WRAP(Image, Widget, _GtkImage, (),
-         explicit Image();
     ,
     );
 
     WRAP(Entry, Widget, _GtkEntry, (IEditable, ICellEditable),
-         explicit Entry();
          explicit Entry(std::size_t max_length);
     ,
         char const *text();
@@ -514,7 +501,6 @@ namespace ui {
     );
 
     WRAP(CellRendererText, CellRenderer, _GtkCellRendererText, (),
-         explicit CellRendererText();
     ,
     );
 
@@ -528,7 +514,6 @@ namespace ui {
     );
 
     WRAP(AccelGroup, Object, _GtkAccelGroup, (),
-         explicit AccelGroup();
     ,
     );
 
@@ -548,7 +533,6 @@ namespace ui {
     // GBoxed
 
     WRAP(TreePath, Object, _GtkTreePath, (),
-         explicit TreePath();
          explicit TreePath(const char *path);
     ,
     );

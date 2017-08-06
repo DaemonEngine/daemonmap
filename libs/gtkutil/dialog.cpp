@@ -203,13 +203,13 @@ PathEntry PathEntry_new(){
 	auto hbox = ui::HBox( FALSE, 0 );
 	gtk_widget_show( GTK_WIDGET( hbox ) );
 
-	auto entry = ui::Entry();
+	auto entry = ui::Entry(ui::New);
 	gtk_entry_set_has_frame( entry, FALSE );
 	gtk_widget_show( GTK_WIDGET( entry ) );
 	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
 
 	// browse button
-	auto button = ui::Button();
+	auto button = ui::Button(ui::New);
 	button_set_icon( button, "ellipsis.bmp" );
 	gtk_widget_show( GTK_WIDGET( button ) );
 	gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );

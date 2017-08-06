@@ -47,8 +47,8 @@
 class GroupDlg
 {
 public:
-ui::Widget m_pNotebook;
-ui::Window m_window;
+ui::Widget m_pNotebook{ui::null};
+ui::Window m_window{ui::null};
 
 GroupDlg();
 void Create( ui::Window parent );

@@ -63,7 +63,7 @@ const char* PLUGIN_NAME = "bobToolz";
 static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,Vis Viewer,Brush Cleanup,Polygon Builder,Caulk Selection,-,Tree Planter,Drop Entity,Plot Splines,-,Merge Patches,Split patches,Split patches cols,Split patches rows,Turn edge";
 
 // globals
-ui::Widget g_pRadiantWnd;
+ui::Widget g_pRadiantWnd{ui::null};
 
 static const char *PLUGIN_ABOUT =   "bobToolz for SDRadiant\n"
 									"by digibob (digibob@splashdamage.com)\n"

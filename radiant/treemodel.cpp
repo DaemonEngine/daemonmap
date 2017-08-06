@@ -881,7 +881,7 @@ static GtkTreePath* graph_tree_model_get_path( GtkTreeModel* tree_model, GtkTree
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	GraphTreeNode* graph = GRAPH_TREE_MODEL( tree_model )->m_graph;
 
-	GtkTreePath* path = ui::TreePath();
+	GtkTreePath* path = ui::TreePath(ui::New);
 
 	for ( GraphTreeNode* node = ( *graph_iterator_read_tree_iter( iter ) ).second; node != graph; node = node->m_parent )
 	{
