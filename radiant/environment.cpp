@@ -256,7 +256,7 @@ void environment_init( int argc, char const* argv[] ){
 
 #include <windows.h>
 
-void environment_init( int argc, char* argv[] ){
+void environment_init( int argc, char const* argv[] ){
 	args_init( argc, argv );
 
 	{
