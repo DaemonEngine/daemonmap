@@ -87,7 +87,6 @@ addflags("-Wall")
 addflags("-Wextra")
 addflags("-pedantic")
 
-addflags("-Wno-parentheses")
 addflags("-Wno-sign-compare")
 addflags("-Wno-write-strings")
 addflags("-Wno-unused-function")
