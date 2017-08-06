@@ -2520,7 +2520,7 @@ MainFrame::MainFrame() : m_idleRedrawStatusText( RedrawStatusTextCaller( *this )
 	m_pActiveXY = 0;
 
 	for (auto &n : m_pStatusLabel) {
-        n = ui::Label{ui::null};
+        n = NULL;
 	}
 
 	m_bSleeping = false;
