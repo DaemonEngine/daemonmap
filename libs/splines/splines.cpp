@@ -653,6 +653,7 @@ void idCameraDef::buildCamera() {
 	for ( i = 0; i < events.Num(); i++ ) {
 		events[i]->setTriggered( false );
 		switch ( events[i]->getType() ) {
+		default: break;
 		case idCameraEvent::EVENT_TARGET: {
 			targets.Append( i );
 			break;

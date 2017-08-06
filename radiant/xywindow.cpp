@@ -412,6 +412,7 @@ inline unsigned int buttons_for_button_and_modifiers( ButtonIdentifier button, M
 
 	switch ( button.get() )
 	{
+    case ButtonEnumeration::INVALID: break;
 	case ButtonEnumeration::LEFT: buttons |= RAD_LBUTTON; break;
 	case ButtonEnumeration::MIDDLE: buttons |= RAD_MBUTTON; break;
 	case ButtonEnumeration::RIGHT: buttons |= RAD_RBUTTON; break;
