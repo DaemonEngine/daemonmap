@@ -443,7 +443,7 @@ ui::Window BuildDialog(){
 	frame.add(vbox2);
 
 	{
-		PreferencesPage preferencesPage( *this, ui::Widget(GTK_WIDGET( vbox2 )) );
+		PreferencesPage preferencesPage( *this, vbox2 );
 		Paths_constructPreferences( preferencesPage );
 	}
 
@@ -1676,7 +1676,7 @@ bool ScreenUpdates_Enabled(){
 }
 
 void ScreenUpdates_process(){
-	if ( redrawRequired() && gtk_widget_get_visible( g_wait.m_window ) ) {
+	if ( redrawRequired() && g_wait.m_window.visible() ) {
 		ui::process();
 	}
 }
@@ -1698,8 +1698,8 @@ void ScreenUpdates_Disable( const char* message, const char* title ){
 			ScreenUpdates_process();
 		}
 	}
-	else if ( gtk_widget_get_visible( g_wait.m_window ) ) {
-		gtk_label_set_text( g_wait.m_label, message );
+	else if ( g_wait.m_window.visible() ) {
+		g_wait.m_label.text(message);
 		ScreenUpdates_process();
 	}
 	g_wait_stack.push_back( message );
@@ -1718,8 +1718,8 @@ void ScreenUpdates_Enable(){
 
 		//gtk_window_present(MainFrame_getWindow());
 	}
-	else if ( gtk_widget_get_visible( g_wait.m_window ) ) {
-		gtk_label_set_text( g_wait.m_label, g_wait_stack.back().c_str() );
+	else if ( g_wait.m_window.visible() ) {
+		g_wait.m_label.text(g_wait_stack.back().c_str());
 		ScreenUpdates_process();
 	}
 }
@@ -2469,7 +2469,7 @@ WindowFocusPrinter g_mainframeFocusPrinter( "mainframe" );
 class MainWindowActive
 {
 static gboolean notify( ui::Window window, gpointer dummy, MainWindowActive* self ){
-	if ( g_wait.m_window && gtk_window_is_active( window ) && !gtk_widget_get_visible( g_wait.m_window ) ) {
+	if ( g_wait.m_window && gtk_window_is_active( window ) && !g_wait.m_window.visible() ) {
 		g_wait.m_window.show();
 	}
 
@@ -2521,7 +2521,7 @@ MainFrame::MainFrame() : m_window( 0 ), m_idleRedrawStatusText( RedrawStatusText
 
 	for ( int n = 0; n < c_count_status; n++ )
 	{
-		m_pStatusLabel[n] = ui::root;
+		m_pStatusLabel[n] = ui::Label(ui::null);
 	}
 
 	m_bSleeping = false;
@@ -3040,11 +3040,11 @@ void MainFrame::Shutdown(){
 }
 
 void MainFrame::RedrawStatusText(){
-	gtk_label_set_text( GTK_LABEL( m_pStatusLabel[c_command_status] ), m_command_status.c_str() );
-	gtk_label_set_text( GTK_LABEL( m_pStatusLabel[c_position_status] ), m_position_status.c_str() );
-	gtk_label_set_text( GTK_LABEL( m_pStatusLabel[c_brushcount_status] ), m_brushcount_status.c_str() );
-	gtk_label_set_text( GTK_LABEL( m_pStatusLabel[c_texture_status] ), m_texture_status.c_str() );
-	gtk_label_set_text( GTK_LABEL( m_pStatusLabel[c_grid_status] ), m_grid_status.c_str() );
+	ui::Label::from(m_pStatusLabel[c_command_status]).text(m_command_status.c_str());
+	ui::Label::from(m_pStatusLabel[c_position_status]).text(m_position_status.c_str());
+	ui::Label::from(m_pStatusLabel[c_brushcount_status]).text(m_brushcount_status.c_str());
+	ui::Label::from(m_pStatusLabel[c_texture_status]).text(m_texture_status.c_str());
+	ui::Label::from(m_pStatusLabel[c_grid_status]).text(m_grid_status.c_str());
 }
 
 void MainFrame::UpdateStatusText(){

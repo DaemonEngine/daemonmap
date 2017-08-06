@@ -67,7 +67,7 @@
 ui::Entry numeric_entry_new(){
 	auto entry = ui::Entry();
 	entry.show();
-	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
+	entry.dimensions(64, -1);
 	return entry;
 }
 
@@ -112,7 +112,7 @@ virtual void release() = 0;
 class BooleanAttribute : public EntityAttribute
 {
 CopiedString m_key;
-GtkCheckButton* m_check;
+ui::CheckButton m_check;
 
 static gboolean toggled( ui::Widget widget, BooleanAttribute* self ){
 	self->apply();
@@ -121,8 +121,8 @@ static gboolean toggled( ui::Widget widget, BooleanAttribute* self ){
 public:
 BooleanAttribute( const char* key ) :
 	m_key( key ),
-	m_check( 0 ){
-	auto check = ui::CheckButton(GTK_CHECK_BUTTON( gtk_check_button_new() ));
+	m_check( ui::null ){
+	auto check = ui::CheckButton();
 	check.show();
 
 	m_check = check;
@@ -133,24 +133,24 @@ BooleanAttribute( const char* key ) :
 	update();
 }
 ui::Widget getWidget() const {
-	return ui::Widget(GTK_WIDGET( m_check ));
+	return m_check;
 }
 void release(){
 	delete this;
 }
 void apply(){
-	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( m_check ) ) ? "1" : "0" );
+	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), m_check.active() ? "1" : "0" );
 }
 typedef MemberCaller<BooleanAttribute, &BooleanAttribute::apply> ApplyCaller;
 
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
 	if ( !string_empty( value ) ) {
-		toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( m_check )), atoi( value ) != 0 );
+		toggle_button_set_active_no_signal( m_check, atoi( value ) != 0 );
 	}
 	else
 	{
-		toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( m_check )), false );
+		toggle_button_set_active_no_signal( m_check, false );
 	}
 }
 typedef MemberCaller<BooleanAttribute, &BooleanAttribute::update> UpdateCaller;
@@ -169,13 +169,13 @@ StringAttribute( const char* key ) :
 	m_nonModal( ApplyCaller( *this ), UpdateCaller( *this ) ){
 	auto entry = ui::Entry();
 	entry.show();
-	gtk_widget_set_size_request( GTK_WIDGET( entry ), 50, -1 );
+	entry.dimensions(50, -1);
 
 	m_entry = entry;
 	m_nonModal.connect( m_entry );
 }
 ui::Widget getWidget() const {
-	return ui::Widget(GTK_WIDGET( m_entry ));
+	return m_entry;
 }
 ui::Entry getEntry() const {
 	return m_entry;
@@ -186,7 +186,7 @@ void release(){
 }
 void apply(){
 	StringOutputStream value( 64 );
-	value << gtk_entry_get_text( m_entry );
+	value << m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
 typedef MemberCaller<StringAttribute, &StringAttribute::apply> ApplyCaller;
@@ -194,7 +194,7 @@ typedef MemberCaller<StringAttribute, &StringAttribute::apply> ApplyCaller;
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
-	gtk_entry_set_text( m_entry, value.c_str() );
+	m_entry.text(value.c_str());
 }
 typedef MemberCaller<StringAttribute, &StringAttribute::update> UpdateCaller;
 };
@@ -224,18 +224,18 @@ void release(){
 	delete this;
 }
 ui::Widget getWidget() const {
-	return ui::Widget(GTK_WIDGET( m_entry.m_entry.m_frame ));
+	return m_entry.m_entry.m_frame;
 }
 void apply(){
 	StringOutputStream value( 64 );
-	value << gtk_entry_get_text( GTK_ENTRY( m_entry.m_entry.m_entry ) );
+	value << m_entry.m_entry.m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
 typedef MemberCaller<ModelAttribute, &ModelAttribute::apply> ApplyCaller;
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
-	gtk_entry_set_text( GTK_ENTRY( m_entry.m_entry.m_entry ), value.c_str() );
+	m_entry.m_entry.m_entry.text(value.c_str());
 }
 typedef MemberCaller<ModelAttribute, &ModelAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
@@ -291,14 +291,14 @@ ui::Widget getWidget() const {
 }
 void apply(){
 	StringOutputStream value( 64 );
-	value << gtk_entry_get_text( GTK_ENTRY( m_entry.m_entry.m_entry ) );
+	value << m_entry.m_entry.m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
 typedef MemberCaller<SoundAttribute, &SoundAttribute::apply> ApplyCaller;
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
-	gtk_entry_set_text( GTK_ENTRY( m_entry.m_entry.m_entry ), value.c_str() );
+	m_entry.m_entry.m_entry.text(value.c_str());
 }
 typedef MemberCaller<SoundAttribute, &SoundAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
@@ -348,11 +348,11 @@ void update(){
 	if ( !string_empty( value ) ) {
 		StringOutputStream angle( 32 );
 		angle << angle_normalised( atof( value ) );
-		gtk_entry_set_text( m_entry, angle.c_str() );
+		m_entry.text(angle.c_str());
 	}
 	else
 	{
-		gtk_entry_set_text( m_entry, "0" );
+		m_entry.text("0");
 	}
 }
 typedef MemberCaller<AngleAttribute, &AngleAttribute::update> UpdateCaller;
@@ -411,12 +411,12 @@ void update(){
 		if ( f == -1 ) {
 			gtk_widget_set_sensitive( GTK_WIDGET( m_entry ), FALSE );
 			radio_button_set_active_no_signal( m_radio.m_radio, 0 );
-			gtk_entry_set_text( m_entry, "" );
+			m_entry.text("");
 		}
 		else if ( f == -2 ) {
 			gtk_widget_set_sensitive( GTK_WIDGET( m_entry ), FALSE );
 			radio_button_set_active_no_signal( m_radio.m_radio, 1 );
-			gtk_entry_set_text( m_entry, "" );
+			m_entry.text("");
 		}
 		else
 		{
@@ -424,12 +424,12 @@ void update(){
 			radio_button_set_active_no_signal( m_radio.m_radio, 2 );
 			StringOutputStream angle( 32 );
 			angle << angle_normalised( f );
-			gtk_entry_set_text( m_entry, angle.c_str() );
+			m_entry.text(angle.c_str());
 		}
 	}
 	else
 	{
-		gtk_entry_set_text( m_entry, "0" );
+		m_entry.text("0");
 	}
 }
 typedef MemberCaller<DirectionAttribute, &DirectionAttribute::update> UpdateCaller;
@@ -519,22 +519,22 @@ void update(){
 		}
 
 		angle << angle_normalised( pitch_yaw_roll.x() );
-		gtk_entry_set_text( m_angles.m_pitch, angle.c_str() );
+		m_angles.m_pitch.text(angle.c_str());
 		angle.clear();
 
 		angle << angle_normalised( pitch_yaw_roll.y() );
-		gtk_entry_set_text( m_angles.m_yaw, angle.c_str() );
+		m_angles.m_yaw.text(angle.c_str());
 		angle.clear();
 
 		angle << angle_normalised( pitch_yaw_roll.z() );
-		gtk_entry_set_text( m_angles.m_roll, angle.c_str() );
+		m_angles.m_roll.text(angle.c_str());
 		angle.clear();
 	}
 	else
 	{
-		gtk_entry_set_text( m_angles.m_pitch, "0" );
-		gtk_entry_set_text( m_angles.m_yaw, "0" );
-		gtk_entry_set_text( m_angles.m_roll, "0" );
+		m_angles.m_pitch.text("0");
+		m_angles.m_yaw.text("0");
+		m_angles.m_roll.text("0");
 	}
 }
 typedef MemberCaller<AnglesAttribute, &AnglesAttribute::update> UpdateCaller;
@@ -606,22 +606,22 @@ void update(){
 		}
 
 		buffer << x_y_z.x();
-		gtk_entry_set_text( m_vector3.m_x, buffer.c_str() );
+		m_vector3.m_x.text(buffer.c_str());
 		buffer.clear();
 
 		buffer << x_y_z.y();
-		gtk_entry_set_text( m_vector3.m_y, buffer.c_str() );
+		m_vector3.m_y.text(buffer.c_str());
 		buffer.clear();
 
 		buffer << x_y_z.z();
-		gtk_entry_set_text( m_vector3.m_z, buffer.c_str() );
+		m_vector3.m_z.text(buffer.c_str());
 		buffer.clear();
 	}
 	else
 	{
-		gtk_entry_set_text( m_vector3.m_x, "0" );
-		gtk_entry_set_text( m_vector3.m_y, "0" );
-		gtk_entry_set_text( m_vector3.m_z, "0" );
+		m_vector3.m_x.text("0");
+		m_vector3.m_y.text("0");
+		m_vector3.m_z.text("0");
 	}
 }
 typedef MemberCaller<Vector3Attribute, &Vector3Attribute::update> UpdateCaller;
@@ -710,12 +710,12 @@ int g_entitysplit2_position;
 bool g_entityInspector_windowConstructed = false;
 
 GtkTreeView* g_entityClassList;
-GtkTextView* g_entityClassComment;
+ui::TextView g_entityClassComment;
 
 GtkCheckButton* g_entitySpawnflagsCheck[MAX_FLAGS];
 
-GtkEntry* g_entityKeyEntry;
-GtkEntry* g_entityValueEntry;
+ui::Entry g_entityKeyEntry;
+ui::Entry g_entityValueEntry;
 
 ui::ListStore g_entlist_store{ui::null};
 ui::ListStore g_entprops_store{ui::null};
@@ -831,8 +831,7 @@ void SetComment( EntityClass* eclass ){
 
 	g_current_comment = eclass;
 
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer( g_entityClassComment );
-	gtk_text_buffer_set_text( buffer, eclass->comments(), -1 );
+	g_entityClassComment.text(eclass->comments());
 }
 
 void SurfaceFlags_setEntityClass( EntityClass* eclass ){
@@ -860,8 +859,9 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 	{
 		for ( int i = 0; i < g_spawnflag_count; ++i )
 		{
-			ui::Widget widget = ui::Widget(GTK_WIDGET( g_entitySpawnflagsCheck[i] ));
-			gtk_label_set_text( GTK_LABEL( gtk_bin_get_child(GTK_BIN(widget)) ), " " );
+			auto widget = ui::Widget(GTK_WIDGET(g_entitySpawnflagsCheck[i]));
+			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget))));
+			label.text(" ");
 			gtk_widget_hide( widget );
 			g_object_ref( widget );
 			gtk_container_remove( GTK_CONTAINER( g_spawnflagsTable ), widget );
@@ -884,7 +884,8 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 							  (GtkAttachOptions)( GTK_FILL ), 0, 0 );
 			widget.unref();
 
-			gtk_label_set_text( GTK_LABEL( gtk_bin_get_child(GTK_BIN(widget)) ), str.c_str() );
+			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget)) ));
+			label.text(str.c_str());
 		}
 	}
 }
@@ -1038,8 +1039,8 @@ void EntityInspector_updateKeyValues(){
 
 	// save current key/val pair around filling epair box
 	// row_select wipes it and sets to first in list
-	CopiedString strKey( gtk_entry_get_text( g_entityKeyEntry ) );
-	CopiedString strVal( gtk_entry_get_text( g_entityValueEntry ) );
+	CopiedString strKey( g_entityKeyEntry.text() );
+	CopiedString strVal( g_entityValueEntry.text() );
 
 	gtk_list_store_clear( store );
 	// Walk through list and add pairs
@@ -1054,8 +1055,8 @@ void EntityInspector_updateKeyValues(){
 		gtk_list_store_set( store, &iter, 0, key.c_str(), 1, value.c_str(), -1 );
 	}
 
-	gtk_entry_set_text( g_entityKeyEntry, strKey.c_str() );
-	gtk_entry_set_text( g_entityValueEntry, strVal.c_str() );
+	g_entityKeyEntry.text( strKey.c_str() );
+	g_entityValueEntry.text( strVal.c_str() );
 
 	for ( EntityAttributes::const_iterator i = g_entityAttributes.begin(); i != g_entityAttributes.end(); ++i )
 	{
@@ -1249,8 +1250,8 @@ static void EntityProperties_selection_changed( GtkTreeSelection* selection, gpo
 	char* val;
 	gtk_tree_model_get( model, &iter, 0, &key, 1, &val, -1 );
 
-	gtk_entry_set_text( g_entityKeyEntry, key );
-	gtk_entry_set_text( g_entityValueEntry, val );
+	g_entityKeyEntry.text( key );
+	g_entityValueEntry.text( val );
 
 	g_free( key );
 	g_free( val );
@@ -1263,7 +1264,7 @@ static void SpawnflagCheck_toggled( ui::Widget widget, gpointer data ){
 static gint EntityEntry_keypress( GtkEntry* widget, GdkEventKey* event, gpointer data ){
 	if ( event->keyval == GDK_KEY_Return ) {
 		if ( widget == g_entityKeyEntry ) {
-			gtk_entry_set_text( g_entityValueEntry, "" );
+			g_entityValueEntry.text( "" );
 			gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( widget ) ) ), GTK_WIDGET( g_entityValueEntry ) );
 		}
 		else

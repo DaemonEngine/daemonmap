@@ -1016,9 +1016,9 @@ void DoRotateDlg(){
 
 struct ScaleDialog
 {
-	ui::Widget x;
-	ui::Widget y;
-	ui::Widget z;
+	ui::Entry x;
+	ui::Entry y;
+	ui::Entry z;
 	ui::Window window{ui::null};
 };
 
@@ -1041,9 +1041,9 @@ static gboolean scaledlg_apply( ui::Widget widget, ScaleDialog* scaleDialog ){
 static gboolean scaledlg_cancel( ui::Widget widget, ScaleDialog* scaleDialog ){
 	gtk_widget_hide( GTK_WIDGET( scaleDialog->window ) );
 
-	gtk_entry_set_text( GTK_ENTRY( scaleDialog->x ), "1.0" );
-	gtk_entry_set_text( GTK_ENTRY( scaleDialog->y ), "1.0" );
-	gtk_entry_set_text( GTK_ENTRY( scaleDialog->z ), "1.0" );
+	scaleDialog->x.text("1.0");
+	scaleDialog->y.text("1.0");
+	scaleDialog->z.text("1.0");
 
 	return TRUE;
 }
@@ -1096,8 +1096,8 @@ void DoScaleDlg(){
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
-					ui::Widget entry = ui::Entry();
-					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
+					auto entry = ui::Entry();
+					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -1106,8 +1106,8 @@ void DoScaleDlg(){
 					g_scale_dialog.x = entry;
 				}
 				{
-					ui::Widget entry = ui::Entry();
-					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
+					auto entry = ui::Entry();
+					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
@@ -1116,8 +1116,8 @@ void DoScaleDlg(){
 					g_scale_dialog.y = entry;
 				}
 				{
-					ui::Widget entry = ui::Entry();
-					gtk_entry_set_text( GTK_ENTRY( entry ), "1.0" );
+					auto entry = ui::Entry();
+					entry.text("1.0");
 					entry.show();
 					gtk_table_attach( table, entry, 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),

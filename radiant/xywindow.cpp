@@ -707,7 +707,7 @@ bool XYWnd::chaseMouseMotion( int pointx, int pointy ){
 Shader* XYWnd::m_state_selected = 0;
 
 void xy_update_xor_rectangle( XYWnd& self, rect_t area ){
-	if ( gtk_widget_get_visible( self.GetWidget() ) ) {
+	if ( self.GetWidget().visible() ) {
 		self.m_XORRectangle.set( rectangle_from_area( area.min, area.max, self.Width(), self.Height() ) );
 	}
 }

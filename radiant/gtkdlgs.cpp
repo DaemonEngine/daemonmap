@@ -155,7 +155,7 @@ inline void path_copy_clean( char* destination, const char* source ){
 struct GameCombo
 {
 	ui::ComboBoxText game_select;
-	GtkEntry* fsgame_entry;
+	ui::Entry fsgame_entry;
 };
 
 gboolean OnSelchangeComboWhatgame( ui::Widget widget, GameCombo* combo ){
@@ -168,7 +168,7 @@ gboolean OnSelchangeComboWhatgame( ui::Widget widget, GameCombo* combo ){
 
 	gamecombo_t gamecombo = gamecombo_for_gamename( gamename );
 
-	gtk_entry_set_text( combo->fsgame_entry, gamecombo.fs_game );
+	combo->fsgame_entry.text( gamecombo.fs_game );
 	gtk_widget_set_sensitive( GTK_WIDGET( combo->fsgame_entry ), gamecombo.sensitive );
 
 	return FALSE;
@@ -301,7 +301,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 	gamecombo_t gamecombo = gamecombo_for_dir( dir );
 
 	gtk_combo_box_set_active( dialog.game_combo.game_select, gamecombo.game );
-	gtk_entry_set_text( dialog.game_combo.fsgame_entry, gamecombo.fs_game );
+	dialog.game_combo.fsgame_entry.text( gamecombo.fs_game );
 	gtk_widget_set_sensitive( GTK_WIDGET( dialog.game_combo.fsgame_entry ), gamecombo.sensitive );
 
 	if ( globalMappingMode().do_mapping_mode ) {
@@ -569,8 +569,7 @@ void DoAbout(){
 						auto text_extensions = ui::TextView();
 						gtk_text_view_set_editable( GTK_TEXT_VIEW( text_extensions ), FALSE );
 						sc_extensions.add(text_extensions);
-						GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( text_extensions ) );
-						gtk_text_buffer_set_text( buffer, reinterpret_cast<const char*>( glGetString( GL_EXTENSIONS ) ), -1 );
+						text_extensions.text(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
 						gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text_extensions ), GTK_WRAP_WORD );
 						text_extensions.show();
 					}
@@ -595,8 +594,8 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
-	GtkEntry* x;
-	GtkEntry* y;
+	ui::Entry x;
+	ui::Entry y;
 
 	auto window = MainFrame_getWindow().create_modal_dialog_window("Patch texture layout", dialog );
 
@@ -679,10 +678,10 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 	char buf[16];
 	
 	sprintf( buf, "%f", last_used_texture_layout_scale_x );
-	gtk_entry_set_text( x, buf );
+	x.text( buf );
 	
 	sprintf( buf, "%f", last_used_texture_layout_scale_y );
-	gtk_entry_set_text( y, buf );
+	y.text( buf );
 
 	// Set focus after intializing the values
 	gtk_widget_grab_focus( GTK_WIDGET( x ) );
@@ -854,7 +853,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 
 EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 	ModalDialog dialog;
-	GtkEntry* intensity_entry;
+	ui::Entry intensity_entry;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 
@@ -904,7 +903,7 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 
 	char buf[16];
 	sprintf( buf, "%d", *intensity );
-	gtk_entry_set_text( intensity_entry, buf );
+	intensity_entry.text(buf);
 
 	EMessageBoxReturn ret = modal_dialog_show( window, dialog );
 	if ( ret == eIDOK ) {

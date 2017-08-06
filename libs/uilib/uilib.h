@@ -175,7 +175,7 @@ namespace ui {
         using native = _GtkObject *;
         native _handle;
 
-        Object(native h) : _handle(h)
+        explicit Object(native h) : _handle(h)
         {}
 
         explicit operator bool() const
@@ -223,7 +223,7 @@ namespace ui {
     );
 
     WRAP(Editable, Object, _GtkEditable, (),
-         Editable();
+         explicit Editable();
     ,
          void editable(bool value);
     );
@@ -234,8 +234,13 @@ namespace ui {
 
     // GObject
 
+    struct Dimensions {
+        int width;
+        int height;
+    };
+
     WRAP(Widget, Object, _GtkWidget, (),
-         Widget();
+         explicit Widget();
     ,
          alert_response alert(
                  std::string text,
@@ -252,7 +257,10 @@ namespace ui {
                  bool want_import = false,
                  bool want_save = false
          );
+         bool visible();
          void show();
+         Dimensions dimensions();
+         void dimensions(int width, int height);
     );
 
     WRAP(Container, Widget, _GtkContainer, (),
@@ -271,7 +279,7 @@ namespace ui {
 
     class AccelGroup;
     WRAP(Window, Bin, _GtkWindow, (),
-         Window(window_type type);
+         explicit Window(window_type type);
     ,
          Window create_dialog_window(
                  const char *title,
@@ -308,13 +316,13 @@ namespace ui {
     );
 
     WRAP(Frame, Bin, _GtkFrame, (),
-         Frame(const char *label = nullptr);
+         explicit Frame(const char *label = nullptr);
     ,
     );
 
     WRAP(Button, Bin, _GtkButton, (),
-         Button();
-         Button(const char *label);
+         explicit Button();
+         explicit Button(const char *label);
     ,
     );
 
@@ -324,7 +332,8 @@ namespace ui {
     );
 
     WRAP(CheckButton, ToggleButton, _GtkCheckButton, (),
-         CheckButton(const char *label);
+         explicit CheckButton();
+         explicit CheckButton(const char *label);
     ,
     );
 
@@ -337,8 +346,8 @@ namespace ui {
     );
 
     WRAP(MenuItem, Item, _GtkMenuItem, (),
-         MenuItem();
-         MenuItem(const char *label, bool mnemonic = false);
+         explicit MenuItem();
+         explicit MenuItem(const char *label, bool mnemonic = false);
     ,
     );
 
@@ -351,7 +360,7 @@ namespace ui {
     );
 
     WRAP(TearoffMenuItem, MenuItem, _GtkTearoffMenuItem, (),
-         TearoffMenuItem();
+         explicit TearoffMenuItem();
     ,
     );
 
@@ -360,7 +369,7 @@ namespace ui {
     );
 
     WRAP(ComboBoxText, ComboBox, _GtkComboBoxText, (),
-         ComboBoxText();
+         explicit ComboBoxText();
     ,
     );
 
@@ -381,8 +390,9 @@ namespace ui {
     );
 
     WRAP(ScrolledWindow, Bin, _GtkScrolledWindow, (),
-         ScrolledWindow();
+         explicit ScrolledWindow();
     ,
+         void overflow(Policy x, Policy y);
     );
 
     WRAP(Box, Container, _GtkBox, (),
@@ -404,12 +414,12 @@ namespace ui {
     );
 
     WRAP(HPaned, Paned, _GtkHPaned, (),
-         HPaned();
+         explicit HPaned();
     ,
     );
 
     WRAP(VPaned, Paned, _GtkVPaned, (),
-         VPaned();
+         explicit VPaned();
     ,
     );
 
@@ -422,7 +432,7 @@ namespace ui {
     );
 
     WRAP(Menu, MenuShell, _GtkMenu, (),
-         Menu();
+         explicit Menu();
     ,
     );
 
@@ -432,8 +442,9 @@ namespace ui {
     );
 
     WRAP(TextView, Container, _GtkTextView, (),
-         TextView();
+         explicit TextView();
     ,
+         void text(char const *str);
     );
 
     WRAP(Toolbar, Container, _GtkToolbar, (),
@@ -442,7 +453,7 @@ namespace ui {
 
     class TreeModel;
     WRAP(TreeView, Widget, _GtkTreeView, (),
-         TreeView();
+         explicit TreeView();
          TreeView(TreeModel model);
     ,
     );
@@ -452,19 +463,22 @@ namespace ui {
     );
 
     WRAP(Label, Widget, _GtkLabel, (),
-         Label(const char *label);
+         explicit Label(const char *label);
     ,
+         void text(char const *str);
     );
 
     WRAP(Image, Widget, _GtkImage, (),
-         Image();
+         explicit Image();
     ,
     );
 
     WRAP(Entry, Widget, _GtkEntry, (IEditable, ICellEditable),
-         Entry();
-         Entry(std::size_t max_length);
+         explicit Entry();
+         explicit Entry(std::size_t max_length);
     ,
+        char const *text();
+        void text(char const *str);
     );
 
     class Adjustment;
@@ -482,7 +496,7 @@ namespace ui {
     );
 
     WRAP(HScale, Scale, _GtkHScale, (),
-         HScale(Adjustment adjustment);
+         explicit HScale(Adjustment adjustment);
          HScale(double min, double max, double step);
     ,
     );
@@ -500,7 +514,7 @@ namespace ui {
     );
 
     WRAP(CellRendererText, CellRenderer, _GtkCellRendererText, (),
-         CellRendererText();
+         explicit CellRendererText();
     ,
     );
 
@@ -514,7 +528,7 @@ namespace ui {
     );
 
     WRAP(AccelGroup, Object, _GtkAccelGroup, (),
-         AccelGroup();
+         explicit AccelGroup();
     ,
     );
 
@@ -534,8 +548,8 @@ namespace ui {
     // GBoxed
 
     WRAP(TreePath, Object, _GtkTreePath, (),
-         TreePath();
-         TreePath(const char *path);
+         explicit TreePath();
+         explicit TreePath(const char *path);
     ,
     );
 

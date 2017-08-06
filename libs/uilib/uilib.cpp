@@ -92,9 +92,26 @@ namespace ui {
         return ::file_dialog(this, open, title, path, pattern, want_load, want_import, want_save);
     }
 
+    bool IWidget::visible()
+    {
+        return gtk_widget_get_visible(this) != 0;
+    }
+
     void IWidget::show()
     {
         gtk_widget_show(this);
+    }
+
+    Dimensions IWidget::dimensions()
+    {
+        GtkAllocation allocation;
+        gtk_widget_get_allocation(this, &allocation);
+        return Dimensions{allocation.width, allocation.height};
+    }
+
+    void IWidget::dimensions(int width, int height)
+    {
+        gtk_widget_set_size_request(this, width, height);
     }
 
     IMPL(Container, GTK_CONTAINER);
@@ -185,6 +202,9 @@ namespace ui {
 
     IMPL(CheckButton, GTK_CHECK_BUTTON);
 
+    CheckButton::CheckButton() : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new()))
+    {}
+
     CheckButton::CheckButton(const char *label) : CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_label(label)))
     {}
 
@@ -211,6 +231,11 @@ namespace ui {
 
     ScrolledWindow::ScrolledWindow() : ScrolledWindow(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(nullptr, nullptr)))
     {}
+
+    void IScrolledWindow::overflow(Policy x, Policy y)
+    {
+        gtk_scrolled_window_set_policy(this, static_cast<GtkPolicyType>(x), static_cast<GtkPolicyType>(y));
+    }
 
     IMPL(VBox, GTK_VBOX);
 
@@ -249,6 +274,12 @@ namespace ui {
     TextView::TextView() : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))
     {}
 
+    void ITextView::text(char const *str)
+    {
+        GtkTextBuffer *buffer = gtk_text_view_get_buffer(this);
+        gtk_text_buffer_set_text(buffer, str, -1);
+    }
+
     TreeView::TreeView() : TreeView(GTK_TREE_VIEW(gtk_tree_view_new()))
     {}
 
@@ -259,6 +290,11 @@ namespace ui {
 
     Label::Label(const char *label) : Label(GTK_LABEL(gtk_label_new(label)))
     {}
+
+    void ILabel::text(char const *str)
+    {
+        gtk_label_set_text(this, str);
+    }
 
     IMPL(Image, GTK_IMAGE);
 
@@ -273,6 +309,16 @@ namespace ui {
     Entry::Entry(std::size_t max_length) : Entry()
     {
         gtk_entry_set_max_length(this, static_cast<gint>(max_length));
+    }
+
+    char const *IEntry::text()
+    {
+        return gtk_entry_get_text(this);
+    }
+
+    void IEntry::text(char const *str)
+    {
+        return gtk_entry_set_text(this, str);
     }
 
     IMPL(SpinButton, GTK_SPIN_BUTTON);

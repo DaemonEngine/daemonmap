@@ -71,8 +71,8 @@ EntityList() :
 	m_selection_disabled( false ){
 }
 
-bool visible() const {
-	return gtk_widget_get_visible( m_window );
+bool visible() {
+	return m_window.visible();
 }
 };
 

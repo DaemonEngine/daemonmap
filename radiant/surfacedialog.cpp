@@ -174,7 +174,7 @@ Increment m_vshiftIncrement;
 Increment m_hscaleIncrement;
 Increment m_vscaleIncrement;
 Increment m_rotateIncrement;
-GtkEntry* m_texture;
+ui::Entry m_texture;
 
 SurfaceInspector() :
 	m_textureEntry( ApplyShaderCaller( *this ), UpdateCaller( *this ) ),
@@ -210,8 +210,8 @@ void constructWindow( ui::Window main_window ){
 void destroyWindow(){
 	Destroy();
 }
-bool visible() const {
-	return gtk_widget_get_visible( GetWidget() );
+bool visible() {
+	return GetWidget().visible();
 }
 void queueDraw(){
 	if ( visible() ) {
@@ -1112,11 +1112,11 @@ void SurfaceInspector::Update(){
 	const char * name = SurfaceInspector_GetSelectedShader();
 
 	if ( shader_is_texture( name ) ) {
-		gtk_entry_set_text( m_texture, shader_get_textureName( name ) );
+		m_texture.text(shader_get_textureName(name));
 	}
 	else
 	{
-		gtk_entry_set_text( m_texture, "" );
+		m_texture.text("");
 	}
 
 	texdef_t shiftScaleRotate;

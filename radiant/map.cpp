@@ -763,8 +763,8 @@ WindowPosition g_posMapInfoWnd( c_default_window_pos );
 
 void DoMapInfo(){
 	ModalDialog dialog;
-	GtkEntry* brushes_entry;
-	GtkEntry* entities_entry;
+	ui::Entry brushes_entry;
+	ui::Entry entities_entry;
 	ui::ListStore EntityBreakdownWalker{ui::null};
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Map Info", G_CALLBACK(dialog_delete_callback ), &dialog );
@@ -889,9 +889,9 @@ void DoMapInfo(){
 
 	char tmp[16];
 	sprintf( tmp, "%u", Unsigned( g_brushCount.get() ) );
-	gtk_entry_set_text( GTK_ENTRY( brushes_entry ), tmp );
+	brushes_entry.text(tmp);
 	sprintf( tmp, "%u", Unsigned( g_entityCount.get() ) );
-	gtk_entry_set_text( GTK_ENTRY( entities_entry ), tmp );
+	entities_entry.text(tmp);
 
 	modal_dialog_show( window, dialog );
 
@@ -2036,8 +2036,8 @@ static void GetSelectionIndex( int *ent, int *brush ){
 
 void DoFind(){
 	ModalDialog dialog;
-	GtkEntry* entity;
-	GtkEntry* brush;
+	ui::Entry entity;
+	ui::Entry brush;
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Find Brush", G_CALLBACK(dialog_delete_callback ), &dialog );
 
@@ -2106,9 +2106,9 @@ void DoFind(){
 
 	GetSelectionIndex( &ent, &br );
 	sprintf( buf, "%i", ent );
-	gtk_entry_set_text( entity, buf );
+	entity.text(buf);
 	sprintf( buf, "%i", br );
-	gtk_entry_set_text( brush, buf );
+	brush.text(buf);
 
 	if ( modal_dialog_show( window, dialog ) == eIDOK ) {
 		const char *entstr = gtk_entry_get_text( entity );

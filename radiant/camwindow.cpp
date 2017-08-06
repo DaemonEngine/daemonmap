@@ -828,7 +828,7 @@ gboolean mousecontrol_button_press( ui::Widget widget, GdkEventButton* event, Ca
 #endif
 
 void camwnd_update_xor_rectangle( CamWnd& self, rect_t area ){
-	if ( gtk_widget_get_visible( self.m_gl_widget ) ) {
+	if ( self.m_gl_widget.visible() ) {
 		self.m_XORRectangle.set( rectangle_from_area( area.min, area.max, self.getCamera().width, self.getCamera().height ) );
 	}
 }
@@ -854,8 +854,7 @@ void selection_motion( gdouble x, gdouble y, guint state, void* data ){
 }
 
 inline WindowVector windowvector_for_widget_centre( ui::Widget widget ){
-	GtkAllocation allocation;
-	gtk_widget_get_allocation(widget, &allocation);
+	auto allocation = widget.dimensions();
 	return WindowVector( static_cast<float>( allocation.width / 2 ), static_cast<float>(allocation.height / 2 ) );
 }
 

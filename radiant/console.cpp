@@ -81,14 +81,13 @@ void Sys_LogFile( bool enable ){
 	}
 }
 
-ui::Widget g_console;
+ui::TextView g_console{ui::null};
 
 void console_clear(){
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( g_console ) );
-	gtk_text_buffer_set_text( buffer, "", -1 );
+	g_console.text("");
 }
 
-void console_populate_popup( GtkTextView* textview, ui::Menu menu, gpointer user_data ){
+void console_populate_popup( ui::TextView textview, ui::Menu menu, gpointer user_data ){
 	menu_separator( menu );
 
 	ui::Widget item(ui::MenuItem( "Clear" ));
@@ -106,12 +105,12 @@ WidgetFocusPrinter g_consoleWidgetFocusPrinter( "console" );
 
 ui::Widget Console_constructWindow( ui::Window toplevel ){
 	auto scr = ui::ScrolledWindow();
-	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+	scr.overflow(ui::Policy::AUTOMATIC, ui::Policy::AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 	scr.show();
 
 	{
-		ui::Widget text = ui::TextView();
+		auto text = ui::TextView();
 		gtk_widget_set_size_request( text, 0, -1 ); // allow shrinking
 		gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text ), GTK_WRAP_WORD );
 		gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), FALSE );
@@ -163,7 +162,7 @@ std::size_t Sys_Print( int level, const char* buf, std::size_t length ){
 	}
 
 	if ( level != SYS_NOCON ) {
-		if ( g_console != 0 ) {
+		if ( g_console ) {
 			GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( g_console ) );
 
 			GtkTextIter iter;

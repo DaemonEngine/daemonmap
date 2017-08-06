@@ -43,7 +43,7 @@ class CBackgroundDialogPage
 private:
 GtkWidget *m_pWidget;
 GtkWidget *m_pTabLabel;
-GtkWidget *m_pFileLabel;
+ui::Label m_pFileLabel;
 GtkWidget *m_pPosLabel;
 VIEWTYPE m_vt;
 bool m_bValidFile;
@@ -159,7 +159,7 @@ void CBackgroundDialogPage::Browse(){
 
 	if ( m_pImage->Load( newfile ) ) {
 		m_bValidFile = true;
-		gtk_label_set_text( GTK_LABEL( m_pFileLabel ),newfile );
+		m_pFileLabel.text(newfile);
 	}
 }
 
@@ -168,7 +168,7 @@ void CBackgroundDialogPage::SetPosLabel(){
 	// TODO no snprintf ?
 	sprintf( s, "Size/Position (%d,%d) (%d,%d)",(int)( m_pImage->m_xmin ),
 			 (int)( m_pImage->m_ymin ),(int)( m_pImage->m_xmax ),(int)( m_pImage->m_ymax ) );
-	gtk_label_set_text( GTK_LABEL( m_pPosLabel ),s );
+	m_pPosLabel.text(s);
 }
 
 CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){

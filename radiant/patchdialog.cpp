@@ -176,8 +176,8 @@ void update(){
 	}
 	else
 	{
-		gtk_entry_set_text( m_horizontal, "" );
-		gtk_entry_set_text( m_vertical, "" );
+		m_horizontal.text("");
+		m_vertical.text("");
 		gtk_widget_set_sensitive( GTK_WIDGET( m_horizontal ), FALSE );
 		gtk_widget_set_sensitive( GTK_WIDGET( m_vertical ), FALSE );
 	}
@@ -256,7 +256,7 @@ PatchInspector() :
 }
 
 bool visible(){
-	return gtk_widget_get_visible( GetWidget() );
+	return GetWidget().visible();
 }
 
 //  void UpdateInfo();

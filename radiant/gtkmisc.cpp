@@ -131,7 +131,7 @@ void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry ){
 	const char *filename = ui::Widget(gtk_widget_get_toplevel( widget )).file_dialog( TRUE, "Choose File", gtk_entry_get_text( entry ) );
 
 	if ( filename != 0 ) {
-		gtk_entry_set_text( entry, filename );
+		entry.text(filename);
 	}
 }
 
@@ -141,7 +141,7 @@ void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry )
 
 	if ( dir != 0 ) {
 		gchar* converted = g_filename_to_utf8( dir, -1, 0, 0, 0 );
-		gtk_entry_set_text( entry, converted );
+		entry.text(converted);
 		g_free( dir );
 		g_free( converted );
 	}

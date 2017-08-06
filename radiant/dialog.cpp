@@ -150,7 +150,7 @@ void IntRadioExport( GtkRadioButton& widget, const IntImportCallback& importCall
 typedef ImportExport<GtkRadioButton, int, IntRadioImport, IntRadioExport> IntRadioImportExport;
 
 void TextEntryImport( GtkEntry& widget, const char* text ){
-	gtk_entry_set_text( &widget, text );
+	ui::Entry(&widget).text(text);
 }
 void TextEntryExport( GtkEntry& widget, const StringImportCallback& importCallback ){
 	importCallback( gtk_entry_get_text( &widget ) );
