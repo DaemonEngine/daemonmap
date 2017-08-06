@@ -88,7 +88,6 @@ addflags("-Wextra")
 addflags("-pedantic")
 
 addflags("-Wno-sign-compare")
-addflags("-Wno-write-strings")
 addflags("-Wno-unused-function")
 addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
