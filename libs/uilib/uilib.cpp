@@ -14,7 +14,7 @@ namespace ui {
     bool init(int *argc, char **argv[], char const *parameter_string, char const **error)
     {
         gtk_disable_setlocale();
-        static GOptionEntry entries[] = {{NULL}};
+        static GOptionEntry entries[] = {{}};
         char const *translation_domain = NULL;
         GError *gerror = NULL;
         bool ret = gtk_init_with_args(argc, argv, parameter_string, entries, translation_domain, &gerror) != 0;

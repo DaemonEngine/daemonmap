@@ -93,7 +93,6 @@ addflags("-Wno-sign-compare")
 addflags("-Wno-unused-function")
 addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
-addflags("-Wno-missing-field-initializers")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 set(GTK_TARGET 2 CACHE STRING "GTK target")
