@@ -128,7 +128,7 @@ void DumpChunks( void ){
 		memcpy( str, data_p, 4 );
 		data_p += 4;
 		iff_chunk_len = GetLittleLong();
-		printf( "0x%x : %s (%d)\n", (int)( data_p - 4 ), str, iff_chunk_len );
+		printf( "%p : %s (%d)\n", (void *) ( data_p - 4 ), str, iff_chunk_len );
 		data_p += ( iff_chunk_len + 1 ) & ~1;
 	} while ( data_p < iff_end );
 }
