@@ -26,7 +26,9 @@
 #include "md3lib.h"
 
 #if defined ( __linux__ ) || defined ( __APPLE__ )
-#define filelength Q_filelength
+#define filelength(f) Q_filelength(f)
+#else
+#define filelength(f) filelength(fileno(f))
 #endif
 
 /*
@@ -149,8 +151,8 @@ void MD3_Dump( const char *filename ){
 		Error( "Unable to open '%s'\n", filename );
 	}
 
-	fileSize = filelength( fileno( fp ) );
-	_buffer = malloc( filelength( fileno( fp ) ) );
+	fileSize = filelength( fp );
+	_buffer = malloc( fileSize );
 	fread( _buffer, fileSize, 1, fp );
 	fclose( fp );
 

@@ -33,8 +33,10 @@
 #if defined ( __linux__ ) || defined ( __APPLE__ )
 	#include "cmdlib.h"
 	#define _strcmpi Q_stricmp
-	#define filelength Q_filelength
 	#define strlwr strlower
+	#define filelength(f) Q_filelength(f)
+#else
+	#define filelength(f) filelength(fileno(f))
 #endif
 typedef struct
 {
@@ -68,7 +70,7 @@ int P3DLoad( const char *filename ){
 
 	memset( &p3d, 0, sizeof( p3d ) );
 
-	p3d.len = filelength( fileno( fp ) );
+	p3d.len = filelength( fp );
 
 	p3d.curpos = p3d.buffer = malloc( p3d.len );
 
