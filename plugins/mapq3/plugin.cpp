@@ -71,7 +71,7 @@ MapDoom3Dependencies& m_dependencies;
 public:
 typedef MapFormat Type;
 STRING_CONSTANT( Name, "mapdoom3" );
-INTEGER_CONSTANT( MapVersion, 2 );
+UINT_CONSTANT( MapVersion, 2 );
 
 MapDoom3API( MapDoom3Dependencies& dependencies ) : m_dependencies( dependencies ){
 	GlobalFiletypesModule::getTable().addType( Type::Name(), Name(), filetype_t( "doom3 maps", "*.map" ) );
@@ -142,7 +142,7 @@ MapDoom3Dependencies& m_dependencies;
 public:
 typedef MapFormat Type;
 STRING_CONSTANT( Name, "mapquake4" );
-INTEGER_CONSTANT( MapVersion, 3 );
+UINT_CONSTANT( MapVersion, 3 );
 
 MapQuake4API( MapDoom3Dependencies& dependencies ) : m_dependencies( dependencies ){
 	GlobalFiletypesModule::getTable().addType( Type::Name(), Name(), filetype_t( "quake4 maps", "*.map" ) );

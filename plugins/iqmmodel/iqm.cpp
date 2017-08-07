@@ -192,7 +192,7 @@ void IQMSurface_read(Model& model, const byte* buffer, ArchiveFile& file)
     
     int ofs_position = -1, ofs_st = -1, ofs_normal = -1;
     PointerInputStream vaStream (buffer + header.ofs_vertexarrays);
-    for (int i = 0; i < header.num_vertexarrays; i++)
+    for (unsigned int i = 0; i < header.num_vertexarrays; i++)
     {
         iqmvertexarray_t va;
         istream_read_iqmVertexarray (vaStream, va);
@@ -238,7 +238,7 @@ void IQMSurface_read(Model& model, const byte* buffer, ArchiveFile& file)
     }
     
     PointerInputStream triangleStream(buffer + header.ofs_triangles);
-	for(int i = 0; i < header.num_triangles; ++i)
+	for(unsigned int i = 0; i < header.num_triangles; ++i)
     {
       iqmTriangle_t triangle;
       istream_read_iqmTriangle(triangleStream, triangle);

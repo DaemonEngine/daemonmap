@@ -1825,7 +1825,7 @@ void                        FloodLightRawLightmap( int num );
 void                        IlluminateRawLightmap( int num );
 void                        IlluminateVertexes( int num );
 
-void                        SetupBrushesFlags( int mask_any, int test_any, int mask_all, int test_all );
+void                        SetupBrushesFlags( unsigned int mask_any, unsigned int test_any, unsigned int mask_all, unsigned int test_all );
 void                        SetupBrushes( void );
 void                        SetupClusters( void );
 qboolean                    ClusterVisible( int a, int b );

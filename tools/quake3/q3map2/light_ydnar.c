@@ -3183,7 +3183,7 @@ void IlluminateVertexes( int num ){
    determines opaque brushes in the world and find sky shaders for sunlight calculations
  */
 
-void SetupBrushesFlags( int mask_any, int test_any, int mask_all, int test_all ){
+void SetupBrushesFlags( unsigned int mask_any, unsigned int test_any, unsigned int mask_all, unsigned int test_all ){
 	int i, j, b;
 	unsigned int compileFlags, allCompileFlags;
 	qboolean inside;

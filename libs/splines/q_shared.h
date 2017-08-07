@@ -65,6 +65,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include <cstddef>
+
 #ifdef WIN32                // mac doesn't have malloc.h
 #include <malloc.h>         // for _alloca()
 #endif
@@ -591,7 +593,7 @@ void Com_Parse3DMatrix( const char *( *buf_p ), int z, int y, int x, float *m );
 extern "C" {
 #endif
 
-void QDECL Com_sprintf( char *dest, int size, const char *fmt, ... );
+void QDECL Com_sprintf( char *dest, std::size_t size, const char *fmt, ... );
 
 
 // mode parm for FS_FOpenFile
@@ -624,8 +626,8 @@ char    *Q_strupr( char *s1 );
 char    *Q_strrchr( const char* string, int c );
 
 // buffer size safe library replacements
-void    Q_strncpyz( char *dest, const char *src, int destsize );
-void    Q_strcat( char *dest, int size, const char *src );
+void    Q_strncpyz( char *dest, const char *src, std::size_t destsize );
+void    Q_strcat( char *dest, std::size_t size, const char *src );
 
 // strlen that discounts Quake color sequences
 int Q_PrintStrlen( const char *string );

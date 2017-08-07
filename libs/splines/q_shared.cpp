@@ -546,7 +546,7 @@ char* Q_strrchr( const char* string, int c ){
    Safe strncpy that ensures a trailing zero
    =============
  */
-void Q_strncpyz( char *dest, const char *src, int destsize ) {
+void Q_strncpyz( char *dest, const char *src, std::size_t destsize ) {
 	if ( !src ) {
 		Com_Error( ERR_FATAL, "Q_strncpyz: NULL src" );
 	}
@@ -633,10 +633,8 @@ char *Q_strupr( char *s1 ) {
 
 
 // never goes past bounds or leaves without a terminating 0
-void Q_strcat( char *dest, int size, const char *src ) {
-	int l1;
-
-	l1 = strlen( dest );
+void Q_strcat( char *dest, std::size_t size, const char *src ) {
+	auto l1 = strlen( dest );
 	if ( l1 >= size ) {
 		Com_Error( ERR_FATAL, "Q_strcat: already overflowed" );
 	}
@@ -689,14 +687,17 @@ char *Q_CleanStr( char *string ) {
 }
 
 
-void QDECL Com_sprintf( char *dest, int size, const char *fmt, ... ) {
-	int len;
+void QDECL Com_sprintf( char *dest, std::size_t size, const char *fmt, ... ) {
 	va_list argptr;
 	char bigbuffer[32000];      // big, but small enough to fit in PPC stack
 
 	va_start( argptr,fmt );
-	len = vsprintf( bigbuffer,fmt,argptr );
+	int ret = vsprintf( bigbuffer,fmt,argptr );
 	va_end( argptr );
+	if ( ret < 0 ) {
+		Com_Error(ERR_FATAL, "Com_sprintf: vsprintf failed");
+	}
+	auto len = static_cast<size_t>(ret);
 	if ( len >= sizeof( bigbuffer ) ) {
 		Com_Error( ERR_FATAL, "Com_sprintf: overflowed bigbuffer" );
 	}

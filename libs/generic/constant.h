@@ -43,6 +43,7 @@ inline TextOutputStreamType& ostream_write( TextOutputStreamType& ostream, const
 #define TYPE_CONSTANT( name, value, type ) struct name ## _CONSTANT_ { typedef type Value; static Value evaluate() { return value; } }; typedef ConstantWrapper<name ## _CONSTANT_> name
 #define STRING_CONSTANT( name, value ) TYPE_CONSTANT ( name, value, const char* )
 #define INTEGER_CONSTANT( name, value ) TYPE_CONSTANT ( name, value, int )
+#define UINT_CONSTANT( name, value ) TYPE_CONSTANT ( name, value, unsigned int )
 
 STRING_CONSTANT( EmptyString, "" );
 

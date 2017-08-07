@@ -57,7 +57,7 @@ DebugScopeTimer( const char* operation )
 
 class RadiantUndoSystem : public UndoSystem
 {
-INTEGER_CONSTANT( MAX_UNDO_LEVELS, 1024 );
+UINT_CONSTANT( MAX_UNDO_LEVELS, 1024 );
 
 class Snapshot
 {

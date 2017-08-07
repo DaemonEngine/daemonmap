@@ -603,7 +603,7 @@ void CPortalsDrawSolid::render( RenderStateFlags state ) const {
 }
 
 void CPortalsDrawSolidOutline::render( RenderStateFlags state ) const {
-	for ( int n = 0; n < portals.portal_count; n++ )
+	for ( unsigned int n = 0; n < portals.portal_count; n++ )
 	{
 		if ( portals.lines == 2 && !portals.portal[n].hint ) {
 			continue;
@@ -613,26 +613,26 @@ void CPortalsDrawSolidOutline::render( RenderStateFlags state ) const {
 			if ( clip.min[0] < portals.portal[n].min[0] ) {
 				continue;
 			}
-			else if ( clip.min[1] < portals.portal[n].min[1] ) {
+			if ( clip.min[1] < portals.portal[n].min[1] ) {
 				continue;
 			}
-			else if ( clip.min[2] < portals.portal[n].min[2] ) {
+			if ( clip.min[2] < portals.portal[n].min[2] ) {
 				continue;
 			}
-			else if ( clip.max[0] > portals.portal[n].max[0] ) {
+			if ( clip.max[0] > portals.portal[n].max[0] ) {
 				continue;
 			}
-			else if ( clip.max[1] > portals.portal[n].max[1] ) {
+			if ( clip.max[1] > portals.portal[n].max[1] ) {
 				continue;
 			}
-			else if ( clip.max[2] > portals.portal[n].max[2] ) {
+			if ( clip.max[2] > portals.portal[n].max[2] ) {
 				continue;
 			}
 		}
 
 		glBegin( GL_LINE_LOOP );
 
-		for ( int p = 0; p < portals.portal[n].point_count; p++ )
+		for ( unsigned int p = 0; p < portals.portal[n].point_count; p++ )
 			glVertex3fv( portals.portal[n].inner_point[p].p );
 
 		glEnd();

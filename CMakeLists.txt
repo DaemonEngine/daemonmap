@@ -89,7 +89,6 @@ addflags("-pedantic")
 
 addflags_c("-Wno-deprecated-declarations") # vfs.c: g_strdown
 
-addflags("-Wno-sign-compare")
 addflags("-Wno-unused-function")
 addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
