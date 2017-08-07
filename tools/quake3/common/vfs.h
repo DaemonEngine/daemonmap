@@ -39,7 +39,6 @@
 #else
 #include <wtypes.h>
 #include <io.h>
-#define R_OK 04
 #define S_ISDIR( mode ) ( mode & _S_IFDIR )
 #define PATH_MAX 260
 #endif
