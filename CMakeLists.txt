@@ -95,8 +95,6 @@ addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
 addflags("-Wno-missing-field-initializers")
 
-addflags_c("-Wno-incompatible-pointer-types")
-
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 set(GTK_TARGET 2 CACHE STRING "GTK target")
 add_definitions(-DGTK_TARGET=${GTK_TARGET})
