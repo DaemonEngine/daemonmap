@@ -169,6 +169,12 @@ if (BUILD_RADIANT)
     disable_deprecated(PANGO 0)
 endif ()
 
+IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+    link_directories(
+            /usr/local/lib
+    )
+endif ()
+
 if (BUILD_BINARIES)
     if (APPLE)
         if (BUILD_RADIANT)
