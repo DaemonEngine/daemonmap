@@ -174,6 +174,7 @@ GLFont *glfont_create( const char* font_string ){
 // new font code ripped from ZeroRadiant
 
 #include <pango/pangoft2.h>
+#include <pango/pango-features.h>
 #include <pango/pango-utils.h>
 
 class GLFontInternal : public GLFont
