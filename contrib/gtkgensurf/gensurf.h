@@ -412,7 +412,7 @@ extern int SP;       // ^Fishman - Snap to grid.
    extern HCURSOR   ghCursorDefault;
    extern HCURSOR   ghCursorVertex;
    extern HINSTANCE ghInst;*/
-extern GtkWidget *g_pRadiantWnd;
+extern ui::Window g_pRadiantWnd;
 extern ui::Window g_pWnd;
 /*extern HWND      ghwndAngles;
    extern HWND      ghwndFix;

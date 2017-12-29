@@ -52,7 +52,7 @@ ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const ch
 
 template<typename Element> class BasicVector3;
 typedef BasicVector3<float> Vector3;
-bool color_dialog( ui::Widget parent, Vector3& color, const char* title = "Choose Color" );
+bool color_dialog( ui::Window parent, Vector3& color, const char* title = "Choose Color" );
 
 void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry );
 void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry );

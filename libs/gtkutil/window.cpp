@@ -110,7 +110,7 @@ gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event
 }
 
 ui::Window create_persistent_floating_window( const char* title, ui::Window main_window ){
-	ui::Window window = ui::Window(GTK_WINDOW( create_floating_window( title, main_window ) ));
+	auto window = create_floating_window( title, main_window );
 
 	gtk_widget_set_events( window , GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK );
 
@@ -145,9 +145,9 @@ ui::ScrolledWindow create_scrolled_window( ui::Policy hscrollbar_policy, ui::Pol
 	return scr;
 }
 
-gboolean window_focus_in_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpointer data)
+gboolean window_focus_in_clear_focus_widget(ui::Window widget, GdkEventKey *event, gpointer data)
 {
-    gtk_window_set_focus( GTK_WINDOW( widget ), NULL );
+    gtk_window_set_focus( widget, NULL );
     return FALSE;
 }
 

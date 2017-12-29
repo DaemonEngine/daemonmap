@@ -1659,7 +1659,7 @@ bool MainFrame_isActiveApp(){
 	for ( GList* i = list; i != 0; i = g_list_next( i ) )
 	{
 		//globalOutputStream() << "toplevel.. ";
-		if ( gtk_window_is_active( GTK_WINDOW( i->data ) ) ) {
+		if ( gtk_window_is_active( ui::Window::from( i->data ) ) ) {
 			//globalOutputStream() << "is active\n";
 			return true;
 		}

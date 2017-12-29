@@ -62,7 +62,7 @@ namespace UFOAI
 	ui::Window g_mainwnd{ui::null};
 
 const char* init( void* hApp, void* pMainWidget ){
-	g_mainwnd = ui::Window(GTK_WINDOW( pMainWidget ));
+	g_mainwnd = ui::Window::from(pMainWidget);
 	return "Initializing GTKRadiant UFOAI plugin";
 }
 const char* getName(){

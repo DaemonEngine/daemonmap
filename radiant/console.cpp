@@ -67,7 +67,7 @@ void Sys_LogFile( bool enable ){
 								 << "This is NetRadiant '" RADIANT_VERSION "' compiled " __DATE__ "\n" RADIANT_ABOUTMSG "\n";
 		}
 		else{
-			ui::root.alert( "Failed to create log file, check write permissions in Radiant directory.\n",
+			ui::root.window().alert( "Failed to create log file, check write permissions in Radiant directory.\n",
 							"Console logging", ui::alert_type::OK, ui::alert_icon::Error );
 		}
 	}
@@ -112,8 +112,8 @@ ui::Widget Console_constructWindow( ui::Window toplevel ){
 	{
 		auto text = ui::TextView(ui::New);
 		gtk_widget_set_size_request( text, 0, -1 ); // allow shrinking
-		gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text ), GTK_WRAP_WORD );
-		gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), FALSE );
+		gtk_text_view_set_wrap_mode( text, GTK_WRAP_WORD );
+		gtk_text_view_set_editable( text, FALSE );
 		scr.add(text);
 		text.show();
 		g_console = text;
@@ -163,7 +163,7 @@ std::size_t Sys_Print( int level, const char* buf, std::size_t length ){
 
 	if ( level != SYS_NOCON ) {
 		if ( g_console ) {
-			GtkTextBuffer* buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( g_console ) );
+			GtkTextBuffer* buffer = gtk_text_view_get_buffer( g_console );
 
 			GtkTextIter iter;
 			gtk_text_buffer_get_end_iter( buffer, &iter );
@@ -207,7 +207,7 @@ std::size_t Sys_Print( int level, const char* buf, std::size_t length ){
 
 			// update console widget immediatly if we're doing something time-consuming
 			if ( contains_newline ) {
-				gtk_text_view_scroll_mark_onscreen( GTK_TEXT_VIEW( g_console ), end );
+				gtk_text_view_scroll_mark_onscreen( g_console, end );
 
 				if ( !ScreenUpdates_Enabled() && gtk_widget_get_realized( g_console ) ) {
 					ScreenUpdates_process();

@@ -58,11 +58,10 @@ void *g_pMainWnd;
 // =============================================================================
 // Ripped from TexTool.cpp
 
-static void dialog_button_callback( GtkWidget *widget, gpointer data ){
-	GtkWidget *parent;
+static void dialog_button_callback( ui::Widget widget, gpointer data ){
 	int *loop, *ret;
 
-	parent = gtk_widget_get_toplevel( widget );
+	auto parent = widget.window();
 	loop = (int*)gtk_object_get_data( GTK_OBJECT( parent ), "loop" );
 	ret = (int*)gtk_object_get_data( GTK_OBJECT( parent ), "ret" );
 
@@ -89,7 +88,7 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 						G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy",
 						G_CALLBACK( gtk_widget_destroy ), NULL );
-	gtk_window_set_title( GTK_WINDOW( window ), lpCaption );
+	gtk_window_set_title( window, lpCaption );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 	gtk_object_set_data( GTK_OBJECT( window ), "loop", &loop );
 	gtk_object_set_data( GTK_OBJECT( window ), "ret", &ret );

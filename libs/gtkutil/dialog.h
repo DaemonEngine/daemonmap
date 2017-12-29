@@ -118,7 +118,7 @@ BrowsedPathEntry( const BrowseCallback& browse );
 
 ui::Label DialogLabel_new( const char* name );
 ui::Table DialogRow_new( const char* name, ui::Widget widget );
-void DialogVBox_packRow( ui::VBox vbox, ui::Widget row );
+void DialogVBox_packRow( ui::Box vbox, ui::Widget row );
 
 
 #endif

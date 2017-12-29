@@ -133,32 +133,32 @@ const ui::Window GetWidget() const {
 	return m_window;
 }
 
-ui::CheckButton addCheckBox( ui::Widget vbox, const char* name, const char* flag, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
-ui::CheckButton addCheckBox( ui::Widget vbox, const char* name, const char* flag, bool& data );
-void addCombo( ui::Widget vbox, const char* name, StringArrayRange values, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addCombo( ui::Widget vbox, const char* name, int& data, StringArrayRange values );
-void addSlider( ui::Widget vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment );
-void addRadio( ui::Widget vbox, const char* name, StringArrayRange names, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addRadio( ui::Widget vbox, const char* name, int& data, StringArrayRange names );
-void addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange icons, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-void addRadioIcons( ui::Widget vbox, const char* name, int& data, StringArrayRange icons );
-ui::Widget addIntEntry( ui::Widget vbox, const char* name, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-ui::Widget addEntry( ui::Widget vbox, const char* name, int& data ){
+ui::CheckButton addCheckBox( ui::VBox vbox, const char* name, const char* flag, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback );
+ui::CheckButton addCheckBox( ui::VBox vbox, const char* name, const char* flag, bool& data );
+void addCombo( ui::VBox vbox, const char* name, StringArrayRange values, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addCombo( ui::VBox vbox, const char* name, int& data, StringArrayRange values );
+void addSlider( ui::VBox vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment );
+void addRadio( ui::VBox vbox, const char* name, StringArrayRange names, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addRadio( ui::VBox vbox, const char* name, int& data, StringArrayRange names );
+void addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange icons, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+void addRadioIcons( ui::VBox vbox, const char* name, int& data, StringArrayRange icons );
+ui::Widget addIntEntry( ui::VBox vbox, const char* name, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+ui::Widget addEntry( ui::VBox vbox, const char* name, int& data ){
 	return addIntEntry( vbox, name, IntImportCaller( data ), IntExportCaller( data ) );
 }
-ui::Widget addSizeEntry( ui::Widget vbox, const char* name, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
-ui::Widget addEntry( ui::Widget vbox, const char* name, std::size_t& data ){
+ui::Widget addSizeEntry( ui::VBox vbox, const char* name, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback );
+ui::Widget addEntry( ui::VBox vbox, const char* name, std::size_t& data ){
 	return addSizeEntry( vbox, name, SizeImportCaller( data ), SizeExportCaller( data ) );
 }
-ui::Widget addFloatEntry( ui::Widget vbox, const char* name, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
-ui::Widget addEntry( ui::Widget vbox, const char* name, float& data ){
+ui::Widget addFloatEntry( ui::VBox vbox, const char* name, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+ui::Widget addEntry( ui::VBox vbox, const char* name, float& data ){
 	return addFloatEntry( vbox, name, FloatImportCaller( data ), FloatExportCaller( data ) );
 }
-ui::Widget addPathEntry( ui::Widget vbox, const char* name, bool browse_directory, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
-ui::Widget addPathEntry( ui::Widget vbox, const char* name, CopiedString& data, bool directory );
-ui::SpinButton addSpinner( ui::Widget vbox, const char* name, int& data, double value, double lower, double upper );
-ui::SpinButton addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
-ui::SpinButton addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
+ui::Widget addPathEntry( ui::VBox vbox, const char* name, bool browse_directory, const StringImportCallback& importCallback, const StringExportCallback& exportCallback );
+ui::Widget addPathEntry( ui::VBox vbox, const char* name, CopiedString& data, bool directory );
+ui::SpinButton addSpinner( ui::VBox vbox, const char* name, int& data, double value, double lower, double upper );
+ui::SpinButton addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importCallback, const IntExportCallback& exportCallback );
+ui::SpinButton addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback );
 
 protected:
 

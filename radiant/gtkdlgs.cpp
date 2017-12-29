@@ -568,10 +568,10 @@ void DoAbout(){
 					frame.add(sc_extensions);
 					{
 						auto text_extensions = ui::TextView(ui::New);
-						gtk_text_view_set_editable( GTK_TEXT_VIEW( text_extensions ), FALSE );
+						gtk_text_view_set_editable( text_extensions, FALSE );
 						sc_extensions.add(text_extensions);
 						text_extensions.text(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
-						gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( text_extensions ), GTK_WRAP_WORD );
+						gtk_text_view_set_wrap_mode( text_extensions, GTK_WRAP_WORD );
 						text_extensions.show();
 					}
 				}
@@ -706,11 +706,11 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 // Text Editor dialog
 
 // master window widget
-static ui::Widget text_editor{ui::null};
+static ui::Window text_editor{ui::null};
 static ui::Widget text_widget{ui::null}; // slave, text widget from the gtk editor
 
 static gint editor_delete( ui::Widget widget, gpointer data ){
-	if ( widget.alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
+	if ( widget.window().alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return TRUE;
 	}
 
@@ -724,7 +724,7 @@ static void editor_save( ui::Widget widget, gpointer data ){
 	gpointer text = g_object_get_data( G_OBJECT( data ), "text" );
 
 	if ( f == 0 ) {
-		ui::Widget::from(data).alert( "Error saving file !" );
+		ui::Widget::from(data).window().alert( "Error saving file !" );
 		return;
 	}
 
@@ -734,7 +734,7 @@ static void editor_save( ui::Widget widget, gpointer data ){
 }
 
 static void editor_close( ui::Widget widget, gpointer data ){
-	if ( text_editor.alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
+	if ( text_editor.window().alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return;
 	}
 
@@ -746,7 +746,7 @@ static void CreateGtkTextEditor(){
 
 	dlg.connect( "delete_event",
 					  G_CALLBACK( editor_delete ), 0 );
-	gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 300 );
+	gtk_window_set_default_size( dlg, 600, 300 );
 
 	auto vbox = ui::VBox( FALSE, 5 );
 	vbox.show();
@@ -763,7 +763,7 @@ static void CreateGtkTextEditor(){
 	scr.add(text);
 	text.show();
 	g_object_set_data( G_OBJECT( dlg ), "text", (gpointer) text );
-	gtk_text_view_set_editable( GTK_TEXT_VIEW( text ), TRUE );
+	gtk_text_view_set_editable( text, TRUE );
 
 	auto hbox = ui::HBox( FALSE, 5 );
 	hbox.show();
@@ -809,9 +809,9 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 		rewind( f );
 		fread( buf, 1, len, f );
 
-		gtk_window_set_title( GTK_WINDOW( text_editor ), filename );
+		gtk_window_set_title( text_editor, filename );
 
-		GtkTextBuffer* text_buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( text_widget ) );
+		GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(ui::TextView::from(text_widget));
 		gtk_text_buffer_set_text( text_buffer, (char*)buf, len );
 
 		old_filename = g_object_get_data( G_OBJECT( text_editor ), "filename" );

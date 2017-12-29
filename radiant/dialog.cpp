@@ -453,20 +453,20 @@ EMessageBoxReturn Dialog::DoModal(){
 }
 
 
-ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const char* flag, const BoolImportCallback& importViewer, const BoolExportCallback& exportViewer ){
+ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, const BoolImportCallback& importViewer, const BoolExportCallback& exportViewer ){
 	auto check = ui::CheckButton( flag );
 	check.show();
 	AddBoolToggleData( *GTK_TOGGLE_BUTTON( check ), importViewer, exportViewer );
 
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), ui::Widget(DialogRow_new( name, check  ) ));
+	DialogVBox_packRow( vbox, ui::Widget(DialogRow_new( name, check  ) ));
 	return check;
 }
 
-ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const char* flag, bool& data ){
+ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, bool& data ){
 	return addCheckBox( vbox, name, flag, BoolImportCaller( data ), BoolExportCaller( data ) );
 }
 
-void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange values, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
+void Dialog::addCombo( ui::VBox vbox, const char* name, StringArrayRange values, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 	{
@@ -484,14 +484,14 @@ void Dialog::addCombo( ui::Widget vbox, const char* name, StringArrayRange value
 	}
 
 	auto row = DialogRow_new( name, alignment );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX(vbox)), row );
+	DialogVBox_packRow( vbox, row );
 }
 
-void Dialog::addCombo( ui::Widget vbox, const char* name, int& data, StringArrayRange values ){
+void Dialog::addCombo( ui::VBox vbox, const char* name, int& data, StringArrayRange values ){
 	addCombo( vbox, name, values, IntImportCaller( data ), IntExportCaller( data ) );
 }
 
-void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment ){
+void Dialog::addSlider( ui::VBox vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment ){
 #if 0
 	if ( draw_value == FALSE ) {
 		auto hbox2 = ui::HBox( FALSE, 0 );
@@ -527,10 +527,10 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 	gtk_scale_set_digits( GTK_SCALE( scale ), 0 );
 
 	auto row = DialogRow_new( name, alignment );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row );
+	DialogVBox_packRow( vbox, row );
 }
 
-void Dialog::addRadio( ui::Widget vbox, const char* name, StringArrayRange names, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
+void Dialog::addRadio( ui::VBox vbox, const char* name, StringArrayRange names, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();;
 	{
@@ -540,14 +540,14 @@ void Dialog::addRadio( ui::Widget vbox, const char* name, StringArrayRange names
 	}
 
 	auto row = DialogRow_new( name, alignment );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row );
+	DialogVBox_packRow( vbox, row );
 }
 
-void Dialog::addRadio( ui::Widget vbox, const char* name, int& data, StringArrayRange names ){
+void Dialog::addRadio( ui::VBox vbox, const char* name, int& data, StringArrayRange names ){
 	addRadio( vbox, name, names, IntImportCaller( data ), IntExportCaller( data ) );
 }
 
-void Dialog::addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange icons, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
+void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange icons, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	ui::Widget table = ui::Table( 2, icons.last - icons.first, FALSE );
 	table.show();;
 
@@ -576,64 +576,64 @@ void Dialog::addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange 
 
 	AddIntRadioData( *GTK_RADIO_BUTTON( radio ), importViewer, exportViewer );
 
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), DialogRow_new( name, table ) );
+	DialogVBox_packRow( vbox, DialogRow_new( name, table ) );
 }
 
-void Dialog::addRadioIcons( ui::Widget vbox, const char* name, int& data, StringArrayRange icons ){
+void Dialog::addRadioIcons( ui::VBox vbox, const char* name, int& data, StringArrayRange icons ){
 	addRadioIcons( vbox, name, icons, IntImportCaller( data ), IntExportCaller( data ) );
 }
 
-ui::Widget Dialog::addIntEntry( ui::Widget vbox, const char* name, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
+ui::Widget Dialog::addIntEntry( ui::VBox vbox, const char* name, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddIntEntryData( *GTK_ENTRY(row.m_entry), importViewer, exportViewer );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row.m_row );
+	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addSizeEntry( ui::Widget vbox, const char* name, const SizeImportCallback& importViewer, const SizeExportCallback& exportViewer ){
+ui::Widget Dialog::addSizeEntry( ui::VBox vbox, const char* name, const SizeImportCallback& importViewer, const SizeExportCallback& exportViewer ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddSizeEntryData( *GTK_ENTRY(row.m_entry), importViewer, exportViewer );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row.m_row );
+	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addFloatEntry( ui::Widget vbox, const char* name, const FloatImportCallback& importViewer, const FloatExportCallback& exportViewer ){
+ui::Widget Dialog::addFloatEntry( ui::VBox vbox, const char* name, const FloatImportCallback& importViewer, const FloatExportCallback& exportViewer ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddFloatEntryData( *GTK_ENTRY(row.m_entry), importViewer, exportViewer );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row.m_row );
+	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addPathEntry( ui::Widget vbox, const char* name, bool browse_directory, const StringImportCallback& importViewer, const StringExportCallback& exportViewer ){
+ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, bool browse_directory, const StringImportCallback& importViewer, const StringExportCallback& exportViewer ){
 	PathEntry pathEntry = PathEntry_new();
 	pathEntry.m_button.connect( "clicked", G_CALLBACK( browse_directory ? button_clicked_entry_browse_directory : button_clicked_entry_browse_file ), pathEntry.m_entry );
 
 	AddTextEntryData( *GTK_ENTRY(pathEntry.m_entry), importViewer, exportViewer );
 
 	auto row = DialogRow_new( name, ui::Widget(pathEntry.m_frame ) );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row );
+	DialogVBox_packRow( vbox, row );
 
 	return ui::Widget(row );
 }
 
-ui::Widget Dialog::addPathEntry( ui::Widget vbox, const char* name, CopiedString& data, bool browse_directory ){
+ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, CopiedString& data, bool browse_directory ){
 	return addPathEntry( vbox, name, browse_directory, StringImportCallback( StringImportCaller( data ) ), StringExportCallback( StringExportCaller( data ) ) );
 }
 
-ui::SpinButton Dialog::addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
+ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
 	DialogSpinnerRow row( DialogSpinnerRow_new( name, value, lower, upper, 1 ) );
 	AddIntSpinnerData( *GTK_SPIN_BUTTON(row.m_spin), importViewer, exportViewer );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row.m_row );
+	DialogVBox_packRow( vbox, row.m_row );
 	return ui::SpinButton(row.m_spin);
 }
 
-ui::SpinButton Dialog::addSpinner( ui::Widget vbox, const char* name, int& data, double value, double lower, double upper ){
+ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, int& data, double value, double lower, double upper ){
 	return addSpinner( vbox, name, value, lower, upper, IntImportCallback( IntImportCaller( data ) ), IntExportCallback( IntExportCaller( data ) ) );
 }
 
-ui::SpinButton Dialog::addSpinner( ui::Widget vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importViewer, const FloatExportCallback& exportViewer ){
+ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, const FloatImportCallback& importViewer, const FloatExportCallback& exportViewer ){
 	DialogSpinnerRow row( DialogSpinnerRow_new( name, value, lower, upper, 10 ) );
 	AddFloatSpinnerData( *GTK_SPIN_BUTTON(row.m_spin), importViewer, exportViewer );
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row.m_row );
+	DialogVBox_packRow( vbox, row.m_row );
 	return ui::SpinButton(row.m_spin);
 }

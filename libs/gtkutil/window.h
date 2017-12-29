@@ -28,7 +28,7 @@
 #include "generic/callback.h"
 #include "widget.h"
 
-gboolean window_focus_in_clear_focus_widget(ui::Widget widget, GdkEventKey *event, gpointer data);
+gboolean window_focus_in_clear_focus_widget(ui::Window widget, GdkEventKey *event, gpointer data);
 
 guint window_connect_focus_in_clear_focus_widget(ui::Window window);
 

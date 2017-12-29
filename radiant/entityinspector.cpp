@@ -240,7 +240,7 @@ void update(){
 }
 typedef MemberCaller<ModelAttribute, &ModelAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
-	const char *filename = misc_model_dialog( ui::Widget(gtk_widget_get_toplevel( m_entry.m_entry.m_frame  ) ));
+	const char *filename = misc_model_dialog( m_entry.m_entry.m_frame.window() );
 
 	if ( filename != 0 ) {
 		setPath( filename );
@@ -303,7 +303,7 @@ void update(){
 }
 typedef MemberCaller<SoundAttribute, &SoundAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
-	const char *filename = browse_sound( ui::Widget(gtk_widget_get_toplevel( m_entry.m_entry.m_frame  )) );
+	const char *filename = browse_sound( m_entry.m_entry.m_frame.window() );
 
 	if ( filename != 0 ) {
 		setPath( filename );
@@ -1085,13 +1085,13 @@ void EntityInspector_selectionChanged( const Selectable& ){
 // Creates a new entity based on the currently selected brush and entity type.
 //
 void EntityClassList_createEntity(){
-	GtkTreeView* view = g_entityClassList;
+	auto view = ui::Widget::from(g_entityClassList);
 
 	// find out what type of entity we are trying to create
 	GtkTreeModel* model;
 	GtkTreeIter iter;
-	if ( gtk_tree_selection_get_selected( gtk_tree_view_get_selection( view ), &model, &iter ) == FALSE ) {
-		ui::Widget(gtk_widget_get_toplevel( ui::TreeView(g_entityClassList)  )).alert( "You must have a selected class to create an entity", "info" );
+	if ( gtk_tree_selection_get_selected( gtk_tree_view_get_selection( g_entityClassList ), &model, &iter ) == FALSE ) {
+		view.window().alert( "You must have a selected class to create an entity", "info" );
 		return;
 	}
 
@@ -1119,14 +1119,14 @@ void EntityInspector_applyKeyValue(){
 
 	// TTimo: if you change the classname to worldspawn you won't merge back in the structural brushes but create a parasite entity
 	if ( !strcmp( key.c_str(), "classname" ) && !strcmp( value.c_str(), "worldspawn" ) ) {
-		ui::Widget(gtk_widget_get_toplevel( g_entityKeyEntry ) ).alert( "Cannot change \"classname\" key back to worldspawn.", 0, ui::alert_type::OK );
+		g_entityKeyEntry.window().alert( "Cannot change \"classname\" key back to worldspawn.", 0, ui::alert_type::OK );
 		return;
 	}
 
 
 	// RR2DO2: we don't want spaces in entity keys
 	if ( strstr( key.c_str(), " " ) ) {
-		ui::Widget(gtk_widget_get_toplevel( g_entityKeyEntry ) ).alert( "No spaces are allowed in entity keys.", 0, ui::alert_type::OK );
+		g_entityKeyEntry.window().alert( "No spaces are allowed in entity keys.", 0, ui::alert_type::OK );
 		return;
 	}
 
@@ -1262,7 +1262,7 @@ static gint EntityEntry_keypress( ui::Entry widget, GdkEventKey* event, gpointer
 	if ( event->keyval == GDK_KEY_Return ) {
 		if ( widget._handle == g_entityKeyEntry._handle ) {
 			g_entityValueEntry.text( "" );
-			gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( widget ) ), g_entityValueEntry  );
+			gtk_window_set_focus( widget.window(), g_entityValueEntry  );
 		}
 		else
 		{
@@ -1271,7 +1271,7 @@ static gint EntityEntry_keypress( ui::Entry widget, GdkEventKey* event, gpointer
 		return TRUE;
 	}
 	if ( event->keyval == GDK_KEY_Escape ) {
-		gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( widget ) ), NULL );
+		gtk_window_set_focus( widget.window(), NULL );
 		return TRUE;
 	}
 

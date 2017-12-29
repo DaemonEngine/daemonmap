@@ -60,36 +60,16 @@ namespace ui {
     Widget::Widget(ui::New_t) : Widget(nullptr)
     {}
 
-    alert_response IWidget::alert(std::string text, std::string title, alert_type type, alert_icon icon)
+    Window IWidget::window()
     {
-        auto ret = gtk_MessageBox(this, text.c_str(),
-                                  title.c_str(),
-                                  type == alert_type::OK ? eMB_OK :
-                                  type == alert_type::OKCANCEL ? eMB_OKCANCEL :
-                                  type == alert_type::YESNO ? eMB_YESNO :
-                                  type == alert_type::YESNOCANCEL ? eMB_YESNOCANCEL :
-                                  type == alert_type::NOYES ? eMB_NOYES :
-                                  eMB_OK,
-                                  icon == alert_icon::Default ? eMB_ICONDEFAULT :
-                                  icon == alert_icon::Error ? eMB_ICONERROR :
-                                  icon == alert_icon::Warning ? eMB_ICONWARNING :
-                                  icon == alert_icon::Question ? eMB_ICONQUESTION :
-                                  icon == alert_icon::Asterisk ? eMB_ICONASTERISK :
-                                  eMB_ICONDEFAULT
-        );
-        return
-                ret == eIDOK ? alert_response::OK :
-                ret == eIDCANCEL ? alert_response::CANCEL :
-                ret == eIDYES ? alert_response::YES :
-                ret == eIDNO ? alert_response::NO :
-                alert_response::OK;
+        return Window::from(gtk_widget_get_toplevel(this));
     }
 
     const char *
     IWidget::file_dialog(bool open, const char *title, const char *path, const char *pattern, bool want_load,
                          bool want_import, bool want_save)
     {
-        return ::file_dialog(this, open, title, path, pattern, want_load, want_import, want_save);
+        return ::file_dialog(this.window(), open, title, path, pattern, want_load, want_import, want_save);
     }
 
     bool IWidget::visible()
@@ -155,6 +135,31 @@ namespace ui {
             GTK_WINDOW_TOPLEVEL
     )))
     {}
+
+    alert_response IWindow::alert(std::string text, std::string title, alert_type type, alert_icon icon)
+    {
+        auto ret = gtk_MessageBox(this, text.c_str(),
+                                  title.c_str(),
+                                  type == alert_type::OK ? eMB_OK :
+                                  type == alert_type::OKCANCEL ? eMB_OKCANCEL :
+                                  type == alert_type::YESNO ? eMB_YESNO :
+                                  type == alert_type::YESNOCANCEL ? eMB_YESNOCANCEL :
+                                  type == alert_type::NOYES ? eMB_NOYES :
+                                  eMB_OK,
+                                  icon == alert_icon::Default ? eMB_ICONDEFAULT :
+                                  icon == alert_icon::Error ? eMB_ICONERROR :
+                                  icon == alert_icon::Warning ? eMB_ICONWARNING :
+                                  icon == alert_icon::Question ? eMB_ICONQUESTION :
+                                  icon == alert_icon::Asterisk ? eMB_ICONASTERISK :
+                                  eMB_ICONDEFAULT
+        );
+        return
+                ret == eIDOK ? alert_response::OK :
+                ret == eIDCANCEL ? alert_response::CANCEL :
+                ret == eIDYES ? alert_response::YES :
+                ret == eIDNO ? alert_response::NO :
+                alert_response::OK;
+    }
 
     Window IWindow::create_dialog_window(const char *title, void func(), void *data, int default_w, int default_h)
     {

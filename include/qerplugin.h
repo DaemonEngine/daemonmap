@@ -65,22 +65,22 @@ enum EMessageBoxReturn
 
 // simple Message Box, see above for the 'type' flags
 
-typedef EMessageBoxReturn ( *PFN_QERAPP_MESSAGEBOX )( ui::Widget parent, const char* text, const char* caption /* = "NetRadiant"*/, EMessageBoxType type /* = eMB_OK*/, EMessageBoxIcon icon /* = eMB_ICONDEFAULT*/ );
+typedef EMessageBoxReturn ( *PFN_QERAPP_MESSAGEBOX )( ui::Window parent, const char* text, const char* caption /* = "NetRadiant"*/, EMessageBoxType type /* = eMB_OK*/, EMessageBoxIcon icon /* = eMB_ICONDEFAULT*/ );
 
 // file and directory selection functions return null if the user hits cancel
 // - 'title' is the dialog title (can be null)
 // - 'path' is used to set the initial directory (can be null)
 // - 'pattern': the first pattern is for the win32 mode, then comes the Gtk pattern list, see Radiant source for samples
-typedef const char* ( *PFN_QERAPP_FILEDIALOG )( ui::Widget parent, bool open, const char* title, const char* path /* = 0*/, const char* pattern /* = 0*/, bool want_load /* = false*/, bool want_import /* = false*/, bool want_save /* = false*/ );
+typedef const char* ( *PFN_QERAPP_FILEDIALOG )( ui::Window parent, bool open, const char* title, const char* path /* = 0*/, const char* pattern /* = 0*/, bool want_load /* = false*/, bool want_import /* = false*/, bool want_save /* = false*/ );
 
 // returns a gchar* string that must be g_free'd by the user
-typedef char* ( *PFN_QERAPP_DIRDIALOG )( ui::Widget parent, const char* title /* = "Choose Directory"*/, const char* path /* = 0*/ );
+typedef char* ( *PFN_QERAPP_DIRDIALOG )( ui::Window parent, const char* title /* = "Choose Directory"*/, const char* path /* = 0*/ );
 
 // return true if the user closed the dialog with 'Ok'
 // 'color' is used to set the initial value and store the selected value
 template<typename Element> class BasicVector3;
 typedef BasicVector3<float> Vector3;
-typedef bool ( *PFN_QERAPP_COLORDIALOG )( ui::Widget parent, Vector3& color,
+typedef bool ( *PFN_QERAPP_COLORDIALOG )( ui::Window parent, Vector3& color,
 										  const char* title /* = "Choose Color"*/ );
 
 // load a .bmp file and create a GtkImage widget from it

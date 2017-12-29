@@ -52,7 +52,7 @@ namespace BrushExport
 ui::Window g_mainwnd{ui::null};
 
 const char* init( void* hApp, void* pMainWidget ){
-	g_mainwnd = ui::Window(GTK_WINDOW(pMainWidget));
+	g_mainwnd = ui::Window::from(pMainWidget);
 	ASSERT_TRUE( g_mainwnd );
 	return "";
 }

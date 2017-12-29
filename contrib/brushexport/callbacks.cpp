@@ -18,7 +18,7 @@ void OnDestroy( ui::Widget w, gpointer data ){
 }
 
 void OnExportClicked( ui::Button button, gpointer user_data ){
-	ui::Widget window = lookup_widget( button , "w_plugplug2" );
+	auto window = ui::Window::from(lookup_widget( button , "w_plugplug2" ));
 	ASSERT_TRUE( window );
 	const char* cpath = GlobalRadiant().m_pfnFileDialog( window, false, "Save as Obj", 0, 0, false, false, true );
 	if ( !cpath ) {
@@ -31,7 +31,7 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 	std::set<std::string> ignore;
 
 	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) );
-	ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( view ) ));
+	ui::ListStore list = ui::ListStore::from(gtk_tree_view_get_model( view ));
 
 	GtkTreeIter iter;
 	gboolean valid = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter );
@@ -113,7 +113,7 @@ void OnAddMaterial( ui::Button button, gpointer user_data ){
 
 	const gchar* name = gtk_entry_get_text( edit );
 	if ( g_utf8_strlen( name, -1 ) > 0 ) {
-		ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) ) ) ));
+		ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) ) ) );
 		list.append(0, name);
 		gtk_entry_set_text( edit, "" );
 	}
@@ -121,7 +121,7 @@ void OnAddMaterial( ui::Button button, gpointer user_data ){
 
 void OnRemoveMaterial( ui::Button button, gpointer user_data ){
 	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) );
-	ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( view ) ));
+	ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model( view ) );
 	GtkTreeSelection* sel = gtk_tree_view_get_selection( view );
 
 	GtkTreeIter iter;

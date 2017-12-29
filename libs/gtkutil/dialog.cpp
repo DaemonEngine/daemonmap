@@ -262,6 +262,6 @@ ui::Table DialogRow_new( const char* name, ui::Widget widget ){
 	return table;
 }
 
-void DialogVBox_packRow( ui::VBox vbox, ui::Widget row ){
+void DialogVBox_packRow( ui::Box vbox, ui::Widget row ){
 	vbox.pack_start( row, FALSE, FALSE, 0 );
 }

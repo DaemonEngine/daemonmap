@@ -39,8 +39,8 @@ static const char *PLUGIN_NAME = "Camera";
 static const char *PLUGIN_COMMANDS = "About...,-,Load Camera...,-,Preview Camera,-,Camera Inspector...,-,New Spline Camera,New Interpolated Camera,New Fixed Camera";
 
 // globals
-GtkWidget *g_pRadiantWnd = NULL;
-GtkWidget *g_pCameraInspectorWnd = NULL;
+ui::Window g_pRadiantWnd{ui::null};
+ui::Window g_pCameraInspectorWnd{ui::null};
 CCamera   *firstCam = NULL;       // double linked list
 CCamera   *firstFreeCam = NULL;   // single linked list
 CCamera   *currentCam = NULL;     // single item

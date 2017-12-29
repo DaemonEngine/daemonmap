@@ -177,7 +177,7 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	if ( dialog.m_waiting_for_key ) {
 		// just unhighlight, user wanted to cancel
 		dialog.m_waiting_for_key = false;
-		gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
+		gtk_list_store_set( ui::ListStore::from( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
 		gtk_widget_set_sensitive( dialog.m_list , true );
 		dialog.m_model = NULL;
 		return;
@@ -204,7 +204,7 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	}
 	thisShortcutIterator->second.first = accelerator_null();
 
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, 1, "", -1 );
+	gtk_list_store_set( ui::ListStore::from( model ), &iter, 1, "", -1 );
 
 	g_value_unset( &val );
 }
@@ -226,13 +226,13 @@ void accelerator_edit_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	//gtk_widget_set_sensitive(dialog.m_list, false);
 
 	// 3. highlight the row
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, 2, true, -1 );
+	gtk_list_store_set( ui::ListStore::from( model ), &iter, 2, true, -1 );
 
 	// 4. grab keyboard focus
 	dialog.m_waiting_for_key = true;
 }
 
-bool accelerator_window_key_press( ui::Widget widget, GdkEventKey *event, gpointer dialogptr ){
+bool accelerator_window_key_press( ui::Window widget, GdkEventKey *event, gpointer dialogptr ){
 	command_list_dialog_t &dialog = *(command_list_dialog_t *) dialogptr;
 
 	if ( !dialog.m_waiting_for_key ) {
@@ -273,7 +273,7 @@ bool accelerator_window_key_press( ui::Widget widget, GdkEventKey *event, gpoint
 	const char *commandName = g_value_get_string( &val );;
 	Shortcuts::iterator thisShortcutIterator = g_shortcuts.find( commandName );
 	if ( thisShortcutIterator == g_shortcuts.end() ) {
-		gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
+		gtk_list_store_set( ui::ListStore::from( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
 		gtk_widget_set_sensitive( dialog.m_list , true );
 		return true;
 	}
@@ -306,7 +306,7 @@ public:
 			StringOutputStream msg;
 			msg << "The command " << name << " is already assigned to the key " << accelerator << ".\n\n"
 				<< "Do you want to unassign " << name << " first?";
-			auto r = widget.alert( msg.c_str(), "Key already used", ui::alert_type::YESNOCANCEL );
+			auto r = widget.window().alert( msg.c_str(), "Key already used", ui::alert_type::YESNOCANCEL );
 			if ( r == ui::alert_response::YES ) {
 				// clear the ACTUAL accelerator too!
 				disconnect_accelerator( name );
@@ -322,7 +322,7 @@ public:
 						gtk_tree_model_get_value( GTK_TREE_MODEL( model ), &i, 0, &val );
 						const char *thisName = g_value_get_string( &val );;
 						if ( !strcmp( thisName, name ) ) {
-							gtk_list_store_set( GTK_LIST_STORE( model ), &i, 1, "", -1 );
+							gtk_list_store_set( ui::ListStore::from( model ), &i, 1, "", -1 );
 						}
 						g_value_unset( &val );
 						if ( !gtk_tree_model_iter_next( GTK_TREE_MODEL( model ), &i ) ) {
@@ -340,7 +340,7 @@ public:
 	} verify_visitor( commandName, newAccel, widget, dialog.m_model );
 	GlobalShortcuts_foreach( verify_visitor );
 
-	gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
+	gtk_list_store_set( ui::ListStore::from( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
 	gtk_widget_set_sensitive( dialog.m_list , true );
 
 	if ( verify_visitor.allow ) {
@@ -352,7 +352,7 @@ public:
 		// write into the cell
 		StringOutputStream modifiers;
 		modifiers << newAccel;
-		gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 1, modifiers.c_str(), -1 );
+		gtk_list_store_set( ui::ListStore::from( dialog.m_model ), &dialog.m_command_iter, 1, modifiers.c_str(), -1 );
 
 		// set the ACTUAL accelerator too!
 		connect_accelerator( commandName );
@@ -379,7 +379,7 @@ public:
         accelerator_parse(i->second.first, new_text);
         StringOutputStream modifiers;
         modifiers << i->second.first;
-        gtk_list_store_set(GTK_LIST_STORE(model), &row, 1, modifiers.c_str(), -1);
+        gtk_list_store_set(ui::ListStore::from(model), &row, 1, modifiers.c_str(), -1);
     }
    };
  */
@@ -389,7 +389,7 @@ void DoCommandListDlg(){
 
 	ui::Window window = MainFrame_getWindow().create_modal_dialog_window("Mapped Commands", dialog, -1, 400);
 	window.on_key_press([](ui::Widget widget, GdkEventKey *event, gpointer dialogptr) {
-		return accelerator_window_key_press(widget, event, dialogptr);
+		return accelerator_window_key_press(ui::Window::from(widget), event, dialogptr);
 	}, &dialog);
 
 	auto accel = ui::AccelGroup(ui::New);

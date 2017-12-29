@@ -97,23 +97,23 @@ ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const ch
 // =============================================================================
 // File dialog
 
-bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
+bool color_dialog( ui::Window parent, Vector3& color, const char* title ){
 	GdkColor clr = { 0, guint16(color[0] * 65535), guint16(color[1] * 65535), guint16(color[2] * 65535) };
 	ModalDialog dialog;
 
-	auto dlg = ui::Widget(gtk_color_selection_dialog_new( title ));
+	auto dlg = ui::Window::from(gtk_color_selection_dialog_new( title ));
 	gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
 	dlg.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), &dialog );
 	GtkWidget *ok_button, *cancel_button;
-	g_object_get(dlg, "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
+	g_object_get(G_OBJECT(dlg), "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
 	ui::Widget(ok_button).connect( "clicked", G_CALLBACK( dialog_button_ok ), &dialog );
 	ui::Widget(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_cancel ), &dialog );
 
 	if ( parent ) {
-		gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( parent ) );
+		gtk_window_set_transient_for( dlg, parent );
 	}
 
-	bool ok = modal_dialog_show( ui::Window(GTK_WINDOW( dlg )), dialog ) == eIDOK;
+	bool ok = modal_dialog_show( dlg, dialog ) == eIDOK;
 	if ( ok ) {
 		gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG( dlg )) ), &clr );
 		color[0] = clr.red / 65535.0f;
@@ -127,7 +127,7 @@ bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
 }
 
 void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry ){
-	const char *filename = ui::Widget(gtk_widget_get_toplevel( widget )).file_dialog( TRUE, "Choose File", gtk_entry_get_text( entry ) );
+	const char *filename = widget.file_dialog( TRUE, "Choose File", gtk_entry_get_text( entry ) );
 
 	if ( filename != 0 ) {
 		entry.text(filename);
@@ -136,7 +136,7 @@ void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry ){
 
 void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry ){
 	const char* text = gtk_entry_get_text( entry );
-	char *dir = dir_dialog( ui::Widget(gtk_widget_get_toplevel( widget )), "Choose Directory", path_is_absolute( text ) ? text : "" );
+	char *dir = dir_dialog( widget.window(), "Choose Directory", path_is_absolute( text ) ? text : "" );
 
 	if ( dir != 0 ) {
 		gchar* converted = g_filename_to_utf8( dir, -1, 0, 0, 0 );

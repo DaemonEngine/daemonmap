@@ -51,14 +51,12 @@ const char* messagebox_stock_icon( EMessageBoxIcon type ){
 	}
 }
 
-EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const char* title, EMessageBoxType type, EMessageBoxIcon icon ){
+EMessageBoxReturn gtk_MessageBox( ui::Window parentWindow, const char* text, const char* title, EMessageBoxType type, EMessageBoxIcon icon ){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 	ModalDialogButton yes_button( dialog, eIDYES );
 	ModalDialogButton no_button( dialog, eIDNO );
-
-	ui::Window parentWindow = ui::Window(parent ? GTK_WINDOW( parent ) : 0);
 
 	ui::Window window = create_fixedsize_modal_dialog_window( parentWindow, title, dialog, 400, 100 );
 

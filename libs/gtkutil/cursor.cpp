@@ -59,10 +59,10 @@ gboolean DeferredMotion::gtk_motion(ui::Widget widget, GdkEventMotion *event, De
     return FALSE;
 }
 
-gboolean FreezePointer::motion_delta(ui::Widget widget, GdkEventMotion *event, FreezePointer *self)
+gboolean FreezePointer::motion_delta(ui::Window widget, GdkEventMotion *event, FreezePointer *self)
 {
 	int current_x, current_y;
-	Sys_GetCursorPos( ui::Window(GTK_WINDOW( widget )), &current_x, &current_y );
+	Sys_GetCursorPos( widget, &current_x, &current_y );
 	int dx = current_x - self->last_x;
 	int dy = current_y - self->last_y;
 	int ddx = current_x - self->recorded_x;
@@ -72,7 +72,7 @@ gboolean FreezePointer::motion_delta(ui::Widget widget, GdkEventMotion *event, F
 	if ( dx != 0 || dy != 0 ) {
 		//globalOutputStream() << "motion x: " << dx << ", y: " << dy << "\n";
 		if (ddx < -32 || ddx > 32 || ddy < -32 || ddy > 32) {
-			Sys_SetCursorPos( ui::Window(GTK_WINDOW( widget )), self->recorded_x, self->recorded_y );
+			Sys_SetCursorPos( widget, self->recorded_x, self->recorded_y );
 			self->last_x = self->recorded_x;
 			self->last_y = self->recorded_y;
 		}

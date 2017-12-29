@@ -130,8 +130,8 @@ static void destroy( ui::Widget widget, gpointer data ){
 }
 
 // function for close button to destroy the toplevel widget
-static void close_window( GtkWidget *widget, gpointer data ){
-	ui::Widget(gtk_widget_get_toplevel( widget ) ).destroy();
+static void close_window( ui::Widget widget, gpointer data ){
+	widget.window().destroy();
 }
 
 // callback function to assign the optimal mapcoords to the spinboxes
@@ -148,7 +148,7 @@ gint grab_int_value( GtkSpinButton *a_spinner, gpointer user_data ) {
 }
 
 // write the values of the Spinner-Boxes to the worldspawn
-static void set_coordinates( GtkWidget *widget, gpointer data ){
+static void set_coordinates( ui::Widget widget, gpointer data ){
 	//Str str_min, str_max;
 	char buffer[10], str_min[20], str_max[20];
 
@@ -189,7 +189,7 @@ ui::Window main_window{ui::null};
 char MenuList[100] = "";
 
 const char* init( void* hApp, void* pMainWidget ){
-	main_window = ui::Window(GTK_WINDOW( pMainWidget ));
+	main_window = ui::Window::from(pMainWidget);
 	return "Initializing SunPlug for GTKRadiant";
 }
 const char* getName(){
@@ -255,12 +255,12 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server 
 // About dialog
 void about_plugin_window(){
 	auto window = ui::Window( ui::window_type::TOP ); // create a window
-	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
+	gtk_window_set_transient_for( window, SunPlug::main_window ); // make the window to stay in front of the main window
 	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
 	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
-	gtk_window_set_title( GTK_WINDOW( window ), "About SunPlug" ); // set the title of the window for the window
-	gtk_window_set_resizable( GTK_WINDOW( window ), FALSE ); // don't let the user resize the window
-	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
+	gtk_window_set_title( window, "About SunPlug" ); // set the title of the window for the window
+	gtk_window_set_resizable( window, FALSE ); // don't let the user resize the window
+	gtk_window_set_modal( window, TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
 	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
@@ -274,7 +274,7 @@ void about_plugin_window(){
 	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), (void *) window ); // connect the click event to close the window
 	vbox.pack_start( button, FALSE, FALSE, 2 ); // insert the button in the box
 
-	gtk_window_set_position( GTK_WINDOW( window ), GTK_WIN_POS_CENTER ); // center the window on screen
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER ); // center the window on screen
 
 	gtk_widget_show_all( window ); // show the window and all subelements
 }
@@ -320,12 +320,12 @@ void MapCoordinator(){
 
 	// in any case we need a window to show the user what to do
 	auto window = ui::Window( ui::window_type::TOP ); // create the window
-	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
+	gtk_window_set_transient_for( window, SunPlug::main_window ); // make the window to stay in front of the main window
 	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event for the window
 	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
-	gtk_window_set_title( GTK_WINDOW( window ), "ET-MapCoordinator" ); // set the title of the window for the window
-	gtk_window_set_resizable( GTK_WINDOW( window ), FALSE ); // don't let the user resize the window
-	gtk_window_set_modal( GTK_WINDOW( window ), TRUE ); // force the user not to do something with the other windows
+	gtk_window_set_title( window, "ET-MapCoordinator" ); // set the title of the window for the window
+	gtk_window_set_resizable( window, FALSE ); // don't let the user resize the window
+	gtk_window_set_modal( window, TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
 
 	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
@@ -435,6 +435,6 @@ void MapCoordinator(){
 		vbox.pack_start( button, FALSE, FALSE, 2 ); // insert the button in the box
 	}
 
-	gtk_window_set_position( GTK_WINDOW( window ), GTK_WIN_POS_CENTER ); // center the window
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER ); // center the window
 	gtk_widget_show_all( window ); // show the window and all subelements
 }

@@ -934,7 +934,7 @@ static gint fix_value_entryfocusout( GtkWidget* widget, GdkEventFocus *event, gp
 									 "GenSurf", eMB_OK, eMB_ICONWARNING );
 		sprintf( Text, "%d", (int)xyz[Vertex[0].i][Vertex[0].j].fixed_value );
 		gtk_entry_set_text( GTK_ENTRY( widget ), Text );
-		gtk_window_set_focus( GTK_WINDOW( gtk_widget_get_toplevel( widget ) ), widget );
+		gtk_window_set_focus( widget.window(), widget );
 	}
 	else if ( i != xyz[Vertex[0].i][Vertex[0].j].fixed_value ) {
 		for ( k = 0; k < NumVerticesSelected; k++ )
@@ -1356,10 +1356,10 @@ GtkWidget* create_main_dialog(){
 								   "Wall facing 180","Wall facing 270" };
 
 	auto dlg = g_pWnd = ui::Window( ui::window_type::TOP );
-	gtk_window_set_title( GTK_WINDOW( dlg ), gszCaption );
+	gtk_window_set_title( dlg, gszCaption );
 	dlg.connect( "delete_event", G_CALLBACK( main_close ), NULL );
 	//  dlg.connect( "destroy", G_CALLBACK (gtk_widget_destroy), NULL);
-	gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( g_pRadiantWnd ) );
+	gtk_window_set_transient_for( dlg, g_pRadiantWnd );
 
 	auto hbox = ui::HBox( FALSE, 5 );
 	hbox.show();

@@ -29,10 +29,9 @@
 #include "StdAfx.h"
 
 static void dialog_button_callback( GtkWidget *widget, gpointer data ){
-	GtkWidget *parent;
 	int *loop, *ret;
 
-	parent = gtk_widget_get_toplevel( widget );
+	auto parent = widget.window();
 	loop = (int*)g_object_get_data( G_OBJECT( parent ), "loop" );
 	ret = (int*)g_object_get_data( G_OBJECT( parent ), "ret" );
 
@@ -59,7 +58,7 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 						G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy",
 						G_CALLBACK( gtk_widget_destroy ), NULL );
-	gtk_window_set_title( GTK_WINDOW( window ), lpCaption );
+	gtk_window_set_title( window, lpCaption );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
 	g_object_set_data( G_OBJECT( window ), "ret", &ret );

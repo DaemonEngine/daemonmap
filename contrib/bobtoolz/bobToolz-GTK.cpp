@@ -63,7 +63,7 @@ const char* PLUGIN_NAME = "bobToolz";
 static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,Vis Viewer,Brush Cleanup,Polygon Builder,Caulk Selection,-,Tree Planter,Drop Entity,Plot Splines,-,Merge Patches,Split patches,Split patches cols,Split patches rows,Turn edge";
 
 // globals
-ui::Widget g_pRadiantWnd{ui::null};
+ui::Window g_pRadiantWnd{ui::null};
 
 static const char *PLUGIN_ABOUT =   "bobToolz for SDRadiant\n"
 									"by digibob (digibob@splashdamage.com)\n"
@@ -72,7 +72,7 @@ static const char *PLUGIN_ABOUT =   "bobToolz for SDRadiant\n"
 									"MarsMattel, RR2DO2\n";
 
 extern "C" const char* QERPlug_Init( void* hApp, void* pMainWidget ) {
-	g_pRadiantWnd = ui::Widget::from(pMainWidget);
+	g_pRadiantWnd = ui::Window::from(pMainWidget);
 
 	return "bobToolz for GTKradiant";
 }

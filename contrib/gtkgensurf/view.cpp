@@ -371,11 +371,11 @@ void CreateViewWindow(){
 #endif
 
 	auto dlg = g_pWndPreview = ui::Window( ui::window_type::TOP );
-	gtk_window_set_title( GTK_WINDOW( dlg ), "GtkGenSurf Preview" );
+	gtk_window_set_title( dlg, "GtkGenSurf Preview" );
 	dlg.connect( "delete_event", G_CALLBACK( preview_close ), NULL );
 	dlg.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
-	gtk_window_set_transient_for( GTK_WINDOW( dlg ), GTK_WINDOW( g_pWnd ) );
-	gtk_window_set_default_size( GTK_WINDOW( dlg ), 300, 400 );
+	gtk_window_set_transient_for( dlg, g_pWnd );
+	gtk_window_set_default_size( dlg, 300, 400 );
 
 	auto vbox = ui::VBox( FALSE, 5 );
 	vbox.show();

@@ -1255,7 +1255,7 @@ if ( ( m_bFreeMove && ( buttons == ( RAD_CONTROL | RAD_SHIFT ) ) )
 void CamWnd::Cam_PositionDrag(){
 	int x, y;
 
-	Sys_GetCursorPos( GTK_WINDOW( m_gl_widget ), &x, &y );
+	Sys_GetCursorPos( m_gl_widget, &x, &y );
 	if ( x != m_PositionDragCursorX || y != m_PositionDragCursorY ) {
 		x -= m_PositionDragCursorX;
 		vector3_add( m_Camera.origin, vector3_scaled( m_Camera.vright, x ) );
@@ -1265,7 +1265,7 @@ void CamWnd::Cam_PositionDrag(){
 		CamWnd_Update( camwnd );
 		CameraMovedNotify();
 
-		Sys_SetCursorPos( GTK_WINDOW( m_parent ), m_PositionDragCursorX, m_PositionDragCursorY );
+		Sys_SetCursorPos( m_parent, m_PositionDragCursorX, m_PositionDragCursorY );
 	}
 }
 #endif

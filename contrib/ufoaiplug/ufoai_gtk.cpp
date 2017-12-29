@@ -46,8 +46,8 @@ static void destroy( ui::Widget widget, gpointer data ){
 /**
  * @brief function for close button to destroy the toplevel widget
  */
-static void close_window( GtkWidget *widget, gpointer data ){
-	ui::Widget(gtk_widget_get_toplevel( widget ) ).destroy();
+static void close_window( ui::Widget widget, gpointer data ){
+	widget.window().destroy();
 }
 
 /* =============================== */

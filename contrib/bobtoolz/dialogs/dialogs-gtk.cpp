@@ -78,12 +78,11 @@ void Update_TextureReseter(){
 	gtk_editable_set_editable( GTK_EDITABLE( dlgTexReset.editRotation ), check );
 }
 
-static void dialog_button_callback( GtkWidget *widget, gpointer data ){
-	GtkWidget *parent;
+static void dialog_button_callback( ui::Widget widget, gpointer data ){
 	int *loop;
 	EMessageBoxReturn *ret;
 
-	parent = gtk_widget_get_toplevel( widget );
+	auto parent = widget.window();
 	loop = (int*)g_object_get_data( G_OBJECT( parent ), "loop" );
 	ret = (EMessageBoxReturn*)g_object_get_data( G_OBJECT( parent ), "ret" );
 
@@ -213,7 +212,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	auto window = ui::Window( ui::window_type::TOP );
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
-	gtk_window_set_title( GTK_WINDOW( window ), lpCaption );
+	gtk_window_set_title( window, lpCaption );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
 	g_object_set_data( G_OBJECT( window ), "ret", &ret );
@@ -294,7 +293,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 		ret = eIDNO;
 	}
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -316,7 +315,7 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Intersect" );
+	gtk_window_set_title( window, "Intersect" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -377,7 +376,7 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 
 	// ---- /vbox ----
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -409,7 +408,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Polygon Builder" );
+	gtk_window_set_title( window, "Polygon Builder" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -526,7 +525,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 
 	// ---- /vbox ----
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -577,7 +576,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Stair Builder" );
+	gtk_window_set_title( window, "Stair Builder" );
 
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
@@ -759,7 +758,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	ret = eIDCANCEL;
 
 // +djbob: need our "little" modal loop mars :P
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -827,7 +826,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Door Builder" );
+	gtk_window_set_title( window, "Door Builder" );
 
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
@@ -997,7 +996,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	// ----------------- //
 
 //+djbob
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1037,7 +1036,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Texture Reset" );
+	gtk_window_set_title( window, "Texture Reset" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1161,7 +1160,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ----------------- //
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1208,7 +1207,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "CTF Colour Changer" );
+	gtk_window_set_title( window, "CTF Colour Changer" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1253,7 +1252,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 
 	// ---- /vbox ----
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1279,7 +1278,7 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Texture Reset" );
+	gtk_window_set_title( window, "Texture Reset" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1532,7 +1531,7 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 
 	// ---- /vbox ----
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1615,7 +1614,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Train Thing" );
+	gtk_window_set_title( window, "Train Thing" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1814,7 +1813,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 
 
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1878,7 +1877,7 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( GTK_WINDOW( window ), "Make Chain" );
+	gtk_window_set_title( window, "Make Chain" );
 
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
@@ -1949,7 +1948,7 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 
 	ret = eIDCANCEL;
 
-	gtk_window_set_position( GTK_WINDOW( window ),GTK_WIN_POS_CENTER );
+	gtk_window_set_position(  window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 

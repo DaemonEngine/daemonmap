@@ -27,11 +27,10 @@
 #include "prtview.h"
 #include "ConfigDialog.h"
 
-static void dialog_button_callback( GtkWidget *widget, gpointer data ){
-	GtkWidget *parent;
+static void dialog_button_callback( ui::Widget widget, gpointer data ){
 	int *loop, *ret;
 
-	parent = gtk_widget_get_toplevel( widget );
+	auto parent = widget.window();
 	loop = (int*)g_object_get_data( G_OBJECT( parent ), "loop" );
 	ret = (int*)g_object_get_data( G_OBJECT( parent ), "ret" );
 

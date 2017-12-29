@@ -124,7 +124,7 @@ filetype_pair_t GetTypeForGTKMask( const char *mask ) const {
 
 static char g_file_dialog_file[1024];
 
-const char* file_dialog_show( GtkWidget* parent, bool open, const char* title, const char* path, const char* pattern, bool want_load, bool want_import, bool want_save ){
+const char* file_dialog_show( ui::Window parent, bool open, const char* title, const char* path, const char* pattern, bool want_load, bool want_import, bool want_save ){
 	filetype_t type;
 
 	if ( pattern == 0 ) {
@@ -140,28 +140,28 @@ const char* file_dialog_show( GtkWidget* parent, bool open, const char* title, c
 		title = open ? "Open File" : "Save File";
 	}
 
-	GtkWidget* dialog;
+	ui::Dialog dialog{ui::null};
 	if ( open ) {
-		dialog = gtk_file_chooser_dialog_new( title,
-											  GTK_WINDOW( parent ),
+		dialog = ui::Dialog::from(gtk_file_chooser_dialog_new( title,
+											  parent,
 											  GTK_FILE_CHOOSER_ACTION_OPEN,
 											  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 											  GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-											  NULL );
+											  NULL ));
 	}
 	else
 	{
-		dialog = gtk_file_chooser_dialog_new( title,
-											  GTK_WINDOW( parent ),
+		dialog = ui::Dialog::from(gtk_file_chooser_dialog_new( title,
+											  parent,
 											  GTK_FILE_CHOOSER_ACTION_SAVE,
 											  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 											  GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
-											  NULL );
+											  NULL ));
 		gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dialog ), "unnamed" );
 	}
 
-	gtk_window_set_modal( GTK_WINDOW( dialog ), TRUE );
-	gtk_window_set_position( GTK_WINDOW( dialog ), GTK_WIN_POS_CENTER_ON_PARENT );
+	gtk_window_set_modal( dialog, TRUE );
+	gtk_window_set_position( dialog, GTK_WIN_POS_CENTER_ON_PARENT );
 
 	// we expect an actual path below, if the path is 0 we might crash
 	if ( path != 0 && !string_empty( path ) ) {
@@ -240,16 +240,16 @@ const char* file_dialog_show( GtkWidget* parent, bool open, const char* title, c
 	return g_file_dialog_file;
 }
 
-char* dir_dialog( ui::Widget parent, const char* title, const char* path ){
-	GtkWidget* dialog = gtk_file_chooser_dialog_new( title,
-													 GTK_WINDOW( parent ),
+char* dir_dialog( ui::Window parent, const char* title, const char* path ){
+	auto dialog = ui::Dialog::from(gtk_file_chooser_dialog_new( title,
+													 parent,
 													 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 													 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 													 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-													 NULL );
+													 NULL ));
 
-	gtk_window_set_modal( GTK_WINDOW( dialog ), TRUE );
-	gtk_window_set_position( GTK_WINDOW( dialog ), GTK_WIN_POS_CENTER_ON_PARENT );
+	gtk_window_set_modal( dialog, TRUE );
+	gtk_window_set_position( dialog, GTK_WIN_POS_CENTER_ON_PARENT );
 
 	if ( !string_empty( path ) ) {
 		gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ), path );
@@ -260,12 +260,12 @@ char* dir_dialog( ui::Widget parent, const char* title, const char* path ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
 	}
 
-	ui::Widget(dialog).destroy();
+	dialog.destroy();
 
 	return filename;
 }
 
-const char* file_dialog( ui::Widget parent, bool open, const char* title, const char* path, const char* pattern, bool want_load, bool want_import, bool want_save ){
+const char* file_dialog( ui::Window parent, bool open, const char* title, const char* path, const char* pattern, bool want_load, bool want_import, bool want_save ){
 	for (;; )
 	{
 		const char* file = file_dialog_show( parent, open, title, path, pattern, want_load, want_import, want_save );

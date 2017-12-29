@@ -67,7 +67,7 @@ XmlTagBuilder TagBuilder;
 void CreateTagFile();
 
 const char* init( void* hApp, void* pMainWidget ){
-	g_window = ui::Window(GTK_WINDOW( pMainWidget ));
+	g_window = ui::Window::from(pMainWidget);
 	return "";
 }
 const char* getName(){

@@ -244,14 +244,10 @@ namespace ui {
         int height;
     };
 
+    class Window;
     WRAP(Widget, Object, _GtkWidget, (),
     ,
-         alert_response alert(
-                 std::string text,
-                 std::string title = "NetRadiant",
-                 alert_type type = alert_type::OK,
-                 alert_icon icon = alert_icon::Default
-         );
+         Window window();
          const char *file_dialog(
                  bool open,
                  const char *title,
@@ -288,6 +284,13 @@ namespace ui {
     WRAP(Window, Bin, _GtkWindow, (),
          explicit Window(window_type type);
     ,
+         alert_response alert(
+                 std::string text,
+                 std::string title = "NetRadiant",
+                 alert_type type = alert_type::OK,
+                 alert_icon icon = alert_icon::Default
+         );
+
          Window create_dialog_window(
                  const char *title,
                  void func(),

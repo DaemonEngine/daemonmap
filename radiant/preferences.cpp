@@ -326,7 +326,7 @@ ui::Window CGameDialog::BuildDialog(){
 	frame.add(vbox2);
 
 	{
-		PreferencesPage preferencesPage( *this, ui::Widget(vbox2 ) );
+		PreferencesPage preferencesPage( *this, vbox2 );
 		Global_constructPreferences( preferencesPage );
 		CreateGlobalFrame( preferencesPage );
 	}
@@ -482,7 +482,7 @@ CGameDialog g_GamesDialog;
 
 static void OnButtonClean( ui::Widget widget, gpointer data ){
 	// make sure this is what the user wants
-	if ( ui::Widget(g_Preferences.GetWidget( )).alert( "This will close Radiant and clean the corresponding registry entries.\n"
+	if ( g_Preferences.GetWidget().alert( "This will close Radiant and clean the corresponding registry entries.\n"
 																  "Next time you start Radiant it will be good as new. Do you wish to continue?",
 						 "Reset Registry", ui::alert_type::YESNO, ui::alert_icon::Asterisk ) == ui::alert_response::YES ) {
 		PrefsDlg *dlg = (PrefsDlg*)data;
@@ -629,8 +629,8 @@ void Widget_connectToggleDependency( ui::Widget self, ui::Widget toggleButton ){
 }
 
 
-inline ui::Widget getVBox( ui::Widget page ){
-	return ui::Widget(gtk_bin_get_child( GTK_BIN( page ) ));
+inline ui::VBox getVBox( ui::Bin page ){
+	return ui::VBox::from(gtk_bin_get_child(page));
 }
 
 GtkTreeIter PreferenceTree_appendPage( GtkTreeStore* store, GtkTreeIter* parent, const char* name, ui::Widget page ){
@@ -640,7 +640,7 @@ GtkTreeIter PreferenceTree_appendPage( GtkTreeStore* store, GtkTreeIter* parent,
 	return group;
 }
 
-ui::Widget PreferencePages_addPage( ui::Widget notebook, const char* name ){
+ui::Bin PreferencePages_addPage( ui::Widget notebook, const char* name ){
 	ui::Widget preflabel = ui::Label( name );
 	preflabel.show();
 
@@ -673,7 +673,7 @@ PreferenceTreeGroup( Dialog& dialog, ui::Widget notebook, GtkTreeStore* store, G
 	m_group( group ){
 }
 PreferencesPage createPage( const char* treeName, const char* frameName ){
-	ui::Widget page = PreferencePages_addPage( m_notebook, frameName );
+	auto page = PreferencePages_addPage( m_notebook, frameName );
 	PreferenceTree_appendPage( m_store, &m_group, treeName, page );
 	return PreferencesPage( m_dialog, getVBox( page ) );
 }
@@ -760,14 +760,14 @@ ui::Window PrefsDlg::BuildDialog(){
 						PreferencePages_addPage( m_notebook, "Front Page" );
 
 						{
-							ui::Widget global = PreferencePages_addPage( m_notebook, "Global Preferences" );
+							auto global = PreferencePages_addPage( m_notebook, "Global Preferences" );
 							{
 								PreferencesPage preferencesPage( *this, getVBox( global ) );
 								Global_constructPreferences( preferencesPage );
 							}
 							GtkTreeIter group = PreferenceTree_appendPage( store, 0, "Global", global );
 							{
-								ui::Widget game = PreferencePages_addPage( m_notebook, "Game" );
+								auto game = PreferencePages_addPage( m_notebook, "Game" );
 								PreferencesPage preferencesPage( *this, getVBox( game ) );
 								g_GamesDialog.CreateGlobalFrame( preferencesPage );
 
@@ -776,7 +776,7 @@ ui::Window PrefsDlg::BuildDialog(){
 						}
 
 						{
-							ui::Widget interfacePage = PreferencePages_addPage( m_notebook, "Interface Preferences" );
+							auto interfacePage = PreferencePages_addPage( m_notebook, "Interface Preferences" );
 							{
 								PreferencesPage preferencesPage( *this, getVBox( interfacePage ) );
 								PreferencesPageCallbacks_constructPage( g_interfacePreferences, preferencesPage );
@@ -789,7 +789,7 @@ ui::Window PrefsDlg::BuildDialog(){
 						}
 
 						{
-							ui::Widget display = PreferencePages_addPage( m_notebook, "Display Preferences" );
+							auto display = PreferencePages_addPage( m_notebook, "Display Preferences" );
 							{
 								PreferencesPage preferencesPage( *this, getVBox( display ) );
 								PreferencesPageCallbacks_constructPage( g_displayPreferences, preferencesPage );
@@ -801,7 +801,7 @@ ui::Window PrefsDlg::BuildDialog(){
 						}
 
 						{
-							ui::Widget settings = PreferencePages_addPage( m_notebook, "General Settings" );
+							auto settings = PreferencePages_addPage( m_notebook, "General Settings" );
 							{
 								PreferencesPage preferencesPage( *this, getVBox( settings ) );
 								PreferencesPageCallbacks_constructPage( g_settingsPreferences, preferencesPage );

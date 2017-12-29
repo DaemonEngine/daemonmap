@@ -51,7 +51,7 @@ void QERApp_GetCamWindowExtents( int *x, int *y, int *width, int *height ){
 #if 0
 	CamWnd* camwnd = g_pParentWnd->GetCamWnd();
 
-	gtk_window_get_position( GTK_WINDOW( camwnd->m_window ), x, y );
+	gtk_window_get_position( camwnd->m_window, x, y );
 
 	*width = camwnd->Camera()->width;
 	*height = camwnd->Camera()->height;

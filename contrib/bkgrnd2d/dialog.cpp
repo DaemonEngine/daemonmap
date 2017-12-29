@@ -34,7 +34,7 @@
 // spaces to make label nice and big
 #define NO_FILE_MSG "        (no file loaded)        "
 
-static GtkWidget *pDialogWnd;
+static ui::Window pDialogWnd{ui::null};
 static GtkWidget *pNotebook;
 static GtkTooltips *pTooltips;
 
@@ -307,7 +307,7 @@ void InitBackgroundDialog(){
 	CBackgroundDialogPage *pPage;
 
 	pDialogWnd = gtk_dialog_new_with_buttons( "Background Images",
-											  GTK_WINDOW( g_pMainWidget ),
+											  g_pMainWidget,
 											  (GtkDialogFlags)( GTK_DIALOG_DESTROY_WITH_PARENT ),
 	                                          // TODO dialog with no buttons
 	                                          //										  GTK_STOCK_CLOSE,
@@ -335,7 +335,7 @@ void InitBackgroundDialog(){
 }
 
 void ShowBackgroundDialog(){
-	gtk_window_present( GTK_WINDOW( pDialogWnd ) );
+	gtk_window_present( pDialogWnd );
 }
 
 void ShowBackgroundDialogPG( int page ){

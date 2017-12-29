@@ -114,7 +114,7 @@ void* m_data;
 public:
 FreezePointer() : handle_motion( 0 ), m_function( 0 ), m_data( 0 ){
 }
-static gboolean motion_delta( ui::Widget widget, GdkEventMotion *event, FreezePointer* self );
+static gboolean motion_delta( ui::Window widget, GdkEventMotion *event, FreezePointer* self );
 
 void freeze_pointer( ui::Window window, MotionDeltaFunction function, void* data );
 

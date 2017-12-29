@@ -39,9 +39,9 @@ void Widget_connectToggleDependency( ui::Widget self, ui::Widget toggleButton );
 class PreferencesPage
 {
 Dialog& m_dialog;
-ui::Widget m_vbox;
+ui::VBox m_vbox;
 public:
-PreferencesPage( Dialog& dialog, ui::Widget vbox ) : m_dialog( dialog ), m_vbox( vbox ){
+PreferencesPage( Dialog& dialog, ui::VBox vbox ) : m_dialog( dialog ), m_vbox( vbox ){
 }
 ui::CheckButton appendCheckBox( const char* name, const char* flag, bool& data ){
 	return m_dialog.addCheckBox( m_vbox, name, flag, data );

@@ -33,11 +33,10 @@
 #include "prtview.h"
 #include "portals.h"
 
-static void dialog_button_callback( GtkWidget *widget, gpointer data ){
-	GtkWidget *parent;
+static void dialog_button_callback( ui::Widget widget, gpointer data ){
 	int *loop, *ret;
 
-	parent = gtk_widget_get_toplevel( widget );
+	auto parent = widget.window();
 	loop = (int*)g_object_get_data( G_OBJECT( parent ), "loop" );
 	ret = (int*)g_object_get_data( G_OBJECT( parent ), "ret" );
 
@@ -80,7 +79,7 @@ int DoLoadPortalFileDialog(){
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window( ui::window_type::TOP );
-	gtk_window_set_title( GTK_WINDOW( dlg ), "Load .prt" );
+	gtk_window_set_title( dlg, "Load .prt" );
 	dlg.connect( "delete_event",
 						G_CALLBACK( dialog_delete_callback ), NULL );
 	dlg.connect( "destroy",
