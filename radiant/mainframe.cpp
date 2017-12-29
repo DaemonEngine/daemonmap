@@ -26,6 +26,7 @@
 //
 
 #include "mainframe.h"
+#include "globaldefs.h"
 
 #include <gtk/gtk.h>
 
@@ -180,7 +181,7 @@ void VFS_Destroy(){
 
 // Home Paths
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <shlobj.h>
 #include <objbase.h>
 const GUID qFOLDERID_SavedGames = {0x4C5C32FF, 0xBB9D, 0x43b0, {0xB5, 0xB4, 0x2D, 0x72, 0xE5, 0x4E, 0xAA, 0xA4}};
@@ -197,7 +198,7 @@ void HomePaths_Realise(){
 		if ( !string_empty( prefix ) ) {
 			StringOutputStream path( 256 );
 
-#if defined( __APPLE__ )
+#if GDEF_OS_MACOS
 			path.clear();
 			path << DirectoryCleaned( g_get_home_dir() ) << "Library/Application Support" << ( prefix + 1 ) << "/";
 			if ( file_is_directory( path.c_str() ) ) {
@@ -208,7 +209,7 @@ void HomePaths_Realise(){
 			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
 #endif
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 			TCHAR mydocsdir[MAX_PATH + 1];
 			wchar_t *mydocsdirw;
 			HMODULE shfolder = LoadLibrary( "shfolder.dll" );
@@ -247,7 +248,7 @@ void HomePaths_Realise(){
 			}
 #endif
 
-#if defined( POSIX )
+#if GDEF_OS_POSIX
 			path.clear();
 			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
 			g_qeglobals.m_userEnginePath = path.c_str();
@@ -539,11 +540,11 @@ void operator()( const char* name ) const {
 const char* const c_library_extension =
 #if defined( CMAKE_SHARED_MODULE_SUFFIX )
     CMAKE_SHARED_MODULE_SUFFIX
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 	"dll"
-#elif defined ( __APPLE__ )
+#elif GDEF_OS_MACOS
 	"dylib"
-#elif defined( __linux__ ) || defined ( __FreeBSD__ )
+#elif GDEF_OS_LINUX || GDEF_OS_BSD
 	"so"
 #endif
 ;
@@ -2602,7 +2603,7 @@ void MainFrame::CreateContexts(){
 #endif
 }
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 //#define DBG_SLEEP
 #endif
 
@@ -2711,7 +2712,7 @@ void MainFrame::Create(){
 
 	gtk_window_set_transient_for( splash_screen, window );
 
-#if !defined( WIN32 )
+#if !GDEF_OS_WINDOWS
 	{
 		GdkPixbuf* pixbuf = pixbuf_new_from_file_with_mask( "bitmaps/icon.png" );
 		if ( pixbuf != 0 ) {
@@ -2767,7 +2768,7 @@ void MainFrame::Create(){
 		g_page_console = GroupDialog_addPage( "Console", Console_constructWindow( GroupDialog_getWindow() ), RawStringExportCaller( "Console" ) );
 	}
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( g_multimon_globals.m_bStartOnPrimMon ) {
 		PositionWindowOnPrimaryScreen( g_layout_globals.m_position );
 		window_set_position( window, g_layout_globals.m_position );
@@ -3107,7 +3108,7 @@ void GlobalGL_sharedContextCreated(){
 	GlobalShaderCache().realise();
 	Textures_Realise();
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	/* win32 is dodgy here, just use courier new then */
 	g_font = glfont_create( "arial 9" );
 #else
@@ -3313,11 +3314,11 @@ void MainFrame_Construct(){
 
 	{
 		const char* ENGINEPATH_ATTRIBUTE =
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 			"enginepath_win32"
-#elif defined( __APPLE__ )
+#elif GDEF_OS_MACOS
 			"enginepath_macos"
-#elif defined( __linux__ ) || defined ( __FreeBSD__ )
+#elif GDEF_OS_LINUX || GDEF_OS_BSD
 			"enginepath_linux"
 #else
 #error "unknown platform"

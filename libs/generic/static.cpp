@@ -20,8 +20,9 @@
  */
 
 #include "static.h"
+#include "globaldefs.h"
 
-#if defined( _DEBUG ) || defined( DOXYGEN )
+#if GDEF_DEBUG || defined( DOXYGEN )
 
 namespace ExampleStatic
 {

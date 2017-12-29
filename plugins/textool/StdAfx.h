@@ -22,11 +22,13 @@
 // stdafx.h
 // precompiled headers
 
+#include "globaldefs.h"
+
 // standard headers
 #include <stdio.h>
 #include <stdlib.h>
 
-#if !defined( WIN32 )
+#if !GDEF_OS_WINDOWS
 
 // Necessary for proper boolean type declaration
 #include "qertypes.h"

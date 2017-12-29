@@ -26,6 +26,7 @@
 // deal with in/out tasks, for either stdin/stdout or network/XML stream
 //
 
+#include "globaldefs.h"
 #include "cmdlib.h"
 #include "mathlib.h"
 #include "polylib.h"
@@ -33,7 +34,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <direct.h>
 #include <windows.h>
 #endif
@@ -45,7 +46,7 @@
 // utf8 conversion
 #include <glib.h>
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 HWND hwndOut = NULL;
 qboolean lookedForServer = qfalse;
 UINT wm_BroadcastCommand = -1;

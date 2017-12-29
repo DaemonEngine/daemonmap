@@ -25,13 +25,14 @@
 /// \file
 /// \brief Debugging macros for fatal error/assert messages.
 
+#include "globaldefs.h"
 #include "stream/textstream.h"
 #include "warnings.h"
 #include "generic/static.h"
 
-#if defined( _MSC_VER ) && ( defined( _M_IX86 ) || defined( _M_AMD64 ) )
+#if GDEF_COMPILER_MSVC && ( defined( _M_IX86 ) || defined( _M_AMD64 ) )
 #define DEBUGGER_BREAKPOINT() __asm { int 3 }
-#elif ( defined ( __i386__ ) || defined ( __x86_64__ ) ) && defined ( __GNUC__ ) && __GNUC__ >= 2
+#elif GDEF_COMPILER_GNU && __GNUC__ >= 2 && ( defined ( __i386__ ) || defined ( __x86_64__ ) )
 #define DEBUGGER_BREAKPOINT() __asm__ __volatile__ ( "int $03" )
 #else
 #include <signal.h>
@@ -43,9 +44,7 @@
 #define STR2( x ) STR( x )
 #define FILE_LINE __FILE__ ":" STR2( __LINE__ )
 
-#if defined( _DEBUG ) || 1
 #define DEBUG_ASSERTS
-#endif
 
 class DebugMessageHandler
 {
@@ -72,7 +71,7 @@ virtual TextOutputStream& getOutputStream(){
 	return globalErrorStream();
 }
 virtual bool handleMessage(){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	return false; // send debug-break
 #else
 	return true;

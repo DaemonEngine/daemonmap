@@ -21,6 +21,7 @@
 
 
 #include "qgl.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -28,18 +29,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined( _WIN32 )
+#if GDEF_OS_WINDOWS
 #define WINGDIAPI __declspec( dllimport )
 #define APIENTRY __stdcall
 #endif
 
-#if defined( __APPLE__ ) && !defined( XWINDOWS )
+#if GDEF_OS_MACOS && !defined( XWINDOWS )
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>
 #endif
 
-#if defined( _WIN32 )
+#if GDEF_OS_WINDOWS
 #undef WINGDIAPI
 #undef APIENTRY
 #endif
@@ -49,7 +50,7 @@
 
 
 
-#if defined( _WIN32 )
+#if GDEF_OS_WINDOWS
 
 #include <wtypes.h>
 
@@ -64,7 +65,7 @@ Bool ( *qglXQueryExtension )( Display *dpy, int *errorb, int *event );
 void*        ( *qglXGetProcAddressARB )( const GLubyte * procName );
 typedef void* ( *glXGetProcAddressARBProc )( const GLubyte *procName );
 
-#elif defined(__APPLE__)
+#elif GDEF_OS_MACOS
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,12 +77,12 @@ typedef void* ( *glXGetProcAddressARBProc )( const GLubyte *procName );
 void QGL_Shutdown( OpenGLBinding& table ){
 	globalOutputStream() << "Shutting down OpenGL module...";
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 	qwglGetProcAddress           = 0;
 #elif defined( XWINDOWS )
 	qglXQueryExtension           = glXQueryExtension;
 	qglXGetProcAddressARB        = 0;
-#elif defined(__APPLE__)
+#elif GDEF_OS_MACOS
 #else
 #error "unsupported platform"
 #endif
@@ -138,7 +139,7 @@ bool QGL_ExtensionSupported( const char* extension ){
 	}
 
 	extensions = GlobalOpenGL().m_glGetString( GL_EXTENSIONS );
-#ifndef __APPLE__
+#if !GDEF_OS_MACOS
 	if ( !extensions ) {
 		return false;
 	}
@@ -179,7 +180,7 @@ QGLFunctionPointer QGL_getExtensionFunc( const char* symbol ){
 	{
 		return (QGLFunctionPointer) qglXGetProcAddressARB( reinterpret_cast<const GLubyte*>( symbol ) );
 	}
-#elif defined(__APPLE__)
+#elif GDEF_OS_MACOS
 	// Prepend a '_' for the Unix C symbol mangling convention
 	char *symbolName = (char *) malloc(strlen(symbol) + 2);
 	strcpy(symbolName + 1, symbol);
@@ -188,7 +189,7 @@ QGLFunctionPointer QGL_getExtensionFunc( const char* symbol ){
 	if (NSIsSymbolNameDefined(symbolName)) nssymbol = NSLookupAndBindSymbol(symbolName);
 	free(symbolName);
     return nssymbol ? reinterpret_cast<QGLFunctionPointer>(NSAddressOfSymbol(nssymbol)) : reinterpret_cast<QGLFunctionPointer>(glInvalidFunction);
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 	ASSERT_NOTNULL( qwglGetProcAddress );
 	return (QGLFunctionPointer) qwglGetProcAddress( symbol );
 #else
@@ -550,14 +551,14 @@ void QGL_clear( OpenGLBinding& table ){
 int QGL_Init( OpenGLBinding& table ){
 	QGL_clear( table );
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 	qwglGetProcAddress           = wglGetProcAddress;
 #elif defined( XWINDOWS )
 	qglXGetProcAddressARB = (glXGetProcAddressARBProc)dlsym( RTLD_DEFAULT, "glXGetProcAddressARB" );
 	if ( ( qglXQueryExtension == 0 ) || ( qglXQueryExtension(XOpenDisplay(nullptr), 0, 0) != True ) ) {
 		return 0;
 	}
-#elif defined (__APPLE__)
+#elif GDEF_OS_MACOS
 #else
 #error "unsupported platform"
 #endif

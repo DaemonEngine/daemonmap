@@ -20,11 +20,13 @@
  */
 
 #include "stacktrace.h"
+#include "globaldefs.h"
+
 #include "stream/textstream.h"
 
 #include "environment.h"
 
-#ifdef __linux__
+#if GDEF_OS_LINUX
 #include <execinfo.h>
 
 void write_stack_trace( TextOutputStream& outputStream ){
@@ -48,7 +50,7 @@ void write_stack_trace( TextOutputStream& outputStream ){
 		free( symbol_names );
 	}
 }
-#elif defined ( WIN32 ) && defined ( _MSC_VER )
+#elif GDEF_COMPILER_MSVC
 
 #include "windows.h"
 #include "winnt.h"
@@ -288,7 +290,7 @@ void write_stack_trace( TextOutputStream& outputStream ){
 	}
 }
 
-#elif defined ( WIN32 )
+#elif GDEF_OS_WINDOWS
 void write_stack_trace( TextOutputStream& outputStream ){
 	outputStream << "\nStacktrace is disabled on this compiler\n";
 }

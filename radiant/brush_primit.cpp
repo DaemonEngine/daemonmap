@@ -20,6 +20,7 @@
  */
 
 #include "brush_primit.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -397,11 +398,11 @@ inline BasicVector3<Element> vector3_inverse( const BasicVector3<Element>& self 
 void BPMatMul( float A[2][3], float B[2][3], float C[2][3] );
 // apply a rotation (degrees)
 void BPMatRotate( float A[2][3], float theta );
-#ifdef _DEBUG
+#if GDEF_DEBUG
 void BPMatDump( float A[2][3] );
 #endif
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 //#define DBG_BP
 #endif
 

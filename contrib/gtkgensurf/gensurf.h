@@ -20,6 +20,7 @@
 #ifndef _GENSURF_H_
 #define _GENSURF_H_
 
+#include "globaldefs.h"
 #include <string.h>
 #include "qertypes.h"
 #include <stdio.h>
@@ -56,7 +57,7 @@ extern _QERBrushTable __BRUSHTABLENAME;
 #define PLUGIN
 #define Q3RADIANT
 
-//#if defined(__linux__) || defined(__APPLE__)
+//#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #if 1
 #include <algorithm>
 #else

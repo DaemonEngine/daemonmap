@@ -20,6 +20,7 @@
  */
 
 #include "qdata.h"
+#include "globaldefs.h"
 #include "md4.h"
 
 void TK_Init();
@@ -202,7 +203,7 @@ void Cmd_File( void ){
 
    ===============
  */
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
 #include "io.h"
 void PackDirectory_r( char *dir ){
 	struct _finddata_t fileinfo;

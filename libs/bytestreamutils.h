@@ -22,7 +22,9 @@
 #if !defined( INCLUDED_BYTESTREAMUTILS_H )
 #define INCLUDED_BYTESTREAMUTILS_H
 
-#if defined( __GNUC__ )
+#include "globaldefs.h"
+
+#if GDEF_COMPILER_GNU
 
 #define _ISOC9X_SOURCE  1
 #define _ISOC99_SOURCE  1
@@ -55,18 +57,20 @@ typedef unsigned int uint32_t;
 
 template<typename InputStreamType, typename Type>
 inline void istream_read_little_endian( InputStreamType& istream, Type& value ){
-	istream.read( reinterpret_cast<typename InputStreamType::byte_type*>( &value ), sizeof( Type ) );
-#if defined( __BIG_ENDIAN__ )
-	std::reverse( reinterpret_cast<typename InputStreamType::byte_type*>( &value ), reinterpret_cast<typename InputStreamType::byte_type*>( &value ) + sizeof( Type ) );
-#endif
+	istream.read(reinterpret_cast<typename InputStreamType::byte_type *>( &value ), sizeof(Type));
+	if (GDEF_ARCH_ENDIAN_BIG) {
+		std::reverse(reinterpret_cast<typename InputStreamType::byte_type *>( &value ),
+					 reinterpret_cast<typename InputStreamType::byte_type *>( &value ) + sizeof(Type));
+	}
 }
 
 template<typename InputStreamType, typename Type>
 inline void istream_read_big_endian( InputStreamType& istream, Type& value ){
-	istream.read( reinterpret_cast<typename InputStreamType::byte_type*>( &value ), sizeof( Type ) );
-#if !defined( __BIG_ENDIAN__ )
-	std::reverse( reinterpret_cast<typename InputStreamType::byte_type*>( &value ), reinterpret_cast<typename InputStreamType::byte_type*>( &value ) + sizeof( Type ) );
-#endif
+	istream.read(reinterpret_cast<typename InputStreamType::byte_type *>( &value ), sizeof(Type));
+	if (!GDEF_ARCH_ENDIAN_BIG) {
+		std::reverse(reinterpret_cast<typename InputStreamType::byte_type *>( &value ),
+					 reinterpret_cast<typename InputStreamType::byte_type *>( &value ) + sizeof(Type));
+	}
 }
 
 template<typename InputStreamType>

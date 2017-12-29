@@ -25,6 +25,7 @@
  */
 
 #include "camera.h"
+#include "globaldefs.h"
 
 void Sys_ERROR( char* text, ... ){
 	va_list argptr;
@@ -38,7 +39,7 @@ void Sys_ERROR( char* text, ... ){
 }
 
 char* UnixToDosPath( char* path ){
-#ifndef WIN32
+#if !GDEF_OS_WINDOWS
 	return path;
 #else
 	for ( char* p = path; *p; p++ )
@@ -132,7 +133,7 @@ void CDECL Com_Printf( const char* msg, ... ){
 }
 
 void CDECL Com_DPrintf( const char* msg, ... ){
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	va_list argptr;
 	char buf[32768];
 
@@ -156,7 +157,7 @@ void Com_Dealloc( void *ptr ) {
 // Filesystem
 //
 
-#ifdef WIN32
+#if GDEF_COMPILER_MSVC
 	#pragma warning(disable : 4311)
 	#pragma warning(disable : 4312)
 #endif

@@ -19,6 +19,7 @@
  */
 
 #include "sunplug.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -39,7 +40,7 @@
 void about_plugin_window();
 void MapCoordinator();
 
-#ifndef _WIN32
+#if !GDEF_OS_WINDOWS
 // linux itoa implementation
 char* itoa( int value, char* result, int base ){
 	// check that the base if valid

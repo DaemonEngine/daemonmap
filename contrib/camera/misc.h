@@ -24,6 +24,8 @@
    Copyright (C) 2002 Splash Damage Ltd.
  */
 
+#include "globaldefs.h"
+
 void Sys_ERROR( char* text, ... );
 char* UnixToDosPath( char* path );
 void ExtractFilePath( const char *path, char *dest );
@@ -40,7 +42,7 @@ void Cbuf_Execute( void );
 
 // common
 #ifndef CDECL
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	#define CDECL __cdecl
 #else
 	#define CDECL

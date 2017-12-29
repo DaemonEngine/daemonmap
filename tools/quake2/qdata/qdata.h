@@ -19,6 +19,7 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "globaldefs.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -34,7 +35,7 @@
 #include "l3dslib.h"
 #include "bspfile.h"
 
-#ifdef WIN32
+#if GDEF_COMPILER_MSVC
 	#ifdef NDEBUG                           // Don't show in a Release build
 		#pragma warning(disable : 4305)     // truncate from double to float
 		#pragma warning(disable : 4244)     // conversion from double to float

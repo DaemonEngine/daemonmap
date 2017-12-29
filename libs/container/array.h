@@ -22,6 +22,7 @@
 #if !defined( INCLUDED_CONTAINER_ARRAY_H )
 #define INCLUDED_CONTAINER_ARRAY_H
 
+#include "globaldefs.h"
 #include <cstddef>
 #include <algorithm>
 
@@ -119,13 +120,13 @@ const_iterator end() const {
 }
 
 value_type& operator[]( std::size_t index ){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];
 }
 const value_type& operator[]( std::size_t index ) const {
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];

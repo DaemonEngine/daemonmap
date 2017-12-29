@@ -28,7 +28,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef _WIN32
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4710)     // function 'blah' not inlined
 #endif
 

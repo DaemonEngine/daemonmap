@@ -21,7 +21,7 @@
 
 // qdata.h
 
-
+#include "globaldefs.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -38,7 +38,7 @@
 #include "l3dslib.h"
 #include "bspfile.h"
 
-#ifndef _WIN32
+#if !GDEF_OS_WINDOWS
 #define stricmp strcasecmp
 #define strcmpi strcasecmp
 #endif

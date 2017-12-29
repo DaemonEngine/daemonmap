@@ -39,6 +39,7 @@
 /* dependencies */
 #include <string.h>
 #include "picointernal.h"
+#include "globaldefs.h"
 
 
 
@@ -476,7 +477,7 @@ void _pico_copy_color( picoColor_t src, picoColor_t dest ){
 	dest[ 3 ] = src[ 3 ];
 }
 
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 
 int   _pico_big_long( int src ) { return src; }
 short _pico_big_short( short src ) { return src; }

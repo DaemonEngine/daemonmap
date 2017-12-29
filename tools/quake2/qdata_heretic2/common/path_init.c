@@ -24,12 +24,9 @@
    Nurail: Swiped from Q3Map2
  */
 
+#include "globaldefs.h"
 
-
-/* marker */
-#define PATH_INIT_C
-
-#if defined( __linux__ ) || defined( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 	#define Q_UNIX
 #endif
 

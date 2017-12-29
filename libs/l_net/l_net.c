@@ -29,6 +29,7 @@
 // Notes:
 //====================================================================
 
+#include "globaldefs.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -36,7 +37,7 @@
 #include "l_net.h"
 #include "l_net_wins.h"
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 void WinPrint( const char *str, ... ){
 	va_list argptr;
 	char text[4096];
@@ -72,7 +73,7 @@ void Net_SetAddressPort( address_t *address, int port ){
 // Changes Globals:		-
 //===========================================================================
 int Net_AddressCompare( address_t *addr1, address_t *addr2 ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	return _stricmp( addr1->ip, addr2->ip );
 #else
 	return strcasecmp( addr1->ip, addr2->ip );
@@ -163,7 +164,7 @@ int Net_Receive( socket_t *sock, netmessage_t *msg ){
 		return msg->size - 4;
 	} //end if
 	  //the message has not been completely read yet
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	printf( "++timo TODO: debug the Net_Receive on big size messages\n" );
 #endif
 	return 0;

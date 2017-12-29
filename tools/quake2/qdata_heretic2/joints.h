@@ -22,6 +22,8 @@
 #ifndef JOINTS_H
 #define JOINTS_H
 
+#include "globaldefs.h"
+
 #ifdef _HERETIC2_
 #include "angles.h"
 #endif
@@ -29,7 +31,7 @@
 //typedef float vec3_t[3];
 //typedef unsigned char byte;
 
-#ifndef _WIN32
+#if !GDEF_OS_WINDOWS
 #define stricmp strcasecmp
 #define strcmpi strcasecmp
 #endif

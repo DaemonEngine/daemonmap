@@ -22,6 +22,8 @@
 #if !defined ( INCLUDED_OS_PATH_H )
 #define INCLUDED_OS_PATH_H
 
+#include "globaldefs.h"
+
 /// \file
 /// \brief OS file-system path comparison, decomposition and manipulation.
 ///
@@ -33,7 +35,7 @@
 
 #include "string/string.h"
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define OS_CASE_INSENSITIVE
 #endif
 
@@ -85,10 +87,10 @@ inline bool path_equal_n( const char* path, const char* other, std::size_t n ){
 /// \brief Returns true if \p path is a fully qualified file-system path.
 /// O(1)
 inline bool path_is_absolute( const char* path ){
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 	return path[0] == '/'
 		   || ( path[0] != '\0' && path[1] == ':' ); // local drive
-#elif defined( POSIX )
+#elif GDEF_OS_POSIX
 	return path[0] == '/';
 #endif
 }

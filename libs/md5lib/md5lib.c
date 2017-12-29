@@ -54,14 +54,10 @@
  */
 
 #include "md5lib.h" /* ydnar */
+#include "globaldefs.h"
 #include <string.h>
 
-/* ydnar: gtkradiant endian picking */
-#ifdef _SGI_SOURCE
-#define __BIG_ENDIAN__
-#endif
-
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 #define ARCH_IS_BIG_ENDIAN  1
 #else
 #define ARCH_IS_BIG_ENDIAN  0
@@ -69,11 +65,7 @@
 /* ydnar: end */
 
 #undef BYTE_ORDER   /* 1 = big-endian, -1 = little-endian, 0 = unknown */
-#ifdef ARCH_IS_BIG_ENDIAN
 #define BYTE_ORDER ( ARCH_IS_BIG_ENDIAN ? 1 : -1 )
-#else
-#define BYTE_ORDER 0
-#endif
 
 #define T_MASK ( ( md5_word_t ) ~0 )
 #define T1 /* 0xd76aa478 */ ( T_MASK ^ 0x28955b87 )

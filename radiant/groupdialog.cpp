@@ -27,6 +27,7 @@
 //
 
 #include "groupdialog.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -101,7 +102,7 @@ void GroupDlg::Create( ui::Window parent ){
 
 	m_window = window;
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( g_multimon_globals.m_bStartOnPrimMon ) {
 		WindowPosition pos( m_position_tracker.getPosition() );
 		PositionWindowOnPrimaryScreen( pos );

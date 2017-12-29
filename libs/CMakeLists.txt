@@ -37,6 +37,7 @@ add_library(libs
         entityxml.h
         fs_filesystem.h
         fs_path.h
+        globaldefs.h
         imagelib.h
         instancelib.h
         maplib.h

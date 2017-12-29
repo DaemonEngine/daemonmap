@@ -20,6 +20,7 @@
  */
 
 #include "model.h"
+#include "globaldefs.h"
 
 #include "picomodel.h"
 
@@ -113,7 +114,7 @@ void render( RenderStateFlags state ) const {
 	glVertexPointer( 3, GL_FLOAT, sizeof( ArbitraryMeshVertex ), &m_vertices.data()->vertex );
 	glDrawElements( GL_TRIANGLES, GLsizei( m_indices.size() ), RenderIndexTypeID, m_indices.data() );
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	GLfloat modelview[16];
 	glGetFloatv( GL_MODELVIEW_MATRIX, modelview ); // I know this is slow as hell, but hey - we're in _DEBUG
 	Matrix4 modelview_inv(

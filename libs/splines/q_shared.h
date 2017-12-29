@@ -22,6 +22,8 @@
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
+#include "globaldefs.h"
+
 // q_shared.h -- included first by ALL program modules.
 // these are the definitions that have no dependance on
 // central system services, and can be used by any part
@@ -35,7 +37,7 @@
 #define ALIGN_ON
 #define ALIGN_OFF
 
-#ifdef _WIN32
+#if GDEF_COMPILER_MSVC
 
 #pragma warning(disable : 4018)     // signed/unsigned mismatch
 #pragma warning(disable : 4032)
@@ -67,10 +69,10 @@
 #include <ctype.h>
 #include <cstddef>
 
-#ifdef WIN32                // mac doesn't have malloc.h
+#if GDEF_OS_WINDOWS                // mac doesn't have malloc.h
 #include <malloc.h>         // for _alloca()
 #endif
-#ifdef _WIN32
+#if GDEF_COMPILER_MSVC
 
 //#pragma intrinsic( memset, memcpy )
 
@@ -78,7 +80,7 @@
 
 
 // this is the define for determining if we have an asm version of a C function
-#if ( defined _M_IX86 || defined __i386__ ) && !defined __sun__  && !defined __LCC__
+#if GDEF_ARCH_BITS_32 && !defined __sun__  && !defined __LCC__
 #define id386   1
 #else
 #define id386   0
@@ -90,7 +92,7 @@
 
 //======================= WIN32 DEFINES =================================
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 
 #define MAC_STATIC
 
@@ -99,13 +101,13 @@
 
 // buildstring will be incorporated into the version string
 #ifdef NDEBUG
-#ifdef _M_IX86
+#if GDEF_ARCH_BITS_32
 #define CPUSTRING   "win-x86"
 #elif defined _M_ALPHA
 #define CPUSTRING   "win-AXP"
 #endif
 #else
-#ifdef _M_IX86
+#if GDEF_ARCH_BITS_32
 #define CPUSTRING   "win-x86-debug"
 #elif defined _M_ALPHA
 #define CPUSTRING   "win-AXP-debug"
@@ -119,13 +121,13 @@
 
 //======================= MAC OS X SERVER DEFINES =====================
 
-#if defined( __MACH__ ) && defined( __APPLE__ )
+#if GDEF_OS_MACOS && defined( __MACH__ )
 
 #define MAC_STATIC
 
 #ifdef __ppc__
 #define CPUSTRING   "MacOSXS-ppc"
-#elif defined __i386__
+#elif GDEF_ARCH_BITS_32
 #define CPUSTRING   "MacOSXS-i386"
 #else
 #define CPUSTRING   "MacOSXS-other"
@@ -190,11 +192,11 @@ void Sys_PumpEvents( void );
 
 // the mac compiler can't handle >32k of locals, so we
 // just waste space and make big arrays static...
-#ifdef __linux__
+#if GDEF_OS_LINUX
 
 #define MAC_STATIC
 
-#ifdef __i386__
+#if GDEF_ARCH_BITS_32
 #define CPUSTRING   "linux-i386"
 #elif defined __axp__
 #define CPUSTRING   "linux-alpha"

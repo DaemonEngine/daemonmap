@@ -1,3 +1,4 @@
+#include <globaldefs.h>
 #include "bsploader.h"
 #include "dialogs/dialogs-gtk.h"
 #include "cmdlib.h"
@@ -71,16 +72,16 @@ bool    LoadFile( const char *filename, byte **bufferptr ){
 }
 
 int    LittleLong( int l ){
-#if defined( __BIG_ENDIAN__ )
-	std::reverse( reinterpret_cast<unsigned char*>( &l ), reinterpret_cast<unsigned char*>( &l ) + sizeof( int ) );
-#endif
+	if (GDEF_ARCH_ENDIAN_BIG) {
+		std::reverse(reinterpret_cast<unsigned char *>( &l ), reinterpret_cast<unsigned char *>( &l ) + sizeof(int));
+	}
 	return l;
 }
 
 float   LittleFloat( float l ){
-#if defined( __BIG_ENDIAN__ )
-	std::reverse( reinterpret_cast<unsigned char*>( &l ), reinterpret_cast<unsigned char*>( &l ) + sizeof( float ) );
-#endif
+	if (GDEF_ARCH_ENDIAN_BIG) {
+		std::reverse( reinterpret_cast<unsigned char*>( &l ), reinterpret_cast<unsigned char*>( &l ) + sizeof( float ) );
+	}
 	return l;
 }
 

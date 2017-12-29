@@ -25,13 +25,14 @@
  */
 
 #include "camera.h"
+#include "globaldefs.h"
 
 extern GtkWidget *g_pEditModeAddRadioButton;
 
 char* Q_realpath( const char *path, char *resolved_path, size_t size ){
-#if defined( POSIX )
+#if GDEF_OS_POSIX
 	return realpath( path, resolved_path );
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 	return _fullpath( resolved_path, path, size );
 #else
 #error "unsupported platform"

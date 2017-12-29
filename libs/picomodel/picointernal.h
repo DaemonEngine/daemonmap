@@ -38,6 +38,8 @@
 #ifndef PICOINTERNAL_H
 #define PICOINTERNAL_H
 
+#include "globaldefs.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -56,7 +58,7 @@ extern "C"
 
 
 /* os dependent replacements */
-#if WIN32 || _WIN32
+#if GDEF_OS_WINDOWS
 	#define _pico_stricmp stricmp
 	#define _pico_strnicmp strnicmp
 #else

@@ -20,6 +20,7 @@
  */
 
 #include "selection.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -156,7 +157,7 @@ inline float angle_between( const Vector3& a, const Vector3& b ){
 }
 
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 class test_quat
 {
 public:
@@ -466,7 +467,7 @@ void add_one(){
 }
 };
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 #define DEBUG_SELECTION
 #endif
 

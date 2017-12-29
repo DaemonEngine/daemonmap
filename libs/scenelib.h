@@ -22,6 +22,7 @@
 #if !defined ( INCLUDED_SCENELIB_H )
 #define INCLUDED_SCENELIB_H
 
+#include "globaldefs.h"
 #include "iscenegraph.h"
 #include "iselection.h"
 
@@ -108,7 +109,7 @@ void initialise(){
 }
 typedef MemberCaller<NodeType<Type>, &NodeType<Type>::initialise> InitialiseCaller;
 TypeId getTypeId(){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( m_typeId != NODETYPEID_NONE, "node-type " << makeQuoted( Name() ) << " used before being initialised" );
 #endif
 	return m_typeId;
@@ -443,7 +444,7 @@ void initialise(){
 }
 typedef MemberCaller<InstanceType<Type>, &InstanceType<Type>::initialise> InitialiseCaller;
 TypeId getTypeId(){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( m_typeId != INSTANCETYPEID_NONE, "instance-type " << makeQuoted( Name() ) << " used before being initialised" );
 #endif
 	return m_typeId;

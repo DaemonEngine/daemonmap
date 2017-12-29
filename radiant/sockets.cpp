@@ -1,25 +1,25 @@
-
 #include "sockets.h"
+#include "globaldefs.h"
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #include <winsock2.h>
-#elif defined ( POSIX )
+#elif GDEF_OS_POSIX
 #include <sys/time.h>
 const int SOCKET_ERROR = -1;
 #else
 #error "unsupported platform"
 #endif
 
-#ifdef __APPLE__
+#if GDEF_OS_MACOS
 #include <unistd.h>
 #endif
 
 int Net_Wait( socket_t *sock, long sec, long usec ){
 // used for select()
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	TIMEVAL tout = { sec, usec };
 #endif
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 	timeval tout;
 	tout.tv_sec = sec;
 	tout.tv_usec = usec;

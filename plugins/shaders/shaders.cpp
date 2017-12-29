@@ -35,6 +35,7 @@
 //
 
 #include "shaders.h"
+#include "globaldefs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1369,7 +1370,7 @@ void ParseShaderFile( Tokeniser& tokeniser, const char* filename ){
 				if ( result ) {
 					// do we already have this shader?
 					if ( !g_shaderDefinitions.insert( ShaderDefinitionMap::value_type( shaderTemplate->getName(), ShaderDefinition( shaderTemplate.get(), ShaderArguments(), filename ) ) ).second ) {
-  #ifdef _DEBUG
+  #if GDEF_DEBUG
 						globalOutputStream() << "WARNING: shader " << shaderTemplate->getName() << " is already in memory, definition in " << filename << " ignored.\n";
   #endif
 					}

@@ -211,7 +211,7 @@ PackDirectory_r
 
 ===============
 */
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
 #include "io.h"
 void PackDirectory_r (char *dir)
 {

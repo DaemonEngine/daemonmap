@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cmdlib.c
 
 #include "cmdlib.h"
+#include "globaldefs.h"
 
 #define PATHSEPERATOR   '/'
 
@@ -567,11 +568,7 @@ int ParseNum (char *str)
 ============================================================================
 */
 
-#ifdef _SGI_SOURCE
-#define	__BIG_ENDIAN__
-#endif
-
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 
 short   LittleShort (short l)
 {

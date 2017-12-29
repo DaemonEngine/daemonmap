@@ -22,8 +22,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "DBrush.h"
+#include "globaldefs.h"
 
-#ifdef WIN32
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4786)
 #endif
 
@@ -68,7 +69,7 @@ DBrush::~DBrush(){
 //////////////////////////////////////////////////////////////////////
 
 DPlane* DBrush::AddFace( const vec3_t va, const vec3_t vb, const vec3_t vc, const _QERFaceData* texData ){
-#ifdef _DEBUG
+#if GDEF_DEBUG
 //	Sys_Printf("(%f %f %f) (%f %f %f) (%f %f %f)\n", va[0], va[1], va[2], vb[0], vb[1], vb[2], vc[0], vc[1], vc[2]);
 #endif
 	bBoundsBuilt = false;
@@ -117,7 +118,7 @@ int DBrush::BuildPoints(){
 		}
 	}
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 //	Sys_Printf("%i points on brush\n", pointList.size());
 #endif
 

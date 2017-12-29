@@ -20,11 +20,12 @@
  */
 
 #include "url.h"
+#include "globaldefs.h"
 
 #include "mainframe.h"
 #include "gtkutil/messagebox.h"
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <gtk/gtk.h>
 #include <gdk/gdkwin32.h>
 #include <shellapi.h>
@@ -33,7 +34,7 @@ bool open_url( const char* url ){
 }
 #endif
 
-#if defined( __linux__ ) || defined( __FreeBSD__ )
+#if GDEF_OS_LINUX || GDEF_OS_BSD
 #include <stdlib.h>
 bool open_url( const char* url ){
 	char command[2 * PATH_MAX];
@@ -43,7 +44,7 @@ bool open_url( const char* url ){
 }
 #endif
 
-#ifdef __APPLE__
+#if GDEF_OS_MACOS
 #include <stdlib.h>
 bool open_url( const char* url ){
 	char command[2 * PATH_MAX];

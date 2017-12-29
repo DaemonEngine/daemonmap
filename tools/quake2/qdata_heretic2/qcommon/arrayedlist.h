@@ -33,13 +33,7 @@ typedef struct ArrayedListNode_s
 
 #define ARRAYEDLISTNODE_NULL -1
 
-static
-#ifdef _WIN32
-_inline
-#else
-inline
-#endif
-int GetFreeNode( ArrayedListNode_t *nodeArray, int max ){
+static GDEF_ATTRIBUTE_INLINE int GetFreeNode( ArrayedListNode_t *nodeArray, int max ){
 	int i;
 
 	for ( i = 0; i < max; ++i )
@@ -54,13 +48,7 @@ int GetFreeNode( ArrayedListNode_t *nodeArray, int max ){
 	return -1;
 }
 
-static
-#ifdef _WIN32
-_inline
-#else
-inline
-#endif
-void FreeNode( ArrayedListNode_t *nodeArray, int index ){
+static GDEF_ATTRIBUTE_INLINE void FreeNode( ArrayedListNode_t *nodeArray, int index ){
 	nodeArray[index].inUse = 0;
 }
 

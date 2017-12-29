@@ -33,6 +33,7 @@
 //
 
 #include "qe3.h"
+#include "globaldefs.h"
 
 #include <gtk/gtk.h>
 
@@ -66,7 +67,7 @@
 QEGlobals_t g_qeglobals;
 
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define PATH_MAX 260
 #endif
 
@@ -281,10 +282,10 @@ void RunBSP( const char* name ){
 		strcat( junkpath, "junk.txt" );
 
 		char batpath[PATH_MAX];
-#if defined( POSIX )
+#if GDEF_OS_POSIX
 		strcpy( batpath, SettingsPath_get() );
 		strcat( batpath, "qe3bsp.sh" );
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 		strcpy( batpath, SettingsPath_get() );
 		strcat( batpath, "qe3bsp.bat" );
 #else
@@ -294,7 +295,7 @@ void RunBSP( const char* name ){
 		{
 			TextFileOutputStream batchFile( batpath );
 			if ( !batchFile.failed() ) {
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 				batchFile << "#!/bin/sh \n\n";
 #endif
 				BatchCommandListener listener( batchFile, junkpath );
@@ -303,7 +304,7 @@ void RunBSP( const char* name ){
 			}
 		}
 		if ( written ) {
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 			chmod( batpath, 0744 );
 #endif
 			globalOutputStream() << "Writing the compile script to '" << batpath << "'\n";

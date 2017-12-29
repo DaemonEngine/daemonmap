@@ -19,7 +19,8 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifdef WIN32
+#include "globaldefs.h"
+#if GDEF_OS_WINDOWS
 #include <io.h>
 #endif
 #include "q3data.h"
@@ -40,7 +41,7 @@ char *moddir = NULL;
 // some old defined that was in cmdlib lost during merge
 char writedir[1024];
 
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #define strlwr strlower
 #endif
 
@@ -301,7 +302,7 @@ void Cmd_File( void ){
 
    ===============
  */
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
 #include "io.h"
 void PackDirectory_r( char *dir ){
 	struct _finddata_t fileinfo;
@@ -334,7 +335,7 @@ void PackDirectory_r( char *dir ){
 #else
 
 #include <sys/types.h>
-#ifndef WIN32
+#if !GDEF_OS_WINDOWS
 #include <sys/dir.h>
 #else
 #include <sys/dirent.h>

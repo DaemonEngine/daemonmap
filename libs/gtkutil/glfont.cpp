@@ -20,6 +20,7 @@
  */
 
 #include "glfont.h"
+#include "globaldefs.h"
 #include "igl.h"
 
 // generic string printing with call lists
@@ -50,7 +51,7 @@ virtual int getPixelHeight() const {
 }
 };
 
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
 	#include <windows.h>
 #endif
 #include "debugging/debugging.h"

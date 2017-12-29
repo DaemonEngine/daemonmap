@@ -36,6 +36,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef __MRU_H__
 #define __MRU_H__
 
+#include "globaldefs.h"
+
 #define NBMRUMENUSHOW   6       // Default number of MRU showed in the menu File
 #define NBMRUMENU       9       // Default number of MRU stored
 #define IDMRU           8000    // Default First ID of MRU
@@ -83,7 +85,7 @@ void            PlaceMenuMRUItem(LPMRUMENU lpMruMenu,HMENU hMenu,UINT uiItem);
 
 BOOL            SaveMruInIni   (LPMRUMENU lpMruMenu,LPSTR lpszSection,LPSTR lpszFile);
 BOOL            LoadMruInIni   (LPMRUMENU lpMruMenu,LPSTR lpszSection,LPSTR lpszFile);
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 BOOL            SaveMruInReg   (LPMRUMENU lpMruMenu,LPSTR lpszKey);
 BOOL            LoadMruInReg   (LPMRUMENU lpMruMenu,LPSTR lpszKey);
 

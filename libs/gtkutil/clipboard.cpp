@@ -21,6 +21,7 @@
 
 #include "clipboard.h"
 
+#include "globaldefs.h"
 #include "stream/memstream.h"
 #include "stream/textstream.h"
 
@@ -28,7 +29,7 @@
 /// \file
 /// \brief Platform-independent GTK clipboard support.
 /// \todo Using GDK_SELECTION_CLIPBOARD fails on win32, so we use the win32 API directly for now.
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 
 const char* c_clipboard_format = "RadiantClippings";
 

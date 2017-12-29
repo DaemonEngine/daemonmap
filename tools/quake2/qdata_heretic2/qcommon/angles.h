@@ -71,5 +71,6 @@
 
 #define SHORT_TO_ANGLE  ( 360.0 / 65536 )
 
-
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4305)     // 'initializing' : truncation from 'const double ' to 'float '
+#endif

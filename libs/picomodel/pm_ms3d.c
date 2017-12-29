@@ -34,9 +34,10 @@
 
 /* dependencies */
 #include "picointernal.h"
+#include "globaldefs.h"
 
 /* disable warnings */
-#ifdef WIN32
+#if GDEF_COMPILER_MSVC
 #pragma warning( disable:4100 )		/* unref param */
 #endif
 

@@ -23,6 +23,7 @@
 // trilib.c: library for loading triangles from an Alias triangle file
 //
 
+#include "globaldefs.h"
 #include <stdio.h>
 #include "cmdlib.h"
 #include "mathlib.h"
@@ -38,7 +39,7 @@
 
 //#define NOISY 1
 
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #define strlwr strlower
 #endif
 

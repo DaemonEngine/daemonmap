@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 //*************************************************************
 
+#include "globaldefs.h"
 #include <windows.h>
 #include <windowsx.h>
 #include <string.h>
@@ -505,7 +506,7 @@ WORD i;
   return TRUE;
 }
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 
 BOOL IsWin395OrHigher(void)
 {

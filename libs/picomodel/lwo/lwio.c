@@ -10,6 +10,7 @@
 #include "../picointernal.h"
 #include "lwo2.h"
 #include <limits.h>
+#include "globaldefs.h"
 
 
 /*
@@ -32,7 +33,7 @@ void set_flen( int i ) { flen = i; }
 int get_flen( void ) { return flen; }
 
 
-#ifndef __BIG_ENDIAN__
+#if !GDEF_ARCH_ENDIAN_BIG
 /*
    =====================================================================
    revbytes()

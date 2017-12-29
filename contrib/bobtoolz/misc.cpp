@@ -18,6 +18,7 @@
  */
 
 #include "misc.h"
+#include "globaldefs.h"
 
 #include <list>
 #include "str.h"
@@ -31,7 +32,7 @@
 
 #include "funchandlers.h"
 
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 #include <sys/types.h>
 #include <unistd.h>
 #endif
@@ -146,7 +147,7 @@ char* TranslateString( char *buf ){
 
 
 char* UnixToDosPath( char* path ){
-#ifndef WIN32
+#if !GDEF_OS_WINDOWS
 	return path;
 #else
 	for ( char* p = path; *p; p++ )
@@ -182,7 +183,7 @@ extern char* PLUGIN_NAME;
     return buffer;
    }*/
 
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 // the bCreateConsole parameter is ignored on linux ..
 bool Q_Exec( const char *pCmd, bool bCreateConsole ){
 	switch ( fork() )
@@ -192,7 +193,7 @@ bool Q_Exec( const char *pCmd, bool bCreateConsole ){
 //      Error ("CreateProcess failed");
 		break;
 	case 0:
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		printf( "Running system...\n" );
 		printf( "Command: %s\n", pCmd );
 #endif
@@ -208,7 +209,7 @@ bool Q_Exec( const char *pCmd, bool bCreateConsole ){
 }
 #endif
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 
 #include <windows.h>
 

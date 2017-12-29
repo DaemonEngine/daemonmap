@@ -22,11 +22,12 @@
 #if !defined( INCLUDED_IGL_H )
 #define INCLUDED_IGL_H
 
+#include "globaldefs.h"
 #include <cstddef>
 #include <string.h>
 #include "generic/constant.h"
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define QGL_DLLEXPORT __stdcall
 #else
 #define QGL_DLLEXPORT
@@ -2805,7 +2806,7 @@ inline OpenGLBinding& GlobalOpenGL(){
 	return GlobalOpenGLModule::getTable();
 }
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 #define GlobalOpenGL_debugAssertNoErrors() GlobalOpenGL().assertNoErrors( __FILE__, __LINE__ )
 #else
 #define GlobalOpenGL_debugAssertNoErrors()

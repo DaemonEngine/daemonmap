@@ -20,8 +20,10 @@
  */
 // q2map.h
 
+#include "globaldefs.h"
+
 /* platform-specific */
-#if defined( __linux__ ) || defined( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 	#define Q_UNIX
 #endif
 
@@ -31,7 +33,7 @@
 	#include <limits.h>
 #endif
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	#include <windows.h>
 #endif
 

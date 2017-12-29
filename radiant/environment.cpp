@@ -20,6 +20,7 @@
  */
 
 #include "environment.h"
+#include "globaldefs.h"
 
 #include "stream/textstream.h"
 #include "string/string.h"
@@ -127,9 +128,9 @@ void gamedetect(){
 			// TODO add more games to this
 
 			// try to detect Nexuiz installs
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "nexuiz.exe", buf, p - buf ) )
-#elif defined( __APPLE__ )
+#elif GDEF_OS_MACOS
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "Nexuiz.app/Contents/Info.plist", buf, p - buf ) )
 #else
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "nexuiz-linux-glx.sh", buf, p - buf ) )
@@ -179,7 +180,7 @@ bool portable_app_setup(){
 	return false;
 }
 
-#if defined( POSIX )
+#if GDEF_OS_POSIX
 
 #include <stdlib.h>
 #include <pwd.h>
@@ -188,7 +189,7 @@ bool portable_app_setup(){
 #include <glib.h>
 
 const char* LINK_NAME =
-#if defined ( __linux__ )
+#if GDEF_OS_LINUX
 	"/proc/self/exe"
 #else // FreeBSD and OSX
 	"/proc/curproc/file"
@@ -252,7 +253,7 @@ void environment_init( int argc, char const* argv[] ){
 	gamedetect();
 }
 
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 
 #include <windows.h>
 

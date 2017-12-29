@@ -24,6 +24,7 @@
 //
 
 #include "cmdlib.h"
+#include "globaldefs.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@
 #include "container/array.h"
 
 
-#if defined ( POSIX )
+#if GDEF_OS_POSIX
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -43,7 +44,7 @@ bool Q_Exec( const char *cmd, char *cmdline, const char *, bool, bool waitfor ){
 	char fullcmd[2048];
 	char *pCmd;
 	pid_t pid;
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	printf( "Q_Exec damnit\n" );
 #endif
 	switch ( ( pid = fork() ) )
@@ -71,12 +72,12 @@ bool Q_Exec( const char *cmd, char *cmdline, const char *, bool, bool waitfor ){
 		pCmd = fullcmd;
 		while ( *pCmd == ' ' )
 			pCmd++;
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		printf( "Running system...\n" );
 		printf( "Command: %s\n", pCmd );
 #endif
 		system( pCmd );
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		printf( "system() returned\n" );
 #endif
 		_exit( 0 );
@@ -85,7 +86,7 @@ bool Q_Exec( const char *cmd, char *cmdline, const char *, bool, bool waitfor ){
 	return true;
 }
 
-#elif defined( WIN32 )
+#elif GDEF_OS_WINDOWS
 
 #include <windows.h>
 

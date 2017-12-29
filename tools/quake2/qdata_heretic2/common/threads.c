@@ -19,7 +19,9 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef WIN32
+#include "globaldefs.h"
+
+#if !GDEF_OS_WINDOWS
 // The below define is necessary to use
 // pthreads extensions like pthread_mutexattr_settype
 #define _GNU_SOURCE
@@ -106,7 +108,7 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 
    ===================================================================
  */
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 
 #define USED
 
@@ -414,7 +416,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    =======================================================================
  */
 
-#ifdef __linux__
+#if GDEF_OS_LINUX
 #define USED
 
 int numthreads = 4;

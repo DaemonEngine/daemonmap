@@ -18,8 +18,9 @@
  */
 
 #include "lists.h"
+#include "globaldefs.h"
 
-#ifdef WIN32
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4786)
 #endif
 

@@ -31,9 +31,11 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
+#include "globaldefs.h"
+
 // to get PATH_MAX
 #include <stdio.h>
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #include <dirent.h>
 #include <unistd.h>
 #else

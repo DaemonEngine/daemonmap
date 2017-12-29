@@ -17,6 +17,7 @@
  */
 
 #include "ufoai_filters.h"
+#include "globaldefs.h"
 
 #include "ibrush.h"
 #include "ientity.h"
@@ -100,7 +101,7 @@ ForEachFace( Brush& brush )
 }
 
 void visit( Face& face ) const {
-#if _DEBUG
+#if GDEF_DEBUG
 	if ( m_surfaceFlagsVis < 0 ) {
 		m_surfaceFlagsVis = face.getShader().m_flags.m_surfaceFlags;
 	}
@@ -215,7 +216,7 @@ void filter_level( int flag ){
 	GlobalSceneGraph().traverse( EntityFindByName( "misc_model", entities, level, true ) );
 	GlobalSceneGraph().traverse( EntityFindByName( "misc_particle", entities, level, true ) );
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	if ( brushes.empty() ) {
 		globalOutputStream() << "UFO:AI: No brushes.\n";
 	}
@@ -264,7 +265,7 @@ void filter_nodraw( void ){
 	brushlist_t brushes;
 	GlobalSceneGraph().traverse( BrushGetLevel( brushes, SURF_NODRAW, false, false, nodraw_active ) );
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	if ( brushes.empty() ) {
 		globalOutputStream() << "UFO:AI: No brushes.\n";
 	}
@@ -285,7 +286,7 @@ void filter_actorclip( void ){
 	brushlist_t brushes;
 	GlobalSceneGraph().traverse( BrushGetLevel( brushes, CONTENTS_ACTORCLIP, true, false, actorclip_active ) );
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	if ( brushes.empty() ) {
 		globalOutputStream() << "UFO:AI: No brushes.\n";
 	}
@@ -306,7 +307,7 @@ void filter_weaponclip( void ){
 	brushlist_t brushes;
 	GlobalSceneGraph().traverse( BrushGetLevel( brushes, CONTENTS_WEAPONCLIP, true, false, weaponclip_active ) );
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	if ( brushes.empty() ) {
 		globalOutputStream() << "UFO:AI: No brushes.\n";
 	}

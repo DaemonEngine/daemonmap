@@ -42,6 +42,7 @@
 //
 
 #include "vfs.h"
+#include "globaldefs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,7 +65,7 @@ ArchiveModules& FileSystemQ3API_getArchiveModules();
 
 const int VFS_MAXDIRS = 64;
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define PATH_MAX 260
 #endif
 

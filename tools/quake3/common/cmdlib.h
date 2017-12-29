@@ -25,8 +25,9 @@
 #define __CMDLIB__
 
 #include "bytebool.h"
+#include "globaldefs.h"
 
-#ifdef _WIN32
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4244)     // MIPS
 #pragma warning(disable : 4136)     // X86
 #pragma warning(disable : 4051)     // ALPHA
@@ -46,7 +47,7 @@
 #include <time.h>
 #include <stdarg.h>
 
-#ifdef _WIN32
+#if GDEF_COMPILER_MSVC
 
 #pragma intrinsic( memset, memcpy )
 
@@ -97,11 +98,7 @@ void ExpandWildcards( int *argc, char ***argv );
 
 double I_FloatTime( void );
 
-void    Error( const char *error, ... )
-#ifdef __GNUC__
-__attribute__( ( noreturn ) )
-#endif
-;
+void    Error( const char *error, ... ) GDEF_ATTRIBUTE_NORETURN;
 int     CheckParm( const char *check );
 
 FILE    *SafeOpenWrite( const char *filename );

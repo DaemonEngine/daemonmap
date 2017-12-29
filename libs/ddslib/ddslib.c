@@ -37,8 +37,7 @@
 
 /* dependencies */
 #include "ddslib.h"
-
-
+#include "globaldefs.h"
 
 /* endian tomfoolery */
 typedef union
@@ -48,15 +47,7 @@ typedef union
 }
 floatSwapUnion;
 
-
-#ifndef __BIG_ENDIAN__
-	#ifdef _SGI_SOURCE
-		#define __BIG_ENDIAN__
-	#endif
-#endif
-
-
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 
 int   DDSBigLong( int src ) { return src; }
 short DDSBigShort( short src ) { return src; }

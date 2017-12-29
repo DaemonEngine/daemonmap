@@ -20,6 +20,7 @@
  */
 
 #include "error.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 #include "igl.h"
@@ -29,7 +30,7 @@
 #include "preferences.h"
 
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #define UNICODE
 #include <windows.h>
 #else
@@ -63,7 +64,7 @@ void Error( const char *error, ... ){
 
 	strcat( text, "\n" );
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( GetLastError() != 0 ) {
 		LPVOID lpMsgBuf;
 		FormatMessage(

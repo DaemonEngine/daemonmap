@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "cmdlib.h"
 #include "threads.h"
+#include "globaldefs.h"
 
 #define	MAX_THREADS	64
 
@@ -99,7 +100,7 @@ WIN32
 
 ===================================================================
 */
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 
 #define	USED
 

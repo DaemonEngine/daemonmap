@@ -21,7 +21,7 @@
 
 #include "qdata.h"
 
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
  #include <windows.h>
 #endif
 

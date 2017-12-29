@@ -23,10 +23,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cmdlib.c
 
 #include "cmdlib.h"
+#include "globaldefs.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <direct.h>
 #endif
 
@@ -58,7 +60,7 @@ Mimic unix command line expansion
 #define	MAX_EX_ARGC	1024
 int		ex_argc;
 char	*ex_argv[MAX_EX_ARGC];
-#ifdef _WIN32
+#if GDEF_OS_WINDOWS
 #include "io.h"
 void ExpandWildcards (int *argc, char ***argv)
 {
@@ -305,7 +307,7 @@ double I_FloatTime (void)
 
 void Q_getwd (char *out)
 {
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
    _getcwd (out, 256);
    strcat (out, "\\");
 #else
@@ -317,7 +319,7 @@ void Q_getwd (char *out)
 
 void Q_mkdir (char *path)
 {
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if (_mkdir (path) != -1)
 		return;
 #else
@@ -830,11 +832,7 @@ int ParseNum (char *str)
 ============================================================================
 */
 
-#ifdef _SGI_SOURCE
-#define	__BIG_ENDIAN__
-#endif
-
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 
 short   LittleShort (short l)
 {

@@ -22,6 +22,8 @@
 #if !defined( INCLUDED_MULTIMON_H )
 #define INCLUDED_MULTIMON_H
 
+#include "globaldefs.h"
+
 struct WindowPosition;
 
 void PositionWindowOnPrimaryScreen( WindowPosition& position );
@@ -37,7 +39,7 @@ struct multimon_globals_t
 
 extern multimon_globals_t g_multimon_globals;
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 void MultiMon_Construct();
 void MultiMon_Destroy();
 #else

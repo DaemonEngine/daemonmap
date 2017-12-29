@@ -20,8 +20,9 @@
  */
 
 #include "hashtable.h"
+#include "globaldefs.h"
 
-#if defined( _DEBUG ) || defined( DOXYGEN )
+#if GDEF_DEBUG || defined( DOXYGEN )
 
 #include "hashfunc.h"
 

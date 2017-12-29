@@ -32,7 +32,7 @@
 #ifndef Q3MAP2_H
 #define Q3MAP2_H
 
-
+#include "globaldefs.h"
 
 /* version */
 #ifndef Q3MAP_VERSION
@@ -50,7 +50,7 @@
    ------------------------------------------------------------------------------- */
 
 /* platform-specific */
-#if defined( __linux__ ) || defined( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 	#define Q_UNIX
 #endif
 
@@ -60,7 +60,7 @@
 	#include <limits.h>
 #endif
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	#include <windows.h>
 #endif
 
@@ -93,14 +93,14 @@
    ------------------------------------------------------------------------------- */
 
 #define MAC_STATIC_HACK         0
-#if defined( __APPLE__ ) && MAC_STATIC_HACK
+#if GDEF_OS_MACOS && MAC_STATIC_HACK
 	#define MAC_STATIC          static
 #else
 	#define MAC_STATIC
 #endif
 
 #if 1
-	#ifdef WIN32
+	#if GDEF_OS_WINDOWS
 		#define Q_stricmp           stricmp
 		#define Q_strncasecmp       strnicmp
 	#else

@@ -24,9 +24,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __QE3_H__
 
 // disable data conversion warnings for gl
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4244)     // MIPS
 #pragma warning(disable : 4136)     // X86
 #pragma warning(disable : 4051)     // ALPHA
+#endif
 
 #include <windows.h>
 

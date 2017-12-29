@@ -22,10 +22,11 @@
 #if !defined( INCLUDED_MODULESYSTEM_H )
 #define INCLUDED_MODULESYSTEM_H
 
+#include "globaldefs.h"
 #include "generic/static.h"
 #include "debugging/debugging.h"
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define RADIANT_DLLEXPORT __declspec(dllexport)
 #define RADIANT_DLLIMPORT __declspec(dllimport)
 #else
@@ -145,7 +146,7 @@ ModuleRef( const char* name ) : m_table( 0 ){
 	}
 }
 Type* getTable(){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( m_table != 0, "ModuleRef::getTable: type=" << makeQuoted( typename Type::Name() ) << " version=" << makeQuoted( typename Type::Version() ) << " - module-reference used without being initialised" );
 #endif
 	return m_table;
@@ -176,7 +177,7 @@ void initialise( const char* name ){
 }
 
 Type* getTable(){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( m_table != 0, "SingletonModuleRef::getTable: type=" << makeQuoted( typename Type::Name() ) << " version=" << makeQuoted( typename Type::Version() ) << " - module-reference used without being initialised" );
 #endif
 	return m_table;

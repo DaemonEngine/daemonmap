@@ -19,13 +19,14 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "globaldefs.h"
 #include <assert.h>
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <io.h>
 #endif
 #include "md3lib.h"
 
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #define filelength(f) Q_filelength(f)
 #else
 #define filelength(f) filelength(fileno(f))

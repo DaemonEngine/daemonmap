@@ -22,11 +22,12 @@
 #if !defined( INCLUDED_VIEW_H )
 #define INCLUDED_VIEW_H
 
+#include "globaldefs.h"
 #include "cullable.h"
 #include "math/frustum.h"
 
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 #define DEBUG_CULLING
 #endif
 

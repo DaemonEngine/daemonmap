@@ -22,6 +22,8 @@
 #if !defined( INCLUDED_STRING_STRING_H )
 #define INCLUDED_STRING_STRING_H
 
+#include "globaldefs.h"
+
 /// \file
 /// C-style null-terminated-character-array string library.
 
@@ -81,7 +83,7 @@ inline bool string_greater( const char* string, const char* other ){
 /// Returns 0 if \p string is lexicographically equal to \p other after converting both to lower-case.
 /// O(n)
 inline int string_compare_nocase( const char* string, const char* other ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	return _stricmp( string, other );
 #else
 	return strcasecmp( string, other );
@@ -94,7 +96,7 @@ inline int string_compare_nocase( const char* string, const char* other ){
 /// Treats all ascii characters as lower-case during comparisons.
 /// O(n)
 inline int string_compare_nocase_n( const char* string, const char* other, std::size_t n ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	return _strnicmp( string, other, n );
 #else
 	return strncasecmp( string, other, n );

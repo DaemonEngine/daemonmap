@@ -31,6 +31,7 @@
 #if !defined( INCLUDED_GTKDLGS_H )
 #define INCLUDED_GTKDLGS_H
 
+#include "globaldefs.h"
 #include "qerplugin.h"
 #include "string/string.h"
 
@@ -47,7 +48,7 @@ void DoSides( int type, int axis );
 void DoAbout();
 
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 extern bool g_TextEditor_useWin32Editor;
 #else
 #include "string/stringfwd.h"

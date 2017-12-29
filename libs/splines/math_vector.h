@@ -22,7 +22,9 @@
 #ifndef __MATH_VECTOR_H__
 #define __MATH_VECTOR_H__
 
-#ifdef WIN32
+#include "globaldefs.h"
+
+#if GDEF_COMPILER_MSVC
 #pragma warning(disable : 4244)
 #endif
 
@@ -64,11 +66,7 @@
 float Q_fabs( float f );
 
 #ifndef ID_INLINE
-#ifdef _WIN32
-#define ID_INLINE __inline
-#else
-#define ID_INLINE inline
-#endif
+#define ID_INLINE GDEF_ATTRIBUTE_INLINE
 #endif
 
 // if this is defined, vec3 will take four elements, which may allow
@@ -98,7 +96,7 @@ static inline float idSqrt( float x ) {
 	}
 	B = x;
 
-#ifdef __GNUC__
+#if GDEF_COMPILER_GNU
 	asm ( "frsqrte %0,%1" : "=f" ( y0 ) : "f" ( B ) );
 #else
 	y0 = __frsqrte( B );

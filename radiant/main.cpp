@@ -62,6 +62,7 @@
  */
 
 #include "main.h"
+#include "globaldefs.h"
 
 #include "version.h"
 
@@ -89,7 +90,7 @@
 #include "referencecache.h"
 #include "stacktrace.h"
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <windows.h>
 #endif
 
@@ -213,12 +214,12 @@ void error_redirect( const gchar *domain, GLogLevelFlags log_level, const gchar 
     }
 }
 
-#if defined ( _DEBUG ) && defined ( WIN32 ) && defined ( _MSC_VER )
+#if GDEF_COMPILER_MSVC && GDEF_DEBUG
 #include "crtdbg.h"
 #endif
 
 void crt_init(){
-#if defined ( _DEBUG ) && defined ( WIN32 ) && defined ( _MSC_VER )
+#if GDEF_COMPILER_MSVC && GDEF_DEBUG
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 }
@@ -301,7 +302,7 @@ bool handleMessage(){
 	globalErrorStream() << m_buffer.c_str();
 	if ( !m_lock.locked() ) {
 		ScopedLock lock( m_lock );
-#if defined _DEBUG
+#if GDEF_DEBUG
 		m_buffer << "Break into the debugger?\n";
 		bool handled = ui::root.alert( m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error ) == ui::alert_response::NO;
 		m_buffer.clear();
@@ -367,7 +368,7 @@ bool check_version(){
 	// make something idiot proof and someone will make better idiots, this may be overkill
 	// let's leave it disabled in debug mode in any case
 	// http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=431
-#ifndef _DEBUG
+#if !GDEF_DEBUG
 #define CHECK_VERSION
 #endif
 #ifdef CHECK_VERSION
@@ -421,7 +422,7 @@ void create_global_pid(){
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
-#if !defined( _DEBUG )
+#if !GDEF_DEBUG
 		StringOutputStream msg( 256 );
 		msg << "Radiant failed to start properly the last time it was run.\n"
 			   "The failure may be related to current global preferences.\n"
@@ -480,7 +481,7 @@ void create_local_pid(){
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
-#if !defined( _DEBUG )
+#if !GDEF_DEBUG
 		StringOutputStream msg;
 		msg << "Radiant failed to start properly the last time it was run.\n"
 			   "The failure may be caused by current preferences.\n"
@@ -539,7 +540,7 @@ int main( int argc, char* argv[] ){
 
 	streams_init();
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	HMODULE lib;
 	lib = LoadLibrary( "dwmapi.dll" );
 	if ( lib != 0 ) {

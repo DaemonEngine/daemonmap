@@ -10,6 +10,8 @@
 #ifndef LWO2_H
 #define LWO2_H
 
+#include "globaldefs.h"
+
 /* chunk and subchunk IDs */
 
 #define LWID_( a,b,c,d ) ( ( ( a ) << 24 ) | ( ( b ) << 16 ) | ( ( c ) << 8 ) | ( d ) )
@@ -642,7 +644,7 @@ int   sgetVX( unsigned char **bp );
 float sgetF4( unsigned char **bp );
 char *sgetS0( unsigned char **bp );
 
-#ifndef __BIG_ENDIAN__
+#if !GDEF_ARCH_ENDIAN_BIG
 void revbytes( void *bp, int elsize, int elcount );
 #else
   #define revbytes( b, s, c )

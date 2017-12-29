@@ -22,6 +22,7 @@
 #if !defined( INCLUDED_IPATCH_H )
 #define INCLUDED_IPATCH_H
 
+#include "globaldefs.h"
 #include "debugging/debugging.h"
 #include "generic/constant.h"
 #include "generic/vector.h"
@@ -62,13 +63,13 @@ const_iterator end() const {
 }
 
 value_type& operator[]( std::size_t index ){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];
 }
 const value_type& operator[]( std::size_t index ) const {
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];
@@ -167,25 +168,25 @@ const_iterator end() const {
 }
 
 value_type& operator[]( std::size_t index ){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];
 }
 const value_type& operator[]( std::size_t index ) const {
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( index < size(), "array index out of bounds" );
 #endif
 	return m_data[index];
 }
 value_type& operator()( std::size_t x, std::size_t y ){
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( x < m_x && y < m_y, "array index out of bounds" );
 #endif
 	return m_data[x * m_y + y];
 }
 const value_type& operator()( std::size_t x, std::size_t y ) const {
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	ASSERT_MESSAGE( x < m_x && y < m_y, "array index out of bounds" );
 #endif
 	return m_data[x * m_y + y];

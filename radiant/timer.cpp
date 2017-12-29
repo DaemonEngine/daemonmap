@@ -20,9 +20,10 @@
  */
 
 #include "timer.h"
+#include "globaldefs.h"
 
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 
 #include <windows.h>
 
@@ -62,7 +63,7 @@ public:
 
 
 
-#elif defined( POSIX )
+#elif GDEF_OS_POSIX
 
 #include <time.h>
 #include "sys/time.h"

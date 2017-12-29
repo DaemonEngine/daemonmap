@@ -34,6 +34,7 @@
 // monitoring window for running BSP processes (and possibly various other stuff)
 
 #include "watchbsp.h"
+#include "globaldefs.h"
 
 #include <algorithm>
 
@@ -343,7 +344,7 @@ static void saxEndElement( message_info_t *data, const xmlChar *name ){
 	}
 	if ( data->recurse == data->stop_depth ) {
 		message_flush( data );
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		globalOutputStream() << "Received error msg .. shutting down..\n";
 #endif
 		GetWatchBSP()->EndMonitoringLoop();
@@ -494,7 +495,7 @@ void CWatchBSP::Reset(){
 }
 
 bool CWatchBSP::SetupListening(){
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	if ( m_pListenSocket ) {
 		globalOutputStream() << "ERROR: m_pListenSocket != NULL in CWatchBSP::SetupListening\n";
 		return false;
@@ -545,13 +546,13 @@ void CWatchBSP::DoEBeginStep(){
 }
 
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 const char *ENGINE_ATTRIBUTE = "engine_win32";
 const char *MP_ENGINE_ATTRIBUTE = "mp_engine_win32";
-#elif defined( __linux__ ) || defined ( __FreeBSD__ )
+#elif GDEF_OS_LINUX || GDEF_OS_BSD
 const char *ENGINE_ATTRIBUTE = "engine_linux";
 const char *MP_ENGINE_ATTRIBUTE = "mp_engine_linux";
-#elif defined( __APPLE__ )
+#elif GDEF_OS_MACOS
 const char *ENGINE_ATTRIBUTE = "engine_macos";
 const char *MP_ENGINE_ATTRIBUTE = "mp_engine_macos";
 #else
@@ -622,7 +623,7 @@ void CWatchBSP::RoutineProcessing(){
 #endif
 			return;
 		}
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		// some debug checks
 		if ( !m_pListenSocket ) {
 			globalErrorStream() << "ERROR: m_pListenSocket == NULL in CWatchBSP::RoutineProcessing EBeginStep state\n";
@@ -642,7 +643,7 @@ void CWatchBSP::RoutineProcessing(){
 		break;
 	case EWatching:
 	{
-#ifdef _DEBUG
+#if GDEF_DEBUG
 		// some debug checks
 		if ( !m_pInSocket ) {
 			globalErrorStream() << "ERROR: m_pInSocket == NULL in CWatchBSP::RoutineProcessing EWatching state\n";

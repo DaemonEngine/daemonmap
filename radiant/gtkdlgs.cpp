@@ -35,6 +35,7 @@
 //
 
 #include "gtkdlgs.h"
+#include "globaldefs.h"
 
 #include <gtk/gtk.h>
 
@@ -822,7 +823,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 		// trying to show later
 		text_editor.show();
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 		ui::process();
 #endif
 
@@ -837,7 +838,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 			gtk_text_buffer_place_cursor( text_buffer, &text_iter );
 		}
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 		gtk_widget_queue_draw( text_widget );
 #endif
 
@@ -1030,11 +1031,11 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const
 
 
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <gdk/gdkwin32.h>
 #endif
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 // use the file associations to open files instead of builtin Gtk editor
 bool g_TextEditor_useWin32Editor = true;
 #else
@@ -1044,7 +1045,7 @@ CopiedString g_TextEditor_editorCommand( "" );
 #endif
 
 void DoTextEditor( const char* filename, int cursorpos ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( g_TextEditor_useWin32Editor ) {
 		globalOutputStream() << "opening file '" << filename << "' (line " << cursorpos << " info ignored)\n";
 		ShellExecute( (HWND)GDK_WINDOW_HWND( gtk_widget_get_window( MainFrame_getWindow() ) ), "open", filename, 0, 0, SW_SHOW );

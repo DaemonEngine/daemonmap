@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
+#include "globaldefs.h"
 #include "cmdlib.h"
 #include "mathlib.h"
 #include "bspfile.h"
@@ -27,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "threads.h"
 #include "lbmlib.h"
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <windows.h>
 #endif
 

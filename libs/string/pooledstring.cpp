@@ -1,8 +1,9 @@
 
 #include "pooledstring.h"
+#include "globaldefs.h"
 #include "generic/static.h"
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 
 namespace ExamplePooledString
 {

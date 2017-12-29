@@ -20,6 +20,7 @@
  */
 
 #include "treemodel.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -465,7 +466,7 @@ static void graph_tree_model_tree_model_init( GtkTreeModelIface *iface ){
 }
 
 static gboolean graph_tree_model_row_draggable( GtkTreeDragSource *drag_source, GtkTreePath *path ){
-#ifdef _DEBUG
+#if GDEF_DEBUG
 	gint depth = gtk_tree_path_get_depth( path );
 #endif
 	return gtk_tree_path_get_depth( path ) > 1;

@@ -20,6 +20,7 @@
  */
 
 #include "server.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 #include "warnings.h"
@@ -89,7 +90,7 @@ void foreachModule( const char* type, int version, const Visitor& visitor ){
 };
 
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 
 #include <windows.h>
 
@@ -140,7 +141,7 @@ FunctionPointer findSymbol( const char* symbol ){
 }
 };
 
-#elif defined( POSIX )
+#elif GDEF_OS_POSIX
 
 #include <dlfcn.h>
 

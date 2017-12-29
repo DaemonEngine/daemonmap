@@ -26,6 +26,7 @@
 //
 
 #include "preferences.h"
+#include "globaldefs.h"
 
 #include <gtk/gtk.h>
 #include "environment.h"
@@ -57,7 +58,7 @@ void Global_constructPreferences( PreferencesPage& page ){
 }
 
 void Interface_constructPreferences( PreferencesPage& page ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	page.appendCheckBox( "", "Default Text Editor", g_TextEditor_useWin32Editor );
 #else
 	{
@@ -949,7 +950,7 @@ typedef FreeCaller1<const StringImportCallback&, GameMode_exportString> GameMode
 
 
 void RegisterPreferences( PreferenceSystem& preferences ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	preferences.registerPreference( "UseCustomShaderEditor", BoolImportStringCaller( g_TextEditor_useWin32Editor ), BoolExportStringCaller( g_TextEditor_useWin32Editor ) );
 #else
 	preferences.registerPreference( "UseCustomShaderEditor", BoolImportStringCaller( g_TextEditor_useCustomEditor ), BoolExportStringCaller( g_TextEditor_useCustomEditor ) );

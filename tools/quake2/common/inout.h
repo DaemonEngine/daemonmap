@@ -22,6 +22,7 @@
 #ifndef __INOUT__
 #define __INOUT__
 
+#include "globaldefs.h"
 // inout is the only stuff relying on xml, include the headers there
 #include "libxml/tree.h"
 #include "mathlib.h"
@@ -52,7 +53,7 @@ void Sys_Printf( const char *text, ... );
 void Sys_FPrintf( int flag, const char *text, ... );
 void Error( const char *error, ... );
 
-#ifdef _DEBUG
+#if GDEF_DEBUG
 #define DBG_XML 1
 #endif
 

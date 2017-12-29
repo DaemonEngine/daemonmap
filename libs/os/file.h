@@ -22,10 +22,12 @@
 #if !defined( INCLUDED_OS_FILE_H )
 #define INCLUDED_OS_FILE_H
 
+#include "globaldefs.h"
+
 /// \file
 /// \brief OS file-system querying and manipulation.
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define S_ISDIR( mode ) ( mode & _S_IFDIR )
 #include <io.h> // _access()
 #define access( path, mode ) _access( path, mode )

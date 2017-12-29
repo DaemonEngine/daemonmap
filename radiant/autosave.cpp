@@ -21,6 +21,7 @@
 
 #include <uilib/uilib.h>
 #include "autosave.h"
+#include "globaldefs.h"
 
 #include "os/file.h"
 #include "os/path.h"
@@ -36,7 +37,7 @@
 #include "preferences.h"
 
 
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 #define PATH_MAX 260
 #endif
 

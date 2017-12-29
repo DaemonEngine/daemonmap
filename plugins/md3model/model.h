@@ -22,6 +22,7 @@
 #if !defined( INCLUDED_MODEL_H )
 #define INCLUDED_MODEL_H
 
+#include "globaldefs.h"
 #include "cullable.h"
 #include "renderable.h"
 #include "selectable.h"
@@ -180,7 +181,7 @@ void render( RenderStateFlags state ) const {
 	glEnd();
 #endif
 
-#if defined( _DEBUG )
+#if GDEF_DEBUG
 	glBegin( GL_LINES );
 
 	for ( VertexBuffer<ArbitraryMeshVertex>::const_iterator i = m_vertices.begin(); i != m_vertices.end(); ++i )

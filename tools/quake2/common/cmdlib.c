@@ -22,17 +22,19 @@
 // Nurail: Swiped from quake3/common
 
 #include "cmdlib.h"
+#include "globaldefs.h"
+
 #include "mathlib.h"
 #include "inout.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <direct.h>
 #include <windows.h>
 #endif
 
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #include <unistd.h>
 #endif
 
@@ -93,7 +95,7 @@ char archivedir[1024];
 #define MAX_EX_ARGC 1024
 int ex_argc;
 char    *ex_argv[MAX_EX_ARGC];
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include "io.h"
 void ExpandWildcards( int *argc, char ***argv ){
 	struct _finddata_t fileinfo;
@@ -328,7 +330,7 @@ double I_FloatTime( void ){
 void Q_getwd( char *out ){
 	int i = 0;
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	_getcwd( out, 256 );
 	strcat( out, "\\" );
 #else
@@ -347,7 +349,7 @@ void Q_getwd( char *out ){
 
 
 void Q_mkdir( const char *path ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( _mkdir( path ) != -1 ) {
 		return;
 	}
@@ -952,11 +954,7 @@ int ParseNum( const char *str ){
    ============================================================================
  */
 
-#ifdef _SGI_SOURCE
-#define __BIG_ENDIAN__
-#endif
-
-#ifdef __BIG_ENDIAN__
+#if GDEF_ARCH_ENDIAN_BIG
 
 short   LittleShort( short l ){
 	byte b1,b2;
@@ -1128,7 +1126,7 @@ void    CreatePath( const char *path ){
 	char c;
 	char dir[1024];
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	int olddrive = -1;
 
 	if ( path[1] == ':' ) {
@@ -1151,7 +1149,7 @@ void    CreatePath( const char *path ){
 		}
 	}
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	if ( olddrive != -1 ) {
 		_chdrive( olddrive );
 	}
@@ -1177,10 +1175,10 @@ void QCopyFile( const char *from, const char *to ){
 }
 
 void Sys_Sleep( int n ){
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 	Sleep( n );
 #endif
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 	usleep( n * 1000 );
 #endif
 }

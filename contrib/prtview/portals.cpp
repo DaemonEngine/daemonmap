@@ -18,9 +18,10 @@
  */
 
 #include "portals.h"
+#include "globaldefs.h"
 #include <string.h>
 #include <stdlib.h>
-#ifndef __APPLE__
+#if !GDEF_OS_MACOS
 #include <search.h>
 #endif
 #include <stdio.h>

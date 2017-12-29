@@ -26,6 +26,7 @@
 #ifndef __CMDLIB__
 #define __CMDLIB__
 
+#include "globaldefs.h"
 #include <time.h>
 
 
@@ -78,7 +79,7 @@ bool Q_Exec( const char *cmd, char *cmdline, const char *execdir, bool bCreateCo
 
 // Q_mkdir
 // returns true if succeeded in creating directory
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <direct.h>
 inline bool Q_mkdir( const char* name ){
 	return _mkdir( name ) != -1;

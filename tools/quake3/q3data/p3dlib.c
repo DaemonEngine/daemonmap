@@ -20,8 +20,9 @@
  */
 
 #include "p3dlib.h"
+#include "globaldefs.h"
 
-#ifdef WIN32
+#if GDEF_OS_WINDOWS
 #include <io.h>
 #endif
 #include <stdlib.h>
@@ -30,7 +31,7 @@
 
 #define MAX_POLYSETS 64
 
-#if defined ( __linux__ ) || defined ( __APPLE__ )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 	#include "cmdlib.h"
 	#define _strcmpi Q_stricmp
 	#define strlwr strlower

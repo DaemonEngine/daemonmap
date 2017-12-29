@@ -22,7 +22,9 @@
 #if !defined ( INCLUDED_WARNINGS_H )
 #define INCLUDED_WARNINGS_H
 
-#if _MSC_VER > 1000 && defined( WIN32 )
+#include "globaldefs.h"
+
+#if GDEF_COMPILER_MSVC && _MSC_VER > 1000
 #pragma warning(disable:4355) // 'this' : used in base member initializer list
 #pragma warning(disable:4503) // '[symbol]' : decorated name length exceeded, name was truncated
 #endif

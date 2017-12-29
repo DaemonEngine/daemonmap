@@ -31,6 +31,8 @@
 #ifndef __STR__
 #define __STR__
 
+#include "globaldefs.h"
+
 //
 // class Str
 // loose replacement for CString from MFC
@@ -44,7 +46,7 @@
 
 #include <cstdio>
 
-#ifdef _MSC_VER
+#if GDEF_COMPILER_MSVC
 #define strcasecmp strcmpi
 #if _MSC_VER < 1400
 #define vsnprintf std::vsnprintf
@@ -67,7 +69,7 @@ inline char* Q_StrDup( const char* pStr ){
 	return strcpy( new char[strlen( pStr ) + 1], pStr );
 }
 
-#if !defined( WIN32 )
+#if !GDEF_OS_WINDOWS
 #define strcmpi strcasecmp
 #define stricmp strcasecmp
 #define strnicmp strncasecmp

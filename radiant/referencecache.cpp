@@ -20,6 +20,7 @@
  */
 
 #include "referencecache.h"
+#include "globaldefs.h"
 
 #include "debugging/debugging.h"
 
@@ -206,7 +207,7 @@ NodeSmartReference ModelResource_load( ModelLoader* loader, const char* name ){
 
 
 inline hash_t path_hash( const char* path, hash_t previous = 0 ){
-#if defined( WIN32 )
+#if GDEF_OS_WINDOWS
 	return string_hash_nocase( path, previous );
 #else // UNIX
 	return string_hash( path, previous );
