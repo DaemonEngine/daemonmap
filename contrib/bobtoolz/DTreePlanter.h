@@ -29,13 +29,13 @@
 #include "mathlib.h"
 #include "misc.h"
 
-#define MAX_QPATH 64
+const int MAX_QPATH = 64;
 
 typedef struct treeModel_s {
 	char name[MAX_QPATH];
 } treeModel_t;
 
-#define MAX_TP_MODELS 256
+const int MAX_TP_MODELS = 256;
 
 class DTreePlanter {
 MouseEventHandlerId m_mouseDown;

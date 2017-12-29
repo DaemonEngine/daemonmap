@@ -546,14 +546,14 @@ void CWatchBSP::DoEBeginStep(){
 
 
 #if defined( WIN32 )
-#define ENGINE_ATTRIBUTE "engine_win32"
-#define MP_ENGINE_ATTRIBUTE "mp_engine_win32"
+const char *ENGINE_ATTRIBUTE = "engine_win32";
+const char *MP_ENGINE_ATTRIBUTE = "mp_engine_win32";
 #elif defined( __linux__ ) || defined ( __FreeBSD__ )
-#define ENGINE_ATTRIBUTE "engine_linux"
-#define MP_ENGINE_ATTRIBUTE "mp_engine_linux"
+const char *ENGINE_ATTRIBUTE = "engine_linux";
+const char *MP_ENGINE_ATTRIBUTE = "mp_engine_linux";
 #elif defined( __APPLE__ )
-#define ENGINE_ATTRIBUTE "engine_macos"
-#define MP_ENGINE_ATTRIBUTE "mp_engine_macos"
+const char *ENGINE_ATTRIBUTE = "engine_macos";
+const char *MP_ENGINE_ATTRIBUTE = "mp_engine_macos";
 #else
 #error "unsupported platform"
 #endif

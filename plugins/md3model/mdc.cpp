@@ -34,7 +34,7 @@
 
 const unsigned char MDC_IDENT[4] = { 'I', 'D', 'P', 'C', };
 const float MDC_XYZ_SCALE = 0.015625f;
-#define MAX_QPATH           64      // max length of a quake game pathname
+const int MAX_QPATH = 64;      // max length of a quake game pathname
 
 typedef float float3[3];
 

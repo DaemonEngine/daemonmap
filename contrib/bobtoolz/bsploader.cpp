@@ -24,9 +24,9 @@ dbrush_t          *dbrushes =             NULL;
 dbrushside_t    *dbrushsides =      NULL;
 int                 *dleafbrushes =     NULL;
 
-#define BSP_IDENT   ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'B' << 8 ) + 'I' )
-#define Q3_BSP_VERSION          46
-#define WOLF_BSP_VERSION            47
+const int BSP_IDENT = ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'B' << 8 ) + 'I' );
+const int Q3_BSP_VERSION = 46;
+const int WOLF_BSP_VERSION = 47;
 
 /*
    ================

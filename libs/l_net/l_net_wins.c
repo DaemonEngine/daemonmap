@@ -40,22 +40,19 @@
 
 #define WinError WinPrint
 
-#define qtrue   1
-#define qfalse  0
-
 typedef struct tag_error_struct
 {
 	int errnum;
 	LPSTR errstr;
 } ERROR_STRUCT;
 
-#define NET_NAMELEN         64
+const int NET_NAMELEN = 64;
 
 char my_tcpip_address[NET_NAMELEN];
 
-#define DEFAULTnet_hostport 26000
+const int DEFAULTnet_hostport = 26000;
 
-#define MAXHOSTNAMELEN      256
+const int MAXHOSTNAMELEN = 256;
 
 static int net_acceptsocket = -1;       // socket for fielding new connections
 static int net_controlsocket;

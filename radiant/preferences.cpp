@@ -509,7 +509,7 @@ static void OnButtonClean( ui::Widget widget, gpointer data ){
    ========
  */
 
-#define PREFS_LOCAL_FILENAME "local.pref"
+const char *PREFS_LOCAL_FILENAME = "local.pref";
 
 void PrefsDlg::Init(){
 	// m_global_rc_path has been set above

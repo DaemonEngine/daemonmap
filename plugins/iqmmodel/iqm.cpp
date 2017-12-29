@@ -75,27 +75,27 @@ void istream_read_iqmPos(PointerInputStream& inputStream, iqmPos_t& iqmPos)
   iqmPos.v[2] = istream_read_float32_le(inputStream);
 }
 
-#define IQM_POSITION	    0
-#define IQM_TEXCOORD        1
-#define IQM_NORMAL          2
-#define IQM_TANGENT         3
-#define IQM_BLENDINDEXES    4
-#define IQM_BLENDWEIGHTS    5
-#define IQM_COLOR	        6
-#define IQM_CUSTOM          0x10
+const int IQM_POSITION	    = 0;
+const int IQM_TEXCOORD        = 1;
+const int IQM_NORMAL          = 2;
+const int IQM_TANGENT         = 3;
+const int IQM_BLENDINDEXES    = 4;
+const int IQM_BLENDWEIGHTS    = 5;
+const int IQM_COLOR	        = 6;
+const int IQM_CUSTOM          = 0x10;
 
-#define IQM_BYTE    0
-#define IQM_UBYTE   1
-#define IQM_SHORT   2
-#define IQM_USHORT  3
-#define IQM_INT	    4
-#define IQM_UINT    5
-#define IQM_HALF    6
-#define IQM_FLOAT   7
-#define IQM_DOUBLE  8
+const int IQM_BYTE    = 0;
+const int IQM_UBYTE   = 1;
+const int IQM_SHORT   = 2;
+const int IQM_USHORT  = 3;
+const int IQM_INT	    = 4;
+const int IQM_UINT    = 5;
+const int IQM_HALF    = 6;
+const int IQM_FLOAT   = 7;
+const int IQM_DOUBLE  = 8;
 
 // animflags
-#define IQM_LOOP 1
+const int IQM_LOOP = 1;
 
 typedef struct iqmHeader_s
 {

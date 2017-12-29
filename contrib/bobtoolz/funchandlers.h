@@ -28,22 +28,22 @@ extern DTrainDrawer* g_TrainView;
 extern DTreePlanter* g_TreePlanter;
 
 // intersect stuff
-#define BRUSH_OPT_WHOLE_MAP 0
-#define BRUSH_OPT_SELECTED  1
+const int BRUSH_OPT_WHOLE_MAP = 0;
+const int BRUSH_OPT_SELECTED  = 1;
 
 // defines for stairs
-#define MOVE_NORTH  0
-#define MOVE_SOUTH  1
-#define MOVE_EAST   2
-#define MOVE_WEST   3
+const int MOVE_NORTH  = 0;
+const int MOVE_SOUTH  = 1;
+const int MOVE_EAST   = 2;
+const int MOVE_WEST   = 3;
 
-#define STYLE_ORIGINAL  0
-#define STYLE_BOB       1
-#define STYLE_CORNER    2
+const int STYLE_ORIGINAL  = 0;
+const int STYLE_BOB       = 1;
+const int STYLE_CORNER    = 2;
 
 // defines for doors
-#define DIRECTION_NS    0
-#define DIRECTION_EW    1
+const int DIRECTION_NS    = 0;
+const int DIRECTION_EW    = 1;
 
 // help
 void LoadLists();

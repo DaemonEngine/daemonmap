@@ -29,6 +29,8 @@
 // Notes:
 //===========================================================================
 
+#include "bytebool.h"
+
 int  WINS_Init( void );
 void WINS_Shutdown( void );
 char *WINS_MyAddress( void );

@@ -143,7 +143,7 @@ void DBobView::SetPath( vec3_t *pPath ){
 	path = pPath;
 }
 
-#define LOCAL_GRAVITY -800.0f
+const float LOCAL_GRAVITY = -800.0f;
 
 bool DBobView::CalculateTrajectory( vec3_t start, vec3_t apex, float multiplier, int points, float varGravity ){
 	if ( apex[2] <= start[2] ) {

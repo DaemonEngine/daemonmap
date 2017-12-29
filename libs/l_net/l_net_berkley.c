@@ -47,13 +47,10 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdio.h>
-#define SOCKET_ERROR -1
-#define INVALID_SOCKET -1
+const int SOCKET_ERROR = -1;
+const int INVALID_SOCKET = -1;
 
 #define WinError WinPrint
-
-#define qtrue   1
-#define qfalse  0
 
 #define ioctlsocket ioctl
 #define closesocket close
@@ -80,9 +77,9 @@ typedef struct tag_error_struct
 
 static char my_tcpip_address[NET_NAMELEN];
 
-#define DEFAULTnet_hostport 26000
+const int DEFAULTnet_hostport = 26000;
 
-#define MAXHOSTNAMELEN      256
+const int MAXHOSTNAMELEN = 256;
 
 static int net_acceptsocket = -1;       // socket for fielding new connections
 static int net_controlsocket;

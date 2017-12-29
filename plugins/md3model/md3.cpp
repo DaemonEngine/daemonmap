@@ -32,7 +32,7 @@
 #include "md3normals.h"
 
 // the maximum size of game reletive pathnames
-#define MAX_QPATH       64
+const int MAX_QPATH = 64;
 
 /*
    ========================================================================
@@ -43,19 +43,19 @@
  */
 
 const unsigned char MD3_IDENT[4] = { 'I', 'D', 'P', '3', };
-#define MD3_VERSION         15
+const int MD3_VERSION = 15;
 
 // limits
-#define MD3_MAX_LODS        4
-#define MD3_MAX_TRIANGLES   8192    // per surface
-#define MD3_MAX_VERTS       4096    // per surface
-#define MD3_MAX_SHADERS     256     // per surface
-#define MD3_MAX_FRAMES      1024    // per model
-#define MD3_MAX_SURFACES    32      // per model
-#define MD3_MAX_TAGS        16      // per frame
+const int MD3_MAX_LODS        = 4;
+const int MD3_MAX_TRIANGLES   = 8192;    // per surface
+const int MD3_MAX_VERTS       = 4096;    // per surface
+const int MD3_MAX_SHADERS     = 256;     // per surface
+const int MD3_MAX_FRAMES      = 1024;    // per model
+const int MD3_MAX_SURFACES    = 32;      // per model
+const int MD3_MAX_TAGS        = 16;      // per frame
 
 // vertex scales
-#define MD3_XYZ_SCALE       ( 1.f / 64 )
+const float MD3_XYZ_SCALE = ( 1.f / 64 );
 
 typedef float float3[3];
 

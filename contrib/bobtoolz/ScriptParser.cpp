@@ -65,7 +65,7 @@ const char* CScriptParser::MakeToken( const char* pToken ) {
 	return m_pToken;
 }
 
-#define MAX_TOKEN_STRING 1024
+const int MAX_TOKEN_STRING = 1024;
 // Should NEVER return NULL
 const char* CScriptParser::GetToken( bool bAllowLinebreaks ) {
 	int c = 0, len;

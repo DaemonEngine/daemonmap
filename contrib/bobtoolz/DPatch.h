@@ -47,10 +47,10 @@ class Node;
 class Instance;
 }
 
-#define MAX_PATCH_WIDTH 32
-#define MAX_PATCH_HEIGHT 32
-#define MIN_PATCH_WIDTH 3
-#define MIN_PATCH_HEIGHT 3
+const int MAX_PATCH_WIDTH = 32;
+const int MAX_PATCH_HEIGHT = 32;
+const int MIN_PATCH_WIDTH = 3;
+const int MIN_PATCH_HEIGHT = 3;
 
 class DPatch
 {

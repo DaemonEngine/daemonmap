@@ -23,7 +23,7 @@
    read requests until flen is reset.
    ====================================================================== */
 
-#define FLEN_ERROR INT_MIN
+const int FLEN_ERROR = INT_MIN;
 
 static int flen;
 

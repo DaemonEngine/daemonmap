@@ -39,7 +39,7 @@
 #include "generic/object.h"
 
 
-#define PARSE_ERROR "XML PARSE ERROR"
+const char *PARSE_ERROR = "XML PARSE ERROR";
 
 
 inline XMLImporter* Node_getXMLImporter( scene::Node& node ){

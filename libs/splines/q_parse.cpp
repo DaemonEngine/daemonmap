@@ -45,7 +45,7 @@ typedef struct {
 	char parseFile[MAX_QPATH];
 } parseInfo_t;
 
-#define MAX_PARSE_INFO  16
+const int MAX_PARSE_INFO = 16;
 static parseInfo_t parseInfo[MAX_PARSE_INFO];
 static int parseInfoNum;
 static parseInfo_t  *pi = &parseInfo[0];

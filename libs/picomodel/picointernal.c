@@ -32,13 +32,6 @@
 
    ----------------------------------------------------------------------------- */
 
-
-
-/* marker */
-#define PICOINTERNAL_C
-
-
-
 /* todo:
  * - fix p->curLine for parser routines. increased twice
  */

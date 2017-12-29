@@ -36,29 +36,21 @@
    Nurail: Used pm_md3.c (Randy Reddig) as a template.
  */
 
-
-/* marker */
-#define PM_MD2_C
-
 /* dependencies */
 #include "picointernal.h"
-
+#include "bytebool.h"
 
 /* md2 model format */
-#define MD2_MAGIC               "IDP2"
-#define MD2_VERSION             8
+const char *MD2_MAGIC             = "IDP2";
+const int MD2_VERSION             = 8;
 
-#define MD2_NUMVERTEXNORMALS    162
-#define MD2_MAX_SKINNAME        64
-#define MD2_MAX_TRIANGLES       4096
-#define MD2_MAX_VERTS           2048
-#define MD2_MAX_FRAMES          512
-#define MD2_MAX_MD2SKINS        32
-#define MD2_MAX_SKINNAME        64
+#define MD2_NUMVERTEXNORMALS 162
 
-#ifndef byte
-	#define byte unsigned char
-#endif
+const int MD2_MAX_TRIANGLES       = 4096;
+const int MD2_MAX_VERTS           = 2048;
+const int MD2_MAX_FRAMES          = 512;
+const int MD2_MAX_MD2SKINS        = 32;
+const int MD2_MAX_SKINNAME        = 64;
 
 typedef struct index_LUT_s
 {

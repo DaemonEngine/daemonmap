@@ -23,7 +23,7 @@
 
 //#include "interfaces/IScriptParser.h"
 
-#define SP_MAX_BREAKCHARS 16
+const int SP_MAX_BREAKCHARS = 16;
 
 class CScriptParser //: public IScriptParser
 {

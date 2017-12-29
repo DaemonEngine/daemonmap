@@ -92,7 +92,7 @@ inline bool EntityClassFGD_parseToken( Tokeniser& tokeniser, const char* token )
 	return string_equal( tokeniser.getToken(), token );
 }
 
-#define PARSE_ERROR "error parsing entity class definition"
+const char *PARSE_ERROR = "error parsing entity class definition";
 
 void EntityClassFGD_parseSplitString( Tokeniser& tokeniser, CopiedString& string ){
 	StringOutputStream buffer( 256 );

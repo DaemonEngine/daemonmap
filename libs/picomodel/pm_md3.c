@@ -32,24 +32,17 @@
 
    ----------------------------------------------------------------------------- */
 
-
-
-/* marker */
-#define PM_MD3_C
-
-
-
 /* dependencies */
 #include "picointernal.h"
 
 
 
 /* md3 model format */
-#define MD3_MAGIC           "IDP3"
-#define MD3_VERSION         15
+const char *MD3_MAGIC = "IDP3";
+const int MD3_VERSION = 15;
 
 /* md3 vertex scale */
-#define MD3_SCALE         ( 1.0f / 64.0f )
+const float MD3_SCALE = ( 1.0f / 64.0f );
 
 /* md3 model frame information */
 typedef struct md3Frame_s

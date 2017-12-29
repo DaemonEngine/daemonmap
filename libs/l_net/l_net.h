@@ -39,11 +39,7 @@
 extern "C" {
 #endif
 
-#ifndef __BYTEBOOL__
-#define __BYTEBOOL__
-typedef enum { qfalse, qtrue } qboolean;
-typedef unsigned char byte;
-#endif
+#include "bytebool.h"
 
 typedef struct address_s
 {

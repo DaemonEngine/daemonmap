@@ -32,13 +32,6 @@
 
    ----------------------------------------------------------------------------- */
 
-
-
-/* marker */
-#define PICOMODEL_C
-
-
-
 /* dependencies */
 #include "picointernal.h"
 
@@ -1426,7 +1419,7 @@ int PicoGetSurfaceSpecial( picoSurface_t *surface, int num ){
 
 /* hashtable code for faster vertex lookups */
 //#define HASHTABLE_SIZE 32768 // 2048			/* power of 2, use & */
-#define HASHTABLE_SIZE 7919 // 32749 // 2039    /* prime, use % */
+const int HASHTABLE_SIZE = 7919; // 32749 // 2039    /* prime, use % */
 
 int PicoGetHashTableSize( void ){
 	return HASHTABLE_SIZE;

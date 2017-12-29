@@ -32,11 +32,6 @@
 
    ----------------------------------------------------------------------------- */
 
-
-
-/* marker */
-#define PM_OBJ_C
-
 /* dependencies */
 #include "picointernal.h"
 
@@ -135,7 +130,7 @@ static int _obj_canload( PM_PARAMS_CANLOAD ){
  *   allocates - and reallocates as soon as required -
  *   my vertex data array in even steps.
  */
-#define SIZE_OBJ_STEP  4096
+const int SIZE_OBJ_STEP = 4096;
 
 static TObjVertexData *SizeObjVertexData(
 	TObjVertexData *vertexData, int reqEntries,

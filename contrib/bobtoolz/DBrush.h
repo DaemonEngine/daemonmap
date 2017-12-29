@@ -44,9 +44,9 @@ class Node;
 class Instance;
 }
 
-#define POINT_IN_BRUSH  0
-#define POINT_ON_BRUSH  1
-#define POINT_OUT_BRUSH 2
+const int POINT_IN_BRUSH  = 0;
+const int POINT_ON_BRUSH  = 1;
+const int POINT_OUT_BRUSH = 2;
 
 class DBrush
 {

@@ -1,24 +1,24 @@
 
 #include "mathlib.h"
 
-#define LUMP_ENTITIES       0
-#define LUMP_SHADERS        1
-#define LUMP_PLANES         2
-#define LUMP_NODES          3
-#define LUMP_LEAFS          4
-#define LUMP_LEAFSURFACES   5
-#define LUMP_LEAFBRUSHES    6
-#define LUMP_MODELS         7
-#define LUMP_BRUSHES        8
-#define LUMP_BRUSHSIDES     9
-#define LUMP_DRAWVERTS      10
-#define LUMP_DRAWINDEXES    11
-#define LUMP_FOGS           12
-#define LUMP_SURFACES       13
-#define LUMP_LIGHTMAPS      14
-#define LUMP_LIGHTGRID      15
-#define LUMP_VISIBILITY     16
-#define HEADER_LUMPS        17
+const int LUMP_ENTITIES       = 0;
+const int LUMP_SHADERS        = 1;
+const int LUMP_PLANES         = 2;
+const int LUMP_NODES          = 3;
+const int LUMP_LEAFS          = 4;
+const int LUMP_LEAFSURFACES   = 5;
+const int LUMP_LEAFBRUSHES    = 6;
+const int LUMP_MODELS         = 7;
+const int LUMP_BRUSHES        = 8;
+const int LUMP_BRUSHSIDES     = 9;
+const int LUMP_DRAWVERTS      = 10;
+const int LUMP_DRAWINDEXES    = 11;
+const int LUMP_FOGS           = 12;
+const int LUMP_SURFACES       = 13;
+const int LUMP_LIGHTMAPS      = 14;
+const int LUMP_LIGHTGRID      = 15;
+const int LUMP_VISIBILITY     = 16;
+const int HEADER_LUMPS        = 17;
 
 typedef struct {
 	int fileofs, filelen;
@@ -106,10 +106,10 @@ typedef enum {
 	MST_FLARE
 } mapSurfaceType_t;
 
-#define MAX_MAP_VISIBILITY  0x200000
-#define MAX_MAP_NODES       0x20000
-#define MAX_MAP_PLANES      0x20000
-#define MAX_MAP_LEAFS       0x20000
+const int MAX_MAP_VISIBILITY  = 0x200000;
+const int MAX_MAP_NODES       = 0x20000;
+const int MAX_MAP_PLANES      = 0x20000;
+const int MAX_MAP_LEAFS       = 0x20000;
 
 extern int numVisBytes;
 extern int numleafs;

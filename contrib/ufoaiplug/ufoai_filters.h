@@ -25,18 +25,18 @@ void filter_actorclip( void );
 void filter_weaponclip( void );
 void filter_nodraw( void );
 
-#define SURF_NODRAW 0x80
+const int SURF_NODRAW = 0x80;
 
-#define CONTENTS_LEVEL8 0x8000
-#define CONTENTS_LEVEL7 0x4000
-#define CONTENTS_LEVEL6 0x2000
-#define CONTENTS_LEVEL5 0x1000
-#define CONTENTS_LEVEL4 0x0800
-#define CONTENTS_LEVEL3 0x0400
-#define CONTENTS_LEVEL2 0x0200
-#define CONTENTS_LEVEL1 0x0100
-#define CONTENTS_ACTORCLIP 0x10000
-#define CONTENTS_WEAPONCLIP 0x2000000
-#define CONTENTS_STEPON 0x40000000
+const int CONTENTS_LEVEL8 = 0x8000;
+const int CONTENTS_LEVEL7 = 0x4000;
+const int CONTENTS_LEVEL6 = 0x2000;
+const int CONTENTS_LEVEL5 = 0x1000;
+const int CONTENTS_LEVEL4 = 0x0800;
+const int CONTENTS_LEVEL3 = 0x0400;
+const int CONTENTS_LEVEL2 = 0x0200;
+const int CONTENTS_LEVEL1 = 0x0100;
+const int CONTENTS_ACTORCLIP = 0x10000;
+const int CONTENTS_WEAPONCLIP = 0x2000000;
+const int CONTENTS_STEPON = 0x40000000;
 
 #endif

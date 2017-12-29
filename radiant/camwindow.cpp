@@ -527,11 +527,11 @@ typedef ReferenceCaller<camera_t, &Camera_MoveDown_KeyDown> FreeMoveCameraMoveDo
 typedef ReferenceCaller<camera_t, &Camera_MoveDown_KeyUp> FreeMoveCameraMoveDownKeyUpCaller;
 
 
-#define SPEED_MOVE 32
-#define SPEED_TURN 22.5
-#define MIN_CAM_SPEED 10
-#define MAX_CAM_SPEED 610
-#define CAM_SPEED_STEP 50
+const float SPEED_MOVE = 32;
+const float SPEED_TURN = 22.5;
+const float MIN_CAM_SPEED = 10;
+const float MAX_CAM_SPEED = 610;
+const float CAM_SPEED_STEP = 50;
 
 void Camera_MoveForward_Discrete( camera_t& camera ){
 	Camera_Move_updateAxes( camera );

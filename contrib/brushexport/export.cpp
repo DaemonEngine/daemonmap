@@ -12,7 +12,7 @@
 #include "../../radiant/brush.h"
 
 // for limNames
-#define MAX_MATERIAL_NAME 20
+const int MAX_MATERIAL_NAME = 20;
 
 /*
     Abstract baseclass for modelexporters

@@ -426,7 +426,7 @@ MapQ2Module g_MapQ2Module;
 
 
 
-#define PARSE_ERROR "error parsing VMF"
+const char *PARSE_ERROR = "error parsing VMF";
 
 inline void parseToken( Tokeniser& tokeniser, const char* token ){
 	ASSERT_MESSAGE( Tokeniser_parseToken( tokeniser, token ), "error parsing vmf: token not found: " << makeQuoted( token ) );

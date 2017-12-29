@@ -40,17 +40,16 @@ typedef unsigned char byte;
 
    ========================================================================
  */
-#define MD2_NUMVERTEXNORMALS 162
-#define MD2_MAX_SKINNAME    64
+const int MD2_NUMVERTEXNORMALS = 162;
 
 const unsigned char MD2_IDENT[4] = { 'I', 'D', 'P', '2', };
-#define MD2_VERSION 8
+const int MD2_VERSION = 8;
 
-#define MD2_MAX_TRIANGLES   4096
-#define MD2_MAX_VERTS       2048
-#define MD2_MAX_FRAMES      512
-#define MD2_MAX_MD2SKINS    32
-#define MD2_MAX_SKINNAME    64
+const int MD2_MAX_TRIANGLES   = 4096;
+const int MD2_MAX_VERTS       = 2048;
+const int MD2_MAX_FRAMES      = 512;
+const int MD2_MAX_MD2SKINS    = 32;
+const int MD2_MAX_SKINNAME    = 64;
 
 typedef struct
 {
@@ -89,11 +88,11 @@ void istream_read_md2XyzNormal( PointerInputStream& inputStream, md2XyzNormal_t&
 	inputStream.read( &xyz.lightnormalindex, 1 );
 }
 
-#define MD2_XYZNORMAL_V0   0
-#define MD2_XYZNORMAL_V1   1
-#define MD2_XYZNORMAL_V2   2
-#define MD2_XYZNORMAL_LNI  3
-#define MD2_XYZNORMAL_SIZE 4
+const int MD2_XYZNORMAL_V0   = 0;
+const int MD2_XYZNORMAL_V1   = 1;
+const int MD2_XYZNORMAL_V2   = 2;
+const int MD2_XYZNORMAL_LNI  = 3;
+const int MD2_XYZNORMAL_SIZE = 4;
 
 typedef struct
 {

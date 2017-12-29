@@ -66,7 +66,7 @@ typedef struct {
 
 typedef my_source_mgr * my_src_ptr;
 
-#define INPUT_BUF_SIZE  4096    /* choose an efficiently fread'able size */
+const int INPUT_BUF_SIZE = 4096;    /* choose an efficiently fread'able size */
 
 
 /*

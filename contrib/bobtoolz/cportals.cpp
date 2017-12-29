@@ -24,8 +24,8 @@
 
 #include "misc.h"
 
-#define LINE_BUF 1000
-#define MSG_PREFIX "bobToolz plugin: "
+const int LINE_BUF = 1000;
+const char *MSG_PREFIX = "bobToolz plugin: ";
 
 // these classes are far less of a mess than my code was,
 // thanq to G.DeWan 4 the prtview source on which it was based
@@ -118,7 +118,7 @@ void CPortals::Load(){
 
 	Purge();
 
-	globalOutputStream() << MSG_PREFIX "Loading portal file " << fn << ".\n";
+	globalOutputStream() << MSG_PREFIX << "Loading portal file " << fn << ".\n";
 
 	FILE *in;
 

@@ -63,8 +63,8 @@ vec3_t* p;
 vec3_t clr;
 };
 
-#define MAX_POINTS_ON_WINDING   64
+const int MAX_POINTS_ON_WINDING = 64;
 
-#define ON_EPSILON  0.01
+const double ON_EPSILON = 0.01;
 
 #endif // !defined(AFX_DWINDING_H__35B2C524_F0A7_11D4_ACF7_004095A18133__INCLUDED_)

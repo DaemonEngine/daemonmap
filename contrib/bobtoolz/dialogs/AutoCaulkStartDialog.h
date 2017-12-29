@@ -26,9 +26,9 @@
 // AutoCaulkStartDialog.h : header file
 //
 
-#define MODE_AC_NORMAL          0
-#define MODE_AC_BUILD_MINI_PRT  1
-#define MODE_AC_SUPER           2
+const int MODE_AC_NORMAL          = 0;
+const int MODE_AC_BUILD_MINI_PRT  = 1;
+const int MODE_AC_SUPER           = 2;
 
 /////////////////////////////////////////////////////////////////////////////
 // CAutoCaulkStartDialog dialog

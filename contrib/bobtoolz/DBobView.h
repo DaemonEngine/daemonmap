@@ -32,8 +32,8 @@
 class DListener;
 class Shader;
 
-#define BOUNDS_ALL  0
-#define BOUNDS_APEX 1
+const int BOUNDS_ALL  = 0;
+const int BOUNDS_APEX = 1;
 
 #if _MSC_VER > 1000
 #pragma once

@@ -296,7 +296,7 @@ void popElement( const char* name ){
 };
 
 typedef std::pair<CopiedString, Build> BuildPair;
-#define SEPARATOR_STRING "-"
+const char *SEPARATOR_STRING = "-";
 static bool is_separator( const BuildPair &p ){
 	if ( !string_equal( p.first.c_str(), SEPARATOR_STRING ) ) {
 		return false;

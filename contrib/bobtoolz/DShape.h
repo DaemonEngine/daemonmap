@@ -35,7 +35,7 @@ class DBrush;
 class DEntity;
 
 // defines for polygon stuff
-#define MAX_POLYGON_FACES   128
+const int MAX_POLYGON_FACES = 128;
 
 extern bool bFacesAll[];
 

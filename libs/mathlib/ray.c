@@ -58,7 +58,7 @@ vec_t ray_intersect_point( const ray_t *ray, const vec3_t point, vec_t epsilon, 
 
 // Tomas Moller and Ben Trumbore. Fast, minimum storage ray-triangle intersection. Journal of graphics tools, 2(1):21-28, 1997
 
-#define EPSILON 0.000001
+const double EPSILON = 0.000001;
 
 vec_t ray_intersect_triangle( const ray_t *ray, qboolean bCullBack, const vec3_t vert0, const vec3_t vert1, const vec3_t vert2 ){
 	float edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];

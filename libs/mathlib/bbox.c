@@ -166,10 +166,10 @@ int aabb_test_plane( const aabb_t *aabb, const float *plane ){
    from "Graphics Gems", Academic Press, 1990
  */
 
-#define NUMDIM  3
-#define RIGHT   0
-#define LEFT    1
-#define MIDDLE  2
+const int NUMDIM  = 3;
+const int RIGHT   = 0;
+const int LEFT    = 1;
+const int MIDDLE  = 2;
 
 int aabb_intersect_ray( const aabb_t *aabb, const ray_t *ray, vec3_t intersection ){
 	int inside = 1;

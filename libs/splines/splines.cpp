@@ -43,7 +43,7 @@ float Q_fabs( float f ) {
 //		Certainly better ways to do this, but this lets
 //		me get underway quickly with ents that need spline
 //		targets.
-#define MAX_CAMERAS 64
+const int MAX_CAMERAS = 64;
 
 idCameraDef camera[MAX_CAMERAS];
 
@@ -638,8 +638,8 @@ bool idCameraDef::waitEvent( int index ) {
 }
 
 
-#define NUM_CCELERATION_SEGS 10
-#define CELL_AMT 5
+const int NUM_CCELERATION_SEGS = 10;
+const int CELL_AMT = 5;
 
 void idCameraDef::buildCamera() {
 	int i;

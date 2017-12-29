@@ -47,7 +47,7 @@ DWinding::~DWinding(){
 // Implementation
 //////////////////////////////////////////////////////////////////////
 
-#define BOGUS_RANGE 4096
+const int BOGUS_RANGE = 4096;
 
 void DWinding::AllocWinding( int points ){
 	numpoints = points;

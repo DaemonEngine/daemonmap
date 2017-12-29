@@ -52,7 +52,7 @@ static void close_window( GtkWidget *widget, gpointer data ){
 
 /* =============================== */
 
-#define NUM_TOOLBARBUTTONS 12
+const int NUM_TOOLBARBUTTONS = 12;
 
 /**
  * @brief

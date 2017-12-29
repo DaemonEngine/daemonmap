@@ -28,8 +28,8 @@
 #include "bytestreamutils.h"
 #include "imagelib.h"
 
-#define QUAKE2_WAL   0
-#define HERETIC2_M8  1
+const int QUAKE2_WAL   = 0;
+const int HERETIC2_M8  = 1;
 
 typedef unsigned char byte;
 

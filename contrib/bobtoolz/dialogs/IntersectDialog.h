@@ -26,8 +26,8 @@
 // IntersectDialog.h : header file
 //
 
-#define BRUSH_OPT_WHOLE_MAP 0
-#define BRUSH_OPT_SELECTED  1
+const int BRUSH_OPT_WHOLE_MAP = 0;
+const int BRUSH_OPT_SELECTED  = 1;
 
 /////////////////////////////////////////////////////////////////////////////
 // CIntersectDialog dialog

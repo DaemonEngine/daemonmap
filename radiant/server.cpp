@@ -93,7 +93,7 @@ void foreachModule( const char* type, int version, const Visitor& visitor ){
 
 #include <windows.h>
 
-#define FORMAT_BUFSIZE 2048
+const int FORMAT_BUFSIZE = 2048;
 const char* FormatGetLastError(){
 	static char buf[FORMAT_BUFSIZE];
 	FormatMessage(

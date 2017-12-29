@@ -1545,14 +1545,14 @@ void RenderablePatchSolid::RenderNormals() const {
 	glEnd();
 }
 
-#define DEGEN_0a  0x01
-#define DEGEN_1a  0x02
-#define DEGEN_2a  0x04
-#define DEGEN_0b  0x08
-#define DEGEN_1b  0x10
-#define DEGEN_2b  0x20
-#define SPLIT     0x40
-#define AVERAGE   0x80
+const int DEGEN_0a  = 0x01;
+const int DEGEN_1a  = 0x02;
+const int DEGEN_2a  = 0x04;
+const int DEGEN_0b  = 0x08;
+const int DEGEN_1b  = 0x10;
+const int DEGEN_2b  = 0x20;
+const int SPLIT     = 0x40;
+const int AVERAGE   = 0x80;
 
 
 unsigned int subarray_get_degen( PatchControlIter subarray, std::size_t strideU, std::size_t strideV ){

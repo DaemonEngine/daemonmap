@@ -32,24 +32,17 @@
 
    ----------------------------------------------------------------------------- */
 
-
-
-/* marker */
-#define PM_MDC_C
-
-
-
 /* dependencies */
 #include "picointernal.h"
 
 /* mdc model format */
-#define MDC_MAGIC           "IDPC"
-#define MDC_VERSION         2
+const char *MDC_MAGIC = "IDPC";
+const int MDC_VERSION = 2;
 
 /* mdc vertex scale */
-#define MDC_SCALE           ( 1.0f / 64.0f )
-#define MDC_MAX_OFS         127.0f
-#define MDC_DIST_SCALE      0.05f
+const float MDC_SCALE           = ( 1.0f / 64.0f );
+const float MDC_MAX_OFS         = 127.0f;
+const float MDC_DIST_SCALE      = 0.05f;
 
 /* mdc decoding normal table */
 double mdcNormals[ 256 ][ 3 ] =

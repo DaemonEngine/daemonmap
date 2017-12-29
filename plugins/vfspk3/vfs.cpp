@@ -62,7 +62,7 @@ ArchiveModules& FileSystemQ3API_getArchiveModules();
 #include "dpkdeps.h"
 
 
-#define VFS_MAXDIRS 64
+const int VFS_MAXDIRS = 64;
 
 #if defined( WIN32 )
 #define PATH_MAX 260
@@ -666,8 +666,8 @@ void Shutdown(){
 	g_loaded_dpk_paks.clear();
 }
 
-#define VFS_SEARCH_PAK 0x1
-#define VFS_SEARCH_DIR 0x2
+const int VFS_SEARCH_PAK = 0x1;
+const int VFS_SEARCH_DIR = 0x2;
 
 int GetFileCount( const char *filename, int flag ){
 	int count = 0;

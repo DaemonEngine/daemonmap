@@ -5,7 +5,7 @@
 #include <winsock2.h>
 #elif defined ( POSIX )
 #include <sys/time.h>
-#define SOCKET_ERROR -1
+const int SOCKET_ERROR = -1;
 #else
 #error "unsupported platform"
 #endif

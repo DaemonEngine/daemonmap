@@ -91,7 +91,7 @@ typedef struct {
    } dpalette_t;
  */
 
-#define IDSPRITEHEADER  ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'D' << 8 ) + 'I' )
+const int IDSPRITEHEADER = ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'D' << 8 ) + 'I' );
 // little-endian "IDSP"
 
 /*

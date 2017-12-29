@@ -34,7 +34,7 @@
 #include "map.h"
 #include "qe3.h"
 
-#define MRU_MAX 4
+const int MRU_MAX = 4;
 namespace {
 GtkMenuItem *MRU_items[MRU_MAX];
 std::size_t MRU_used;

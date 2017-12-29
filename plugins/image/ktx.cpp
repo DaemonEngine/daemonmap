@@ -29,20 +29,20 @@
 #include "imagelib.h"
 
 
-#define KTX_TYPE_UNSIGNED_BYTE				0x1401
-#define KTX_TYPE_UNSIGNED_SHORT_4_4_4_4		0x8033
-#define KTX_TYPE_UNSIGNED_SHORT_5_5_5_1		0x8034
-#define KTX_TYPE_UNSIGNED_SHORT_5_6_5		0x8363
+const int KTX_TYPE_UNSIGNED_BYTE			= 0x1401;
+const int KTX_TYPE_UNSIGNED_SHORT_4_4_4_4	= 0x8033;
+const int KTX_TYPE_UNSIGNED_SHORT_5_5_5_1	= 0x8034;
+const int KTX_TYPE_UNSIGNED_SHORT_5_6_5		= 0x8363;
 
-#define KTX_FORMAT_ALPHA					0x1906
-#define KTX_FORMAT_RGB						0x1907
-#define KTX_FORMAT_RGBA						0x1908
-#define KTX_FORMAT_LUMINANCE				0x1909
-#define KTX_FORMAT_LUMINANCE_ALPHA			0x190A
-#define KTX_FORMAT_BGR						0x80E0
-#define KTX_FORMAT_BGRA						0x80E1
+const int KTX_FORMAT_ALPHA					= 0x1906;
+const int KTX_FORMAT_RGB					= 0x1907;
+const int KTX_FORMAT_RGBA					= 0x1908;
+const int KTX_FORMAT_LUMINANCE				= 0x1909;
+const int KTX_FORMAT_LUMINANCE_ALPHA		= 0x190A;
+const int KTX_FORMAT_BGR					= 0x80E0;
+const int KTX_FORMAT_BGRA					= 0x80E1;
 
-#define KTX_FORMAT_ETC1_RGB8				0x8D64
+const int KTX_FORMAT_ETC1_RGB8				= 0x8D64;
 
 class KTX_Decoder
 {

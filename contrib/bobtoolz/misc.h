@@ -25,7 +25,7 @@
 #include "str.h"
 #include "iscenegraph.h"
 
-#define MAX_ROUND_ERROR 0.05
+const double MAX_ROUND_ERROR = 0.05;
 
 vec_t Min( vec_t a, vec_t b );
 
