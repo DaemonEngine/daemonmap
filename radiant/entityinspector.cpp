@@ -820,7 +820,7 @@ void EntityClassList_fill(){
 }
 
 void EntityClassList_clear(){
-	gtk_list_store_clear( g_entlist_store );
+	g_entlist_store.clear();
 }
 
 void SetComment( EntityClass* eclass ){
@@ -861,9 +861,9 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 			auto widget = ui::Widget(GTK_WIDGET(g_entitySpawnflagsCheck[i]));
 			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget))));
 			label.text(" ");
-			gtk_widget_hide( widget );
+			widget.hide();
 			g_object_ref( widget );
-			gtk_container_remove( GTK_CONTAINER( g_spawnflagsTable ), widget );
+			ui::Container(GTK_CONTAINER(g_spawnflagsTable)).remove(widget);
 		}
 	}
 
@@ -1041,7 +1041,7 @@ void EntityInspector_updateKeyValues(){
 	CopiedString strKey( g_entityKeyEntry.text() );
 	CopiedString strVal( g_entityValueEntry.text() );
 
-	gtk_list_store_clear( store );
+	store.clear();
 	// Walk through list and add pairs
 	for ( KeyValues::iterator i = g_selectedKeyValues.begin(); i != g_selectedKeyValues.end(); ++i )
 	{

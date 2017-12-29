@@ -165,7 +165,7 @@ void MRU_Activate( std::size_t index ){
 		}
 		else
 		{
-			gtk_widget_hide( GTK_WIDGET( MRU_items[MRU_used] ) );
+			ui::MenuItem(MRU_items[MRU_used]).hide();
 		}
 	}
 }
@@ -194,23 +194,23 @@ LoadMRU g_load_mru4( 4 );
 
 void MRU_constructMenu( ui::Menu menu ){
 	{
-		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_1", LoadMRUCaller( g_load_mru1 ) );
+		auto item = create_menu_item_with_mnemonic( menu, "_1", LoadMRUCaller( g_load_mru1 ) );
 		gtk_widget_set_sensitive( GTK_WIDGET( item ), FALSE );
 		MRU_AddWidget( item, 0 );
 	}
 	{
-		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_2", LoadMRUCaller( g_load_mru2 ) );
-		gtk_widget_hide( GTK_WIDGET( item ) );
+		auto item = create_menu_item_with_mnemonic( menu, "_2", LoadMRUCaller( g_load_mru2 ) );
+		item.hide();
 		MRU_AddWidget( item, 1 );
 	}
 	{
-		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_3", LoadMRUCaller( g_load_mru3 ) );
-		gtk_widget_hide( GTK_WIDGET( item ) );
+		auto item = create_menu_item_with_mnemonic( menu, "_3", LoadMRUCaller( g_load_mru3 ) );
+		item.hide();
 		MRU_AddWidget( item, 2 );
 	}
 	{
-		GtkMenuItem* item = create_menu_item_with_mnemonic( menu, "_4", LoadMRUCaller( g_load_mru4 ) );
-		gtk_widget_hide( GTK_WIDGET( item ) );
+		auto item = create_menu_item_with_mnemonic( menu, "_4", LoadMRUCaller( g_load_mru4 ) );
+		item.hide();
 		MRU_AddWidget( item, 3 );
 	}
 }

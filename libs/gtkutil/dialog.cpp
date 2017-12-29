@@ -95,7 +95,7 @@ EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog ){
 		gtk_main_iteration();
 	}
 
-	gtk_widget_hide( GTK_WIDGET( window ) );
+	window.hide();
 	gtk_grab_remove( GTK_WIDGET( window ) );
 
 	return dialog.ret;
@@ -152,7 +152,7 @@ gboolean dialog_button_no( ui::Widget widget, ModalDialog* data ){
 }
 
 gboolean dialog_delete_callback( ui::Widget widget, GdkEventAny* event, ModalDialog* data ){
-	gtk_widget_hide( widget );
+	widget.hide();
 	data->loop = false;
 	return TRUE;
 }

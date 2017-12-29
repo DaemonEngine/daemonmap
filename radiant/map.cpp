@@ -896,7 +896,7 @@ void DoMapInfo(){
 	// save before exit
 	window_get_position( window, g_posMapInfoWnd );
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+    window.destroy();
 }
 
 
@@ -2114,7 +2114,7 @@ void DoFind(){
 		SelectBrush( atoi( entstr ), atoi( brushstr ) );
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+    window.destroy();
 }
 
 void Map_constructPreferences( PreferencesPage& page ){

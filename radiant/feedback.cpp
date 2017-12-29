@@ -266,7 +266,7 @@ void CDbgDlg::Init(){
 	}
 
 	if ( m_clist ) {
-		gtk_list_store_clear( m_clist );
+		m_clist.clear();
 	}
 }
 
@@ -279,7 +279,7 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 	}
 
 	// put stuff in the list
-	gtk_list_store_clear( m_clist );
+	m_clist.clear();
 	for ( std::size_t i = 0; i < static_cast<std::size_t>( m_pFeedbackElements->len ); ++i )
 	{
 		m_clist.append(0, GetElement(i)->getName());

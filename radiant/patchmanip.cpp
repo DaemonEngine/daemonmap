@@ -959,7 +959,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 		Scene_PatchConstructPrefab( GlobalSceneGraph(), PatchCreator_getBounds(), TextureBrowser_GetSelectedShader( GlobalTextureBrowser() ), prefab, GlobalXYWnd_getCurrentViewType(), w, h );
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 
@@ -1125,7 +1125,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 		}
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return ret;
 }

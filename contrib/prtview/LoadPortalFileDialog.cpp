@@ -45,13 +45,10 @@ static void dialog_button_callback( GtkWidget *widget, gpointer data ){
 	*ret = gpointer_to_int( data );
 }
 
-static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer data ){
-	int *loop;
-
-	gtk_widget_hide( widget );
-	loop = (int*)g_object_get_data( G_OBJECT( widget ), "loop" );
+static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
+	widget.hide();
+	int *loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
 	*loop = 0;
-
 	return TRUE;
 }
 
@@ -70,7 +67,7 @@ static void change_clicked( GtkWidget *widget, gpointer data ){
 	{
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 	}
-	gtk_widget_destroy (file_sel);
+	ui::Widget(file_sel).destroy();
 
 	if ( filename != NULL ) {
 		strcpy( portals.fn, filename );
@@ -164,7 +161,7 @@ int DoLoadPortalFileDialog(){
 	}
 
 	gtk_grab_remove( dlg );
-	gtk_widget_destroy( dlg );
+	dlg.destroy();
 
 	return ret;
 }

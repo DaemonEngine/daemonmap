@@ -39,13 +39,10 @@ static void dialog_button_callback( GtkWidget *widget, gpointer data ){
 	*ret = gpointer_to_int( data );
 }
 
-static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer data ){
-	int *loop;
-
-	gtk_widget_hide( widget );
-	loop = (int*)g_object_get_data( G_OBJECT( widget ), "loop" );
+static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
+	widget.hide();
+	int *loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
 	*loop = 0;
-
 	return TRUE;
 }
 
@@ -91,7 +88,7 @@ void DoAboutDlg(){
 		gtk_main_iteration();
 
 	gtk_grab_remove(dlg);
-	gtk_widget_destroy(dlg);
+	dlg.destroy();
 }
 
 

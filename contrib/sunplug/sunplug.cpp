@@ -125,13 +125,13 @@ static gboolean delete_event( GtkWidget *widget, GdkEvent *event, gpointer data 
 }
 
 // destroy widget if destroy signal is passed to widget
-static void destroy( GtkWidget *widget, gpointer data ){
-	gtk_widget_destroy( widget );
+static void destroy( ui::Widget widget, gpointer data ){
+	widget.destroy();
 }
 
 // function for close button to destroy the toplevel widget
 static void close_window( GtkWidget *widget, gpointer data ){
-	gtk_widget_destroy( gtk_widget_get_toplevel( widget ) );
+	ui::Widget(gtk_widget_get_toplevel( widget ) ).destroy();
 }
 
 // callback function to assign the optimal mapcoords to the spinboxes

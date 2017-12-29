@@ -171,7 +171,7 @@ static gint ci_new( GtkWidget *widget, gpointer data ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return TRUE;
 }
@@ -463,7 +463,7 @@ static gint ci_rename( GtkWidget *widget, gpointer data ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return TRUE;
 }
@@ -629,7 +629,7 @@ static gint ci_add_target( GtkWidget *widget, gpointer data ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return TRUE;
 }
@@ -952,7 +952,7 @@ static gint ci_add( GtkWidget *widget, gpointer data ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return TRUE;
 }

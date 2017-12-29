@@ -2532,16 +2532,16 @@ MainFrame::MainFrame() : m_idleRedrawStatusText( RedrawStatusTextCaller( *this )
 MainFrame::~MainFrame(){
 	SaveWindowInfo();
 
-	gtk_widget_hide( GTK_WIDGET( m_window ) );
+	m_window.hide();
 
 	Shutdown();
 
 	for ( std::vector<ui::Widget>::iterator i = g_floating_windows.begin(); i != g_floating_windows.end(); ++i )
 	{
-		gtk_widget_destroy( *i );
+		i->destroy();
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( m_window ) );
+	m_window.destroy();
 }
 
 void MainFrame::SetActiveXY( XYWnd* p ){
@@ -2689,7 +2689,7 @@ void show_splash(){
 }
 
 void hide_splash(){
-	gtk_widget_destroy( GTK_WIDGET( splash_screen ) );
+	splash_screen.destroy();
 }
 
 WindowPositionTracker g_posCamWnd;
@@ -2752,9 +2752,9 @@ void MainFrame::Create(){
 	GtkToolbar* main_toolbar = create_main_toolbar( CurrentStyle() );
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( main_toolbar ), FALSE, FALSE, 0 );
 
-	GtkToolbar* plugin_toolbar = create_plugin_toolbar();
+	auto plugin_toolbar = create_plugin_toolbar();
 	if ( !g_Layout_enablePluginToolbar.m_value ) {
-		gtk_widget_hide( GTK_WIDGET( plugin_toolbar ) );
+		plugin_toolbar.hide();
 	}
 	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( plugin_toolbar ), FALSE, FALSE, 0 );
 

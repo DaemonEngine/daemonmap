@@ -216,7 +216,7 @@ void CreateWindow( void ){
 
 void DestroyWindow( void ){
 	ASSERT_NOTNULL( g_brushexp_window );
-	gtk_widget_destroy( g_brushexp_window );
+	ui::Widget(g_brushexp_window).destroy();
 	g_brushexp_window = 0;
 }
 

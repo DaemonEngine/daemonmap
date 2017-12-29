@@ -887,7 +887,7 @@ static gboolean rotatedlg_apply( ui::Widget widget, RotateDialog* rotateDialog )
 }
 
 static gboolean rotatedlg_cancel( ui::Widget widget, RotateDialog* rotateDialog ){
-	gtk_widget_hide( GTK_WIDGET( rotateDialog->window ) );
+	rotateDialog->window.hide();
 
 	gtk_spin_button_set_value( rotateDialog->x, 0.0f ); // reset to 0 on close
 	gtk_spin_button_set_value( rotateDialog->y, 0.0f );
@@ -898,7 +898,7 @@ static gboolean rotatedlg_cancel( ui::Widget widget, RotateDialog* rotateDialog 
 
 static gboolean rotatedlg_ok( ui::Widget widget, RotateDialog* rotateDialog ){
 	rotatedlg_apply( widget, rotateDialog );
-	gtk_widget_hide( GTK_WIDGET( rotateDialog->window ) );
+	rotateDialog->window.hide();
 	return TRUE;
 }
 
@@ -1039,7 +1039,7 @@ static gboolean scaledlg_apply( ui::Widget widget, ScaleDialog* scaleDialog ){
 }
 
 static gboolean scaledlg_cancel( ui::Widget widget, ScaleDialog* scaleDialog ){
-	gtk_widget_hide( GTK_WIDGET( scaleDialog->window ) );
+	scaleDialog->window.hide();
 
 	scaleDialog->x.text("1.0");
 	scaleDialog->y.text("1.0");
@@ -1050,7 +1050,7 @@ static gboolean scaledlg_cancel( ui::Widget widget, ScaleDialog* scaleDialog ){
 
 static gboolean scaledlg_ok( ui::Widget widget, ScaleDialog* scaleDialog ){
 	scaledlg_apply( widget, scaleDialog );
-	gtk_widget_hide( GTK_WIDGET( scaleDialog->window ) );
+	scaleDialog->window.hide();
 	return TRUE;
 }
 

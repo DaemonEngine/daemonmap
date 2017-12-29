@@ -121,7 +121,7 @@ bool color_dialog( ui::Widget parent, Vector3& color, const char* title ){
 		color[2] = clr.blue / 65535.0f;
 	}
 
-	gtk_widget_destroy( dlg );
+	dlg.destroy();
 
 	return ok;
 }

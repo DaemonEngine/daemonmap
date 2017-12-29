@@ -185,7 +185,7 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 		gtk_main_iteration();
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }

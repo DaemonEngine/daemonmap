@@ -861,7 +861,7 @@ XYWnd::~XYWnd(){
 	onDestroyed();
 
 	if ( m_mnuDrop ) {
-		gtk_widget_destroy( GTK_WIDGET( m_mnuDrop ) );
+		m_mnuDrop.destroy();
 		m_mnuDrop = ui::Menu(ui::null);
 	}
 
@@ -2570,7 +2570,7 @@ void realise(){
 void unrealise(){
 	if ( ++m_unrealised == 1 ) {
 		if ( XYWnd::m_mnuDrop ) {
-			gtk_widget_destroy( GTK_WIDGET( XYWnd::m_mnuDrop ) );
+			XYWnd::m_mnuDrop.destroy();
 			XYWnd::m_mnuDrop = ui::Menu(ui::null);
 		}
 	}

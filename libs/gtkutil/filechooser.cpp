@@ -230,7 +230,7 @@ const char* file_dialog_show( GtkWidget* parent, bool open, const char* title, c
 		g_file_dialog_file[0] = '\0';
 	}
 
-	gtk_widget_destroy( dialog );
+	ui::Widget(dialog).destroy();
 
 	// don't return an empty filename
 	if ( g_file_dialog_file[0] == '\0' ) {
@@ -260,7 +260,7 @@ char* dir_dialog( ui::Widget parent, const char* title, const char* path ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
 	}
 
-	gtk_widget_destroy( dialog );
+	ui::Widget(dialog).destroy();
 
 	return filename;
 }

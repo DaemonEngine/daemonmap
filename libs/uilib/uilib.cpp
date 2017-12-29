@@ -97,9 +97,23 @@ namespace ui {
         return gtk_widget_get_visible(this) != 0;
     }
 
+    void IWidget::visible(bool shown)
+    {
+        if (shown) {
+            this.show();
+        } else {
+            this.hide();
+        }
+    }
+
     void IWidget::show()
     {
         gtk_widget_show(this);
+    }
+
+    void IWidget::hide()
+    {
+        gtk_widget_hide(this);
     }
 
     Dimensions IWidget::dimensions()
@@ -112,6 +126,11 @@ namespace ui {
     void IWidget::dimensions(int width, int height)
     {
         gtk_widget_set_size_request(this, width, height);
+    }
+
+    void IWidget::destroy()
+    {
+        gtk_widget_destroy(this);
     }
 
     IMPL(Container, GTK_CONTAINER);

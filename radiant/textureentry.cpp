@@ -55,7 +55,7 @@ void EntryCompletion<StringList>::fill()
 template<class StringList>
 void EntryCompletion<StringList>::clear()
 {
-    gtk_list_store_clear(m_store);
+    m_store.clear();
 }
 
 template<class StringList>

@@ -29,15 +29,6 @@
 #include "warnings.h"
 #include "debugging/debugging.h"
 
-void widget_set_visible(ui::Widget widget, bool shown);
-
-bool widget_is_visible(ui::Widget widget);
-
-inline void widget_toggle_visible(ui::Widget widget)
-{
-    widget_set_visible(widget, !widget_is_visible(widget));
-}
-
 class ToggleItem {
     BoolExportCallback m_exportCallback;
     typedef std::list<BoolImportCallback> ImportCallbacks;

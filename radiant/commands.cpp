@@ -482,7 +482,7 @@ public:
 	}
 
 	modal_dialog_show( window, dialog );
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 #include "profile/profile.h"

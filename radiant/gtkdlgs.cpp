@@ -360,7 +360,7 @@ void DoProjectSettings(){
 			ProjectSettingsDialog_ok( dialog );
 		}
 
-		gtk_widget_destroy( GTK_WIDGET( window ) );
+		window.destroy();
 	}
 }
 
@@ -414,7 +414,7 @@ void DoSides( int type, int axis ){
 		Scene_BrushConstructPrefab( GlobalSceneGraph(), (EBrushPrefab)type, atoi( str ), TextureBrowser_GetSelectedShader( GlobalTextureBrowser() ) );
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 // =============================================================================
@@ -581,7 +581,7 @@ void DoAbout(){
 
 	modal_dialog_show( window, dialog );
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 // =============================================================================
@@ -697,7 +697,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 		last_used_texture_layout_scale_y = *fy;
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return ret;
 }
@@ -714,7 +714,7 @@ static gint editor_delete( ui::Widget widget, gpointer data ){
 		return TRUE;
 	}
 
-	gtk_widget_hide( text_editor );
+	text_editor.hide();
 
 	return TRUE;
 }
@@ -738,7 +738,7 @@ static void editor_close( ui::Widget widget, gpointer data ){
 		return;
 	}
 
-	gtk_widget_hide( text_editor );
+	text_editor.hide();
 }
 
 static void CreateGtkTextEditor(){
@@ -797,7 +797,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 
 	if ( f == 0 ) {
 		globalOutputStream() << "Unable to load file " << filename << " in shader editor.\n";
-		gtk_widget_hide( text_editor );
+		text_editor.hide();
 	}
 	else
 	{
@@ -909,7 +909,7 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 		*intensity = atoi( gtk_entry_get_text( intensity_entry ) );
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return ret;
 }
@@ -973,7 +973,7 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 		*tag = gtk_entry_get_text( textentry );
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return ret;
 }
@@ -1024,7 +1024,7 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const
 
 	EMessageBoxReturn ret = modal_dialog_show( window, dialog );
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return ret;
 }

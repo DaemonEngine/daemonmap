@@ -34,7 +34,7 @@ inline void CHECK_RESTORE( ui::Widget w ){
 
 inline void CHECK_MINIMIZE( ui::Widget w ){
 	g_object_set_data( G_OBJECT( w ), "was_mapped", gint_to_pointer( gtk_widget_get_visible( w ) ) );
-	gtk_widget_hide( w );
+	w.hide();
 }
 
 static gboolean main_window_iconified( ui::Widget widget, GdkEventWindowState* event, gpointer data ){
@@ -96,7 +96,7 @@ ui::Window create_floating_window( const char* title, ui::Window parent ){
 }
 
 void destroy_floating_window( ui::Window window ){
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 gint window_realize_remove_sysmenu( ui::Widget widget, gpointer data ){
@@ -105,7 +105,7 @@ gint window_realize_remove_sysmenu( ui::Widget widget, gpointer data ){
 }
 
 gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event, ui::Window main_window ){
-	gtk_widget_hide( GTK_WIDGET( floating ) );
+	floating.hide();
 	return TRUE;
 }
 

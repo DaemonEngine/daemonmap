@@ -91,13 +91,10 @@ static void dialog_button_callback( GtkWidget *widget, gpointer data ){
 	*ret = (EMessageBoxReturn)gpointer_to_int( data );
 }
 
-static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer data ){
-	int *loop;
-
-	gtk_widget_hide( widget );
-	loop = (int*)g_object_get_data( G_OBJECT( widget ), "loop" );
+static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
+	widget.hide();
+	int *loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
 	*loop = 0;
-
 	return TRUE;
 }
 
@@ -305,7 +302,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 		gtk_main_iteration();
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -400,7 +397,7 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 	rs->bDuplicateOnly = gtk_toggle_button_get_active( (GtkToggleButton*)check2 ) ? true : false;
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -567,7 +564,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -822,7 +819,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 // -djbob
@@ -1037,7 +1034,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 //-djbob
@@ -1210,7 +1207,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -1278,7 +1275,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 		gtk_main_iteration();
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -1609,7 +1606,7 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -1876,7 +1873,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }
@@ -1988,7 +1985,7 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 	}
 
 	gtk_grab_remove( window );
-	gtk_widget_destroy( window );
+	window.destroy();
 
 	return ret;
 }

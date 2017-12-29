@@ -734,7 +734,7 @@ Build* g_current_build = 0;
 gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore store ){
 	Project& project = g_build_project;
 
-	gtk_list_store_clear( store );
+	store.clear();
 
 	GtkTreeIter iter;
 	GtkTreeModel* model;
@@ -957,7 +957,7 @@ void DoBuildMenu(){
 		g_build_changed = true;
 	}
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 }
 
 
@@ -1005,7 +1005,7 @@ void Build_constructMenu( ui::Menu menu ){
 void Build_refreshMenu( ui::Menu menu ){
 	for ( BuildMenuItems::iterator i = g_BuildMenuItems.begin(); i != g_BuildMenuItems.end(); ++i )
 	{
-		gtk_container_remove( menu, GTK_WIDGET( ( *i ).m_item ) );
+		menu.remove(ui::Widget(GTK_WIDGET((*i).m_item)));
 	}
 
 	g_BuildMenuItems.clear();

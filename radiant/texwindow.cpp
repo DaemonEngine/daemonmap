@@ -674,7 +674,7 @@ void TextureBrowser_activeShadersChanged( TextureBrowser& textureBrowser ){
 void TextureBrowser_importShowScrollbar( TextureBrowser& textureBrowser, bool value ){
 	textureBrowser.m_showTextureScrollbar = value;
 	if ( textureBrowser.m_texture_scroll != 0 ) {
-		widget_set_visible( textureBrowser.m_texture_scroll, textureBrowser.m_showTextureScrollbar );
+		textureBrowser.m_texture_scroll.visible(textureBrowser.m_showTextureScrollbar);
 		TextureBrowser_updateScroll( textureBrowser );
 	}
 }
@@ -1299,7 +1299,7 @@ enum
 void BuildStoreAssignedTags( ui::ListStore store, const char* shader, TextureBrowser* textureBrowser ){
 	GtkTreeIter iter;
 
-	gtk_list_store_clear( store );
+	store.clear();
 
 	std::vector<CopiedString> assigned_tags;
 	TagBuilder.GetShaderTags( shader, assigned_tags );
@@ -1319,7 +1319,7 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 	std::set<CopiedString>::const_iterator iterAll;
 	gchar* tag_assigned;
 
-	gtk_list_store_clear( storeAvailable );
+	storeAvailable.clear();
 
 	bool row = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( storeAssigned ), &iterAssigned ) != 0;
 
@@ -1379,7 +1379,7 @@ gboolean TextureBrowser_button_press( ui::Widget widget, GdkEventButton* event, 
 
 			if ( GlobalTextureBrowser().m_tags ) {
 				textureBrowser->m_rmbSelected = false;
-				gtk_widget_hide( textureBrowser->m_tag_frame );
+				textureBrowser->m_tag_frame.hide();
 			}
 		}
 	}
@@ -1828,7 +1828,7 @@ void TextureBrowser_removeTags(){
 }
 
 void TextureBrowser_buildTagList(){
-	gtk_list_store_clear( g_TextureBrowser.m_all_tags_list );
+	g_TextureBrowser.m_all_tags_list.clear();
 
 	std::set<CopiedString>::iterator iter;
 
@@ -1915,7 +1915,7 @@ void TextureBrowser_toggleSearchButton(){
 		gtk_widget_show_all( g_TextureBrowser.m_search_button );
 	}
 	else {
-		gtk_widget_hide( g_TextureBrowser.m_search_button );
+		g_TextureBrowser.m_search_button.hide();
 	}
 }
 
@@ -2047,7 +2047,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		auto vadjustment = ui::Adjustment(gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) ));
 		vadjustment.connect( "value_changed", G_CALLBACK( TextureBrowser_verticalScroll ), &g_TextureBrowser );
 
-		widget_set_visible( g_TextureBrowser.m_texture_scroll, g_TextureBrowser.m_showTextureScrollbar );
+		g_TextureBrowser.m_texture_scroll.visible(g_TextureBrowser.m_showTextureScrollbar);
 	}
 	{ // gl_widget
 		g_TextureBrowser.m_gl_widget = glwidget_new( FALSE );

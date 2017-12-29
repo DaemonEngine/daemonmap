@@ -319,7 +319,7 @@ void Dialog::ShowDlg(){
 void Dialog::HideDlg(){
 	ASSERT_MESSAGE( m_window, "dialog was not constructed" );
 	exportData();
-	gtk_widget_hide( GTK_WIDGET( m_window ) );
+	m_window.hide();
 }
 
 static gint delete_event_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
@@ -338,7 +338,7 @@ void Dialog::Create(){
 void Dialog::Destroy(){
 	ASSERT_MESSAGE( m_window, "dialog cannot be destroyed" );
 
-	gtk_widget_destroy( GTK_WIDGET( m_window ) );
+	m_window.destroy();
 	m_window = ui::Window{ui::null};
 }
 
@@ -445,7 +445,7 @@ EMessageBoxReturn Dialog::DoModal(){
 		exportData();
 	}
 
-	gtk_widget_hide( GTK_WIDGET( m_window ) );
+	m_window.hide();
 
 	PostModal( m_modal.ret );
 

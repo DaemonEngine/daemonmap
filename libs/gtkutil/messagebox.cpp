@@ -190,7 +190,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 
 	modal_dialog_show( window, dialog );
 
-	gtk_widget_destroy( GTK_WIDGET( window ) );
+	window.destroy();
 
 	return dialog.ret;
 }

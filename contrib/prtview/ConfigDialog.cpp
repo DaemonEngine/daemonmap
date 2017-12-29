@@ -40,13 +40,10 @@ static void dialog_button_callback( GtkWidget *widget, gpointer data ){
 	*ret = gpointer_to_int( data );
 }
 
-static gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer data ){
-	int *loop;
-
-	gtk_widget_hide( widget );
-	loop = (int*)g_object_get_data( G_OBJECT( widget ), "loop" );
+static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
+	widget.hide();
+	int *loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
 	*loop = 0;
-
 	return TRUE;
 }
 
@@ -83,7 +80,7 @@ static int DoColor( PackedColour *c ){
 	gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG(dlg)) ), &clr );
 
 	gtk_grab_remove( dlg );
-	gtk_widget_destroy( dlg );
+	dlg.destroy();
 
 	if ( ret == IDOK ) {
 		*c = RGB( clr.red / (65535 / 255), clr.green / (65535 / 255), clr.blue / (65535 / 255));
@@ -476,5 +473,5 @@ void DoConfigDialog(){
 		gtk_main_iteration();
 
 	gtk_grab_remove( dlg );
-	gtk_widget_destroy( dlg );
+	dlg.destroy();
 }

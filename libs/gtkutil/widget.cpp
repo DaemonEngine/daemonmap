@@ -1,20 +1,6 @@
 #include "widget.h"
 #include <gtk/gtk.h>
 
-void widget_set_visible(ui::Widget widget, bool shown)
-{
-    if (shown) {
-        widget.show();
-    } else {
-        gtk_widget_hide(widget);
-    }
-}
-
-bool widget_is_visible(ui::Widget widget)
-{
-    return gtk_widget_get_visible(widget) != FALSE;
-}
-
 void widget_queue_draw(ui::Widget &widget)
 {
     gtk_widget_queue_draw(widget);
@@ -63,19 +49,19 @@ void ToggleShown::set(bool shown)
     if (!m_widget) {
         m_shownDeferred = shown;
     } else {
-        widget_set_visible(m_widget, shown);
+        m_widget.visible(shown);
     }
 }
 
 void ToggleShown::toggle()
 {
-    widget_toggle_visible(m_widget);
+    m_widget.visible(!m_widget.visible());
 }
 
 void ToggleShown::connect(ui::Widget widget)
 {
     m_widget = widget;
-    widget_set_visible(m_widget, m_shownDeferred);
+    m_widget.visible(m_shownDeferred);
     m_widget.connect("notify::visible", G_CALLBACK(notify_visible), this);
     m_widget.connect("destroy", G_CALLBACK(destroy), this);
     update();

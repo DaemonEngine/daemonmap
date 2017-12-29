@@ -60,7 +60,7 @@ void Show(){
 	m_window.show();
 }
 void Hide(){
-	gtk_widget_hide( GTK_WIDGET( m_window ) );
+	m_window.hide();
 }
 
 WindowPositionTracker m_position_tracker;
@@ -134,7 +134,7 @@ ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const S
 
 
 bool GroupDialog_isShown(){
-	return widget_is_visible( g_GroupDlg.m_window );
+	return g_GroupDlg.m_window.visible();
 }
 void GroupDialog_setShown( bool shown ){
 	shown ? g_GroupDlg.Show() : g_GroupDlg.Hide();

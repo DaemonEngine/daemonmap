@@ -259,9 +259,12 @@ namespace ui {
                  bool want_save = false
          );
          bool visible();
+         void visible(bool shown);
          void show();
+         void hide();
          Dimensions dimensions();
          void dimensions(int width, int height);
+         void destroy();
     );
 
     WRAP(Container, Widget, _GtkContainer, (),
