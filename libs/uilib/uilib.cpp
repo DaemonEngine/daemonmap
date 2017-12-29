@@ -373,6 +373,11 @@ namespace ui {
         gtk_list_store_clear(this);
     }
 
+    void IListStore::append()
+    {
+        gtk_list_store_append(this, nullptr);
+    }
+
     // IMPL(TreePath, GTK_TREE_PATH);
 
     TreePath::TreePath(ui::New_t) : TreePath(gtk_tree_path_new())

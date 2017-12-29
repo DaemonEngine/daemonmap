@@ -653,8 +653,7 @@ void BSPCommandList_Construct( ui::ListStore store, Project& project ){
 		store.append(0, (*i).first.c_str());
 	}
 
-	GtkTreeIter lastIter;
-	gtk_list_store_append( store, &lastIter );
+	store.append();
 }
 
 class ProjectList
@@ -695,8 +694,7 @@ gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gch
 		project.push_back( Project::value_type( new_text, Build() ) );
 
 		gtk_list_store_set( projectList->m_store, &iter, 0, new_text, -1 );
-		GtkTreeIter lastIter;
-		gtk_list_store_append( projectList->m_store, &lastIter );
+		projectList->m_store.append();
 	}
 
 	gtk_tree_path_free( path );
@@ -753,8 +751,7 @@ gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore s
 			{
 				store.append(0, (*i).c_str());
 			}
-			GtkTreeIter lastIter;
-			gtk_list_store_append( store, &lastIter );
+			store.append();
 		}
 		else
 		{
@@ -795,8 +792,7 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 
 		gtk_list_store_set( store, &iter, 0, new_text, -1 );
 
-		GtkTreeIter lastIter;
-		gtk_list_store_append( store, &lastIter );
+		store.append();
 	}
 
 	gtk_tree_path_free( path );

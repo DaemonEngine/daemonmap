@@ -528,6 +528,8 @@ namespace ui {
 
          template<class... T>
          void append(T... args);
+
+         void append();
     );
 
     WRAP(TreeSelection, Object, _GtkTreeSelection, (),
