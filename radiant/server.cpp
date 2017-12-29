@@ -61,7 +61,6 @@ DebugMessageHandler& getDebugMessageHandler(){
 }
 
 void registerModule( const char* type, int version, const char* name, Module& module ){
-	ASSERT_NOTNULL( &module );
 	if ( !m_modules.insert( Modules_::value_type( ModuleKey( ModuleType( type, version ), name ), &module ) ).second ) {
 		globalErrorStream() << "module already registered: type=" << makeQuoted( type ) << " name=" << makeQuoted( name ) << "\n";
 	}
