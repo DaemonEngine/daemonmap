@@ -146,11 +146,11 @@ public:
 void PluginsMenu_clear(){
 	m_nNextPlugInID = 0;
 
-	GList* lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ), GTK_WIDGET( g_plugins_menu_separator ) );
+	GList* lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ), g_plugins_menu_separator  );
 	while ( lst->next )
 	{
-		g_plugins_menu.remove(ui::Widget(GTK_WIDGET(lst->next->data)));
-		lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ),  GTK_WIDGET( g_plugins_menu_separator ) );
+		g_plugins_menu.remove(ui::Widget::from(lst->next->data));
+		lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ),  g_plugins_menu_separator  );
 	}
 }
 

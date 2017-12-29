@@ -438,7 +438,7 @@ bool OpenBitmap(){
 
 	if ( g_pWnd ) {
 		gtk_entry_set_text( GTK_ENTRY( g_object_get_data( G_OBJECT( g_pWnd ), "bmp_file" ) ), gbmp.name );
-		gtk_widget_set_sensitive( GTK_WIDGET( g_object_get_data( G_OBJECT( g_pWnd ), "bmp_reload" ) ),
+		gtk_widget_set_sensitive( g_object_get_data( G_OBJECT( g_pWnd , "bmp_reload" ) ),
 								  strlen( gbmp.name ) ? TRUE : FALSE );
 
 		UpdatePreview( true );

@@ -946,13 +946,13 @@ void DoRotateDlg(){
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 0, 1,
+					gtk_table_attach( table, spin , 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					gtk_widget_set_size_request( GTK_WIDGET( spin ), 64, -1 );
+					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
-					gtk_widget_grab_focus( GTK_WIDGET( spin ) );
+					gtk_widget_grab_focus( spin  );
 
 					g_rotate_dialog.x = spin;
 				}
@@ -960,10 +960,10 @@ void DoRotateDlg(){
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 1, 2,
+					gtk_table_attach( table, spin , 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					gtk_widget_set_size_request( GTK_WIDGET( spin ), 64, -1 );
+					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
 					g_rotate_dialog.y = spin;
@@ -972,10 +972,10 @@ void DoRotateDlg(){
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, GTK_WIDGET( spin ), 1, 2, 2, 3,
+					gtk_table_attach( table, spin , 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
-					gtk_widget_set_size_request( GTK_WIDGET( spin ), 64, -1 );
+					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
 					g_rotate_dialog.z = spin;
@@ -988,12 +988,12 @@ void DoRotateDlg(){
 					auto button = create_dialog_button( "OK", G_CALLBACK( rotatedlg_ok ), &g_rotate_dialog );
 					vbox.pack_start( button, FALSE, FALSE, 0 );
 					widget_make_default( button );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					auto button = create_dialog_button( "Cancel", G_CALLBACK( rotatedlg_cancel ), &g_rotate_dialog );
 					vbox.pack_start( button, FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					auto button = create_dialog_button( "Apply", G_CALLBACK( rotatedlg_apply ), &g_rotate_dialog );
@@ -1133,12 +1133,12 @@ void DoScaleDlg(){
 					auto button = create_dialog_button( "OK", G_CALLBACK( scaledlg_ok ), &g_scale_dialog );
 					vbox.pack_start( button, FALSE, FALSE, 0 );
 					widget_make_default( button );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					auto button = create_dialog_button( "Cancel", G_CALLBACK( scaledlg_cancel ), &g_scale_dialog );
 					vbox.pack_start( button, FALSE, FALSE, 0 );
-					gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+					gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 				}
 				{
 					auto button = create_dialog_button( "Apply", G_CALLBACK( scaledlg_apply ), &g_scale_dialog );

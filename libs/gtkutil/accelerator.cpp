@@ -232,7 +232,7 @@ bool Buttons_press( ButtonMask& buttons, guint button, guint state ){
 		{
 			ui::Window toplevel = *i;
 			ASSERT_MESSAGE( window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "disabling accel for non-toplevel window" );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( toplevel ), "disabling accel for non-toplevel window" );
 			gtk_window_remove_accel_group( toplevel,  global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": disabled global accelerators\n";
@@ -255,7 +255,7 @@ bool Buttons_release( ButtonMask& buttons, guint button, guint state ){
 		{
 			ui::Window toplevel = *i;
 			ASSERT_MESSAGE( !window_has_accel( toplevel ), "ERROR" );
-			ASSERT_MESSAGE( gtk_widget_is_toplevel( GTK_WIDGET(toplevel) ), "enabling accel for non-toplevel window" );
+			ASSERT_MESSAGE( gtk_widget_is_toplevel( toplevel ), "enabling accel for non-toplevel window" );
 			toplevel.add_accel_group( global_accel );
 #if 0
 			globalOutputStream() << reinterpret_cast<unsigned int>( toplevel ) << ": enabled global accelerators\n";

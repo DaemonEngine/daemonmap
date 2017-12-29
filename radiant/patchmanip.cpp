@@ -862,7 +862,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			{
 				auto label = ui::Label( "Width:" );
 				label.show();
-				gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
+				gtk_table_attach( table, label , 0, 1, 0, 1,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -870,7 +870,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			{
 				auto label = ui::Label( "Height:" );
 				label.show();
-				gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
+				gtk_table_attach( table, label , 0, 1, 1, 2,
 								  (GtkAttachOptions) ( GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -896,7 +896,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				D_ITEM( 31 ); // MAX_PATCH_SIZE is 32, so we should be able to do 31...
 #undef D_ITEM
 				combo.show();
-				gtk_table_attach( table, GTK_WIDGET( combo ), 1, 2, 0, 1,
+				gtk_table_attach( table, combo , 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -922,7 +922,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				D_ITEM( 31 ); // MAX_PATCH_SIZE is 32, so we should be able to do 31...
 #undef D_ITEM
 				combo.show();
-				gtk_table_attach( table, GTK_WIDGET( combo ), 1, 2, 1, 2,
+				gtk_table_attach( table, combo , 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -937,13 +937,13 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_grab_focus( GTK_WIDGET( button ) );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_grab_focus( button  );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
 				auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &dialog );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}
@@ -999,35 +999,35 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					auto image = new_local_image( "cap_bevel.png" );
 					image.show();
-					gtk_table_attach( table, GTK_WIDGET( image ), 0, 1, 0, 1,
+					gtk_table_attach( table, image , 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					auto image = new_local_image( "cap_endcap.png" );
 					image.show();
-					gtk_table_attach( table, GTK_WIDGET( image ), 0, 1, 1, 2,
+					gtk_table_attach( table, image , 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					auto image = new_local_image( "cap_ibevel.png" );
 					image.show();
-					gtk_table_attach( table, GTK_WIDGET( image ), 0, 1, 2, 3,
+					gtk_table_attach( table, image , 0, 1, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					auto image = new_local_image( "cap_iendcap.png" );
 					image.show();
-					gtk_table_attach( table, GTK_WIDGET( image ), 0, 1, 3, 4,
+					gtk_table_attach( table, image , 0, 1, 3, 4,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
 				{
 					auto image = new_local_image( "cap_cylinder.png" );
 					image.show();
-					gtk_table_attach( table, GTK_WIDGET( image ), 0, 1, 4, 5,
+					gtk_table_attach( table, image , 0, 1, 4, 5,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 				}
@@ -1093,12 +1093,12 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
 				auto button = create_modal_dialog_button( "Cancel", cancel_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}

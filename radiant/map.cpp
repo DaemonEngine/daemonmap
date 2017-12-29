@@ -786,7 +786,7 @@ void DoMapInfo(){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
+					gtk_table_attach( table, entry , 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
@@ -796,7 +796,7 @@ void DoMapInfo(){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
+					gtk_table_attach( table, entry , 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
@@ -2065,16 +2065,16 @@ void DoFind(){
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
+				gtk_table_attach( table, entry , 1, 2, 0, 1,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
-				gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+				gtk_widget_grab_focus( entry  );
 				entity = entry;
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
+				gtk_table_attach( table, entry , 1, 2, 1, 2,
 								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 								  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -2088,12 +2088,12 @@ void DoFind(){
 				auto button = create_dialog_button( "Find", G_CALLBACK( dialog_button_ok ), &dialog );
 				hbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
 				auto button = create_dialog_button( "Close", G_CALLBACK( dialog_button_cancel ), &dialog );
 				hbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}

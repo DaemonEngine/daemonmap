@@ -1631,7 +1631,7 @@ WaitDialog create_wait_dialog( const char* title, const char* text ){
 		gtk_misc_set_alignment( GTK_MISC( dialog.m_label ), 0.0, 0.5 );
 		gtk_label_set_justify( dialog.m_label, GTK_JUSTIFY_LEFT );
 		dialog.m_label.show();
-		gtk_widget_set_size_request( GTK_WIDGET( dialog.m_label ), 200, -1 );
+		gtk_widget_set_size_request( dialog.m_label , 200, -1 );
 
 		dialog.m_window.add(dialog.m_label);
 	}
@@ -1692,7 +1692,7 @@ void ScreenUpdates_Disable( const char* message, const char* title ){
 		bool isActiveApp = MainFrame_isActiveApp();
 
 		g_wait = create_wait_dialog( title, message );
-		gtk_grab_add( GTK_WIDGET( g_wait.m_window ) );
+		gtk_grab_add( g_wait.m_window  );
 
 		if ( isActiveApp ) {
 			g_wait.m_window.show();
@@ -1711,9 +1711,9 @@ void ScreenUpdates_Enable(){
 	g_wait_stack.pop_back();
 	if ( g_wait_stack.empty() ) {
 		EverySecondTimer_enable();
-		//gtk_widget_set_sensitive(GTK_WIDGET(MainFrame_getWindow()), TRUE);
+		//gtk_widget_set_sensitive(MainFrame_getWindow(), TRUE);
 
-		gtk_grab_remove( GTK_WIDGET( g_wait.m_window ) );
+		gtk_grab_remove( g_wait.m_window  );
 		destroy_floating_window( g_wait.m_window );
 		g_wait.m_window = ui::Window{ui::null};
 
@@ -2321,7 +2321,7 @@ ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
 	toolbar.show();
 
 	auto space = [&]() {
-		auto btn = ui::Widget(GTK_WIDGET(gtk_separator_tool_item_new()));
+		auto btn = ui::ToolItem(gtk_separator_tool_item_new());
 		btn.show();
 		toolbar.add(btn);
 	};
@@ -2386,8 +2386,8 @@ ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
 
 	// disable the console and texture button in the regular layouts
 	if ( style == MainFrame::eRegular || style == MainFrame::eRegularLeft ) {
-		gtk_widget_set_sensitive( GTK_WIDGET( g_view_console_button ), FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( g_view_textures_button ), FALSE );
+		gtk_widget_set_sensitive( g_view_console_button , FALSE );
+		gtk_widget_set_sensitive( g_view_textures_button , FALSE );
 	}
 
 	return toolbar;
@@ -2402,15 +2402,15 @@ ui::Widget create_main_statusbar( ui::Widget pStatusLabel[c_count_status] ){
 		gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		gtk_misc_set_padding( GTK_MISC( label ), 4, 2 );
 		label.show();
-		gtk_table_attach_defaults( table, GTK_WIDGET( label ), 0, 1, 0, 1 );
-		pStatusLabel[c_command_status] = ui::Widget(GTK_WIDGET( label ));
+		gtk_table_attach_defaults( table, label , 0, 1, 0, 1 );
+		pStatusLabel[c_command_status] = ui::Widget(label );
 	}
 
 	for ( int i = 1; i < c_count_status; ++i )
 	{
 		auto frame = ui::Frame();
 		frame.show();
-		gtk_table_attach_defaults( table, GTK_WIDGET( frame ), i, i + 1, 0, 1 );
+		gtk_table_attach_defaults( table, frame , i, i + 1, 0, 1 );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 		auto label = ui::Label( "Label" );
@@ -2419,10 +2419,10 @@ ui::Widget create_main_statusbar( ui::Widget pStatusLabel[c_count_status] ){
 		gtk_misc_set_padding( GTK_MISC( label ), 4, 2 );
 		label.show();
 		frame.add(label);
-		pStatusLabel[i] = ui::Widget(GTK_WIDGET( label ));
+		pStatusLabel[i] = ui::Widget(label );
 	}
 
-	return ui::Widget(GTK_WIDGET( table ));
+	return ui::Widget(table );
 }
 
 #if 0
@@ -2674,7 +2674,7 @@ ui::Window create_splash(){
 	image.show();
 	window.add(image);
 
-	gtk_widget_set_size_request( GTK_WIDGET( window ), -1, -1 );
+	gtk_widget_set_size_request( window , -1, -1 );
 	window.show();
 
 	return window;
@@ -2722,7 +2722,7 @@ void MainFrame::Create(){
 	}
 #endif
 
-	gtk_widget_add_events( GTK_WIDGET( window ), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_FOCUS_CHANGE_MASK );
+	gtk_widget_add_events( window , GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_FOCUS_CHANGE_MASK );
 	window.connect( "delete_event", G_CALLBACK( mainframe_delete ), this );
 
 	m_position_tracker.connect( window );
@@ -2809,7 +2809,7 @@ void MainFrame::Create(){
 				// xy
 				m_pXYWnd = new XYWnd();
 				m_pXYWnd->SetViewType( XY );
-				ui::Widget xy_window = ui::Widget(GTK_WIDGET( create_framed_widget( m_pXYWnd->GetWidget() ) ));
+				ui::Widget xy_window = ui::Widget(create_framed_widget( m_pXYWnd->GetWidget( ) ));
 
 				{
 					ui::Widget vsplit2 = ui::VPaned(ui::New);
@@ -2831,14 +2831,14 @@ void MainFrame::Create(){
 					m_pCamWnd = NewCamWnd();
 					GlobalCamera_setCamWnd( *m_pCamWnd );
 					CamWnd_setParent( *m_pCamWnd, window );
-					GtkFrame* camera_window = create_framed_widget( CamWnd_getWidget( *m_pCamWnd ) );
+					auto camera_window = create_framed_widget( CamWnd_getWidget( *m_pCamWnd ) );
 
-					gtk_paned_add1( GTK_PANED( vsplit2 ), GTK_WIDGET( camera_window ) );
+					gtk_paned_add1( GTK_PANED( vsplit2 ), camera_window  );
 
 					// textures
-					GtkFrame* texture_window = create_framed_widget( TextureBrowser_constructWindow( window ) );
+					auto texture_window = create_framed_widget( TextureBrowser_constructWindow( window ) );
 
-					gtk_paned_add2( GTK_PANED( vsplit2 ), GTK_WIDGET( texture_window ) );
+					gtk_paned_add2( GTK_PANED( vsplit2 ), texture_window  );
 				}
 			}
 		}
@@ -2933,8 +2933,8 @@ void MainFrame::Create(){
 		}
 
 		{
-			GtkFrame* frame = create_framed_widget( TextureBrowser_constructWindow( GroupDialog_getWindow() ) );
-			g_page_textures = GroupDialog_addPage( "Textures", ui::Widget(GTK_WIDGET( frame )), TextureBrowserExportTitleCaller() );
+			auto frame = create_framed_widget( TextureBrowser_constructWindow( GroupDialog_getWindow() ) );
+			g_page_textures = GroupDialog_addPage( "Textures", frame, TextureBrowserExportTitleCaller() );
 		}
 
 		GroupDialog_show();
@@ -2966,8 +2966,8 @@ void MainFrame::Create(){
 		vbox.pack_start( split, TRUE, TRUE, 0 );
 
 		{
-			GtkFrame* frame = create_framed_widget( TextureBrowser_constructWindow( window ) );
-			g_page_textures = GroupDialog_addPage( "Textures", ui::Widget(GTK_WIDGET( frame )), TextureBrowserExportTitleCaller() );
+            auto frame = create_framed_widget( TextureBrowser_constructWindow( window ) );
+			g_page_textures = GroupDialog_addPage( "Textures", frame, TextureBrowserExportTitleCaller() );
 		}
 	}
 
@@ -3008,7 +3008,7 @@ void MainFrame::SaveWindowInfo(){
 
 	g_layout_globals.m_position = m_position_tracker.getPosition();
 
-	g_layout_globals.nState = gdk_window_get_state( gtk_widget_get_window(GTK_WIDGET( m_window )) );
+	g_layout_globals.nState = gdk_window_get_state( gtk_widget_get_window(m_window ) );
 }
 
 void MainFrame::Shutdown(){

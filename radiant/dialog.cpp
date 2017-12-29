@@ -50,7 +50,7 @@
 ui::Entry DialogEntry_new(){
 	auto entry = ui::Entry(ui::New);
 	entry.show();
-	gtk_widget_set_size_request( GTK_WIDGET( entry ), 64, -1 );
+	gtk_widget_set_size_request( entry , 64, -1 );
 	return entry;
 }
 
@@ -70,7 +70,7 @@ DialogEntryRow DialogEntryRow_new( const char* name ){
 	auto entry = DialogEntry_new();
 	alignment.add(entry);
 
-	return DialogEntryRow( ui::Widget(GTK_WIDGET( DialogRow_new( name, alignment ) )), entry );
+	return DialogEntryRow( ui::Widget(DialogRow_new( name, alignment  )), entry );
 }
 
 
@@ -83,7 +83,7 @@ ui::SpinButton DialogSpinner_new( double value, double lower, double upper, int 
 	}
 	auto spin = ui::SpinButton( ui::Adjustment( value, lower, upper, step, 10, 0 ), step, digits );
 	spin.show();
-	gtk_widget_set_size_request( GTK_WIDGET( spin ), 64, -1 );
+	gtk_widget_set_size_request( spin , 64, -1 );
 	return spin;
 }
 
@@ -103,7 +103,7 @@ DialogSpinnerRow DialogSpinnerRow_new( const char* name, double value, double lo
 	auto spin = DialogSpinner_new( value, lower, upper, fraction );
 	alignment.add(spin);
 
-	return DialogSpinnerRow( ui::Widget(GTK_WIDGET( DialogRow_new( name, alignment ) )), spin );
+	return DialogSpinnerRow( ui::Widget(DialogRow_new( name, alignment  )), spin );
 }
 
 
@@ -458,7 +458,7 @@ ui::CheckButton Dialog::addCheckBox( ui::Widget vbox, const char* name, const ch
 	check.show();
 	AddBoolToggleData( *GTK_TOGGLE_BUTTON( check ), importViewer, exportViewer );
 
-	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), ui::Widget(GTK_WIDGET( DialogRow_new( name, check ) ) ));
+	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), ui::Widget(DialogRow_new( name, check  ) ));
 	return check;
 }
 
@@ -496,7 +496,7 @@ void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean d
 	if ( draw_value == FALSE ) {
 		auto hbox2 = ui::HBox( FALSE, 0 );
 		hbox2.show();
-		vbox.pack_start( GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
+		vbox.pack_start( hbox2 , FALSE, FALSE, 0 );
 		{
 			ui::Widget label = ui::Label( low );
 			label.show();
@@ -561,7 +561,7 @@ void Dialog::addRadioIcons( ui::Widget vbox, const char* name, StringArrayRange 
 		guint pos = static_cast<guint>( icon - icons.first );
 		auto image = new_local_image( *icon );
 		image.show();
-		gtk_table_attach( GTK_TABLE( table ), GTK_WIDGET( image ), pos, pos + 1, 0, 1,
+		gtk_table_attach( GTK_TABLE( table ), image , pos, pos + 1, 0, 1,
 						  (GtkAttachOptions) ( 0 ),
 						  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -610,10 +610,10 @@ ui::Widget Dialog::addPathEntry( ui::Widget vbox, const char* name, bool browse_
 
 	AddTextEntryData( *GTK_ENTRY(pathEntry.m_entry), importViewer, exportViewer );
 
-	auto row = DialogRow_new( name, ui::Widget(GTK_WIDGET( pathEntry.m_frame )) );
+	auto row = DialogRow_new( name, ui::Widget(pathEntry.m_frame ) );
 	DialogVBox_packRow( ui::VBox(GTK_VBOX( vbox )), row );
 
-	return ui::Widget(GTK_WIDGET( row ));
+	return ui::Widget(row );
 }
 
 ui::Widget Dialog::addPathEntry( ui::Widget vbox, const char* name, CopiedString& data, bool browse_directory ){

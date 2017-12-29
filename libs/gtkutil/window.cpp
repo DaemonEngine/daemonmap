@@ -40,11 +40,11 @@ inline void CHECK_MINIMIZE( ui::Widget w ){
 static gboolean main_window_iconified( ui::Widget widget, GdkEventWindowState* event, gpointer data ){
 	if ( ( event->changed_mask & ( GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_WITHDRAWN ) ) != 0 ) {
 		if ( ( event->new_window_state & ( GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_WITHDRAWN ) ) != 0 ) {
-			CHECK_MINIMIZE( ui::Widget(GTK_WIDGET( data )) );
+			CHECK_MINIMIZE( ui::Widget::from( data ) );
 		}
 		else
 		{
-			CHECK_RESTORE( ui::Widget(GTK_WIDGET( data )) );
+			CHECK_RESTORE( ui::Widget::from( data ) );
 		}
 	}
 	return FALSE;
@@ -112,7 +112,7 @@ gboolean persistent_floating_window_delete( ui::Window floating, GdkEvent *event
 ui::Window create_persistent_floating_window( const char* title, ui::Window main_window ){
 	ui::Window window = ui::Window(GTK_WINDOW( create_floating_window( title, main_window ) ));
 
-	gtk_widget_set_events( GTK_WIDGET( window ), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK );
+	gtk_widget_set_events( window , GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK );
 
 	connect_floating_window_delete_present( window, main_window );
 	window.connect( "delete_event", G_CALLBACK( persistent_floating_window_delete ), 0 );

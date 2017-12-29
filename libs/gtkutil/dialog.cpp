@@ -58,7 +58,7 @@ ui::Table create_dialog_table( unsigned int rows, unsigned int columns, unsigned
 
 ui::Button create_dialog_button( const char* label, GCallback func, gpointer data ){
 	auto button = ui::Button( label );
-	gtk_widget_set_size_request( GTK_WIDGET( button ), 64, -1 );
+	gtk_widget_set_size_request( button , 64, -1 );
 	button.show();
 	button.connect( "clicked", func, data );
 	return button;
@@ -86,7 +86,7 @@ gboolean modal_dialog_delete( ui::Widget widget, GdkEvent* event, ModalDialog* d
 }
 
 EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog ){
-	gtk_grab_add( GTK_WIDGET( window ) );
+	gtk_grab_add( window  );
 	window.show();
 
 	dialog.loop = true;
@@ -96,7 +96,7 @@ EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog ){
 	}
 
 	window.hide();
-	gtk_grab_remove( GTK_WIDGET( window ) );
+	gtk_grab_remove( window  );
 
 	return dialog.ret;
 }
@@ -118,11 +118,11 @@ ui::Window create_fixedsize_modal_dialog_window( ui::Window parent, const char* 
 
 	window_remove_minmax( window );
 
-	//gtk_widget_set_size_request(GTK_WIDGET(window), width, height);
+	//gtk_widget_set_size_request(window, width, height);
 	//gtk_window_set_default_size(window, width, height);
 	//gtk_window_resize(window, width, height);
 	//GdkGeometry geometry = { width, height, -1, -1, width, height, -1, -1, -1, -1, GDK_GRAVITY_STATIC, };
-	//gtk_window_set_geometry_hints(window, GTK_WIDGET(window), &geometry, (GdkWindowHints)(GDK_HINT_POS|GDK_HINT_MIN_SIZE|GDK_HINT_BASE_SIZE));
+	//gtk_window_set_geometry_hints(window, window, &geometry, (GdkWindowHints)(GDK_HINT_POS|GDK_HINT_MIN_SIZE|GDK_HINT_BASE_SIZE));
 
 	return window;
 }
@@ -251,7 +251,7 @@ ui::Table DialogRow_new( const char* name, ui::Widget widget ){
 	gtk_table_set_col_spacings( table, 4 );
 	gtk_table_set_row_spacings( table, 0 );
 
-	gtk_table_attach( table, GTK_WIDGET( DialogLabel_new( name ) ), 0, 1, 0, 1,
+	gtk_table_attach( table, DialogLabel_new( name  ), 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 

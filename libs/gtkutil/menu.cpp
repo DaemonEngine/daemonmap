@@ -40,7 +40,7 @@ void menu_add_item( ui::Menu menu, ui::MenuItem item ){
 ui::MenuItem menu_separator( ui::Menu menu ){
 	auto menu_item = ui::MenuItem(GTK_MENU_ITEM( gtk_menu_item_new() ));
 	menu.add(menu_item);
-	gtk_widget_set_sensitive( GTK_WIDGET( menu_item ), FALSE );
+	gtk_widget_set_sensitive( menu_item , FALSE );
 	menu_item.show();
 	return menu_item;
 }
@@ -48,7 +48,7 @@ ui::MenuItem menu_separator( ui::Menu menu ){
 ui::TearoffMenuItem menu_tearoff( ui::Menu menu ){
 	auto menu_item = ui::TearoffMenuItem(GTK_TEAROFF_MENU_ITEM( gtk_tearoff_menu_item_new() ));
 	menu.add(menu_item);
-// gtk_widget_set_sensitive(GTK_WIDGET(menu_item), FALSE); -- controls whether menu is detachable
+// gtk_widget_set_sensitive(menu_item, FALSE); -- controls whether menu is detachable
 	menu_item.show();
 	return menu_item;
 }

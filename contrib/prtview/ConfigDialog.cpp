@@ -123,7 +123,7 @@ static void SetClipText( GtkWidget* label ){
 
 static void OnScroll2d( GtkAdjustment *adj, gpointer data ){
 	portals.width_2d = static_cast<float>( gtk_adjustment_get_value(adj) );
-	Set2DText( GTK_WIDGET( data ) );
+	Set2DText( ui::Widget::from(data) );
 
 	Portals_shadersChanged();
 	SceneChangeNotify();
@@ -131,21 +131,21 @@ static void OnScroll2d( GtkAdjustment *adj, gpointer data ){
 
 static void OnScroll3d( GtkAdjustment *adj, gpointer data ){
 	portals.width_3d = static_cast<float>( gtk_adjustment_get_value(adj) );
-	Set3DText( GTK_WIDGET( data ) );
+	Set3DText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
 
 static void OnScrollTrans( GtkAdjustment *adj, gpointer data ){
 	portals.trans_3d = static_cast<float>( gtk_adjustment_get_value(adj) );
-	Set3DTransText( GTK_WIDGET( data ) );
+	Set3DTransText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
 
 static void OnScrollClip( GtkAdjustment *adj, gpointer data ){
 	portals.clip_range = static_cast<float>( gtk_adjustment_get_value(adj) );
-	SetClipText( GTK_WIDGET( data ) );
+	SetClipText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
@@ -331,8 +331,8 @@ void DoConfigDialog(){
 	gtk_combo_box_text_append_text(zlist, "Z-Buffer Test Only (recommended for transparent polygons)");
 	gtk_combo_box_text_append_text(zlist, "Z-Buffer Off");
 
-	zlist.connect("changed", G_CALLBACK(+[](GtkComboBox *self, void *) {
-		OnSelchangeZbuffer(GTK_WIDGET(self), GINT_TO_POINTER(gtk_combo_box_get_active(self)));
+	zlist.connect("changed", G_CALLBACK(+[](ui::ComboBox self, void *) {
+		OnSelchangeZbuffer(self, GINT_TO_POINTER(gtk_combo_box_get_active(self)));
 	}), nullptr);
 
 	table = ui::Table( 2, 2, FALSE );

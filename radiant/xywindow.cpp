@@ -551,7 +551,7 @@ void WXY_Print(){
 	unsigned char* img;
 	const char* filename;
 
-	filename = ui::file_dialog( GTK_WIDGET( MainFrame_getWindow() ), FALSE, "Save Image", 0, FILTER_BMP );
+	filename = ui::file_dialog( MainFrame_getWindow( ), FALSE, "Save Image", 0, FILTER_BMP );
 	if ( !filename ) {
 		return;
 	}
@@ -1113,7 +1113,7 @@ void pushMenu( const CopiedString& name ){
 	m_stack.back().first.add(item);
 
 	auto submenu = ui::Menu(ui::New);
-	gtk_menu_item_set_submenu( item, GTK_WIDGET( submenu ) );
+	gtk_menu_item_set_submenu( item, submenu  );
 
 	m_stack.push_back( MenuPair( submenu, name ) );
 }

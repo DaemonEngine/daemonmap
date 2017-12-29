@@ -189,6 +189,9 @@ namespace ui {
         void unref()
         { g_object_unref(_handle); }
 
+        void ref()
+        { g_object_ref(_handle); }
+
         template<class Lambda>
         gulong connect(char const *detailed_signal, Lambda &&c_handler, void *data);
 

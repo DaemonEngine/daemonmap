@@ -170,7 +170,7 @@ gboolean OnSelchangeComboWhatgame( ui::Widget widget, GameCombo* combo ){
 	gamecombo_t gamecombo = gamecombo_for_gamename( gamename );
 
 	combo->fsgame_entry.text( gamecombo.fs_game );
-	gtk_widget_set_sensitive( GTK_WIDGET( combo->fsgame_entry ), gamecombo.sensitive );
+	gtk_widget_set_sensitive( combo->fsgame_entry , gamecombo.sensitive );
 
 	return FALSE;
 }
@@ -210,7 +210,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 		window.add(table1);
 		{
             auto vbox = create_dialog_vbox( 4 );
-			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
+			gtk_table_attach( table1, vbox , 1, 2, 0, 1,
 							  (GtkAttachOptions) ( GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 			{
@@ -224,7 +224,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 		}
 		{
 			auto frame = create_dialog_frame( "Project settings" );
-			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 0, 1,
+			gtk_table_attach( table1, frame , 0, 1, 0, 1,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 			{
@@ -234,7 +234,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				{
 					auto label = ui::Label( "Select mod" );
 					label.show();
-					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 0, 1,
+					gtk_table_attach( table2, label , 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
@@ -249,7 +249,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().custom );
 
 					dialog.game_combo.game_select.show();
-					gtk_table_attach( table2, GTK_WIDGET( dialog.game_combo.game_select ), 1, 2, 0, 1,
+					gtk_table_attach( table2, dialog.game_combo.game_select , 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -259,7 +259,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				{
 					auto label = ui::Label( "fs_game" );
 					label.show();
-					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 1, 2,
+					gtk_table_attach( table2, label , 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
@@ -267,7 +267,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table2, GTK_WIDGET( entry ), 1, 2, 1, 2,
+					gtk_table_attach( table2, entry , 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -277,7 +277,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				if ( globalMappingMode().do_mapping_mode ) {
 					auto label = ui::Label( "Mapping mode" );
 					label.show();
-					gtk_table_attach( table2, GTK_WIDGET( label ), 0, 1, 3, 4,
+					gtk_table_attach( table2, label , 0, 1, 3, 4,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
@@ -287,7 +287,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_combo_box_text_append_text( combo, globalMappingMode().mp_mapping_mode );
 
 					combo.show();
-					gtk_table_attach( table2, GTK_WIDGET( combo ), 1, 2, 3, 4,
+					gtk_table_attach( table2, combo , 1, 2, 3, 4,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -303,7 +303,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 
 	gtk_combo_box_set_active( dialog.game_combo.game_select, gamecombo.game );
 	dialog.game_combo.fsgame_entry.text( gamecombo.fs_game );
-	gtk_widget_set_sensitive( GTK_WIDGET( dialog.game_combo.fsgame_entry ), gamecombo.sensitive );
+	gtk_widget_set_sensitive( dialog.game_combo.fsgame_entry , gamecombo.sensitive );
 
 	if ( globalMappingMode().do_mapping_mode ) {
 		const char *gamemode = gamemode_get();
@@ -389,7 +389,7 @@ void DoSides( int type, int axis ){
 			entry.show();
 			hbox.pack_start( entry, FALSE, FALSE, 0 );
 			sides_entry = entry;
-			gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+			gtk_widget_grab_focus( entry  );
 		}
 		{
             auto vbox = create_dialog_vbox( 4 );
@@ -398,12 +398,12 @@ void DoSides( int type, int axis ){
 				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
                 auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &dialog );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}
@@ -514,7 +514,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( "Vendor:" );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
+					gtk_table_attach( table, label , 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -522,7 +522,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( "Version:" );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
+					gtk_table_attach( table, label , 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -530,7 +530,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( "Renderer:" );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 2, 3,
+					gtk_table_attach( table, label , 0, 1, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -538,7 +538,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_VENDOR ) ) );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 0, 1,
+					gtk_table_attach( table, label , 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -546,7 +546,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_VERSION ) ) );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 1, 2,
+					gtk_table_attach( table, label , 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -554,7 +554,7 @@ void DoAbout(){
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_RENDERER ) ) );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 1, 2, 2, 3,
+					gtk_table_attach( table, label , 1, 2, 2, 3,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -625,7 +625,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				{
 					auto label = ui::Label( "Texture x:" );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 0, 1,
+					gtk_table_attach( table, label , 0, 1, 0, 1,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -633,7 +633,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				{
 					auto label = ui::Label( "Texture y:" );
 					label.show();
-					gtk_table_attach( table, GTK_WIDGET( label ), 0, 1, 1, 2,
+					gtk_table_attach( table, label , 0, 1, 1, 2,
 									  (GtkAttachOptions) ( GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
@@ -641,7 +641,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 0, 1,
+					gtk_table_attach( table, entry , 1, 2, 0, 1,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -650,7 +650,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, GTK_WIDGET( entry ), 1, 2, 1, 2,
+					gtk_table_attach( table, entry , 1, 2, 1, 2,
 									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 									  (GtkAttachOptions) ( 0 ), 0, 0 );
 
@@ -665,12 +665,12 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
                 auto button = create_modal_dialog_button( "Cancel", cancel_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+				gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
 	}
@@ -685,7 +685,7 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 	y.text( buf );
 
 	// Set focus after intializing the values
-	gtk_widget_grab_focus( GTK_WIDGET( x ) );
+	gtk_widget_grab_focus( x  );
 
 	EMessageBoxReturn ret = modal_dialog_show( window, dialog );
 	if ( ret == eIDOK ) {
@@ -724,7 +724,7 @@ static void editor_save( ui::Widget widget, gpointer data ){
 	gpointer text = g_object_get_data( G_OBJECT( data ), "text" );
 
 	if ( f == 0 ) {
-		ui::Widget(GTK_WIDGET( data )).alert( "Error saving file !" );
+		ui::Widget::from(data).alert( "Error saving file !" );
 		return;
 	}
 
@@ -877,7 +877,7 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 				entry.show();
 				vbox.pack_start( entry, TRUE, TRUE, 0 );
 
-				gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+				gtk_widget_grab_focus( entry  );
 
 				intensity_entry = entry;
 			}
@@ -890,12 +890,12 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
                 auto button = create_modal_dialog_button( "Cancel", cancel_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}
@@ -945,7 +945,7 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 				entry.show();
 				vbox.pack_start( entry, TRUE, TRUE, 0 );
 
-				gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+				gtk_widget_grab_focus( entry  );
 
 				textentry = entry;
 			}
@@ -958,12 +958,12 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
                 auto button = create_modal_dialog_button( "Cancel", cancel_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}
@@ -1017,7 +1017,7 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const
 				auto button = create_modal_dialog_button( "OK", ok_button );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
-				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
+				gtk_widget_add_accelerator( button , "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
 	}

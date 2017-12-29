@@ -611,7 +611,7 @@ static gint ci_add_target( GtkWidget *widget, gpointer data ){
 
 				// Select the last item in the listbox
 				li = g_list_last( GTK_LIST( GTK_COMBO( g_pPathListCombo )->list )->children );
-				gtk_list_select_child( GTK_LIST( GTK_COMBO( g_pPathListCombo )->list ), GTK_WIDGET( li->data ) );
+				gtk_list_select_child( GTK_LIST( GTK_COMBO( g_pPathListCombo )->list ), li->data  );
 
 				// If this was the first one, refresh the event list
 				if ( GetCurrentCam()->GetCam()->numTargets() == 1 ) {
@@ -675,7 +675,7 @@ void RefreshCamListCombo( void ){
 		combo_cam = firstCam;
 		while ( li && combo_cam ) {
 			if ( combo_cam == GetCurrentCam() ) {
-				gtk_list_select_child( GTK_LIST( GTK_COMBO( g_pCamListCombo )->list ), GTK_WIDGET( li->data ) );
+				gtk_list_select_child( GTK_LIST( GTK_COMBO( g_pCamListCombo )->list ), li->data  );
 				break;
 			}
 			li = li->next;

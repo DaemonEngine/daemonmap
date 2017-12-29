@@ -289,7 +289,7 @@ int g_iLastLightIntensity;
 void Entity_createFromSelection( const char* name, const Vector3& origin ){
 #if 0
 	if ( string_equal_nocase( name, "worldspawn" ) ) {
-		ui::alert( GTK_WIDGET( MainFrame_getWindow() ), "Can't create an entity with worldspawn.", "info" );
+		ui::alert( MainFrame_getWindow( ), "Can't create an entity with worldspawn.", "info" );
 		return;
 	}
 #endif
@@ -392,7 +392,7 @@ void Entity_createFromSelection( const char* name, const Vector3& origin ){
 
 #if 0
 bool DoNormalisedColor( Vector3& color ){
-	if ( !color_dialog( GTK_WIDGET( MainFrame_getWindow() ), color ) ) {
+	if ( !color_dialog( MainFrame_getWindow( ), color ) ) {
 		return false;
 	}
 	/*

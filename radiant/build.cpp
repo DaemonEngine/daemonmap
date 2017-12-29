@@ -839,7 +839,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		window.add(table1);
 		{
 			auto vbox = create_dialog_vbox( 4 );
-			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
+			gtk_table_attach( table1, vbox , 1, 2, 0, 1,
 							  (GtkAttachOptions) ( GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 			{
@@ -853,7 +853,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		}
 		{
 			auto frame = create_dialog_frame( "Build menu" );
-			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 0, 1,
+			gtk_table_attach( table1, frame , 0, 1, 0, 1,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
@@ -890,7 +890,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		}
 		{
 			auto frame = create_dialog_frame( "Commandline" );
-			gtk_table_attach( table1, GTK_WIDGET( frame ), 0, 1, 1, 2,
+			gtk_table_attach( table1, frame , 0, 1, 1, 2,
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
 			{
@@ -1003,9 +1003,9 @@ void Build_constructMenu( ui::Menu menu ){
 
 
 void Build_refreshMenu( ui::Menu menu ){
-	for ( BuildMenuItems::iterator i = g_BuildMenuItems.begin(); i != g_BuildMenuItems.end(); ++i )
+	for (auto i = g_BuildMenuItems.begin(); i != g_BuildMenuItems.end(); ++i )
 	{
-		menu.remove(ui::Widget(GTK_WIDGET((*i).m_item)));
+		menu.remove(ui::MenuItem(i->m_item));
 	}
 
 	g_BuildMenuItems.clear();

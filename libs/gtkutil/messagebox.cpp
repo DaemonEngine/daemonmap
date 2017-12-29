@@ -110,8 +110,8 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	if ( type == eMB_OK ) {
 		auto button = create_modal_dialog_button( "OK", ok_button );
 		hbox.pack_start( button, TRUE, FALSE, 0 );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 		widget_make_default( button );
 		button.show();
 
@@ -121,7 +121,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 		{
 			auto button = create_modal_dialog_button( "OK", ok_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+			gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			widget_make_default( button );
 			button.show();
 		}
@@ -129,7 +129,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 		{
 			auto button = create_modal_dialog_button( "OK", cancel_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+			gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			button.show();
 		}
 

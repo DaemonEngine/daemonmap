@@ -326,7 +326,7 @@ ui::Window CGameDialog::BuildDialog(){
 	frame.add(vbox2);
 
 	{
-		PreferencesPage preferencesPage( *this, ui::Widget(GTK_WIDGET( vbox2 )) );
+		PreferencesPage preferencesPage( *this, ui::Widget(vbox2 ) );
 		Global_constructPreferences( preferencesPage );
 		CreateGlobalFrame( preferencesPage );
 	}
@@ -482,7 +482,7 @@ CGameDialog g_GamesDialog;
 
 static void OnButtonClean( ui::Widget widget, gpointer data ){
 	// make sure this is what the user wants
-	if ( ui::Widget(GTK_WIDGET( g_Preferences.GetWidget() )).alert( "This will close Radiant and clean the corresponding registry entries.\n"
+	if ( ui::Widget(g_Preferences.GetWidget( )).alert( "This will close Radiant and clean the corresponding registry entries.\n"
 																  "Next time you start Radiant it will be good as new. Do you wish to continue?",
 						 "Reset Registry", ui::alert_type::YESNO, ui::alert_icon::Asterisk ) == ui::alert_response::YES ) {
 		PrefsDlg *dlg = (PrefsDlg*)data;

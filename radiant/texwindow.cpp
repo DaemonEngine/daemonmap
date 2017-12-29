@@ -1694,7 +1694,7 @@ ui::MenuItem TextureBrowser_constructViewMenu( ui::Menu menu ){
 
 	if ( string_empty( g_pGameDescription->getKeyValue( "show_wads" ) ) ) {
 		menu_separator( menu );
-		g_TextureBrowser.m_shader_info_item = ui::Widget(GTK_WIDGET( create_menu_item_with_mnemonic( menu, "Shader Info", "ShaderInfo" ) ));
+		g_TextureBrowser.m_shader_info_item = ui::Widget(create_menu_item_with_mnemonic( menu, "Shader Info", "ShaderInfo"  ));
 		gtk_widget_set_sensitive( g_TextureBrowser.m_shader_info_item, FALSE );
 	}
 
@@ -2035,7 +2035,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 		TextureBrowser_createTreeViewTree();
 
-		gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tree ), GTK_WIDGET( g_TextureBrowser.m_treeViewTree ) );
+		gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tree ), g_TextureBrowser.m_treeViewTree  );
 		g_TextureBrowser.m_treeViewTree.show();
 	}
 	{ // gl_widget scrollbar
@@ -2096,7 +2096,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTags ) );
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
-			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tags ), GTK_WIDGET( g_TextureBrowser.m_treeViewTags ) );
+			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tags ), g_TextureBrowser.m_treeViewTags  );
 			g_TextureBrowser.m_treeViewTags.show();
 		}
 		{ // Texture/Tag notebook
@@ -2145,7 +2145,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			g_TextureBrowser.m_assigned_tree.show();
 
 			scrolled_win.show();
-			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_WIDGET( g_TextureBrowser.m_assigned_tree ) );
+			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), g_TextureBrowser.m_assigned_tree  );
 
 			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
 		}
@@ -2173,7 +2173,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			g_TextureBrowser.m_available_tree.show();
 
 			scrolled_win.show();
-			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_WIDGET( g_TextureBrowser.m_available_tree ) );
+			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), g_TextureBrowser.m_available_tree  );
 
 			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 2, 3, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
 		}
@@ -2320,7 +2320,7 @@ void TextureBrowser_renameTag(){
 	}
 	else
 	{
-		ui::Widget(GTK_WIDGET( g_TextureBrowser.m_parent )).alert( "Select a single tag for renaming." );
+		ui::Widget(g_TextureBrowser.m_parent ).alert( "Select a single tag for renaming." );
 	}
 }
 
@@ -2331,7 +2331,7 @@ void TextureBrowser_deleteTag(){
 	gtk_tree_selection_selected_foreach( selection, GtkTreeSelectionForeachFunc( TextureBrowser_selectionHelper ), &selected );
 
 	if ( g_slist_length( selected ) == 1 ) { // we only delete a single tag
-		auto result = ui::Widget(GTK_WIDGET( g_TextureBrowser.m_parent )).alert( "Are you sure you want to delete the selected tag?", "Delete Tag", ui::alert_type::YESNO, ui::alert_icon::Question );
+		auto result = ui::Widget(g_TextureBrowser.m_parent ).alert( "Are you sure you want to delete the selected tag?", "Delete Tag", ui::alert_type::YESNO, ui::alert_icon::Question );
 
 		if ( result == ui::alert_response::YES ) {
 			GtkTreeIter iterSelected;
@@ -2360,7 +2360,7 @@ void TextureBrowser_deleteTag(){
 		}
 	}
 	else {
-		ui::Widget(GTK_WIDGET( g_TextureBrowser.m_parent )).alert( "Select a single tag for deletion." );
+		ui::Widget(g_TextureBrowser.m_parent ).alert( "Select a single tag for deletion." );
 	}
 }
 
@@ -2452,7 +2452,7 @@ void TextureBrowser_showAll(){
 }
 
 void TextureBrowser_showUntagged(){
-	auto result = ui::Widget(GTK_WIDGET( g_TextureBrowser.m_parent )).alert( "WARNING! This function might need a lot of memory and time. Are you sure you want to use it?", "Show Untagged", ui::alert_type::YESNO, ui::alert_icon::Warning );
+	auto result = ui::Widget(g_TextureBrowser.m_parent ).alert( "WARNING! This function might need a lot of memory and time. Are you sure you want to use it?", "Show Untagged", ui::alert_type::YESNO, ui::alert_icon::Warning );
 
 	if ( result == ui::alert_response::YES ) {
 		g_TextureBrowser.m_found_shaders.clear();

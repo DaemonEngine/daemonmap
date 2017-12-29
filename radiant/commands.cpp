@@ -165,7 +165,7 @@ struct command_list_dialog_t : public ModalDialog
 	}
 	ModalDialogButton m_close_button;
 
-	GtkTreeView *m_list;
+	ui::TreeView m_list;
 	GtkTreeIter m_command_iter;
 	GtkTreeModel *m_model;
 	bool m_waiting_for_key;
@@ -178,7 +178,7 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 		// just unhighlight, user wanted to cancel
 		dialog.m_waiting_for_key = false;
 		gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
-		gtk_widget_set_sensitive( GTK_WIDGET( dialog.m_list ), true );
+		gtk_widget_set_sensitive( dialog.m_list , true );
 		dialog.m_model = NULL;
 		return;
 	}
@@ -223,7 +223,7 @@ void accelerator_edit_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	dialog.m_model = model;
 
 	// 2. disallow changing the row
-	//gtk_widget_set_sensitive(GTK_WIDGET(dialog.m_list), false);
+	//gtk_widget_set_sensitive(dialog.m_list, false);
 
 	// 3. highlight the row
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, 2, true, -1 );
@@ -274,7 +274,7 @@ bool accelerator_window_key_press( ui::Widget widget, GdkEventKey *event, gpoint
 	Shortcuts::iterator thisShortcutIterator = g_shortcuts.find( commandName );
 	if ( thisShortcutIterator == g_shortcuts.end() ) {
 		gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
-		gtk_widget_set_sensitive( GTK_WIDGET( dialog.m_list ), true );
+		gtk_widget_set_sensitive( dialog.m_list , true );
 		return true;
 	}
 
@@ -341,7 +341,7 @@ public:
 	GlobalShortcuts_foreach( verify_visitor );
 
 	gtk_list_store_set( GTK_LIST_STORE( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
-	gtk_widget_set_sensitive( GTK_WIDGET( dialog.m_list ), true );
+	gtk_widget_set_sensitive( dialog.m_list , true );
 
 	if ( verify_visitor.allow ) {
 		// clear the ACTUAL accelerator first
@@ -405,8 +405,8 @@ void DoCommandListDlg(){
 		{
 			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
 
-			ui::Widget view = ui::TreeView(ui::TreeModel(GTK_TREE_MODEL(store)));
-			dialog.m_list = GTK_TREE_VIEW( view );
+			auto view = ui::TreeView(ui::TreeModel(GTK_TREE_MODEL(store)));
+			dialog.m_list = view;
 
 			gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), false ); // annoying
 
@@ -476,9 +476,9 @@ public:
 		auto button = create_modal_dialog_button( "Close", dialog.m_close_button );
 		vbox.pack_start( button, FALSE, FALSE, 0 );
 		widget_make_default( button );
-		gtk_widget_grab_default( GTK_WIDGET( button ) );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
-		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_grab_default( button  );
+		gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
+		gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 	}
 
 	modal_dialog_show( window, dialog );

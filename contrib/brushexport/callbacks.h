@@ -1,10 +1,12 @@
 
+#include <uilib/uilib.h>
+
 namespace callbacks {
 
-void OnDestroy( GtkWidget *, gpointer );
-void OnExportClicked( GtkButton *, gpointer );
-void OnAddMaterial( GtkButton *, gpointer );
-void OnRemoveMaterial( GtkButton *, gpointer );
-void OnExportMatClicked( GtkButton * button, gpointer );
+void OnDestroy( ui::Widget, gpointer );
+void OnExportClicked( ui::Button, gpointer );
+void OnAddMaterial( ui::Button, gpointer );
+void OnRemoveMaterial( ui::Button, gpointer );
+void OnExportMatClicked( ui::Button button, gpointer );
 
 } // callbacks
