@@ -43,9 +43,7 @@ void EntryCompletion<StringList>::connect(ui::Entry entry)
 template<class StringList>
 void EntryCompletion<StringList>::append(const char *string)
 {
-    GtkTreeIter iter;
-    gtk_list_store_append(m_store, &iter);
-    gtk_list_store_set(m_store, &iter, 0, string, -1);
+    m_store.append(0, string);
 }
 
 template<class StringList>

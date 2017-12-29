@@ -810,9 +810,7 @@ public:
 EntityClassListStoreAppend( ui::ListStore store_ ) : store( store_ ){
 }
 void visit( EntityClass* e ){
-	GtkTreeIter iter;
-	gtk_list_store_append( store, &iter );
-	gtk_list_store_set( store, &iter, 0, e->name(), 1, e, -1 );
+	store.append(0, e->name(), 1, e);
 }
 };
 
@@ -1047,13 +1045,11 @@ void EntityInspector_updateKeyValues(){
 	// Walk through list and add pairs
 	for ( KeyValues::iterator i = g_selectedKeyValues.begin(); i != g_selectedKeyValues.end(); ++i )
 	{
-		GtkTreeIter iter;
-		gtk_list_store_append( store, &iter );
 		StringOutputStream key( 64 );
 		key << ( *i ).first.c_str();
 		StringOutputStream value( 64 );
 		value << ( *i ).second.c_str();
-		gtk_list_store_set( store, &iter, 0, key.c_str(), 1, value.c_str(), -1 );
+		store.append(0, key.c_str(), 1, value.c_str());
 	}
 
 	g_entityKeyEntry.text( strKey.c_str() );

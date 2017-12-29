@@ -879,9 +879,7 @@ void DoMapInfo(){
 		{
 			char tmp[16];
 			sprintf( tmp, "%u", Unsigned( ( *i ).second ) );
-			GtkTreeIter iter;
-			gtk_list_store_append( GTK_LIST_STORE( EntityBreakdownWalker ), &iter );
-			gtk_list_store_set( GTK_LIST_STORE( EntityBreakdownWalker ), &iter, 0, ( *i ).first.c_str(), 1, tmp, -1 );
+			EntityBreakdownWalker.append(0, (*i).first.c_str(), 1, tmp);
 		}
 	}
 

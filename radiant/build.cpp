@@ -650,11 +650,7 @@ void BSPCommandList_Construct( ui::ListStore store, Project& project ){
 
 	for ( Project::iterator i = project.begin(); i != project.end(); ++i )
 	{
-		const char* buildName = ( *i ).first.c_str();
-
-		GtkTreeIter buildIter;
-		gtk_list_store_append( store, &buildIter );
-		gtk_list_store_set( store, &buildIter, 0, const_cast<char*>( buildName ), -1 );
+		store.append(0, (*i).first.c_str());
 	}
 
 	GtkTreeIter lastIter;
@@ -755,9 +751,7 @@ gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore s
 
 			for ( Build::iterator i = build.begin(); i != build.end(); ++i )
 			{
-				GtkTreeIter commandIter;
-				gtk_list_store_append( store, &commandIter );
-				gtk_list_store_set( store, &commandIter, 0, const_cast<char*>( ( *i ).c_str() ), -1 );
+				store.append(0, (*i).c_str());
 			}
 			GtkTreeIter lastIter;
 			gtk_list_store_append( store, &lastIter );

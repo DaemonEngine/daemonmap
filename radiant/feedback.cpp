@@ -282,9 +282,7 @@ void CDbgDlg::Push( ISAXHandler *pHandler ){
 	gtk_list_store_clear( m_clist );
 	for ( std::size_t i = 0; i < static_cast<std::size_t>( m_pFeedbackElements->len ); ++i )
 	{
-		GtkTreeIter iter;
-		gtk_list_store_append( m_clist, &iter );
-		gtk_list_store_set( m_clist, &iter, 0, GetElement( i )->getName(), -1 );
+		m_clist.append(0, GetElement(i)->getName());
 	}
 
 	ShowDlg();

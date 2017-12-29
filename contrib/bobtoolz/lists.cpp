@@ -24,9 +24,6 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <glib.h>
-#include <gtk/gtk.h>
-
 #include "misc.h"
 
 bool LoadExclusionList( char* filename, std::list<Str>* exclusionList ){
@@ -69,9 +66,7 @@ bool LoadGList( char* filename, ui::ListStore loadlist ){
 			if ( strlen( buffer ) > 0 ) {
 				char* buffer2 = new char[strlen( buffer ) + 1];
 				strcpy( buffer2, buffer );
-				GtkTreeIter iter;
-				gtk_list_store_append(loadlist, &iter);
-				gtk_list_store_set(loadlist, &iter, 0, buffer2, -1);
+				loadlist.append(0, buffer2);
 			}
 			else{
 				cnt++;

@@ -441,11 +441,7 @@ public:
 					StringOutputStream modifiers;
 					modifiers << accelerator;
 
-					{
-						GtkTreeIter iter;
-						gtk_list_store_append( m_store, &iter );
-						gtk_list_store_set( m_store, &iter, 0, name, 1, modifiers.c_str(), 2, false, 3, 800, -1 );
-					}
+					m_store.append(0, name, 1, modifiers.c_str(), 2, false, 3, 800);
 
 					if ( !m_commandList.failed() ) {
 						int l = strlen( name );

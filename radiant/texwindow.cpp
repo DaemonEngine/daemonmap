@@ -1306,8 +1306,7 @@ void BuildStoreAssignedTags( ui::ListStore store, const char* shader, TextureBro
 
 	for ( size_t i = 0; i < assigned_tags.size(); i++ )
 	{
-		gtk_list_store_append( store, &iter );
-		gtk_list_store_set( store, &iter, TAG_COLUMN, assigned_tags[i].c_str(), -1 );
+		store.append(TAG_COLUMN, assigned_tags[i].c_str());
 	}
 }
 
@@ -1327,8 +1326,7 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 	if ( !row ) { // does the shader have tags assigned?
 		for ( iterAll = allTags.begin(); iterAll != allTags.end(); ++iterAll )
 		{
-			gtk_list_store_append( storeAvailable, &iterAvailable );
-			gtk_list_store_set( storeAvailable, &iterAvailable, TAG_COLUMN, ( *iterAll ).c_str(), -1 );
+			storeAvailable.append(TAG_COLUMN, (*iterAll).c_str());
 		}
 	}
 	else
@@ -1340,8 +1338,7 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 			for ( iterAll = allTags.begin(); iterAll != allTags.end(); ++iterAll )
 			{
 				if ( strcmp( (char*)tag_assigned, ( *iterAll ).c_str() ) != 0 ) {
-					gtk_list_store_append( storeAvailable, &iterAvailable );
-					gtk_list_store_set( storeAvailable, &iterAvailable, TAG_COLUMN, ( *iterAll ).c_str(), -1 );
+					storeAvailable.append(TAG_COLUMN, (*iterAll).c_str());
 				}
 				else
 				{
@@ -1781,8 +1778,7 @@ void TextureBrowser_assignTags(){
 					TagBuilder.AddShaderTag( g_TextureBrowser.shader.c_str(), (char*)tag_assigned, TAG );
 
 					gtk_list_store_remove( g_TextureBrowser.m_available_store, &iter );
-					gtk_list_store_append( g_TextureBrowser.m_assigned_store, &iter );
-					gtk_list_store_set( g_TextureBrowser.m_assigned_store, &iter, TAG_COLUMN, (char*)tag_assigned, -1 );
+					g_TextureBrowser.m_assigned_store.append(TAG_COLUMN, tag_assigned);
 				}
 			}
 		}
@@ -1832,15 +1828,13 @@ void TextureBrowser_removeTags(){
 }
 
 void TextureBrowser_buildTagList(){
-	GtkTreeIter treeIter;
 	gtk_list_store_clear( g_TextureBrowser.m_all_tags_list );
 
 	std::set<CopiedString>::iterator iter;
 
 	for ( iter = g_TextureBrowser.m_all_tags.begin(); iter != g_TextureBrowser.m_all_tags.end(); ++iter )
 	{
-		gtk_list_store_append( g_TextureBrowser.m_all_tags_list, &treeIter );
-		gtk_list_store_set( g_TextureBrowser.m_all_tags_list, &treeIter, TAG_COLUMN, ( *iter ).c_str(), -1 );
+		g_TextureBrowser.m_all_tags_list.append(TAG_COLUMN, (*iter).c_str());
 	}
 }
 
@@ -2268,7 +2262,7 @@ void TextureBrowser_addTag(){
 	EMessageBoxReturn result = DoShaderTagDlg( &tag, "Add shader tag" );
 
 	if ( result == eIDOK && !tag.empty() ) {
-		GtkTreeIter iter, iter2;
+		GtkTreeIter iter;
 		g_TextureBrowser.m_all_tags.insert( tag.c_str() );
 		gtk_list_store_append( g_TextureBrowser.m_available_store, &iter );
 		gtk_list_store_set( g_TextureBrowser.m_available_store, &iter, TAG_COLUMN, tag.c_str(), -1 );
@@ -2277,8 +2271,7 @@ void TextureBrowser_addTag(){
 		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ) );
 		gtk_tree_selection_select_iter( selection, &iter );
 
-		gtk_list_store_append( g_TextureBrowser.m_all_tags_list, &iter2 );
-		gtk_list_store_set( g_TextureBrowser.m_all_tags_list, &iter2, TAG_COLUMN, tag.c_str(), -1 );
+		g_TextureBrowser.m_all_tags_list.append(TAG_COLUMN, tag.c_str());
 	}
 }
 

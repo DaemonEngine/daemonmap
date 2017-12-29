@@ -31,6 +31,7 @@ struct _GtkImage;
 struct _GtkItem;
 struct _GtkLabel;
 struct _GtkListStore;
+struct _GtkTreeIter;
 struct _GtkMenu;
 struct _GtkMenuBar;
 struct _GtkMenuItem;
@@ -524,6 +525,9 @@ namespace ui {
     WRAP(ListStore, Object, _GtkListStore, (ITreeModel),
     ,
          void clear();
+
+         template<class... T>
+         void append(T... args);
     );
 
     WRAP(TreeSelection, Object, _GtkTreeSelection, (),
@@ -578,6 +582,18 @@ namespace ui {
             (*f)(Widget(widget));
         };
         gtk_container_foreach(this, cb, &lambda);
+    }
+
+    namespace {
+        extern "C" {
+        void gtk_list_store_insert_with_values(_GtkListStore *, _GtkTreeIter *, gint position, ...);
+        }
+    }
+
+    template<class... T>
+    void IListStore::append(T... args) {
+        static_assert(sizeof...(args) % 2 == 0, "received an odd number of arguments");
+        gtk_list_store_insert_with_values(this, NULL, -1, args..., -1);
     }
 
 #undef this

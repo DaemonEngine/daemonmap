@@ -114,9 +114,7 @@ void OnAddMaterial( GtkButton* button, gpointer user_data ){
 	const gchar* name = gtk_entry_get_text( edit );
 	if ( g_utf8_strlen( name, -1 ) > 0 ) {
 		ui::ListStore list = ui::ListStore(GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( GTK_WIDGET( button ), "t_materialist" ) ) ) ));
-		GtkTreeIter iter;
-		gtk_list_store_append( list, &iter );
-		gtk_list_store_set( list, &iter, 0, name, -1 );
+		list.append(0, name);
 		gtk_entry_set_text( edit, "" );
 	}
 }
