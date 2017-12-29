@@ -363,7 +363,7 @@ static void preview_spin( GtkAdjustment *adj, double *data ){
 }
 
 void CreateViewWindow(){
-	GtkWidget *hbox, *label, *spin;
+	GtkWidget *label, *spin;
 
 #ifndef ISOMETRIC
 	elevation = PI / 6.;
@@ -382,21 +382,21 @@ void CreateViewWindow(){
 	dlg.add(vbox);
 
 #ifndef ISOMETRIC
-	hbox = ui::HBox( TRUE, 5 );
+	auto hbox = ui::HBox( TRUE, 5 );
 	gtk_widget_show( hbox );
-	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, TRUE, 0 );
+	vbox.pack_start( hbox, FALSE, TRUE, 0 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 3 );
 
 	label = ui::Label( "Elevation" );
 	gtk_widget_show( label );
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
-	gtk_box_pack_start( GTK_BOX( hbox ), label, FALSE, TRUE, 0 );
+	hbox.pack_start( label, FALSE, TRUE, 0 );
 
 	auto adj = ui::Adjustment( 30, -90, 90, 1, 10, 0 );
 	adj.connect( "value_changed", G_CALLBACK( preview_spin ), &elevation );
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
-	gtk_box_pack_start( GTK_BOX( hbox ), spin, FALSE, TRUE, 0 );
+	hbox.pack_start( spin, FALSE, TRUE, 0 );
 	spin.connect( "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &elevation );
 
 	adj = ui::Adjustment( 30, 0, 359, 1, 10, 0 );
@@ -404,19 +404,19 @@ void CreateViewWindow(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	gtk_widget_show( spin );
 	gtk_spin_button_set_wrap( GTK_SPIN_BUTTON( spin ), TRUE );
-	gtk_box_pack_end( GTK_BOX( hbox ), spin, FALSE, TRUE, 0 );
+	hbox.pack_end(spin, FALSE, TRUE, 0);
 
 	label = ui::Label( "Azimuth" );
 	gtk_widget_show( label );
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
-	gtk_box_pack_end( GTK_BOX( hbox ), label, FALSE, TRUE, 0 );
+	hbox.pack_end(label, FALSE, TRUE, 0);
 	spin.connect( "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &azimuth );
 #endif
 
 	auto frame = ui::Frame(ui::null);
 	frame.show();
 	gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_IN );
-	gtk_box_pack_start( GTK_BOX( vbox ), frame, TRUE, TRUE, 0 );
+	vbox.pack_start( frame, TRUE, TRUE, 0 );
 
 	g_pPreviewWidget = g_UIGtkTable.m_pfn_glwidget_new( FALSE, NULL );
 

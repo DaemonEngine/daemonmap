@@ -209,17 +209,17 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 		auto table1 = create_dialog_table( 1, 2, 4, 4, 4 );
 		window.add(table1);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
+            auto vbox = create_dialog_vbox( 4 );
 			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
 							  (GtkAttachOptions) ( GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 			{
-				GtkButton* button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 			{
-				GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &modal );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &modal );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 		}
 		{
@@ -382,27 +382,27 @@ void DoSides( int type, int axis ){
 		{
 			auto label = ui::Label( "Sides:" );
 			label.show();
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+			hbox.pack_start( label, FALSE, FALSE, 0 );
 		}
 		{
 			auto entry = ui::Entry(ui::New);
 			entry.show();
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), FALSE, FALSE, 0 );
+			hbox.pack_start( entry, FALSE, FALSE, 0 );
 			sides_entry = entry;
 			gtk_widget_grab_focus( GTK_WIDGET( entry ) );
 		}
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, TRUE, TRUE, 0 );
 			{
 				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
-				GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &dialog );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &dialog );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
@@ -449,15 +449,15 @@ void DoAbout(){
 		window.add(vbox);
 
 		{
-			GtkHBox* hbox = create_dialog_hbox( 4 );
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
+            auto hbox = create_dialog_hbox( 4 );
+			vbox.pack_start( hbox, FALSE, TRUE, 0 );
 
 			{
-				GtkVBox* vbox2 = create_dialog_vbox( 4 );
-				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox2 ), TRUE, FALSE, 0 );
+                auto vbox2 = create_dialog_vbox( 4 );
+				hbox.pack_start( vbox2, TRUE, FALSE, 0 );
 				{
 					auto frame = create_dialog_frame( 0, ui::Shadow::IN );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
+					vbox2.pack_start( frame, FALSE, FALSE, 0 );
 					{
 						auto image = new_local_image( "logo.png" );
 						image.show();
@@ -479,35 +479,35 @@ void DoAbout(){
 				auto label = ui::Label( label_text );
 
 				label.show();
-				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				hbox.pack_start( label, FALSE, FALSE, 0 );
 				gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 			}
 
 			{
-				GtkVBox* vbox2 = create_dialog_vbox( 4 );
-				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox2 ), FALSE, TRUE, 0 );
+                auto vbox2 = create_dialog_vbox( 4 );
+				hbox.pack_start( vbox2, FALSE, TRUE, 0 );
 				{
-					GtkButton* button = create_modal_dialog_button( "OK", ok_button );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                    auto button = create_modal_dialog_button( "OK", ok_button );
+					vbox2.pack_start( button, FALSE, FALSE, 0 );
 				}
 				{
-					GtkButton* button = create_dialog_button( "Credits", G_CALLBACK( about_button_credits ), 0 );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                    auto button = create_dialog_button( "Credits", G_CALLBACK( about_button_credits ), 0 );
+					vbox2.pack_start( button, FALSE, FALSE, 0 );
 				}
 				{
-					GtkButton* button = create_dialog_button( "Changes", G_CALLBACK( about_button_changelog ), 0 );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                    auto button = create_dialog_button( "Changes", G_CALLBACK( about_button_changelog ), 0 );
+					vbox2.pack_start( button, FALSE, FALSE, 0 );
 				}
 				{
-					GtkButton* button = create_dialog_button( "Issues", G_CALLBACK( about_button_issues ), 0 );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                    auto button = create_dialog_button( "Issues", G_CALLBACK( about_button_issues ), 0 );
+					vbox2.pack_start( button, FALSE, FALSE, 0 );
 				}
 			}
 		}
 		{
 			auto frame = create_dialog_frame( "OpenGL Properties" );
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
+			vbox.pack_start( frame, FALSE, FALSE, 0 );
 			{
 				auto table = create_dialog_table( 3, 2, 4, 4, 4 );
 				frame.add(table);
@@ -562,7 +562,7 @@ void DoAbout(){
 			}
 			{
 				auto frame = create_dialog_frame( "OpenGL Extensions" );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+				vbox.pack_start( frame, TRUE, TRUE, 0 );
 				{
 					auto sc_extensions = create_scrolled_window( ui::Policy::AUTOMATIC, ui::Policy::ALWAYS, 4 );
 					frame.add(sc_extensions);
@@ -607,21 +607,21 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, TRUE, TRUE, 0 );
 			{
 				auto label = ui::Label( "Texture will be fit across the patch based\n"
 															"on the x and y values given. Values of 1x1\n"
 															"will \"fit\" the texture. 2x2 will repeat\n"
 															"it twice, etc." );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), TRUE, TRUE, 0 );
+				vbox.pack_start( label, TRUE, TRUE, 0 );
 				gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 			}
 			{
 				auto table = create_dialog_table( 2, 2, 4, 4 );
 				table.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+				vbox.pack_start( table, TRUE, TRUE, 0 );
 				{
 					auto label = ui::Label( "Texture x:" );
 					label.show();
@@ -659,17 +659,17 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 			}
 		}
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, FALSE, FALSE, 0 );
 			{
 				auto button = create_modal_dialog_button( "OK", ok_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 			{
-				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_modal_dialog_button( "Cancel", cancel_button );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			}
 		}
@@ -755,7 +755,7 @@ static void CreateGtkTextEditor(){
 
 	auto scr = ui::ScrolledWindow(ui::New);
 	scr.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), scr, TRUE, TRUE, 0 );
+	vbox.pack_start( scr, TRUE, TRUE, 0 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
@@ -767,18 +767,18 @@ static void CreateGtkTextEditor(){
 
 	auto hbox = ui::HBox( FALSE, 5 );
 	hbox.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
+	vbox.pack_start( hbox, FALSE, TRUE, 0 );
 
 	auto button = ui::Button( "Close" );
 	button.show();
-	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 					  G_CALLBACK( editor_close ), dlg );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "Save" );
 	button.show();
-	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 					  G_CALLBACK( editor_save ), dlg );
 	gtk_widget_set_size_request( button, 60, -1 );
@@ -865,17 +865,17 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, TRUE, TRUE, 0 );
 			{
 				auto label = ui::Label( "ESC for default, ENTER to validate" );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+				vbox.pack_start( entry, TRUE, TRUE, 0 );
 
 				gtk_widget_grab_focus( GTK_WIDGET( entry ) );
 
@@ -883,18 +883,18 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 			}
 		}
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, FALSE, FALSE, 0 );
 
 			{
 				auto button = create_modal_dialog_button( "OK", ok_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
-				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_modal_dialog_button( "Cancel", cancel_button );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
@@ -932,18 +932,18 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, TRUE, TRUE, 0 );
 			{
 				//GtkLabel* label = GTK_LABEL(gtk_label_new("Enter one ore more tags separated by spaces"));
 				auto label = ui::Label( "ESC to cancel, ENTER to validate" );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+				vbox.pack_start( entry, TRUE, TRUE, 0 );
 
 				gtk_widget_grab_focus( GTK_WIDGET( entry ) );
 
@@ -951,18 +951,18 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 			}
 		}
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, FALSE, FALSE, 0 );
 
 			{
 				auto button = create_modal_dialog_button( "OK", ok_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 			{
-				GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+                auto button = create_modal_dialog_button( "Cancel", cancel_button );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Escape, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}
 		}
@@ -991,31 +991,31 @@ EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
+            auto vbox = create_dialog_vbox( 4 );
+			hbox.pack_start( vbox, FALSE, FALSE, 0 );
 			{
 				auto label = ui::Label( "The selected shader" );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto label = ui::Label( name );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto label = ui::Label( "is located in file" );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto label = ui::Label( filename );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( label ), FALSE, FALSE, 0 );
+				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
 				auto button = create_modal_dialog_button( "OK", ok_button );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 				widget_make_default( button );
 				gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel_group, GDK_KEY_Return, (GdkModifierType)0, GTK_ACCEL_VISIBLE );
 			}

@@ -254,8 +254,6 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server 
 
 // About dialog
 void about_plugin_window(){
-	GtkWidget *label, *button;
-
 	auto window = ui::Window( ui::window_type::TOP ); // create a window
 	gtk_window_set_transient_for( GTK_WINDOW( window ), SunPlug::main_window ); // make the window to stay in front of the main window
 	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
@@ -268,13 +266,13 @@ void about_plugin_window(){
 	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
 	window.add(vbox);
 
-	label = ui::Label( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
+	auto label = ui::Label( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
-	gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
+	vbox.pack_start( label, FALSE, FALSE, 2 ); // insert the label in the box
 
-	button = ui::Button( "OK" ); // create a button with text
+	auto button = ui::Button( "OK" ); // create a button with text
 	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), (void *) window ); // connect the click event to close the window
-	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
+	vbox.pack_start( button, FALSE, FALSE, 2 ); // insert the button in the box
 
 	gtk_window_set_position( GTK_WINDOW( window ), GTK_WIN_POS_CENTER ); // center the window on screen
 
@@ -315,7 +313,7 @@ void GetOptimalCoordinates( AABB *levelBoundingBox ){
 
 // MapCoordinator dialog window
 void MapCoordinator(){
-	GtkWidget *table, *label, *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY;
+	GtkWidget *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY;
 	Entity *theWorldspawn = NULL;
 	const char *buffer;
 	char line[20];
@@ -373,16 +371,16 @@ void MapCoordinator(){
 
 		auto button = ui::Button( "Get optimal mapcoords" ); // create button with text
 		button.connect( "clicked", G_CALLBACK( input_optimal ), NULL ); // connect button with callback function
-		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert button into vbox
+		vbox.pack_start( button, FALSE, FALSE, 2 ); // insert button into vbox
 
-		gtk_box_pack_start( GTK_BOX( vbox ), gtk_hseparator_new(), FALSE, FALSE, 2 ); // insert separator into vbox
+		vbox.pack_start( ui::Widget(gtk_hseparator_new()), FALSE, FALSE, 2 ); // insert separator into vbox
 
-		table = ui::Table( 4, 3, TRUE ); // create table
+		auto table = ui::Table( 4, 3, TRUE ); // create table
 		gtk_table_set_row_spacings( GTK_TABLE( table ), 8 ); // set row spacings
 		gtk_table_set_col_spacings( GTK_TABLE( table ), 8 ); // set column spacings
-		gtk_box_pack_start( GTK_BOX( vbox ), table, FALSE, FALSE, 2 ); // insert table into vbox
+		vbox.pack_start( table, FALSE, FALSE, 2 ); // insert table into vbox
 
-		label = ui::Label( "x" ); // create label
+		auto label = ui::Label( "x" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
 		gtk_table_attach_defaults( GTK_TABLE( table ), label, 1, 2, 0, 1 ); // insert label into table
 
@@ -428,13 +426,13 @@ void MapCoordinator(){
 	else {
 		globalOutputStream() << "SunPlug: no worldspawn found!\n"; // output error to console
 
-		label = ui::Label( "ERROR: No worldspawn was found in the map!\nIn order to use this tool the map must have at least one brush in the worldspawn. " ); // create a label
+		auto label = ui::Label( "ERROR: No worldspawn was found in the map!\nIn order to use this tool the map must have at least one brush in the worldspawn. " ); // create a label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
-		gtk_box_pack_start( GTK_BOX( vbox ), label, FALSE, FALSE, 2 ); // insert the label in the box
+		vbox.pack_start( label, FALSE, FALSE, 2 ); // insert the label in the box
 
 		auto button = ui::Button( "OK" ); // create a button with text
 		button.connect( "clicked", G_CALLBACK( close_window ), NULL ); // connect the click event to close the window
-		gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 2 ); // insert the button in the box
+		vbox.pack_start( button, FALSE, FALSE, 2 ); // insert the button in the box
 	}
 
 	gtk_window_set_position( GTK_WINDOW( window ), GTK_WIN_POS_CENTER ); // center the window

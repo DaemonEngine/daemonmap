@@ -256,6 +256,18 @@ namespace ui {
         gtk_scrolled_window_set_policy(this, static_cast<GtkPolicyType>(x), static_cast<GtkPolicyType>(y));
     }
 
+    IMPL(Box, GTK_BOX);
+
+    void IBox::pack_start(ui::Widget child, bool expand, bool fill, unsigned int padding)
+    {
+        gtk_box_pack_start(this, child, expand, fill, padding);
+    }
+
+    void IBox::pack_end(ui::Widget child, bool expand, bool fill, unsigned int padding)
+    {
+        gtk_box_pack_end(this, child, expand, fill, padding);
+    }
+
     IMPL(VBox, GTK_VBOX);
 
     VBox::VBox(bool homogenous, int spacing) : VBox(GTK_VBOX(gtk_vbox_new(homogenous, spacing)))

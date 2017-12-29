@@ -68,16 +68,16 @@ void DoAboutDlg(){
 			__DATE__;
 	auto label = ui::Label(label_text);
 	label.show();
-	gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+	hbox.pack_start( label, TRUE, TRUE, 0);
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
 
 	auto vbox = ui::VBox(FALSE, 0);
 	vbox.show();
-	gtk_box_pack_start(GTK_BOX(hbox), vbox, FALSE, FALSE, 0);
+	hbox.pack_start( vbox, FALSE, FALSE, 0);
 
 	auto button = ui::Button("OK");
 	button.show();
-	gtk_box_pack_start(GTK_BOX(vbox), button, FALSE, FALSE, 0);
+	vbox.pack_start( button, FALSE, FALSE, 0);
 	button.connect("clicked", G_CALLBACK(dialog_button_callback), GINT_TO_POINTER(IDOK));
 	button.dimensions(60, -1);
 

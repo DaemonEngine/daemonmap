@@ -27,7 +27,7 @@
 #include "dialog.h"
 #include "widget.h"
 
-GtkWidget* create_padding( int width, int height ){
+ui::Widget create_padding( int width, int height ){
 	ui::Alignment widget = ui::Alignment( 0.0, 0.0, 0.0, 0.0 );
 	gtk_widget_show( widget );
 	gtk_widget_set_size_request( widget, width, height );
@@ -74,42 +74,42 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	window.add(vbox);
 
 
-	GtkHBox* hboxDummy = create_dialog_hbox( 0, 0 );
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hboxDummy ), FALSE, FALSE, 0 );
+	auto hboxDummy = create_dialog_hbox( 0, 0 );
+	vbox.pack_start( hboxDummy, FALSE, FALSE, 0 );
 
-	gtk_box_pack_start( GTK_BOX( hboxDummy ), create_padding( 0, 50 ), FALSE, FALSE, 0 ); // HACK to force minimum height
+	hboxDummy.pack_start( create_padding( 0, 50 ), FALSE, FALSE, 0 ); // HACK to force minimum height
 
-	GtkHBox* iconBox = create_dialog_hbox( 16, 0 );
-	gtk_box_pack_start( GTK_BOX( hboxDummy ), GTK_WIDGET( iconBox ), FALSE, FALSE, 0 );
+	auto iconBox = create_dialog_hbox( 16, 0 );
+	hboxDummy.pack_start( iconBox, FALSE, FALSE, 0 );
 
-	GtkImage* image = GTK_IMAGE( gtk_image_new_from_stock( messagebox_stock_icon( icon ), GTK_ICON_SIZE_DIALOG ) );
+	auto image = ui::Image(GTK_IMAGE( gtk_image_new_from_stock( messagebox_stock_icon( icon ), GTK_ICON_SIZE_DIALOG ) ));
 	gtk_widget_show( GTK_WIDGET( image ) );
-	gtk_box_pack_start( GTK_BOX( iconBox ), GTK_WIDGET( image ), FALSE, FALSE, 0 );
+	iconBox.pack_start( image, FALSE, FALSE, 0 );
 
-	GtkLabel* label = GTK_LABEL( ui::Label( text ) );
+	auto label = ui::Label( text );
 	gtk_widget_show( GTK_WIDGET( label ) );
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 	gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 	gtk_label_set_line_wrap( label, TRUE );
-	gtk_box_pack_start( GTK_BOX( iconBox ), GTK_WIDGET( label ), TRUE, TRUE, 0 );
+	iconBox.pack_start( label, TRUE, TRUE, 0 );
 
 
-	GtkVBox* vboxDummy = create_dialog_vbox( 0, 0 );
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( vboxDummy ), FALSE, FALSE, 0 );
+	auto vboxDummy = create_dialog_vbox( 0, 0 );
+	vbox.pack_start( vboxDummy, FALSE, FALSE, 0 );
 
 	auto alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
 	gtk_widget_show( GTK_WIDGET( alignment ) );
-	gtk_box_pack_start( GTK_BOX( vboxDummy ), GTK_WIDGET( alignment ), FALSE, FALSE, 0 );
+	vboxDummy.pack_start( alignment, FALSE, FALSE, 0 );
 
 	auto hbox = create_dialog_hbox( 8, 0 );
 	alignment.add(hbox);
 
-	gtk_box_pack_start( GTK_BOX( vboxDummy ), create_padding( 400, 0 ), FALSE, FALSE, 0 ); // HACK to force minimum width
+	vboxDummy.pack_start( create_padding( 400, 0 ), FALSE, FALSE, 0 ); // HACK to force minimum width
 
 
 	if ( type == eMB_OK ) {
 		auto button = create_modal_dialog_button( "OK", ok_button );
-		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+		hbox.pack_start( button, TRUE, FALSE, 0 );
 		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 		widget_make_default( button );
@@ -120,15 +120,15 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	else if ( type ==  eMB_OKCANCEL ) {
 		{
 			auto button = create_modal_dialog_button( "OK", ok_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );
 			widget_make_default( button );
 			button.show();
 		}
 
 		{
-			GtkButton* button = create_modal_dialog_button( "OK", cancel_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			auto button = create_modal_dialog_button( "OK", cancel_button );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
@@ -138,19 +138,19 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	else if ( type == eMB_YESNOCANCEL ) {
 		{
 			auto button = create_modal_dialog_button( "Yes", yes_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			widget_make_default( button );
 			button.show();
 		}
 
 		{
-			GtkButton* button = create_modal_dialog_button( "No", no_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			auto button = create_modal_dialog_button( "No", no_button );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
 		{
-			GtkButton* button = create_modal_dialog_button( "Cancel", cancel_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			auto button = create_modal_dialog_button( "Cancel", cancel_button );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
 
@@ -159,13 +159,13 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	else if ( type == eMB_NOYES ) {
 		{
 			auto button = create_modal_dialog_button( "No", no_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			widget_make_default( button );
 			button.show();
 		}
 		{
-			GtkButton* button = create_modal_dialog_button( "Yes", yes_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			auto button = create_modal_dialog_button( "Yes", yes_button );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
 
@@ -175,14 +175,14 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	{
 		{
 			auto button = create_modal_dialog_button( "Yes", yes_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			widget_make_default( button );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
 
 		{
-			GtkButton* button = create_modal_dialog_button( "No", no_button );
-			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+			auto button = create_modal_dialog_button( "No", no_button );
+			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_show( GTK_WIDGET( button ) );
 		}
 		dialog.ret = eIDNO;

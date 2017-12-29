@@ -2166,7 +2166,7 @@ ui::MenuItem create_help_menu(){
 	return help_menu_item;
 }
 
-GtkMenuBar* create_main_menu( MainFrame::EViewStyle style ){
+ui::MenuBar create_main_menu( MainFrame::EViewStyle style ){
 	auto menu_bar = ui::MenuBar(GTK_MENU_BAR( gtk_menu_bar_new() ));
 	menu_bar.show();
 
@@ -2736,7 +2736,7 @@ void MainFrame::Create(){
 
 	GetPlugInMgr().Init( window );
 
-	ui::Widget vbox = ui::VBox( FALSE, 0 );
+	auto vbox = ui::VBox( FALSE, 0 );
 	window.add(vbox);
 	vbox.show();
 
@@ -2746,20 +2746,20 @@ void MainFrame::Create(){
 
 	register_shortcuts();
 
-	GtkMenuBar* main_menu = create_main_menu( CurrentStyle() );
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( main_menu ), FALSE, FALSE, 0 );
+    auto main_menu = create_main_menu( CurrentStyle() );
+	vbox.pack_start( main_menu, FALSE, FALSE, 0 );
 
-	GtkToolbar* main_toolbar = create_main_toolbar( CurrentStyle() );
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( main_toolbar ), FALSE, FALSE, 0 );
+    auto main_toolbar = create_main_toolbar( CurrentStyle() );
+	vbox.pack_start( main_toolbar, FALSE, FALSE, 0 );
 
 	auto plugin_toolbar = create_plugin_toolbar();
 	if ( !g_Layout_enablePluginToolbar.m_value ) {
 		plugin_toolbar.hide();
 	}
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( plugin_toolbar ), FALSE, FALSE, 0 );
+	vbox.pack_start( plugin_toolbar, FALSE, FALSE, 0 );
 
 	ui::Widget main_statusbar = create_main_statusbar(reinterpret_cast<ui::Widget *>(m_pStatusLabel));
-	gtk_box_pack_end( GTK_BOX( vbox ), main_statusbar, FALSE, TRUE, 2 );
+	vbox.pack_end(main_statusbar, FALSE, TRUE, 2);
 
 	GroupDialog_constructWindow( window );
 	g_page_entity = GroupDialog_addPage( "Entities", EntityInspector_constructWindow( GroupDialog_getWindow() ), RawStringExportCaller( "Entities" ) );
@@ -2793,7 +2793,7 @@ void MainFrame::Create(){
 		{
 			ui::Widget vsplit = ui::VPaned(ui::New);
 			m_vSplit = vsplit;
-			gtk_box_pack_start( GTK_BOX( vbox ), vsplit, TRUE, TRUE, 0 );
+			vbox.pack_start( vsplit, TRUE, TRUE, 0 );
 			vsplit.show();
 
 			// console
@@ -2962,8 +2962,8 @@ void MainFrame::Create(){
 
 		ui::Widget xz = m_pXZWnd->GetWidget();
 
-		GtkHPaned* split = create_split_views( camera, yz, xy, xz );
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( split ), TRUE, TRUE, 0 );
+        auto split = create_split_views( camera, yz, xy, xz );
+		vbox.pack_start( split, TRUE, TRUE, 0 );
 
 		{
 			GtkFrame* frame = create_framed_widget( TextureBrowser_constructWindow( window ) );

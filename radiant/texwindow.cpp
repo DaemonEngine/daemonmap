@@ -2003,7 +2003,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 	ui::Widget table = ui::Table( 3, 3, FALSE );
 	ui::Widget frame_table{ui::null};
-	ui::Widget vbox = ui::VBox( FALSE, 0 );
+	auto vbox = ui::VBox(FALSE, 0);
 	gtk_table_attach( GTK_TABLE( table ), vbox, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
 	vbox.show();
 
@@ -2101,11 +2101,11 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		}
 		{ // Texture/Tag notebook
 			TextureBrowser_constructTagNotebook();
-			gtk_box_pack_start( GTK_BOX( vbox ), g_TextureBrowser.m_tag_notebook, TRUE, TRUE, 0 );
+			vbox.pack_start( g_TextureBrowser.m_tag_notebook, TRUE, TRUE, 0 );
 		}
 		{ // Tag search button
 			TextureBrowser_constructSearchButton();
-			gtk_box_pack_end( GTK_BOX( vbox ), g_TextureBrowser.m_search_button, FALSE, FALSE, 0 );
+			vbox.pack_end(g_TextureBrowser.m_search_button, FALSE, FALSE, 0);
 		}
 		{ // Tag frame
 			frame_table = ui::Table( 3, 3, FALSE );
@@ -2212,7 +2212,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		}
 	}
 	else { // no tag support, show the texture tree only
-		gtk_box_pack_start( GTK_BOX( vbox ), g_TextureBrowser.m_scr_win_tree, TRUE, TRUE, 0 );
+		vbox.pack_start( g_TextureBrowser.m_scr_win_tree, TRUE, TRUE, 0 );
 	}
 
 	// TODO do we need this?

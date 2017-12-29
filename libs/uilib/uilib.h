@@ -395,6 +395,8 @@ namespace ui {
 
     WRAP(Box, Container, _GtkBox, (),
     ,
+         void pack_start(ui::Widget child, bool expand, bool fill, unsigned int padding);
+         void pack_end(ui::Widget child, bool expand, bool fill, unsigned int padding);
     );
 
     WRAP(VBox, Box, _GtkVBox, (),

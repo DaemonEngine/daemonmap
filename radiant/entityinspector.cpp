@@ -389,8 +389,8 @@ DirectionAttribute( const char* key ) :
 	m_hbox = ui::HBox( FALSE, 4 );
 	m_hbox.show();
 
-	gtk_box_pack_start( GTK_BOX( m_hbox ), GTK_WIDGET( m_radio.m_hbox ), TRUE, TRUE, 0 );
-	gtk_box_pack_start( GTK_BOX( m_hbox ), GTK_WIDGET( m_entry ), TRUE, TRUE, 0 );
+	m_hbox.pack_start( m_radio.m_hbox, TRUE, TRUE, 0 );
+	m_hbox.pack_start( m_entry, TRUE, TRUE, 0 );
 }
 void release(){
 	delete this;
@@ -478,19 +478,19 @@ AnglesAttribute( const char* key ) :
 	m_hbox.show();
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_angles.m_pitch = entry;
 		m_nonModal.connect( m_angles.m_pitch );
 	}
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_angles.m_yaw = entry;
 		m_nonModal.connect( m_angles.m_yaw );
 	}
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_angles.m_roll = entry;
 		m_nonModal.connect( m_angles.m_roll );
 	}
@@ -565,19 +565,19 @@ Vector3Attribute( const char* key ) :
 	m_hbox.show();
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_vector3.m_x = entry;
 		m_nonModal.connect( m_vector3.m_x );
 	}
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_vector3.m_y = entry;
 		m_nonModal.connect( m_vector3.m_y );
 	}
 	{
 		auto entry = numeric_entry_new();
-		gtk_box_pack_start( m_hbox, GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+		m_hbox.pack_start( entry, TRUE, TRUE, 0 );
 		m_vector3.m_z = entry;
 		m_nonModal.connect( m_vector3.m_z );
 	}
@@ -1287,15 +1287,15 @@ void EntityInspector_destroyWindow( ui::Widget widget, gpointer data ){
 }
 
 ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
-	ui::Widget vbox = ui::VBox( FALSE, 2 );
+    auto vbox = ui::VBox( FALSE, 2 );
 	vbox.show();
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 2 );
 
 	vbox.connect( "destroy", G_CALLBACK( EntityInspector_destroyWindow ), 0 );
 
 	{
-		ui::Widget split1 = ui::VPaned(ui::New);
-		gtk_box_pack_start( GTK_BOX( vbox ), split1, TRUE, TRUE, 0 );
+        auto split1 = ui::VPaned(ui::New);
+		vbox.pack_start( split1, TRUE, TRUE, 0 );
 		split1.show();
 
 		g_entity_split1 = split1;
@@ -1370,14 +1370,14 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 			split2.show();
 
 			{
-				ui::Widget vbox2 = ui::VBox( FALSE, 2 );
+                auto vbox2 = ui::VBox( FALSE, 2 );
 				vbox2.show();
 				gtk_paned_pack1( GTK_PANED( split2 ), vbox2, FALSE, FALSE );
 
 				{
 					// Spawnflags (4 colums wide max, or window gets too wide.)
 					auto table = ui::Table( 4, 4, FALSE );
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
+					vbox2.pack_start( table, FALSE, TRUE, 0 );
 					table.show();
 
 					g_spawnflagsTable = table;
@@ -1395,7 +1395,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					// key/value list
 					auto scr = ui::ScrolledWindow(ui::New);
 					scr.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), scr, TRUE, TRUE, 0 );
+					vbox2.pack_start( scr, TRUE, TRUE, 0 );
 					gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 					gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
@@ -1437,7 +1437,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					// key/value entry
 					auto table = ui::Table( 2, 2, FALSE );
 					table.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
+					vbox2.pack_start( table, FALSE, TRUE, 0 );
 					gtk_table_set_row_spacings( table, 3 );
 					gtk_table_set_col_spacings( table, 5 );
 
@@ -1485,19 +1485,19 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 				{
 					auto hbox = ui::HBox( TRUE, 4 );
 					hbox.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
+					vbox2.pack_start( hbox, FALSE, TRUE, 0 );
 
 					{
 						auto button = ui::Button( "Clear All" );
 						button.show();
 						button.connect( "clicked", G_CALLBACK( EntityInspector_clearAllKeyValues ), 0 );
-						gtk_box_pack_start( hbox, GTK_WIDGET( button ), TRUE, TRUE, 0 );
+						hbox.pack_start( button, TRUE, TRUE, 0 );
 					}
 					{
 						auto button = ui::Button( "Delete Key" );
 						button.show();
 						button.connect( "clicked", G_CALLBACK( EntityInspector_clearKeyValue ), 0 );
-						gtk_box_pack_start( hbox, GTK_WIDGET( button ), TRUE, TRUE, 0 );
+						hbox.pack_start( button, TRUE, TRUE, 0 );
 					}
 				}
 			}

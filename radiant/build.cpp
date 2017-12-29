@@ -838,17 +838,17 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
 		window.add(table1);
 		{
-			GtkVBox* vbox = create_dialog_vbox( 4 );
+			auto vbox = create_dialog_vbox( 4 );
 			gtk_table_attach( table1, GTK_WIDGET( vbox ), 1, 2, 0, 1,
 							  (GtkAttachOptions) ( GTK_FILL ),
 							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
 			{
-				GtkButton* button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 			{
-				GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &modal );
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &modal );
+				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 		}
 		{

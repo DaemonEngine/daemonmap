@@ -77,7 +77,6 @@ static void change_clicked( GtkWidget *widget, gpointer data ){
 }
 
 int DoLoadPortalFileDialog(){
-	GtkWidget *hbox, *entry, *check2d, *check3d;
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window( ui::window_type::TOP );
@@ -94,43 +93,43 @@ int DoLoadPortalFileDialog(){
 	dlg.add(vbox);
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
-	entry = ui::Entry(ui::New);
+	auto entry = ui::Entry(ui::New);
 	gtk_widget_show( entry );
 	gtk_editable_set_editable( GTK_EDITABLE( entry ), FALSE );
-	gtk_box_pack_start( GTK_BOX( vbox ), entry, FALSE, FALSE, 0 );
+	vbox.pack_start( entry, FALSE, FALSE, 0 );
 
-	hbox = ui::HBox( FALSE, 5 );
+	auto hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
-	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 0 );
+	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
-	check3d = ui::CheckButton( "Show 3D" );
+	auto check3d = ui::CheckButton( "Show 3D" );
 	gtk_widget_show( check3d );
-	gtk_box_pack_start( GTK_BOX( hbox ), check3d, FALSE, FALSE, 0 );
+	hbox.pack_start( check3d, FALSE, FALSE, 0 );
 
-	check2d = ui::CheckButton( "Show 2D" );
+	auto check2d = ui::CheckButton( "Show 2D" );
 	gtk_widget_show( check2d );
-	gtk_box_pack_start( GTK_BOX( hbox ), check2d, FALSE, FALSE, 0 );
+	hbox.pack_start( check2d, FALSE, FALSE, 0 );
 
 	auto button = ui::Button( "Change" );
 	gtk_widget_show( button );
-	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked", G_CALLBACK( change_clicked ), entry );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	hbox = ui::HBox( FALSE, 5 );
 	gtk_widget_show( hbox );
-	gtk_box_pack_start( GTK_BOX( vbox ), hbox, FALSE, FALSE, 0 );
+	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
 	button = ui::Button( "Cancel" );
 	gtk_widget_show( button );
-	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "OK" );
 	gtk_widget_show( button );
-	gtk_box_pack_end( GTK_BOX( hbox ), button, FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 	gtk_widget_set_size_request( button, 60, -1 );

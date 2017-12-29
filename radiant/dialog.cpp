@@ -494,18 +494,18 @@ void Dialog::addCombo( ui::Widget vbox, const char* name, int& data, StringArray
 void Dialog::addSlider( ui::Widget vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment ){
 #if 0
 	if ( draw_value == FALSE ) {
-		ui::Widget hbox2 = ui::HBox( FALSE, 0 );
+		auto hbox2 = ui::HBox( FALSE, 0 );
 		hbox2.show();
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
+		vbox.pack_start( GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
 		{
 			ui::Widget label = ui::Label( low );
 			label.show();
-			gtk_box_pack_start( GTK_BOX( hbox2 ), label, FALSE, FALSE, 0 );
+			hbox2.pack_start( label, FALSE, FALSE, 0 );
 		}
 		{
 			ui::Widget label = ui::Label( high );
 			label.show();
-			gtk_box_pack_end( GTK_BOX( hbox2 ), label, FALSE, FALSE, 0 );
+			hbox2.pack_end(label, FALSE, FALSE, 0);
 		}
 	}
 #endif

@@ -686,39 +686,39 @@ ui::Window PrefsDlg::BuildDialog(){
 	ui::Window dialog = ui::Window(create_floating_window( "NetRadiant Preferences", m_parent ));
 
 	{
-		ui::Widget mainvbox = ui::VBox( FALSE, 5 );
+		auto mainvbox = ui::VBox( FALSE, 5 );
 		dialog.add(mainvbox);
 		gtk_container_set_border_width( GTK_CONTAINER( mainvbox ), 5 );
 		mainvbox.show();
 
 		{
-			ui::Widget hbox = ui::HBox( FALSE, 5 );
+			auto hbox = ui::HBox( FALSE, 5 );
 			hbox.show();
-			gtk_box_pack_end( GTK_BOX( mainvbox ), hbox, FALSE, TRUE, 0 );
+			mainvbox.pack_end(hbox, FALSE, TRUE, 0);
 
 			{
-				GtkButton* button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &m_modal );
-				gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &m_modal );
+				hbox.pack_end(button, FALSE, FALSE, 0);
 			}
 			{
-				GtkButton* button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &m_modal );
-				gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				auto button = create_dialog_button( "Cancel", G_CALLBACK( dialog_button_cancel ), &m_modal );
+				hbox.pack_end(button, FALSE, FALSE, 0);
 			}
 			{
-				GtkButton* button = create_dialog_button( "Clean", G_CALLBACK( OnButtonClean ), this );
-				gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+				auto button = create_dialog_button( "Clean", G_CALLBACK( OnButtonClean ), this );
+				hbox.pack_end(button, FALSE, FALSE, 0);
 			}
 		}
 
 		{
-			ui::Widget hbox = ui::HBox( FALSE, 5 );
-			gtk_box_pack_start( GTK_BOX( mainvbox ), hbox, TRUE, TRUE, 0 );
+			auto hbox = ui::HBox( FALSE, 5 );
+			mainvbox.pack_start( hbox, TRUE, TRUE, 0 );
 			hbox.show();
 
 			{
 				auto sc_win = ui::ScrolledWindow(ui::New);
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( sc_win ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
-				gtk_box_pack_start( GTK_BOX( hbox ), sc_win, FALSE, FALSE, 0 );
+				hbox.pack_start( sc_win, FALSE, FALSE, 0 );
 				sc_win.show();
 				gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( sc_win ), GTK_SHADOW_IN );
 
@@ -726,7 +726,7 @@ ui::Window PrefsDlg::BuildDialog(){
 				m_notebook = ui::Widget(gtk_notebook_new());
 				// hide the notebook tabs since its not supposed to look like a notebook
 				gtk_notebook_set_show_tabs( GTK_NOTEBOOK( m_notebook ), FALSE );
-				gtk_box_pack_start( GTK_BOX( hbox ), m_notebook, TRUE, TRUE, 0 );
+				hbox.pack_start( m_notebook, TRUE, TRUE, 0 );
 				m_notebook.show();
 
 

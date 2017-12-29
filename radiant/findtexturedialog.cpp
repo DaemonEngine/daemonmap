@@ -128,24 +128,24 @@ FindTextureDialog::~FindTextureDialog(){
 }
 
 ui::Window FindTextureDialog::BuildDialog(){
-	ui::Widget vbox{ui::null}, hbox{ui::null}, table{ui::null}, label{ui::null};
+	ui::Widget table{ui::null}, label{ui::null};
 	ui::Widget button{ui::null};
 	ui::Entry entry{ui::null};
 
 	auto dlg = ui::Window(create_floating_window( "Find / Replace Texture(s)", m_parent ));
 
-	hbox = ui::HBox( FALSE, 5 );
+	auto hbox = ui::HBox( FALSE, 5 );
 	hbox.show();
 	dlg.add(hbox);
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 5 );
 
-	vbox = ui::VBox( FALSE, 5 );
+	auto vbox = ui::VBox( FALSE, 5 );
 	vbox.show();
-	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+	hbox.pack_start( vbox, TRUE, TRUE, 0 );
 
 	table = ui::Table( 2, 2, FALSE );
 	table.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+	vbox.pack_start( table, TRUE, TRUE, 0 );
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
@@ -185,23 +185,23 @@ ui::Window FindTextureDialog::BuildDialog(){
 
 	auto check = ui::CheckButton( "Within selected brushes only" );
 	check.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), check, TRUE, TRUE, 0 );
+	vbox.pack_start( check, TRUE, TRUE, 0 );
 	AddDialogData( *GTK_TOGGLE_BUTTON(check), m_bSelectedOnly );
 
 	vbox = ui::VBox( FALSE, 5 );
 	vbox.show();
-	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), FALSE, FALSE, 0 );
+	hbox.pack_start( vbox, FALSE, FALSE, 0 );
 
 	button = ui::Button( "Apply" );
 	button.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
+	vbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked",
 					  G_CALLBACK( OnApply ), 0 );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "Close" );
 	button.show();
-	gtk_box_pack_start( GTK_BOX( vbox ), button, FALSE, FALSE, 0 );
+	vbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked",
 					  G_CALLBACK( OnClose ), 0 );
 	gtk_widget_set_size_request( button, 60, -1 );

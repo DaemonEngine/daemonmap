@@ -571,16 +571,16 @@ ui::Window PatchInspector::BuildDialog(){
 		{
 			auto hbox = ui::HBox( FALSE, 5 );
 			hbox.show();
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), TRUE, TRUE, 0 );
+			vbox.pack_start( hbox, TRUE, TRUE, 0 );
 			{
 				auto vbox2 = ui::VBox( FALSE, 0 );
 				gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 0 );
 				vbox2.show();
-				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox2 ), TRUE, TRUE, 0 );
+				hbox.pack_start( vbox2, TRUE, TRUE, 0 );
 				{
 					auto frame = ui::Frame( "Details" );
 					frame.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+					vbox2.pack_start( frame, TRUE, TRUE, 0 );
 					{
 						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
@@ -589,7 +589,7 @@ ui::Window PatchInspector::BuildDialog(){
 						{
 							auto table = ui::Table( 2, 2, FALSE );
 							table.show();
-							gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+							vbox3.pack_start( table, TRUE, TRUE, 0 );
 							gtk_table_set_row_spacings( table, 5 );
 							gtk_table_set_col_spacings( table, 5 );
 							{
@@ -634,7 +634,7 @@ ui::Window PatchInspector::BuildDialog(){
 						}
 						auto table = ui::Table( 5, 2, FALSE );
 						table.show();
-						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+						vbox3.pack_start( table, TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 5 );
 						gtk_table_set_col_spacings( table, 5 );
 						{
@@ -727,7 +727,7 @@ ui::Window PatchInspector::BuildDialog(){
 				if ( g_pGameDescription->mGameType == "doom3" ) {
 					auto frame = ui::Frame( "Tesselation" );
 					frame.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+					vbox2.pack_start( frame, TRUE, TRUE, 0 );
 					{
 						auto vbox3 = ui::VBox( FALSE, 5 );
 						gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 5 );
@@ -736,7 +736,7 @@ ui::Window PatchInspector::BuildDialog(){
 						{
 							auto table = ui::Table( 3, 2, FALSE );
 							table.show();
-							gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+							vbox3.pack_start( table, TRUE, TRUE, 0 );
 							gtk_table_set_row_spacings( table, 5 );
 							gtk_table_set_col_spacings( table, 5 );
 							{
@@ -795,7 +795,7 @@ ui::Window PatchInspector::BuildDialog(){
 			{
 				auto frame = ui::Frame( "Texturing" );
 				frame.show();
-				gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+				hbox.pack_start( frame, TRUE, TRUE, 0 );
 				{
 					auto vbox2 = ui::VBox( FALSE, 5 );
 					vbox2.show();
@@ -804,7 +804,7 @@ ui::Window PatchInspector::BuildDialog(){
 					{
 						auto label = ui::Label( "Name:" );
 						label.show();
-						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( label ), TRUE, TRUE, 0 );
+						vbox2.pack_start( label, TRUE, TRUE, 0 );
 						gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 						gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 					}
@@ -812,7 +812,7 @@ ui::Window PatchInspector::BuildDialog(){
 						auto entry = ui::Entry(ui::New);
 						//  gtk_editable_set_editable (GTK_ENTRY (entry), false);
 						entry.show();
-						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+						vbox2.pack_start( entry, TRUE, TRUE, 0 );
 						AddDialogData( *GTK_ENTRY(entry), m_strName );
 
 						entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
@@ -820,7 +820,7 @@ ui::Window PatchInspector::BuildDialog(){
 					{
 						auto table = ui::Table( 5, 4, FALSE );
 						table.show();
-						gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+						vbox2.pack_start( table, TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 5 );
 						gtk_table_set_col_spacings( table, 5 );
 						{
@@ -992,39 +992,39 @@ ui::Window PatchInspector::BuildDialog(){
 					}
 					auto hbox2 = ui::HBox( TRUE, 5 );
 					hbox2.show();
-					gtk_box_pack_start( GTK_BOX( vbox2 ), GTK_WIDGET( hbox2 ), TRUE, FALSE, 0 );
+					vbox2.pack_start( hbox2, TRUE, FALSE, 0 );
 					{
 						auto button = ui::Button( "Auto Cap" );
 						button.show();
-						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchAutoCap ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "CAP" );
 						button.show();
-						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchdetails ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Set..." );
 						button.show();
-						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchreset ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Natural" );
 						button.show();
-						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchnatural ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}
 					{
 						auto button = ui::Button( "Fit" );
 						button.show();
-						gtk_box_pack_end( GTK_BOX( hbox2 ), GTK_WIDGET( button ), TRUE, FALSE, 0 );
+						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchfit ), 0 );
 						gtk_widget_set_size_request( GTK_WIDGET( button ), 60, -1 );
 					}

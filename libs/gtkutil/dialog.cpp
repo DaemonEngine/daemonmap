@@ -167,7 +167,7 @@ ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& di
 
 	ui::Alignment alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
 	gtk_widget_show( GTK_WIDGET( alignment ) );
-	gtk_box_pack_start( GTK_BOX( vbox1 ), GTK_WIDGET( alignment ), FALSE, FALSE, 0 );
+	vbox1.pack_start( alignment, FALSE, FALSE, 0 );
 
 	auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
 	alignment.add(button);
@@ -185,7 +185,7 @@ RadioHBox RadioHBox_new( StringArrayRange names ){
 	{
 		radio = ui::RadioButton(GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) ));
 		gtk_widget_show( GTK_WIDGET( radio ) );
-		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( radio ), FALSE, FALSE, 0 );
+		hbox.pack_start( radio, FALSE, FALSE, 0 );
 
 		group = gtk_radio_button_get_group( radio );
 	}
@@ -206,13 +206,13 @@ PathEntry PathEntry_new(){
 	auto entry = ui::Entry(ui::New);
 	gtk_entry_set_has_frame( entry, FALSE );
 	gtk_widget_show( GTK_WIDGET( entry ) );
-	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+	hbox.pack_start( entry, TRUE, TRUE, 0 );
 
 	// browse button
 	auto button = ui::Button(ui::New);
 	button_set_icon( button, "ellipsis.bmp" );
 	gtk_widget_show( GTK_WIDGET( button ) );
-	gtk_box_pack_end( GTK_BOX( hbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+	hbox.pack_end(button, FALSE, FALSE, 0);
 
 	frame.add(hbox);
 
@@ -263,5 +263,5 @@ ui::Table DialogRow_new( const char* name, ui::Widget widget ){
 }
 
 void DialogVBox_packRow( ui::VBox vbox, ui::Widget row ){
-	gtk_box_pack_start( GTK_BOX( vbox ), row, FALSE, FALSE, 0 );
+	vbox.pack_start( row, FALSE, FALSE, 0 );
 }

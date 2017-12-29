@@ -400,7 +400,7 @@ void DoCommandListDlg(){
 
 	{
 		auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC );
-		gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( scr ), TRUE, TRUE, 0 );
+		hbox.pack_start( scr, TRUE, TRUE, 0 );
 
 		{
 			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
@@ -460,21 +460,21 @@ public:
 		}
 	}
 
-	GtkVBox* vbox = create_dialog_vbox( 4 );
-	gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
+	auto vbox = create_dialog_vbox( 4 );
+	hbox.pack_start( vbox, TRUE, TRUE, 0 );
 	{
-		GtkButton* editbutton = create_dialog_button( "Edit", (GCallback) accelerator_edit_button_clicked, &dialog );
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( editbutton ), FALSE, FALSE, 0 );
+		auto editbutton = create_dialog_button( "Edit", (GCallback) accelerator_edit_button_clicked, &dialog );
+		vbox.pack_start( editbutton, FALSE, FALSE, 0 );
 
-		GtkButton* clearbutton = create_dialog_button( "Clear", (GCallback) accelerator_clear_button_clicked, &dialog );
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( clearbutton ), FALSE, FALSE, 0 );
+		auto clearbutton = create_dialog_button( "Clear", (GCallback) accelerator_clear_button_clicked, &dialog );
+		vbox.pack_start( clearbutton, FALSE, FALSE, 0 );
 
 		ui::Widget spacer = ui::Image(ui::New);
 		spacer.show();
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( spacer ), TRUE, TRUE, 0 );
+		vbox.pack_start( spacer, TRUE, TRUE, 0 );
 
 		auto button = create_modal_dialog_button( "Close", dialog.m_close_button );
-		gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, FALSE, 0 );
+		vbox.pack_start( button, FALSE, FALSE, 0 );
 		widget_make_default( button );
 		gtk_widget_grab_default( GTK_WIDGET( button ) );
 		gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Return, (GdkModifierType)0, (GtkAccelFlags)0 );

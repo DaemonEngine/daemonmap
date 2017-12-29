@@ -593,25 +593,25 @@ ui::Window SurfaceInspector::BuildDialog(){
 
 	{
 		// replaced by only the vbox:
-		ui::Widget vbox = ui::VBox( FALSE, 5 );
+		auto vbox = ui::VBox( FALSE, 5 );
 		vbox.show();
 		window.add(vbox);
 		gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 		{
-			ui::Widget hbox2 = ui::HBox( FALSE, 5 );
+			auto hbox2 = ui::HBox( FALSE, 5 );
 			hbox2.show();
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, FALSE, 0 );
+			vbox.pack_start( hbox2, FALSE, FALSE, 0 );
 
 			{
 				ui::Widget label = ui::Label( "Texture" );
 				label.show();
-				gtk_box_pack_start( GTK_BOX( hbox2 ), label, FALSE, TRUE, 0 );
+				hbox2.pack_start( label, FALSE, TRUE, 0 );
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_box_pack_start( GTK_BOX( hbox2 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+				hbox2.pack_start( entry, TRUE, TRUE, 0 );
 				m_texture = entry;
 				m_textureEntry.connect( entry );
 				GlobalTextureEntryCompletion::instance().connect( entry );
@@ -622,7 +622,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 		{
 			ui::Widget table = ui::Table( 6, 4, FALSE );
 			table.show();
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, FALSE, 0 );
+			vbox.pack_start( table, FALSE, FALSE, 0 );
 			gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 			gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 			{
@@ -820,7 +820,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 		{
 			auto frame = ui::Frame( "Texturing" );
 			frame.show();
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
+			vbox.pack_start( frame, FALSE, FALSE, 0 );
 			{
 				ui::Widget table = ui::Table( 4, 4, FALSE );
 				table.show();
@@ -940,7 +940,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			{
 				auto frame = ui::Frame( "Surface Flags" );
 				frame.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+				vbox.pack_start( frame, TRUE, TRUE, 0 );
 				{
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
@@ -949,7 +949,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					{
 						auto table = ui::Table( 8, 4, FALSE );
 						table.show();
-						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+						vbox3.pack_start( table, TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 0 );
 						gtk_table_set_col_spacings( table, 0 );
 
@@ -975,7 +975,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			{
 				auto frame = ui::Frame( "Content Flags" );
 				frame.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+				vbox.pack_start( frame, TRUE, TRUE, 0 );
 				{
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					//gtk_container_set_border_width(GTK_CONTAINER(vbox3), 4);
@@ -985,7 +985,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 
 						auto table = ui::Table( 8, 4, FALSE );
 						table.show();
-						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( table ), TRUE, TRUE, 0 );
+						vbox3.pack_start( table, TRUE, TRUE, 0 );
 						gtk_table_set_row_spacings( table, 0 );
 						gtk_table_set_col_spacings( table, 0 );
 
@@ -1014,7 +1014,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 			{
 				auto frame = ui::Frame( "Value" );
 				frame.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), TRUE, TRUE, 0 );
+				vbox.pack_start( frame, TRUE, TRUE, 0 );
 				{
 					auto vbox3 = ui::VBox( FALSE, 4 );
 					gtk_container_set_border_width( GTK_CONTAINER( vbox3 ), 4 );
@@ -1024,7 +1024,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					{
 						auto entry = ui::Entry(ui::New);
 						entry.show();
-						gtk_box_pack_start( GTK_BOX( vbox3 ), GTK_WIDGET( entry ), TRUE, TRUE, 0 );
+						vbox3.pack_start( entry, TRUE, TRUE, 0 );
 						m_valueEntryWidget = entry;
 						m_valueEntry.connect( entry );
 					}
@@ -1037,7 +1037,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 // Shamus: Textool goodies...
 			ui::Widget frame = ui::Frame( "Textool" );
 			frame.show();
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( frame ), FALSE, FALSE, 0 );
+			vbox.pack_start( GTK_WIDGET( frame ), FALSE, FALSE, 0 );
 			{
 				//Prolly should make this a member or global var, so the SI can draw on it...
 				TexTool::g_textoolWin = glwidget_new( FALSE );
@@ -1059,14 +1059,14 @@ ui::Window SurfaceInspector::BuildDialog(){
 			{
 				ui::Widget hbox = ui::HBox( FALSE, 5 );
 				hbox.show();
-				gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, FALSE, 0 );
+				vbox.pack_start( GTK_WIDGET( hbox ), FALSE, FALSE, 0 );
 				// Checkboxes go here... (Flip X/Y)
 				ui::Widget flipX = ui::CheckButton( "Flip X axis" );
 				ui::Widget flipY = ui::CheckButton( "Flip Y axis" );
 				flipX.show();
 				flipY.show();
-				gtk_box_pack_start( GTK_BOX( hbox ), flipX, FALSE, FALSE, 0 );
-				gtk_box_pack_start( GTK_BOX( hbox ), flipY, FALSE, FALSE, 0 );
+				hbox.pack_start( flipX, FALSE, FALSE, 0 );
+				hbox.pack_start( flipY, FALSE, FALSE, 0 );
 
 //Instead of this, we probably need to create a vbox to put into the frame, then the
 //window, then the hbox. !!! FIX !!!
