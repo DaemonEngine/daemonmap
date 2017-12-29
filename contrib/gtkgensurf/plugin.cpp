@@ -140,7 +140,7 @@ void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
 			UseFaceBounds();
 		}
 
-		gtk_widget_show( g_pWnd );
+		g_pWnd.show();
 	}
 }
 

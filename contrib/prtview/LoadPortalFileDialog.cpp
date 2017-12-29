@@ -94,41 +94,41 @@ int DoLoadPortalFileDialog(){
 	gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
 	auto entry = ui::Entry(ui::New);
-	gtk_widget_show( entry );
+	entry.show();
 	gtk_editable_set_editable( GTK_EDITABLE( entry ), FALSE );
 	vbox.pack_start( entry, FALSE, FALSE, 0 );
 
 	auto hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
 	auto check3d = ui::CheckButton( "Show 3D" );
-	gtk_widget_show( check3d );
+	check3d.show();
 	hbox.pack_start( check3d, FALSE, FALSE, 0 );
 
 	auto check2d = ui::CheckButton( "Show 2D" );
-	gtk_widget_show( check2d );
+	check2d.show();
 	hbox.pack_start( check2d, FALSE, FALSE, 0 );
 
 	auto button = ui::Button( "Change" );
-	gtk_widget_show( button );
+	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked", G_CALLBACK( change_clicked ), entry );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
 	button = ui::Button( "Cancel" );
-	gtk_widget_show( button );
+	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	button = ui::Button( "OK" );
-	gtk_widget_show( button );
+	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
@@ -147,7 +147,7 @@ int DoLoadPortalFileDialog(){
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( check3d ), portals.show_3d );
 
 	gtk_grab_add( dlg );
-	gtk_widget_show( dlg );
+	dlg.show();
 
 	while ( loop )
 		gtk_main_iteration();

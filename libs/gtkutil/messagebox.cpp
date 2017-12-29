@@ -29,7 +29,7 @@
 
 ui::Widget create_padding( int width, int height ){
 	ui::Alignment widget = ui::Alignment( 0.0, 0.0, 0.0, 0.0 );
-	gtk_widget_show( widget );
+	widget.show();
 	gtk_widget_set_size_request( widget, width, height );
 	return widget;
 }
@@ -83,11 +83,11 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	hboxDummy.pack_start( iconBox, FALSE, FALSE, 0 );
 
 	auto image = ui::Image(GTK_IMAGE( gtk_image_new_from_stock( messagebox_stock_icon( icon ), GTK_ICON_SIZE_DIALOG ) ));
-	gtk_widget_show( GTK_WIDGET( image ) );
+	image.show();
 	iconBox.pack_start( image, FALSE, FALSE, 0 );
 
 	auto label = ui::Label( text );
-	gtk_widget_show( GTK_WIDGET( label ) );
+	label.show();
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 	gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 	gtk_label_set_line_wrap( label, TRUE );
@@ -98,7 +98,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 	vbox.pack_start( vboxDummy, FALSE, FALSE, 0 );
 
 	auto alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
-	gtk_widget_show( GTK_WIDGET( alignment ) );
+	alignment.show();
 	vboxDummy.pack_start( alignment, FALSE, FALSE, 0 );
 
 	auto hbox = create_dialog_hbox( 8, 0 );
@@ -130,7 +130,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 			auto button = create_modal_dialog_button( "OK", cancel_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_add_accelerator( GTK_WIDGET( button ), "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 
 		dialog.ret = eIDCANCEL;
@@ -146,12 +146,12 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 		{
 			auto button = create_modal_dialog_button( "No", no_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 		{
 			auto button = create_modal_dialog_button( "Cancel", cancel_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 
 		dialog.ret = eIDCANCEL;
@@ -166,7 +166,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 		{
 			auto button = create_modal_dialog_button( "Yes", yes_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 
 		dialog.ret = eIDNO;
@@ -177,13 +177,13 @@ EMessageBoxReturn gtk_MessageBox( ui::Widget parent, const char* text, const cha
 			auto button = create_modal_dialog_button( "Yes", yes_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
 			widget_make_default( button );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 
 		{
 			auto button = create_modal_dialog_button( "No", no_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
-			gtk_widget_show( GTK_WIDGET( button ) );
+			button.show();
 		}
 		dialog.ret = eIDNO;
 	}

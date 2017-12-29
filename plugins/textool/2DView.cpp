@@ -118,22 +118,22 @@ bool C2DView::OnRButtonUp( int x, int y ){
 
 			item = ui::MenuItem( "Validate (RETURN)" );
 			item.connect( "activate", G_CALLBACK( Textool_Validate ), NULL );
-			gtk_widget_show( item );
+			item.show();
 			gtk_menu_append( GTK_MENU( menu ), item );
 
 			item = ui::MenuItem( "Zoom in (INSERT)" );
 			item.connect( "activate", G_CALLBACK( view_ZoomIn ), this );
-			gtk_widget_show( item );
+			item.show();
 			gtk_menu_append( GTK_MENU( menu ), item );
 
 			item = ui::MenuItem( "Zoom out (DELETE)" );
 			item.connect( "activate", G_CALLBACK( view_ZoomOut ), this );
-			gtk_widget_show( item );
+			item.show();
 			gtk_menu_append( GTK_MENU( menu ), item );
 
 			item = ui::MenuItem( "Cancel (ESC)" );
 			item.connect( "activate", G_CALLBACK( Textool_Cancel ), NULL );
-			gtk_widget_show( item );
+			item.show();
 			gtk_menu_append( GTK_MENU( menu ), item );
 
 			gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, 1, GDK_CURRENT_TIME );

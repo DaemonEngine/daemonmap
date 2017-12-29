@@ -71,7 +71,7 @@ ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widg
 	{
 		auto vsplit = ui::VPaned(ui::New);
 		gtk_paned_add1( GTK_PANED( hsplit ), GTK_WIDGET( vsplit ) );
-		gtk_widget_show( GTK_WIDGET( vsplit ) );
+		vsplit.show();
 
 		vsplit.connect( "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned1 );
 		vsplit.connect( "notify::position", G_CALLBACK( paned_position ), &g_vpaned1 );
@@ -82,7 +82,7 @@ ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widg
 	{
 		auto vsplit = ui::VPaned(ui::New);
 		gtk_paned_add2( GTK_PANED( hsplit ), GTK_WIDGET( vsplit ) );
-		gtk_widget_show( GTK_WIDGET( vsplit ) );
+		vsplit.show();
 
 		vsplit.connect( "size_allocate", G_CALLBACK( vpaned_allocate ), &g_vpaned2 );
 		vsplit.connect( "notify::position", G_CALLBACK( paned_position ), &g_vpaned2 );

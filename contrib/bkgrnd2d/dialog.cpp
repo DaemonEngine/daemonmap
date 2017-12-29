@@ -210,13 +210,13 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 //TODO set min size ? done with spaces right now
 	hbox.pack_start(m_pFileLabel, TRUE, TRUE, 5 );
 
-	gtk_widget_show( m_pFileLabel );
+	m_pFileLabel.show();
 
 	w = ui::Button( "Browse..." );
 	w.connect( "clicked", G_CALLBACK( browse_callback ), ( gpointer ) this );
 	hbox.pack_start(w, FALSE, FALSE, 5 );
 	gtk_tooltips_set_tip( pTooltips, w, "Select a file", NULL );
-	gtk_widget_show( w );
+	w.show();
 
 	w = ui::Button( "Reload" );
 	w.connect( "clicked", G_CALLBACK( reload_callback ), ( gpointer ) this );
@@ -224,10 +224,10 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	// gtk_widget_set_sensitive(w,FALSE);
 	gtk_tooltips_set_tip( pTooltips, w, "Reload current file", NULL );
 	hbox.pack_start(w, FALSE, FALSE, 5 );
-	gtk_widget_show( w );
+	w.show();
 
-	gtk_widget_show( hbox );
-	gtk_widget_show( frame );
+	hbox.show();
+	frame.show();
 
 // second row (rendering options)
 	frame = ui::Frame( "Rendering" );
@@ -239,7 +239,7 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 
 	w = ui::Label( "Vertex alpha:" );
 	hbox.pack_start(w, FALSE, FALSE, 5 );
-	gtk_widget_show( w );
+	w.show();
 
 	w = ui::HScale( 0.0, 1.0, 0.01 );
 	gtk_range_set_value( GTK_RANGE( w ),0.5 );
@@ -247,10 +247,10 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	w.connect( "value-changed", G_CALLBACK( alpha_adjust_callback ), ( gpointer ) this );
 	hbox.pack_start(w, TRUE, TRUE, 5 );
 	gtk_tooltips_set_tip( pTooltips, w, "Set image transparancy", NULL );
-	gtk_widget_show( w );
+	w.show();
 
-	gtk_widget_show( hbox );
-	gtk_widget_show( frame );
+	hbox.show();
+	frame.show();
 // Third row (size and position)
 	frame = ui::Frame( "Size/Position (undefined)" );
 	m_pPosLabel = gtk_frame_get_label_widget( GTK_FRAME( frame ) );
@@ -264,20 +264,20 @@ CBackgroundDialogPage::CBackgroundDialogPage( VIEWTYPE vt ){
 	hbox.pack_start(w, TRUE, FALSE, 5 );
 	w.connect( "clicked", G_CALLBACK( size_sel_callback ), ( gpointer ) this );
 	gtk_tooltips_set_tip( pTooltips, w, "Set the size of the image to the bounding rectangle of all selected brushes and entities", NULL );
-	gtk_widget_show( w );
+	w.show();
 
 	if ( m_vt == XY ) {
 		w = ui::Button( "from map mins/maxs" );
 		hbox.pack_start(w, TRUE, FALSE, 2 );
 		w.connect( "clicked", G_CALLBACK( size_mm_callback ), ( gpointer ) this );
 		gtk_tooltips_set_tip( pTooltips, w, "Set the size of the image using the mapcoordsmins and mapcoordsmaxs keys of the worldspawn entity", NULL );
-		gtk_widget_show( w );
+		w.show();
 	}
 
-	gtk_widget_show( hbox );
-	gtk_widget_show( frame );
+	hbox.show();
+	frame.show();
 
-	gtk_widget_show( m_pWidget );
+	m_pWidget.show();
 }
 
 void CBackgroundDialogPage::Append( GtkWidget *notebook ){
@@ -329,7 +329,7 @@ void InitBackgroundDialog(){
 
 	gtk_box_pack_start( GTK_BOX( GTK_DIALOG( pDialogWnd )->vbox ), pNotebook, TRUE, TRUE, 0 );
 
-	gtk_widget_show( pNotebook );
+	pNotebook.show();
 
 	gtk_widget_realize( pDialogWnd );
 }

@@ -91,7 +91,7 @@ void ShowPreview(){
 		if ( g_pWndPreview == NULL ) {
 			CreateViewWindow();
 		}
-		gtk_widget_show( g_pWndPreview );
+		g_pWndPreview.show();
 
 		UpdatePreview( true );
 	}
@@ -383,31 +383,31 @@ void CreateViewWindow(){
 
 #ifndef ISOMETRIC
 	auto hbox = ui::HBox( TRUE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox.pack_start( hbox, FALSE, TRUE, 0 );
 	gtk_container_set_border_width( GTK_CONTAINER( hbox ), 3 );
 
 	label = ui::Label( "Elevation" );
-	gtk_widget_show( label );
+	label.show();
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	hbox.pack_start( label, FALSE, TRUE, 0 );
 
 	auto adj = ui::Adjustment( 30, -90, 90, 1, 10, 0 );
 	adj.connect( "value_changed", G_CALLBACK( preview_spin ), &elevation );
 	spin = ui::SpinButton( adj, 1, 0 );
-	gtk_widget_show( spin );
+	spin.show();
 	hbox.pack_start( spin, FALSE, TRUE, 0 );
 	spin.connect( "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &elevation );
 
 	adj = ui::Adjustment( 30, 0, 359, 1, 10, 0 );
 	adj.connect( "value_changed", G_CALLBACK( preview_spin ), &azimuth );
 	spin = ui::SpinButton( adj, 1, 0 );
-	gtk_widget_show( spin );
+	spin.show();
 	gtk_spin_button_set_wrap( GTK_SPIN_BUTTON( spin ), TRUE );
 	hbox.pack_end(spin, FALSE, TRUE, 0);
 
 	label = ui::Label( "Azimuth" );
-	gtk_widget_show( label );
+	label.show();
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	hbox.pack_end(label, FALSE, TRUE, 0);
 	spin.connect( "focus_out_event", G_CALLBACK( doublevariable_spinfocusout ), &azimuth );
@@ -426,11 +426,11 @@ void CreateViewWindow(){
 	g_pPreviewWidget.connect( "button_press_event",
 						G_CALLBACK( button_press ), NULL );
 
-	gtk_widget_show( g_pPreviewWidget );
+	g_pPreviewWidget.show();
 	frame.add(ui::Widget(g_pPreviewWidget));
 
 	if ( Preview ) {
-		gtk_widget_show( g_pWndPreview );
+		g_pWndPreview.show();
 	}
 
 	UpdatePreview( true );

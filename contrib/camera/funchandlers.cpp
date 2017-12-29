@@ -85,7 +85,7 @@ void DoNewSplineCamera(){
 }
 
 void DoCameraInspector(){
-	gtk_widget_show( g_pCameraInspectorWnd );
+	g_pCameraInspectorWnd.show();
 }
 
 void DoPreviewCamera(){

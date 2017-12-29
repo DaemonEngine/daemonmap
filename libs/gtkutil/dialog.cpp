@@ -87,7 +87,7 @@ gboolean modal_dialog_delete( ui::Widget widget, GdkEvent* event, ModalDialog* d
 
 EMessageBoxReturn modal_dialog_show( ui::Window window, ModalDialog& dialog ){
 	gtk_grab_add( GTK_WIDGET( window ) );
-	gtk_widget_show( GTK_WIDGET( window ) );
+	window.show();
 
 	dialog.loop = true;
 	while ( dialog.loop )
@@ -166,7 +166,7 @@ ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& di
 	vbox1.add(contents);
 
 	ui::Alignment alignment = ui::Alignment( 0.5, 0.0, 0.0, 0.0 );
-	gtk_widget_show( GTK_WIDGET( alignment ) );
+	alignment.show();
 	vbox1.pack_start( alignment, FALSE, FALSE, 0 );
 
 	auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &dialog );
@@ -177,14 +177,14 @@ ui::Window create_simple_modal_dialog_window( const char* title, ModalDialog& di
 
 RadioHBox RadioHBox_new( StringArrayRange names ){
 	auto hbox = ui::HBox( TRUE, 4 );
-	gtk_widget_show( GTK_WIDGET( hbox ) );
+	hbox.show();
 
 	GSList* group = 0;
 	auto radio = ui::RadioButton(ui::null);
 	for ( StringArrayRange::Iterator i = names.first; i != names.last; ++i )
 	{
 		radio = ui::RadioButton(GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) ));
-		gtk_widget_show( GTK_WIDGET( radio ) );
+		radio.show();
 		hbox.pack_start( radio, FALSE, FALSE, 0 );
 
 		group = gtk_radio_button_get_group( radio );
@@ -201,17 +201,17 @@ PathEntry PathEntry_new(){
 
 	// path entry
 	auto hbox = ui::HBox( FALSE, 0 );
-	gtk_widget_show( GTK_WIDGET( hbox ) );
+	hbox.show();
 
 	auto entry = ui::Entry(ui::New);
 	gtk_entry_set_has_frame( entry, FALSE );
-	gtk_widget_show( GTK_WIDGET( entry ) );
+	entry.show();
 	hbox.pack_start( entry, TRUE, TRUE, 0 );
 
 	// browse button
 	auto button = ui::Button(ui::New);
 	button_set_icon( button, "ellipsis.bmp" );
-	gtk_widget_show( GTK_WIDGET( button ) );
+	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 
 	frame.add(hbox);
@@ -237,7 +237,7 @@ BrowsedPathEntry::BrowsedPathEntry( const BrowseCallback& browse ) :
 
 ui::Label DialogLabel_new( const char* name ){
 	auto label = ui::Label( name );
-	gtk_widget_show(label);
+	label.show();
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 
@@ -246,7 +246,7 @@ ui::Label DialogLabel_new( const char* name ){
 
 ui::Table DialogRow_new( const char* name, ui::Widget widget ){
 	auto table = ui::Table( 1, 3, TRUE );
-	gtk_widget_show( GTK_WIDGET( table ) );
+	table.show();
 
 	gtk_table_set_col_spacings( table, 4 );
 	gtk_table_set_row_spacings( table, 0 );

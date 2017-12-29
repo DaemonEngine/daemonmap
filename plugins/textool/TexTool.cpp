@@ -67,20 +67,20 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 
 	vbox = ui::VBox( FALSE, 10 );
 	window.add(vbox);
-	gtk_widget_show( vbox );
+	vbox.show();
 
 	w = ui::Label( lpText );
 	vbox.pack_start( w, FALSE, FALSE, 2 );
 	gtk_label_set_justify( GTK_LABEL( w ), GTK_JUSTIFY_LEFT );
-	gtk_widget_show( w );
+	w.show();
 
 	w = gtk_hseparator_new();
 	vbox.pack_start( w, FALSE, FALSE, 2 );
-	gtk_widget_show( w );
+	w.show();
 
 	hbox = ui::HBox( FALSE, 10 );
 	vbox.pack_start( hbox, FALSE, FALSE, 2 );
-	gtk_widget_show( hbox );
+	hbox.show();
 
 	if ( mode == MB_OK ) {
 		w = ui::Button( "Ok" );
@@ -89,7 +89,7 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 		gtk_widget_set_can_default( w, true );
 		gtk_widget_grab_default( w );
-		gtk_widget_show( w );
+		w.show();
 		ret = IDOK;
 	}
 	else if ( mode ==  MB_OKCANCEL ) {
@@ -99,13 +99,13 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
 		gtk_widget_set_can_default( w, true );
 		gtk_widget_grab_default( w );
-		gtk_widget_show( w );
+		w.show();
 
 		w = ui::Button( "Cancel" );
 		hbox.pack_start( w, TRUE, TRUE, 0 );
 		w.connect( "clicked",
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
-		gtk_widget_show( w );
+		w.show();
 		ret = IDCANCEL;
 	}
 	else if ( mode == MB_YESNOCANCEL ) {
@@ -115,19 +115,19 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDYES ) );
 		gtk_widget_set_can_default( w, true );
 		gtk_widget_grab_default( w );
-		gtk_widget_show( w );
+		w.show();
 
 		w = ui::Button( "No" );
 		hbox.pack_start( w, TRUE, TRUE, 0 );
 		w.connect( "clicked",
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDNO ) );
-		gtk_widget_show( w );
+		w.show();
 
 		w = ui::Button( "Cancel" );
 		hbox.pack_start( w, TRUE, TRUE, 0 );
 		w.connect( "clicked",
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
-		gtk_widget_show( w );
+		w.show();
 		ret = IDCANCEL;
 	}
 	else /* if (mode == MB_YESNO) */
@@ -138,17 +138,17 @@ int DoMessageBox( const char* lpText, const char* lpCaption, guint32 uType ){
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDYES ) );
 		gtk_widget_set_can_default( w, true );
 		gtk_widget_grab_default( w );
-		gtk_widget_show( w );
+		w.show();
 
 		w = ui::Button( "No" );
 		hbox.pack_start( w, TRUE, TRUE, 0 );
 		w.connect( "clicked",
 							G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDNO ) );
-		gtk_widget_show( w );
+		w.show();
 		ret = IDNO;
 	}
 
-	gtk_widget_show( window );
+	window.show();
 	gtk_grab_add( window );
 
 	while ( loop )

@@ -71,7 +71,7 @@ static int DoColor( PackedColour *c ){
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
-	gtk_widget_show( dlg );
+	dlg.show();
 	gtk_grab_add( dlg );
 
 	while ( loop )
@@ -261,70 +261,70 @@ void DoConfigDialog(){
 	gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 
 	auto hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox2.pack_start( hbox, TRUE, TRUE, 0 );
 
 	auto adj = ui::Adjustment( portals.width_3d, 2, 40, 1, 1, 0 );
 	auto lw3slider = ui::HScale( adj );
-	gtk_widget_show( lw3slider );
+	lw3slider.show();
 	hbox.pack_start( lw3slider, TRUE, TRUE, 0 );
 	gtk_scale_set_draw_value( GTK_SCALE( lw3slider ), FALSE );
 
 	auto lw3label = ui::Label( "" );
-	gtk_widget_show( lw3label );
+	lw3label.show();
 	hbox.pack_start( lw3label, FALSE, TRUE, 0 );
 	adj.connect( "value_changed", G_CALLBACK( OnScroll3d ), lw3label );
 
 	auto table = ui::Table( 2, 4, FALSE );
-	gtk_widget_show( table );
+	table.show();
 	vbox2.pack_start( table, TRUE, TRUE, 0 );
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
 	auto button = ui::Button( "Color" );
-	gtk_widget_show( button );
+	button.show();
 	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	button.connect( "clicked", G_CALLBACK( OnColor3d ), NULL );
 
 	button = ui::Button( "Depth Color" );
-	gtk_widget_show( button );
+	button.show();
 	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 1, 2,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	button.connect( "clicked", G_CALLBACK( OnColorFog ), NULL );
 
 	auto aa3check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
-	gtk_widget_show( aa3check );
+	aa3check.show();
 	gtk_table_attach( GTK_TABLE( table ), aa3check, 1, 4, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	aa3check.connect( "toggled", G_CALLBACK( OnAntiAlias3d ), NULL );
 
 	auto depthcheck = ui::CheckButton( "Depth Cue" );
-	gtk_widget_show( depthcheck );
+	depthcheck.show();
 	gtk_table_attach( GTK_TABLE( table ), depthcheck, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	depthcheck.connect( "toggled", G_CALLBACK( OnFog ), NULL );
 
 	auto linescheck = ui::CheckButton( "Lines" );
-	gtk_widget_show( linescheck );
+	linescheck.show();
 	gtk_table_attach( GTK_TABLE( table ), linescheck, 2, 3, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	linescheck.connect( "toggled", G_CALLBACK( OnLines ), NULL );
 
 	auto polyscheck = ui::CheckButton( "Polygons" );
-	gtk_widget_show( polyscheck );
+	polyscheck.show();
 	gtk_table_attach( GTK_TABLE( table ), polyscheck, 3, 4, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	polyscheck.connect( "toggled", G_CALLBACK( OnPoly ), NULL );
 
 	auto zlist = ui::ComboBoxText(ui::New);
-	gtk_widget_show( zlist );
+	zlist.show();
 	vbox2.pack_start( zlist, TRUE, FALSE, 0 );
 
 	gtk_combo_box_text_append_text(zlist, "Z-Buffer Test and Write (recommended for solid or no polygons)");
@@ -336,21 +336,21 @@ void DoConfigDialog(){
 	}), nullptr);
 
 	table = ui::Table( 2, 2, FALSE );
-	gtk_widget_show( table );
+	table.show();
 	vbox2.pack_start( table, TRUE, TRUE, 0 );
 	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
 	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
 
 	adj = ui::Adjustment( portals.trans_3d, 0, 100, 1, 1, 0 );
 	auto transslider = ui::HScale( adj );
-	gtk_widget_show( transslider );
+	transslider.show();
 	gtk_table_attach( GTK_TABLE( table ), transslider, 0, 1, 0, 1,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_scale_set_draw_value( GTK_SCALE( transslider ), FALSE );
 
 	auto translabel = ui::Label( "" );
-	gtk_widget_show( translabel );
+	translabel.show();
 	gtk_table_attach( GTK_TABLE( table ), translabel, 1, 2, 0, 1,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -359,14 +359,14 @@ void DoConfigDialog(){
 
 	adj = ui::Adjustment( portals.clip_range, 1, 128, 1, 1, 0 );
 	auto clipslider = ui::HScale( adj );
-	gtk_widget_show( clipslider );
+	clipslider.show();
 	gtk_table_attach( GTK_TABLE( table ), clipslider, 0, 1, 1, 2,
 					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
 	gtk_scale_set_draw_value( GTK_SCALE( clipslider ), FALSE );
 
 	auto cliplabel = ui::Label( "" );
-	gtk_widget_show( cliplabel );
+	cliplabel.show();
 	gtk_table_attach( GTK_TABLE( table ), cliplabel, 1, 2, 1, 2,
 					  (GtkAttachOptions) ( GTK_FILL ),
 					  (GtkAttachOptions) ( 0 ), 0, 0 );
@@ -374,21 +374,21 @@ void DoConfigDialog(){
 	adj.connect( "value_changed", G_CALLBACK( OnScrollClip ), cliplabel );
 
 	hbox = ui::HBox( TRUE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox2.pack_start( hbox, TRUE, FALSE, 0 );
 
 	auto show3check = ui::CheckButton( "Show" );
-	gtk_widget_show( show3check );
+	show3check.show();
 	hbox.pack_start( show3check, TRUE, TRUE, 0 );
 	show3check.connect( "toggled", G_CALLBACK( OnConfig3d ), NULL );
 
 	auto portalcheck = ui::CheckButton( "Portal cubic clipper" );
-	gtk_widget_show( portalcheck );
+	portalcheck.show();
 	hbox.pack_start( portalcheck, TRUE, TRUE, 0 );
 	portalcheck.connect( "toggled", G_CALLBACK( OnClip ), NULL );
 
 	frame = ui::Frame( "2D View" );
-	gtk_widget_show( frame );
+	frame.show();
 	vbox.pack_start( frame, TRUE, TRUE, 0 );
 
 	vbox2 = ui::VBox( FALSE, 5 );
@@ -397,50 +397,50 @@ void DoConfigDialog(){
 	gtk_container_set_border_width( GTK_CONTAINER( vbox2 ), 5 );
 
 	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox2.pack_start( hbox, TRUE, FALSE, 0 );
 
 	adj = ui::Adjustment( portals.width_2d, 2, 40, 1, 1, 0 );
 	auto lw2slider = ui::HScale( adj );
-	gtk_widget_show( lw2slider );
+	lw2slider.show();
 	hbox.pack_start( lw2slider, TRUE, TRUE, 0 );
 	gtk_scale_set_draw_value( GTK_SCALE( lw2slider ), FALSE );
 
 	auto lw2label = ui::Label( "" );
-	gtk_widget_show( lw2label );
+	lw2label.show();
 	hbox.pack_start( lw2label, FALSE, TRUE, 0 );
 	adj.connect( "value_changed", G_CALLBACK( OnScroll2d ), lw2label );
 
 	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox2.pack_start( hbox, TRUE, FALSE, 0 );
 
 	button = ui::Button( "Color" );
-	gtk_widget_show( button );
+	button.show();
 	hbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked", G_CALLBACK( OnColor2d ), NULL );
 	gtk_widget_set_size_request( button, 60, -1 );
 
 	auto aa2check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
-	gtk_widget_show( aa2check );
+	aa2check.show();
 	hbox.pack_start( aa2check, TRUE, TRUE, 0 );
 	aa2check.connect( "toggled", G_CALLBACK( OnAntiAlias2d ), NULL );
 
 	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox2.pack_start( hbox, TRUE, FALSE, 0 );
 
 	auto show2check = ui::CheckButton( "Show" );
-	gtk_widget_show( show2check );
+	show2check.show();
 	hbox.pack_start( show2check, FALSE, FALSE, 0 );
 	show2check.connect( "toggled", G_CALLBACK( OnConfig2d ), NULL );
 
 	hbox = ui::HBox( FALSE, 5 );
-	gtk_widget_show( hbox );
+	hbox.show();
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
 	button = ui::Button( "OK" );
-	gtk_widget_show( button );
+	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
@@ -464,7 +464,7 @@ void DoConfigDialog(){
 	SetClipText( cliplabel );
 
 	gtk_grab_add( dlg );
-	gtk_widget_show( dlg );
+	dlg.show();
 
 	while ( loop )
 		gtk_main_iteration();
