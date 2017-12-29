@@ -39,7 +39,7 @@
 #define DEBUGGER_BREAKPOINT() raise( SIGTRAP );
 #endif
 
-#define STR( x )  # x
+#define STR( x )  #x
 #define STR2( x ) STR( x )
 #define FILE_LINE __FILE__ ":" STR2( __LINE__ )
 
@@ -116,8 +116,8 @@ inline DebugMessageHandler& globalDebugMessageHandler(){
 		globalDebugMessageHandler().getOutputStream() << FILE_LINE "\nruntime error: " << message << "\n"; \
 		if ( !globalDebugMessageHandler().handleMessage() ) { DEBUGGER_BREAKPOINT(); }} while ( 0 )
 
-#define ASSERT_NOTNULL( ptr ) ASSERT_MESSAGE( ptr != 0, "pointer \"" # ptr "\" is null" )
-#define ASSERT_TRUE( flag ) ASSERT_MESSAGE( !!(flag) == true, "condition \"" # flag "\" is false" )
+#define ASSERT_NOTNULL( ptr ) ASSERT_MESSAGE( ptr != 0, "pointer \"" #ptr "\" is null" )
+#define ASSERT_TRUE( flag ) ASSERT_MESSAGE( !!(flag) == true, "condition \"" #flag "\" is false" )
 
 #else
 

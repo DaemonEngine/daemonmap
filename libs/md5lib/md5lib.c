@@ -70,9 +70,9 @@
 
 #undef BYTE_ORDER   /* 1 = big-endian, -1 = little-endian, 0 = unknown */
 #ifdef ARCH_IS_BIG_ENDIAN
-#  define BYTE_ORDER ( ARCH_IS_BIG_ENDIAN ? 1 : -1 )
+#define BYTE_ORDER ( ARCH_IS_BIG_ENDIAN ? 1 : -1 )
 #else
-#  define BYTE_ORDER 0
+#define BYTE_ORDER 0
 #endif
 
 #define T_MASK ( ( md5_word_t ) ~0 )
@@ -197,11 +197,11 @@ md5_process( md5_state_t *pms, const md5_byte_t *data /*[64]*/ ){
 			const md5_byte_t *xp = data;
 			int i;
 
-#  if BYTE_ORDER == 0
+#if BYTE_ORDER == 0
 			X = xbuf;   /* (dynamic only) */
-#  else
-#    define xbuf X      /* (static only) */
-#  endif
+#else
+#define xbuf X      /* (static only) */
+#endif
 			for ( i = 0; i < 16; ++i, xp += 4 )
 				xbuf[i] = xp[0] + ( xp[1] << 8 ) + ( xp[2] << 16 ) + ( xp[3] << 24 );
 		}

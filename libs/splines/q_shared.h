@@ -140,8 +140,8 @@
 
 #undef ALIGN_ON
 #undef ALIGN_OFF
-#define ALIGN_ON        # pragma align( 16 )
-#define ALIGN_OFF       # pragma align()
+#define ALIGN_ON        #pragma align( 16 )
+#define ALIGN_OFF       #pragma align()
 
 #ifdef __cplusplus
 extern "C" {

@@ -878,7 +878,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 
 			{
 				auto combo = ui::ComboBoxText(ui::New);
-#define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_text_append_text( combo, # x )
+#define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_text_append_text( combo, #x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
 				D_ITEM( 7 );
@@ -904,7 +904,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			}
 			{
 				auto combo = ui::ComboBoxText(ui::New);
-#define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_text_append_text( combo, # x )
+#define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_text_append_text( combo, #x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
 				D_ITEM( 7 );
