@@ -637,7 +637,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				m_hshiftSpinner.connect( spin );
 				spin.show();
 				table.attach(spin, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
-				gtk_widget_set_size_request( spin , 60, -1 );
+                spin.dimensions(60, -1);
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
@@ -649,7 +649,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto entry = ui::Entry(ui::New);
 				entry.show();
 				table.attach(entry, {3, 4, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
-				gtk_widget_set_size_request( entry , 50, -1 );
+                entry.dimensions(50, -1);
 				m_hshiftIncrement.m_entry = entry;
 				m_hshiftEntry.connect( entry );
 			}
@@ -665,7 +665,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				m_vshiftSpinner.connect( spin );
 				spin.show();
 				table.attach(spin, {1, 2, 1, 2}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( spin , 60, -1 );
+                spin.dimensions(60, -1);
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
@@ -677,7 +677,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto entry = ui::Entry(ui::New);
 				entry.show();
 				table.attach(entry, {3, 4, 1, 2}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( entry , 50, -1 );
+                entry.dimensions(50, -1);
 				m_vshiftIncrement.m_entry = entry;
 				m_vshiftEntry.connect( entry );
 			}
@@ -693,7 +693,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				m_hscaleSpinner.connect( spin );
 				spin.show();
 				table.attach(spin, {1, 2, 2, 3}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( spin , 60, -1 );
+                spin.dimensions(60, -1);
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
@@ -705,7 +705,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto entry = ui::Entry(ui::New);
 				entry.show();
 				table.attach(entry, {3, 4, 2, 3}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( entry , 50, -1 );
+                entry.dimensions(50, -1);
 				m_hscaleIncrement.m_entry = entry;
 				m_hscaleEntry.connect( entry );
 			}
@@ -721,7 +721,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				m_vscaleSpinner.connect( spin );
 				spin.show();
 				table.attach(spin, {1, 2, 3, 4}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( spin , 60, -1 );
+                spin.dimensions(60, -1);
 			}
 			{
 				ui::Widget label = ui::Label( "Step" );
@@ -733,7 +733,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto entry = ui::Entry(ui::New);
 				entry.show();
 				table.attach(entry, {3, 4, 3, 4}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( entry , 50, -1 );
+                entry.dimensions(50, -1);
 				m_vscaleIncrement.m_entry = entry;
 				m_vscaleEntry.connect( entry );
 			}
@@ -749,7 +749,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				m_rotateSpinner.connect( spin );
 				spin.show();
 				table.attach(spin, {1, 2, 4, 5}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( spin , 60, -1 );
+                spin.dimensions(60, -1);
 				gtk_spin_button_set_wrap( spin, TRUE );
 			}
 			{
@@ -762,7 +762,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				auto entry = ui::Entry(ui::New);
 				entry.show();
 				table.attach(entry, {3, 4, 4, 5}, {GTK_FILL, 0});
-				gtk_widget_set_size_request( entry , 50, -1 );
+                entry.dimensions(50, -1);
 				m_rotateIncrement.m_entry = entry;
 				m_rotateEntry.connect( entry );
 			}
@@ -812,7 +812,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {0, 1, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnAxial ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					ui::Widget button = ui::Button( "Fit" );
@@ -820,7 +820,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnFaceFit ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					ui::Widget button = ui::Button( "CAP" );
@@ -828,7 +828,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {0, 1, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchdetails ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					ui::Widget button = ui::Button( "Set..." );
@@ -836,7 +836,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {1, 2, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchreset ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					ui::Widget button = ui::Button( "Natural" );
@@ -844,7 +844,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {2, 3, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchnatural ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					ui::Widget button = ui::Button( "Fit" );
@@ -852,20 +852,20 @@ ui::Window SurfaceInspector::BuildDialog(){
 					table.attach(button, {3, 4, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
 					button.connect( "clicked",
 									  G_CALLBACK( OnBtnPatchFit ), 0 );
-					gtk_widget_set_size_request( button, 60, -1 );
+                    button.dimensions(60, -1);
 				}
 				{
 					auto spin = ui::SpinButton( ui::Adjustment( 1, 0, 1 << 16, 1, 10, 0 ), 0, 6 );
 					spin.show();
 					table.attach(spin, {2, 3, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
-					gtk_widget_set_size_request( spin, 60, -1 );
+                    spin.dimensions(60, -1);
 					AddDialogData( *GTK_SPIN_BUTTON( spin ), m_fitHorizontal );
 				}
 				{
 					auto spin = ui::SpinButton( ui::Adjustment( 1, 0, 1 << 16, 1, 10, 0 ), 0, 6 );
 					spin.show();
 					table.attach(spin, {3, 4, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
-					gtk_widget_set_size_request( spin, 60, -1 );
+                    spin.dimensions(60, -1);
 					AddDialogData( *GTK_SPIN_BUTTON( spin ), m_fitVertical );
 				}
 			}
@@ -977,7 +977,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 				gtk_widget_set_can_focus( TexTool::g_textoolWin, true );
 				// <-- end stuff...
 				TexTool::g_textoolWin.show();
-				gtk_widget_set_size_request( TexTool::g_textoolWin, -1, 240 ); //Yeah!
+				TexTool::g_textoolWin.dimensions( -1, 240 ); //Yeah!
 				frame.add(TexTool::g_textoolWin);
 
 				TexTool::g_textoolWin.connect( "size_allocate", G_CALLBACK( TexTool::size_allocate ), NULL );

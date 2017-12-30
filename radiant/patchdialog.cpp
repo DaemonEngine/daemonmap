@@ -609,7 +609,7 @@ ui::Window PatchInspector::BuildDialog(){
 
 								combo.show();
                                 table.attach(combo, {0, 1, 1, 2}, {(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0)}, {0, 0});
-								gtk_widget_set_size_request( combo , 60, -1 );
+								combo.dimensions(60, -1);
 								m_pRowCombo = combo;
 							}
 
@@ -620,7 +620,7 @@ ui::Window PatchInspector::BuildDialog(){
 
 								combo.show();
                                 table.attach(combo, {1, 2, 1, 2}, {(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0)}, {0, 0});
-								gtk_widget_set_size_request( combo , 60, -1 );
+								combo.dimensions(60, -1);
 								m_pColCombo = combo;
 							}
 						}
@@ -806,7 +806,7 @@ ui::Window PatchInspector::BuildDialog(){
 							button.show();
                             table.attach(button, {3, 4, 2, 3}, {GTK_FILL, 0});
 							button.connect( "clicked", G_CALLBACK( OnBtnPatchFlipX ), 0 );
-							gtk_widget_set_size_request( button , 60, -1 );
+							button.dimensions(60, -1);
 						}
 						{
 							auto label = ui::Label( "Vertical Stretch Step" );
@@ -819,7 +819,7 @@ ui::Window PatchInspector::BuildDialog(){
 							button.show();
                             table.attach(button, {3, 4, 3, 4}, {GTK_FILL, 0});
 							button.connect( "clicked", G_CALLBACK( OnBtnPatchFlipY ), 0 );
-							gtk_widget_set_size_request( button , 60, -1 );
+							button.dimensions(60, -1);
 						}
 						{
 							auto label = ui::Label( "Rotate Step" );
@@ -831,7 +831,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {0, 1, 0, 1}, {GTK_FILL, 0});
-							gtk_widget_set_size_request( entry , 50, -1 );
+							entry.dimensions(50, -1);
 							g_object_set_data( G_OBJECT( window ), "hshift_entry", (void *) entry );
 							// we fill in this data, if no patch is selected the widgets are unmodified when the inspector is raised
 							// so we need to have at least one initialisation somewhere
@@ -844,14 +844,14 @@ ui::Window PatchInspector::BuildDialog(){
 							auto spin = ui::SpinButton( adj, 1, 0 );
 							spin.show();
                             table.attach(spin, {1, 2, 0, 1}, {0, 0});
-							gtk_widget_set_size_request( spin , 10, -1 );
+							spin.dimensions(10, -1);
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {0, 1, 1, 2}, {GTK_FILL, 0});
-							gtk_widget_set_size_request( entry , 50, -1 );
+							entry.dimensions(50, -1);
 							entry_set_float( entry, g_pi_globals.shift[1] );
 
 							auto adj = ui::Adjustment( 0, -8192, 8192, 1, 1, 0 );
@@ -861,14 +861,14 @@ ui::Window PatchInspector::BuildDialog(){
 							auto spin = ui::SpinButton( adj, 1, 0 );
 							spin.show();
                             table.attach(spin, {1, 2, 1, 2}, {0, 0});
-							gtk_widget_set_size_request( spin , 10, -1 );
+							spin.dimensions(10, -1);
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {0, 1, 2, 3}, {GTK_FILL, 0});
-							gtk_widget_set_size_request( entry , 50, -1 );
+							entry.dimensions(50, -1);
 							entry_set_float( entry, g_pi_globals.scale[0] );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 );
@@ -878,14 +878,14 @@ ui::Window PatchInspector::BuildDialog(){
 							auto spin = ui::SpinButton( adj, 1, 0 );
 							spin.show();
                             table.attach(spin, {1, 2, 2, 3}, {0, 0});
-							gtk_widget_set_size_request( spin , 10, -1 );
+							spin.dimensions(10, -1);
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {0, 1, 3, 4}, {GTK_FILL, 0});
-							gtk_widget_set_size_request( entry , 50, -1 );
+							entry.dimensions(50, -1);
 							entry_set_float( entry, g_pi_globals.scale[1] );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 );
@@ -895,14 +895,14 @@ ui::Window PatchInspector::BuildDialog(){
 							auto spin = ui::SpinButton( adj, 1, 0 );
 							spin.show();
                             table.attach(spin, {1, 2, 3, 4}, {0, 0});
-							gtk_widget_set_size_request( spin , 10, -1 );
+							spin.dimensions(10, -1);
 							gtk_widget_set_can_focus( spin, false );
 						}
 						{
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {0, 1, 4, 5}, {GTK_FILL, 0});
-							gtk_widget_set_size_request( entry , 50, -1 );
+							entry.dimensions(50, -1);
 							entry_set_float( entry, g_pi_globals.rotate );
 
 							auto adj = ui::Adjustment( 0, -1000, 1000, 1, 1, 0 ); // NOTE: Arnout - this really should be 360 but can't change it anymore as it could break existing maps
@@ -912,7 +912,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto spin = ui::SpinButton( adj, 1, 0 );
 							spin.show();
                             table.attach(spin, {1, 2, 4, 5}, {0, 0});
-							gtk_widget_set_size_request( spin , 10, -1 );
+							spin.dimensions(10, -1);
 							gtk_widget_set_can_focus( spin, false );
 						}
 					}
@@ -924,35 +924,35 @@ ui::Window PatchInspector::BuildDialog(){
 						button.show();
 						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchAutoCap ), 0 );
-						gtk_widget_set_size_request( button , 60, -1 );
+						button.dimensions(60, -1);
 					}
 					{
 						auto button = ui::Button( "CAP" );
 						button.show();
 						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchdetails ), 0 );
-						gtk_widget_set_size_request( button , 60, -1 );
+						button.dimensions(60, -1);
 					}
 					{
 						auto button = ui::Button( "Set..." );
 						button.show();
 						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchreset ), 0 );
-						gtk_widget_set_size_request( button , 60, -1 );
+						button.dimensions(60, -1);
 					}
 					{
 						auto button = ui::Button( "Natural" );
 						button.show();
 						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchnatural ), 0 );
-						gtk_widget_set_size_request( button , 60, -1 );
+						button.dimensions(60, -1);
 					}
 					{
 						auto button = ui::Button( "Fit" );
 						button.show();
 						hbox2.pack_end(button, TRUE, FALSE, 0);
 						button.connect( "clicked", G_CALLBACK( OnBtnPatchfit ), 0 );
-						gtk_widget_set_size_request( button , 60, -1 );
+						button.dimensions(60, -1);
 					}
 				}
 			}

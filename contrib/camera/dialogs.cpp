@@ -1247,7 +1247,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 	hbox.show();
 
 	auto scr = w = ui::ScrolledWindow();
-	gtk_widget_set_size_request( w, 0, 150 );
+	w.dimensions( 0, 150 );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( w ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
 	hbox.pack_start( w, TRUE, TRUE, 0 );
 	w.show();

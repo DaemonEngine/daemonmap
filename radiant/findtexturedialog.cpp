@@ -189,14 +189,14 @@ ui::Window FindTextureDialog::BuildDialog(){
 	vbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked",
 					  G_CALLBACK( OnApply ), 0 );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	button = ui::Button( "Close" );
 	button.show();
 	vbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked",
 					  G_CALLBACK( OnClose ), 0 );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	return dlg;
 }

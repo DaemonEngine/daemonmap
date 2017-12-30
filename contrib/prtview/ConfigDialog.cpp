@@ -398,7 +398,7 @@ void DoConfigDialog(){
 	button.show();
 	hbox.pack_start( button, FALSE, FALSE, 0 );
 	button.connect( "clicked", G_CALLBACK( OnColor2d ), NULL );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	auto aa2check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
 	aa2check.show();
@@ -423,7 +423,7 @@ void DoConfigDialog(){
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 						G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	// initialize dialog
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( show2check ), portals.show_2d );

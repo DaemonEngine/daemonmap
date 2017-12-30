@@ -1474,21 +1474,21 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
     table2.attach(entry, {1, 2, 0, 1});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "wavelength", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &WaveLength );
 
 	entry = ui::Entry();
 	entry.show();
     table2.attach(entry, {1, 2, 1, 2});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "amplitude", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Amplitude );
 
 	entry = ui::Entry();
 	entry.show();
 	table2.attach(entry, {1, 2, 2, 3});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "roughness", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Roughness );
 
@@ -1497,7 +1497,7 @@ GtkWidget* create_main_dialog(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
 	table2.attach(spin, {1, 2, 3, 4});
-	gtk_widget_set_size_request( spin, 60, -1 );
+	spin.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "random", spin );
 
 	vbox = ui::VBox( FALSE, 5 );
@@ -1554,28 +1554,28 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 1, 2});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmin", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hll );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {3, 4, 1, 2});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmax", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hur );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 2, 3});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmin", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vll );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {3, 4, 2, 3});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmax", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vur );
 
@@ -1605,7 +1605,7 @@ GtkWidget* create_main_dialog(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
 	table.attach(spin, {1, 2, 0, 1});
-	gtk_widget_set_size_request( spin, 60, -1 );
+	spin.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "nh", spin );
 
 	adj = ui::Adjustment( 8, 1, MAX_ROWS, 1, 10, 0 );
@@ -1613,7 +1613,7 @@ GtkWidget* create_main_dialog(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
 	table.attach(spin, {1, 2, 1, 2});
-	gtk_widget_set_size_request( spin, 60, -1 );
+	spin.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "nv", spin );
 
 	check = ui::CheckButton( "Use Bezier patches" );
@@ -1633,7 +1633,7 @@ GtkWidget* create_main_dialog(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
 	vbox.pack_start( spin, FALSE, TRUE, 0 );
-	gtk_widget_set_size_request( spin, 60, -1 );
+	spin.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "sp", spin );
 	// ^Fishman - End of Snap to grid code.
 
@@ -1685,28 +1685,28 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 0, 1});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z01", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z01 );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 1, 2});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z00", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z00 );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {3, 4, 0, 1});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z11", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z11 );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {3, 4, 1, 2});
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z10", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z10 );
 
@@ -1754,14 +1754,14 @@ GtkWidget* create_main_dialog(){
 	button = ui::Button( "Browse..." );
 	button.show();
 	hbox2.pack_start( button, FALSE, FALSE, 0 );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_file_browse", button );
 	button.connect( "clicked", G_CALLBACK( bitmap_browse ), NULL );
 
 	button = ui::Button( "Reload" );
 	button.show();
 	hbox2.pack_start( button, FALSE, FALSE, 0 );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_reload", button );
 	button.connect( "clicked", G_CALLBACK( bitmap_reload ), NULL );
 
@@ -1793,7 +1793,7 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	hbox2.pack_start( entry, FALSE, FALSE, 0 );
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_black", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.black_value );
 
@@ -1804,7 +1804,7 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	hbox2.pack_start( entry, FALSE, FALSE, 0 );
-	gtk_widget_set_size_request( entry, 50, -1 );
+	entry.dimensions( 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "bmp_white", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &gbmp.white_value );
 
@@ -1855,35 +1855,35 @@ GtkWidget* create_main_dialog(){
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
 	table.attach(spin, {1, 2, 0, 1}, {GTK_EXPAND, GTK_EXPAND});
-	gtk_widget_set_size_request( spin, 60, -1 );
+	spin.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_value", spin );
 	spin.connect( "focus_out_event", G_CALLBACK( fix_value_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_range", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( fix_range_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_rate", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( fix_rate_entryfocusout ), NULL );
 
 	button = ui::Button( "Free" );
 	button.show();
 	table.attach(button, {2, 3, 0, 1}, {GTK_EXPAND, GTK_FILL});
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_free", button );
 	button.connect( "clicked", G_CALLBACK( fix_free ), NULL );
 
 	button = ui::Button( "Free All" );
 	button.show();
 	table.attach(button, {2, 3, 1, 2}, {GTK_EXPAND, GTK_FILL});
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_freeall", button );
 	button.connect( "clicked", G_CALLBACK( fix_freeall ), NULL );
 
@@ -1920,21 +1920,21 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture1", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 0 ) );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture2", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 1 ) );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture3", entry );
 
 	hbox2 = ui::HBox( FALSE, 5 );
@@ -1968,25 +1968,25 @@ GtkWidget* create_main_dialog(){
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {0, 1, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texoffsetx", entry );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texoffsety", entry );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {2, 3, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texscalex", entry );
 
 	entry = ui::Entry();
 	entry.show();
 	table.attach(entry, {3, 4, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
-	gtk_widget_set_size_request( entry, 60, -1 );
+	entry.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texscaley", entry );
 
 
@@ -2017,7 +2017,7 @@ GtkWidget* create_main_dialog(){
 	button = ui::Button( "OK" );
 	button.show();
 	vbox.pack_start( button, FALSE, TRUE, 0 );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions( 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "go", button );
 	button.connect( "clicked", G_CALLBACK( main_go ), NULL );
 

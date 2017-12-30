@@ -1352,7 +1352,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 				{
 					auto text = ui::TextView(ui::New);
-					gtk_widget_set_size_request( text , 0, -1 ); // allow shrinking
+					text.dimensions(0, -1); // allow shrinking
 					gtk_text_view_set_wrap_mode( text, GTK_WRAP_WORD );
 					gtk_text_view_set_editable( text, FALSE );
 					text.show();

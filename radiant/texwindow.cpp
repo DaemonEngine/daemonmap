@@ -2182,8 +2182,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			m_btn_right.add(m_arrow_right);
 
 			// workaround. the size of the tag frame depends of the requested size of the arrow buttons.
-			gtk_widget_set_size_request( m_arrow_left, -1, 68 );
-			gtk_widget_set_size_request( m_arrow_right, -1, 68 );
+			m_arrow_left.dimensions(-1, 68);
+			m_arrow_right.dimensions(-1, 68);
 
 			frame_table.attach(m_btn_left, {1, 2, 1, 2}, {GTK_SHRINK, GTK_EXPAND});
 			frame_table.attach(m_btn_right, {1, 2, 2, 3}, {GTK_SHRINK, GTK_EXPAND});

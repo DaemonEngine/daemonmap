@@ -738,14 +738,14 @@ static void CreateGtkTextEditor(){
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 					  G_CALLBACK( editor_close ), dlg );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	button = ui::Button( "Save" );
 	button.show();
 	hbox.pack_end(button, FALSE, FALSE, 0);
 	button.connect( "clicked",
 					  G_CALLBACK( editor_save ), dlg );
-	gtk_widget_set_size_request( button, 60, -1 );
+	button.dimensions(60, -1);
 
 	text_editor = dlg;
 	text_widget = text;

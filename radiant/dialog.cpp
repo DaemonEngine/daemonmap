@@ -50,7 +50,7 @@
 ui::Entry DialogEntry_new(){
 	auto entry = ui::Entry(ui::New);
 	entry.show();
-	gtk_widget_set_size_request( entry , 64, -1 );
+	entry.dimensions(64, -1);
 	return entry;
 }
 
@@ -83,7 +83,7 @@ ui::SpinButton DialogSpinner_new( double value, double lower, double upper, int 
 	}
 	auto spin = ui::SpinButton( ui::Adjustment( value, lower, upper, step, 10, 0 ), step, digits );
 	spin.show();
-	gtk_widget_set_size_request( spin , 64, -1 );
+	spin.dimensions(64, -1);
 	return spin;
 }
 

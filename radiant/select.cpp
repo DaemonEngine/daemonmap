@@ -941,7 +941,7 @@ void DoRotateDlg(){
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
                     table.attach(spin, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
-					gtk_widget_set_size_request( spin , 64, -1 );
+                    spin.dimensions(64, -1);
 					gtk_spin_button_set_wrap( spin, TRUE );
 
 					gtk_widget_grab_focus( spin  );
@@ -953,7 +953,7 @@ void DoRotateDlg(){
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
                     table.attach(spin, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
-					gtk_widget_set_size_request( spin , 64, -1 );
+                    spin.dimensions(64, -1);
 					gtk_spin_button_set_wrap( spin, TRUE );
 
 					g_rotate_dialog.y = spin;
@@ -963,7 +963,7 @@ void DoRotateDlg(){
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
                     table.attach(spin, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, 0});
-					gtk_widget_set_size_request( spin , 64, -1 );
+                    spin.dimensions(64, -1);
 					gtk_spin_button_set_wrap( spin, TRUE );
 
 					g_rotate_dialog.z = spin;

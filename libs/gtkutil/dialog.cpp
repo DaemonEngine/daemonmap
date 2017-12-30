@@ -58,7 +58,7 @@ ui::Table create_dialog_table( unsigned int rows, unsigned int columns, unsigned
 
 ui::Button create_dialog_button( const char* label, GCallback func, gpointer data ){
 	auto button = ui::Button( label );
-	gtk_widget_set_size_request( button , 64, -1 );
+	button.dimensions(64, -1);
 	button.show();
 	button.connect( "clicked", func, data );
 	return button;
@@ -118,7 +118,7 @@ ui::Window create_fixedsize_modal_dialog_window( ui::Window parent, const char* 
 
 	window_remove_minmax( window );
 
-	//gtk_widget_set_size_request(window, width, height);
+	//window.dimensions(width, height);
 	//gtk_window_set_default_size(window, width, height);
 	//gtk_window_resize(window, width, height);
 	//GdkGeometry geometry = { width, height, -1, -1, width, height, -1, -1, -1, -1, GDK_GRAVITY_STATIC, };

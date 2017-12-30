@@ -1631,7 +1631,7 @@ WaitDialog create_wait_dialog( const char* title, const char* text ){
 		gtk_misc_set_alignment( GTK_MISC( dialog.m_label ), 0.0, 0.5 );
 		gtk_label_set_justify( dialog.m_label, GTK_JUSTIFY_LEFT );
 		dialog.m_label.show();
-		gtk_widget_set_size_request( dialog.m_label , 200, -1 );
+		dialog.m_label.dimensions(200, -1);
 
 		dialog.m_window.add(dialog.m_label);
 	}
@@ -2674,7 +2674,7 @@ ui::Window create_splash(){
 	image.show();
 	window.add(image);
 
-	gtk_widget_set_size_request( window , -1, -1 );
+	window.dimensions(-1, -1);
 	window.show();
 
 	return window;

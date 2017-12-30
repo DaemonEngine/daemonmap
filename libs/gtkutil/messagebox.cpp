@@ -30,7 +30,7 @@
 ui::Widget create_padding( int width, int height ){
 	ui::Alignment widget = ui::Alignment( 0.0, 0.0, 0.0, 0.0 );
 	widget.show();
-	gtk_widget_set_size_request( widget, width, height );
+	widget.dimensions(width, height);
 	return widget;
 }
 
