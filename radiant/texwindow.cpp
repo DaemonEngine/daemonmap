@@ -1321,7 +1321,7 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 
 	storeAvailable.clear();
 
-	bool row = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( storeAssigned ), &iterAssigned ) != 0;
+	bool row = gtk_tree_model_get_iter_first(storeAssigned, &iterAssigned ) != 0;
 
 	if ( !row ) { // does the shader have tags assigned?
 		for ( iterAll = allTags.begin(); iterAll != allTags.end(); ++iterAll )
@@ -1333,7 +1333,7 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 	{
 		while ( row ) // available tags = all tags - assigned tags
 		{
-			gtk_tree_model_get( GTK_TREE_MODEL( storeAssigned ), &iterAssigned, TAG_COLUMN, &tag_assigned, -1 );
+			gtk_tree_model_get(storeAssigned, &iterAssigned, TAG_COLUMN, &tag_assigned, -1 );
 
 			for ( iterAll = allTags.begin(); iterAll != allTags.end(); ++iterAll )
 			{
@@ -1342,10 +1342,10 @@ void BuildStoreAvailableTags(   ui::ListStore storeAvailable,
 				}
 				else
 				{
-					row = gtk_tree_model_iter_next( GTK_TREE_MODEL( storeAssigned ), &iterAssigned ) != 0;
+					row = gtk_tree_model_iter_next(storeAssigned, &iterAssigned ) != 0;
 
 					if ( row ) {
-						gtk_tree_model_get( GTK_TREE_MODEL( storeAssigned ), &iterAssigned, TAG_COLUMN, &tag_assigned, -1 );
+						gtk_tree_model_get(storeAssigned, &iterAssigned, TAG_COLUMN, &tag_assigned, -1 );
 					}
 				}
 			}
@@ -1480,7 +1480,7 @@ void TextureBrowser_ToggleHideUnused(){
 	}
 }
 
-void TextureGroups_constructTreeModel( TextureGroups groups, GtkTreeStore* store ){
+void TextureGroups_constructTreeModel( TextureGroups groups, ui::TreeStore store ){
 	// put the information from the old textures menu into a treeview
 	GtkTreeIter iter, child;
 
@@ -1537,21 +1537,18 @@ TextureGroups TextureGroups_constructTreeView(){
 
 void TextureBrowser_constructTreeStore(){
 	TextureGroups groups = TextureGroups_constructTreeView();
-	GtkTreeStore* store = gtk_tree_store_new( 1, G_TYPE_STRING );
+	auto store = ui::TreeStore(gtk_tree_store_new( 1, G_TYPE_STRING ));
 	TextureGroups_constructTreeModel( groups, store );
-	std::set<CopiedString>::iterator iter;
 
-	GtkTreeModel* model = GTK_TREE_MODEL( store );
-
-	gtk_tree_view_set_model( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTree ), model );
+	gtk_tree_view_set_model(GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTree ), store);
 
 	g_object_unref( G_OBJECT( store ) );
 }
 
 void TextureBrowser_constructTreeStoreTags(){
 	TextureGroups groups;
-	GtkTreeStore* store = gtk_tree_store_new( 1, G_TYPE_STRING );
-	GtkTreeModel* model = GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list );
+	auto store = ui::TreeStore(gtk_tree_store_new( 1, G_TYPE_STRING ));
+	GtkTreeModel* model = g_TextureBrowser.m_all_tags_list;
 
 	gtk_tree_view_set_model( GTK_TREE_VIEW( g_TextureBrowser.m_treeViewTags ), model );
 
@@ -1758,8 +1755,8 @@ void TextureBrowser_assignTags(){
 			if ( path ) {
 				GtkTreeIter iter;
 
-				if ( gtk_tree_model_get_iter( GTK_TREE_MODEL( g_TextureBrowser.m_available_store ), &iter, path ) ) {
-					gtk_tree_model_get( GTK_TREE_MODEL( g_TextureBrowser.m_available_store ), &iter, TAG_COLUMN, &tag_assigned, -1 );
+				if ( gtk_tree_model_get_iter(g_TextureBrowser.m_available_store, &iter, path ) ) {
+					gtk_tree_model_get(g_TextureBrowser.m_available_store, &iter, TAG_COLUMN, &tag_assigned, -1 );
 					if ( !TagBuilder.CheckShaderTag( g_TextureBrowser.shader.c_str() ) ) {
 						// create a custom shader/texture entry
 						IShader* ishader = QERApp_Shader_ForName( g_TextureBrowser.shader.c_str() );
@@ -1808,8 +1805,8 @@ void TextureBrowser_removeTags(){
 			if ( path ) {
 				GtkTreeIter iter;
 
-				if ( gtk_tree_model_get_iter( GTK_TREE_MODEL( g_TextureBrowser.m_assigned_store ), &iter, path ) ) {
-					gtk_tree_model_get( GTK_TREE_MODEL( g_TextureBrowser.m_assigned_store ), &iter, TAG_COLUMN, &tag, -1 );
+				if ( gtk_tree_model_get_iter(g_TextureBrowser.m_assigned_store, &iter, path ) ) {
+					gtk_tree_model_get(g_TextureBrowser.m_assigned_store, &iter, TAG_COLUMN, &tag, -1 );
 					TagBuilder.DeleteShaderTag( g_TextureBrowser.shader.c_str(), tag );
 					gtk_list_store_remove( g_TextureBrowser.m_assigned_store, &iter );
 				}
@@ -1860,8 +1857,8 @@ void TextureBrowser_searchTags(){
 			if ( path ) {
 				GtkTreeIter iter;
 
-				if ( gtk_tree_model_get_iter( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iter, path ) ) {
-					gtk_tree_model_get( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iter, TAG_COLUMN, &tag, -1 );
+				if ( gtk_tree_model_get_iter(g_TextureBrowser.m_all_tags_list, &iter, path ) ) {
+					gtk_tree_model_get(g_TextureBrowser.m_all_tags_list, &iter, TAG_COLUMN, &tag, -1 );
 
 					strcat( buffer, tag );
 					strcat( tags_searched, tag );
@@ -2131,7 +2128,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			auto renderer = ui::CellRendererText(ui::New);
 
-			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_assigned_store ) ));
+			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel(g_TextureBrowser.m_assigned_store ));
 			g_TextureBrowser.m_assigned_store.unref();
 			g_TextureBrowser.m_assigned_tree.connect( "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_assigned_tree ), FALSE );
@@ -2159,7 +2156,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			auto renderer = ui::CellRendererText(ui::New);
 
-			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( g_TextureBrowser.m_available_store ) ));
+			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel(g_TextureBrowser.m_available_store ));
 			g_TextureBrowser.m_available_store.unref();
 			g_TextureBrowser.m_available_tree.connect( "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
 			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( g_TextureBrowser.m_available_tree ), FALSE );
@@ -2296,16 +2293,16 @@ void TextureBrowser_renameTag(){
 			gchar* rowTag;
 			gchar* oldTag = (char*)selected->data;
 
-			bool row = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterList ) != 0;
+			bool row = gtk_tree_model_get_iter_first(g_TextureBrowser.m_all_tags_list, &iterList ) != 0;
 
 			while ( row )
 			{
-				gtk_tree_model_get( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterList, TAG_COLUMN, &rowTag, -1 );
+				gtk_tree_model_get(g_TextureBrowser.m_all_tags_list, &iterList, TAG_COLUMN, &rowTag, -1 );
 
 				if ( strcmp( rowTag, oldTag ) == 0 ) {
 					gtk_list_store_set( g_TextureBrowser.m_all_tags_list, &iterList, TAG_COLUMN, newTag.c_str(), -1 );
 				}
-				row = gtk_tree_model_iter_next( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterList ) != 0;
+				row = gtk_tree_model_iter_next(g_TextureBrowser.m_all_tags_list, &iterList ) != 0;
 			}
 
 			TagBuilder.RenameShaderTag( oldTag, newTag.c_str() );
@@ -2338,17 +2335,17 @@ void TextureBrowser_deleteTag(){
 
 			gchar* tagSelected = (char*)selected->data;
 
-			bool row = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterSelected ) != 0;
+			bool row = gtk_tree_model_get_iter_first(g_TextureBrowser.m_all_tags_list, &iterSelected ) != 0;
 
 			while ( row )
 			{
-				gtk_tree_model_get( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterSelected, TAG_COLUMN, &rowTag, -1 );
+				gtk_tree_model_get(g_TextureBrowser.m_all_tags_list, &iterSelected, TAG_COLUMN, &rowTag, -1 );
 
 				if ( strcmp( rowTag, tagSelected ) == 0 ) {
 					gtk_list_store_remove( g_TextureBrowser.m_all_tags_list, &iterSelected );
 					break;
 				}
-				row = gtk_tree_model_iter_next( GTK_TREE_MODEL( g_TextureBrowser.m_all_tags_list ), &iterSelected ) != 0;
+				row = gtk_tree_model_iter_next(g_TextureBrowser.m_all_tags_list, &iterSelected ) != 0;
 			}
 
 			TagBuilder.DeleteTag( tagSelected );

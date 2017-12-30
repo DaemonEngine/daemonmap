@@ -57,6 +57,7 @@ struct _GtkToolItem;
 struct _GtkTreeModel;
 struct _GtkTreePath;
 struct _GtkTreeSelection;
+struct _GtkTreeStore;
 struct _GtkTreeView;
 struct _GtkTreeViewColumn;
 struct _GtkVBox;
@@ -556,6 +557,10 @@ namespace ui {
          void append(T... args);
 
          void append();
+    );
+
+    WRAP(TreeStore, Object, _GtkTreeStore, (ITreeModel),
+    ,
     );
 
     WRAP(TreeSelection, Object, _GtkTreeSelection, (),

@@ -61,7 +61,7 @@ WindowPositionTracker m_positionTracker;
 
 ui::Window m_window;
 GtkTreeView* m_tree_view;
-GraphTreeModel* m_tree_model;
+ui::TreeModel m_tree_model{ui::null};
 bool m_selection_disabled;
 
 EntityList() :
@@ -197,7 +197,7 @@ gboolean treemodel_update_selection( GtkTreeModel* model, GtkTreePath* path, Gtk
 	return FALSE;
 }
 
-void EntityList_UpdateSelection( GtkTreeModel* model, GtkTreeView* view ){
+void EntityList_UpdateSelection( ui::TreeModel model, GtkTreeView* view ){
 	EntityList_DisconnectSignals( view );
 	gtk_tree_model_foreach( model, treemodel_update_selection, view );
 	EntityList_ConnectSignals( view );
@@ -209,7 +209,7 @@ void RedrawEntityList(){
 	{
 	case EntityList::eInsertRemove:
 	case EntityList::eSelection:
-		EntityList_UpdateSelection( GTK_TREE_MODEL( getEntityList().m_tree_model ), getEntityList().m_tree_view );
+		EntityList_UpdateSelection( getEntityList().m_tree_model, getEntityList().m_tree_view );
 	default:
 		break;
 	}
@@ -268,13 +268,13 @@ gint graph_tree_model_compare_name( GtkTreeModel *model, GtkTreeIter *a, GtkTree
 
 extern GraphTreeModel* scene_graph_get_tree_model();
 void AttachEntityTreeModel(){
-	getEntityList().m_tree_model = scene_graph_get_tree_model();
+	getEntityList().m_tree_model = ui::TreeModel::from(scene_graph_get_tree_model());
 
-	gtk_tree_view_set_model( getEntityList().m_tree_view, GTK_TREE_MODEL( getEntityList().m_tree_model ) );
+	gtk_tree_view_set_model( getEntityList().m_tree_view, getEntityList().m_tree_model );
 }
 
 void DetachEntityTreeModel(){
-	getEntityList().m_tree_model = 0;
+	getEntityList().m_tree_model = ui::TreeModel(ui::null);
 
 	gtk_tree_view_set_model( getEntityList().m_tree_view, 0 );
 }

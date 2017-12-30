@@ -34,15 +34,15 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 	ui::ListStore list = ui::ListStore::from(gtk_tree_view_get_model( view ));
 
 	GtkTreeIter iter;
-	gboolean valid = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter );
+	gboolean valid = gtk_tree_model_get_iter_first(list, &iter );
 	while ( valid )
 	{
 		gchar* data;
-		gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter, 0, &data, -1 );
+		gtk_tree_model_get(list, &iter, 0, &data, -1 );
 		globalOutputStream() << data << "\n";
 		ignore.insert( std::string( data ) );
 		g_free( data );
-		valid = gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter );
+		valid = gtk_tree_model_iter_next(list, &iter );
 	}
 
 	for ( std::set<std::string>::iterator it( ignore.begin() ); it != ignore.end(); ++it )

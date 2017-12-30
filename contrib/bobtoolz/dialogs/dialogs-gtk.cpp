@@ -915,7 +915,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 
 	// djbob: lists added
 
-	auto comboMain = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listMainTextures))));
+	auto comboMain = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(listMainTextures)));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	hbox.pack_start( comboMain, FALSE, FALSE, 0 );
 	comboMain.show();
@@ -934,7 +934,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 	hbox.show();
 
-	auto comboTrim = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(listTrimTextures))));
+	auto comboTrim = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(listTrimTextures)));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	hbox.pack_start( comboTrim, FALSE, FALSE, 0 );
 	comboTrim.show();

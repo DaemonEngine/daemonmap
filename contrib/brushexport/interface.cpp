@@ -195,7 +195,7 @@ void CreateWindow( void ){
 
 	// list store
 	ui::ListStore ignorelist = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
-	gtk_tree_view_set_model( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), GTK_TREE_MODEL( ignorelist ) );
+	gtk_tree_view_set_model( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), ignorelist );
     ignorelist.unref();
 
 	gtk_widget_show_all( wnd );

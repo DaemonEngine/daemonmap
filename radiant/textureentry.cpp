@@ -36,7 +36,7 @@ void EntryCompletion<StringList>::connect(ui::Entry entry)
 
     auto completion = ui::EntryCompletion(gtk_entry_completion_new());
     gtk_entry_set_completion(entry, completion);
-    gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(m_store));
+    gtk_entry_completion_set_model(completion, m_store);
     gtk_entry_completion_set_text_column(completion, 0);
 }
 

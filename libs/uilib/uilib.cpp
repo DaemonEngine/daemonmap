@@ -55,6 +55,8 @@ namespace ui {
         gtk_editable_set_editable(GTK_EDITABLE(this), value);
     }
 
+    IMPL(TreeModel, GTK_TREE_MODEL);
+
     IMPL(Widget, GTK_WIDGET);
 
     Widget::Widget(ui::New_t) : Widget(nullptr)
@@ -421,6 +423,8 @@ namespace ui {
     {
         gtk_list_store_append(this, nullptr);
     }
+
+    IMPL(TreeStore, GTK_TREE_STORE);
 
     // IMPL(TreePath, GTK_TREE_PATH);
 

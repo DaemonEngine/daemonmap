@@ -300,7 +300,7 @@ ui::Window CDbgDlg::BuildDialog(){
 	{
 		ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-		ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
+		ui::Widget view = ui::TreeView(ui::TreeModel(store ));
 		gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 		{

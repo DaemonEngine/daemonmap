@@ -633,7 +633,7 @@ inline ui::VBox getVBox( ui::Bin page ){
 	return ui::VBox::from(gtk_bin_get_child(page));
 }
 
-GtkTreeIter PreferenceTree_appendPage( GtkTreeStore* store, GtkTreeIter* parent, const char* name, ui::Widget page ){
+GtkTreeIter PreferenceTree_appendPage( ui::TreeStore store, GtkTreeIter* parent, const char* name, ui::Widget page ){
 	GtkTreeIter group;
 	gtk_tree_store_append( store, &group, parent );
 	gtk_tree_store_set( store, &group, 0, name, 1, page, -1 );
@@ -663,10 +663,10 @@ class PreferenceTreeGroup : public PreferenceGroup
 {
 Dialog& m_dialog;
 ui::Widget m_notebook;
-GtkTreeStore* m_store;
+ui::TreeStore m_store;
 GtkTreeIter m_group;
 public:
-PreferenceTreeGroup( Dialog& dialog, ui::Widget notebook, GtkTreeStore* store, GtkTreeIter group ) :
+PreferenceTreeGroup( Dialog& dialog, ui::Widget notebook, ui::TreeStore store, GtkTreeIter group ) :
 	m_dialog( dialog ),
 	m_notebook( notebook ),
 	m_store( store ),
@@ -731,9 +731,9 @@ ui::Window PrefsDlg::BuildDialog(){
 
 
 				{
-					auto store = gtk_tree_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER );
+					auto store = ui::TreeStore(gtk_tree_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
 
-					ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
+					auto view = ui::TreeView(ui::TreeModel(store));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 					{

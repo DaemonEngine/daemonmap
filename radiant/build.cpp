@@ -674,7 +674,7 @@ gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gch
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
 	GtkTreeIter iter;
-	gtk_tree_model_get_iter( GTK_TREE_MODEL( projectList->m_store ), &iter, path );
+	gtk_tree_model_get_iter(projectList->m_store, &iter, path );
 
 	Project::iterator i = Project_find( project, gtk_tree_path_get_indices( path )[0] );
 	if ( i != project.end() ) {
@@ -777,7 +777,7 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
 	GtkTreeIter iter;
-	gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, path );
+	gtk_tree_model_get_iter(store, &iter, path );
 
 	Build::iterator i = Build_find( build, gtk_tree_path_get_indices( path )[0] );
 	if ( i != build.end() ) {
@@ -859,7 +859,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				{
 					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					ui::Widget view = ui::TreeView( ui::TreeModel(GTK_TREE_MODEL( store ) ));
+					ui::Widget view = ui::TreeView( ui::TreeModel( store ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 					auto renderer = ui::CellRendererText(ui::New);
@@ -894,7 +894,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				{
 					ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
+					ui::Widget view = ui::TreeView(ui::TreeModel( store ));
 					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
 					auto renderer = ui::CellRendererText(ui::New);

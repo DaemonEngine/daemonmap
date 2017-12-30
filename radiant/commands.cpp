@@ -192,7 +192,7 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 
 	GValue val;
 	memset( &val, 0, sizeof( val ) );
-	gtk_tree_model_get_value( GTK_TREE_MODEL( model ), &iter, 0, &val );
+	gtk_tree_model_get_value(model, &iter, 0, &val );
 	const char *commandName = g_value_get_string( &val );;
 
 	// clear the ACTUAL accelerator too!
@@ -269,7 +269,7 @@ bool accelerator_window_key_press( ui::Window widget, GdkEventKey *event, gpoint
 	// 7. find the name of the accelerator
 	GValue val;
 	memset( &val, 0, sizeof( val ) );
-	gtk_tree_model_get_value( GTK_TREE_MODEL( dialog.m_model ), &dialog.m_command_iter, 0, &val );
+	gtk_tree_model_get_value(dialog.m_model, &dialog.m_command_iter, 0, &val );
 	const char *commandName = g_value_get_string( &val );;
 	Shortcuts::iterator thisShortcutIterator = g_shortcuts.find( commandName );
 	if ( thisShortcutIterator == g_shortcuts.end() ) {
@@ -314,18 +314,18 @@ public:
 				accelerator = accelerator_null();
 				// empty the cell of the key binds dialog
 				GtkTreeIter i;
-				if ( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( model ), &i ) ) {
+				if ( gtk_tree_model_get_iter_first(model, &i ) ) {
 					for (;; )
 					{
 						GValue val;
 						memset( &val, 0, sizeof( val ) );
-						gtk_tree_model_get_value( GTK_TREE_MODEL( model ), &i, 0, &val );
+						gtk_tree_model_get_value(model, &i, 0, &val );
 						const char *thisName = g_value_get_string( &val );;
 						if ( !strcmp( thisName, name ) ) {
 							gtk_list_store_set( ui::ListStore::from( model ), &i, 1, "", -1 );
 						}
 						g_value_unset( &val );
-						if ( !gtk_tree_model_iter_next( GTK_TREE_MODEL( model ), &i ) ) {
+						if ( !gtk_tree_model_iter_next(model, &i ) ) {
 							break;
 						}
 					}
@@ -369,9 +369,9 @@ public:
     GtkTreeIter row;
     GValue val;
     if(!model) {g_error("Unable to get model from cell renderer");}
-    gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(model), &row, path_string);
+    gtk_tree_model_get_iter_from_string(model, &row, path_string);
 
-    gtk_tree_model_get_value(GTK_TREE_MODEL(model), &row, 0, &val);
+    gtk_tree_model_get_value(model, &row, 0, &val);
     const char *name = g_value_get_string(&val);
     Shortcuts::iterator i = g_shortcuts.find(name);
     if(i != g_shortcuts.end())
@@ -405,7 +405,7 @@ void DoCommandListDlg(){
 		{
 			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
 
-			auto view = ui::TreeView(ui::TreeModel(GTK_TREE_MODEL(store)));
+			auto view = ui::TreeView(ui::TreeModel(store));
 			dialog.m_list = view;
 
 			gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), false ); // annoying

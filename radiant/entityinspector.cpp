@@ -888,7 +888,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 }
 
 void EntityClassList_selectEntityClass( EntityClass* eclass ){
-	GtkTreeModel* model = GTK_TREE_MODEL( g_entlist_store );
+	GtkTreeModel* model = g_entlist_store;
 	GtkTreeIter iter;
 	for ( gboolean good = gtk_tree_model_get_iter_first( model, &iter ); good != FALSE; good = gtk_tree_model_iter_next( model, &iter ) )
 	{
@@ -1316,7 +1316,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 				{
 					ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
 
-					auto view = ui::TreeView( ui::TreeModel( GTK_TREE_MODEL( store ) ));
+					auto view = ui::TreeView( ui::TreeModel(store ));
 					gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
 					gtk_tree_view_set_headers_visible( view, FALSE );
 					view.connect( "button_press_event", G_CALLBACK( EntityClassList_button_press ), 0 );
@@ -1400,7 +1400,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					{
 						ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
-						ui::Widget view = ui::TreeView(ui::TreeModel( GTK_TREE_MODEL( store ) ));
+						ui::Widget view = ui::TreeView(ui::TreeModel(store ));
 						gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
 						gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
 
