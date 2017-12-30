@@ -45,7 +45,7 @@ inline Nameable* Node_getNameable( scene::Node& node ){
 #include "gtkutil/gtktreestore.h"
 
 template<typename value_type>
-inline void gtk_tree_model_get_pointer( GtkTreeModel* model, GtkTreeIter* iter, gint column, value_type** pointer ){
+inline void gtk_tree_model_get_pointer( ui::TreeModel model, GtkTreeIter* iter, gint column, value_type** pointer ){
 	GValue value = GValue_default();
 	gtk_tree_model_get_value( model, iter, column, &value );
 	*pointer = (value_type*)g_value_get_pointer( &value );
@@ -217,7 +217,7 @@ static GtkTreeModelFlags graph_tree_model_get_flags( GtkTreeModel* tree_model ){
 	return GTK_TREE_MODEL_ITERS_PERSIST;
 }
 
-static gint graph_tree_model_get_n_columns( GtkTreeModel* tree_model ){
+static gint graph_tree_model_get_n_columns( ui::TreeModel tree_model ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	GraphTreeModel* graph_tree_model = (GraphTreeModel*) tree_model;
 
@@ -240,14 +240,14 @@ inline void graph_iterator_write_tree_iter( graph_type::iterator i, GtkTreeIter*
 	ASSERT_MESSAGE( iter->user_data != 0,  "tree model error" );
 }
 
-static GType graph_tree_model_get_column_type( GtkTreeModel *tree_model, gint index ){
+static GType graph_tree_model_get_column_type( ui::TreeModel tree_model, gint index ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	GraphTreeModel *graph_tree_model = (GraphTreeModel *) tree_model;
 
 	return G_TYPE_POINTER;
 }
 
-static gboolean graph_tree_model_get_iter( GtkTreeModel* tree_model, GtkTreeIter* iter, GtkTreePath* path ){
+static gboolean graph_tree_model_get_iter( ui::TreeModel tree_model, GtkTreeIter* iter, ui::TreePath path ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	gint* indices = gtk_tree_path_get_indices( path );
 	gint depth = gtk_tree_path_get_depth( path );
@@ -275,12 +275,12 @@ static gboolean graph_tree_model_get_iter( GtkTreeModel* tree_model, GtkTreeIter
 	return TRUE;
 }
 
-static GtkTreePath* graph_tree_model_get_path( GtkTreeModel* tree_model, GtkTreeIter* iter ){
+static ui::TreePath graph_tree_model_get_path( ui::TreeModel tree_model, GtkTreeIter* iter ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = graph_iterator_read_tree_iter( iter );
 
-	GtkTreePath* path = ui::TreePath();
+	auto path = ui::TreePath();
 
 	for ( std::size_t depth = ( *i ).first.get().size(); depth != 0; --depth )
 	{
@@ -301,7 +301,7 @@ static GtkTreePath* graph_tree_model_get_path( GtkTreeModel* tree_model, GtkTree
 }
 
 
-static void graph_tree_model_get_value( GtkTreeModel *tree_model, GtkTreeIter  *iter, gint column, GValue *value ){
+static void graph_tree_model_get_value( ui::TreeModel tree_model, GtkTreeIter  *iter, gint column, GValue *value ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	ASSERT_MESSAGE( column == 0 || column == 1, "tree model error" );
 
@@ -317,7 +317,7 @@ static void graph_tree_model_get_value( GtkTreeModel *tree_model, GtkTreeIter  *
 	}
 }
 
-static gboolean graph_tree_model_iter_next( GtkTreeModel  *tree_model, GtkTreeIter   *iter ){
+static gboolean graph_tree_model_iter_next( ui::TreeModel  tree_model, GtkTreeIter   *iter ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = graph_iterator_read_tree_iter( iter );
@@ -339,7 +339,7 @@ static gboolean graph_tree_model_iter_next( GtkTreeModel  *tree_model, GtkTreeIt
 	return TRUE;
 }
 
-static gboolean graph_tree_model_iter_children( GtkTreeModel *tree_model, GtkTreeIter  *iter, GtkTreeIter  *parent ){
+static gboolean graph_tree_model_iter_children( ui::TreeModel tree_model, GtkTreeIter  *iter, GtkTreeIter  *parent ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = ( parent == 0 ) ? graph.begin() : graph_iterator_read_tree_iter( parent );
@@ -357,7 +357,7 @@ static gboolean graph_tree_model_iter_children( GtkTreeModel *tree_model, GtkTre
 	return FALSE;
 }
 
-static gboolean graph_tree_model_iter_has_child( GtkTreeModel *tree_model, GtkTreeIter  *iter ){
+static gboolean graph_tree_model_iter_has_child( ui::TreeModel tree_model, GtkTreeIter  *iter ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = graph_iterator_read_tree_iter( iter );
@@ -366,7 +366,7 @@ static gboolean graph_tree_model_iter_has_child( GtkTreeModel *tree_model, GtkTr
 	return ++i != graph.end() && ( *i ).first.get().size() == depth;
 }
 
-static gint graph_tree_model_iter_n_children( GtkTreeModel *tree_model, GtkTreeIter *parent ){
+static gint graph_tree_model_iter_n_children( ui::TreeModel tree_model, GtkTreeIter *parent ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = ( parent == 0 ) ? graph.begin() : graph_iterator_read_tree_iter( parent );
@@ -386,7 +386,7 @@ static gint graph_tree_model_iter_n_children( GtkTreeModel *tree_model, GtkTreeI
 	return count;
 }
 
-static gboolean graph_tree_model_iter_nth_child( GtkTreeModel *tree_model, GtkTreeIter  *iter, GtkTreeIter  *parent, gint n ){
+static gboolean graph_tree_model_iter_nth_child( ui::TreeModel tree_model, GtkTreeIter  *iter, GtkTreeIter  *parent, gint n ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = ( parent == 0 ) ? graph.begin() : graph_iterator_read_tree_iter( parent );
@@ -408,7 +408,7 @@ static gboolean graph_tree_model_iter_nth_child( GtkTreeModel *tree_model, GtkTr
 	return FALSE;
 }
 
-static gboolean graph_tree_model_iter_parent( GtkTreeModel *tree_model, GtkTreeIter  *iter, GtkTreeIter  *child ){
+static gboolean graph_tree_model_iter_parent( ui::TreeModel tree_model, GtkTreeIter  *iter, GtkTreeIter  *child ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	graph_type& graph = *GRAPH_TREE_MODEL( tree_model )->graph;
 	graph_type::iterator i = graph_iterator_read_tree_iter( child );
@@ -465,14 +465,14 @@ static void graph_tree_model_tree_model_init( GtkTreeModelIface *iface ){
 	iface->iter_parent = graph_tree_model_iter_parent;
 }
 
-static gboolean graph_tree_model_row_draggable( GtkTreeDragSource *drag_source, GtkTreePath *path ){
+static gboolean graph_tree_model_row_draggable( GtkTreeDragSource *drag_source, ui::TreePath path ){
 #if GDEF_DEBUG
 	gint depth = gtk_tree_path_get_depth( path );
 #endif
 	return gtk_tree_path_get_depth( path ) > 1;
 }
 
-static gboolean graph_tree_model_drag_data_delete( GtkTreeDragSource *drag_source, GtkTreePath *path ){
+static gboolean graph_tree_model_drag_data_delete( GtkTreeDragSource *drag_source, ui::TreePath path ){
 	GtkTreeIter iter;
 
 	if ( gtk_tree_model_get_iter( drag_source, &iter, path ) ) {
@@ -486,7 +486,7 @@ static gboolean graph_tree_model_drag_data_delete( GtkTreeDragSource *drag_sourc
 	}
 }
 
-static gboolean graph_tree_model_drag_data_get( GtkTreeDragSource *drag_source, GtkTreePath *path, GtkSelectionData *selection_data ){
+static gboolean graph_tree_model_drag_data_get( GtkTreeDragSource *drag_source, ui::TreePath path, GtkSelectionData *selection_data ){
 	if ( gtk_tree_set_row_drag_data( selection_data, drag_source, path ) ) {
 		return TRUE;
 	}
@@ -504,8 +504,8 @@ static void graph_tree_model_drag_source_init( GtkTreeDragSourceIface *iface ){
 	iface->drag_data_get = graph_tree_model_drag_data_get;
 }
 
-static gboolean graph_tree_model_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData *selection_data ){
-	GtkTreeModel *tree_model = drag_dest;
+static gboolean graph_tree_model_drag_data_received( GtkTreeDragDest *drag_dest, ui::TreePath dest, GtkSelectionData *selection_data ){
+	auto tree_model = drag_dest;
 
 	GtkTreeModel *src_model = 0;
 	GtkTreePath *src_path = 0;
@@ -528,7 +528,7 @@ static gboolean graph_tree_model_drag_data_received( GtkTreeDragDest *drag_dest,
 	return FALSE;
 }
 
-static gboolean graph_tree_model_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data ){
+static gboolean graph_tree_model_row_drop_possible( GtkTreeDragDest *drag_dest, ui::TreePath dest_path, GtkSelectionData *selection_data ){
 	gboolean retval = FALSE;
 
 	GtkTreeModel *src_model = 0;
@@ -540,7 +540,7 @@ static gboolean graph_tree_model_row_drop_possible( GtkTreeDragDest *drag_dest, 
 			if ( !gtk_tree_path_is_ancestor( src_path, dest_path ) ) {
 				/* Can't drop if dest_path's parent doesn't exist */
 				if ( gtk_tree_path_get_depth( dest_path ) > 1 ) {
-					GtkTreePath* tmp = gtk_tree_path_copy( dest_path );
+					auto tmp = gtk_tree_path_copy( dest_path );
 					gtk_tree_path_up( tmp );
 
 					GtkTreeIter iter;
@@ -677,7 +677,7 @@ void graph_tree_model_row_inserted( GraphTreeModel* model, graph_type::iterator 
 	GtkTreeIter iter;
 	graph_iterator_write_tree_iter( i, &iter );
 
-	GtkTreePath* tree_path = graph_tree_model_get_path( model, &iter );
+	auto tree_path = graph_tree_model_get_path( model, &iter );
 
 	gint depth = gtk_tree_path_get_depth( tree_path );
 	gint* indices = gtk_tree_path_get_indices( tree_path );
@@ -691,7 +691,7 @@ void graph_tree_model_row_deleted( GraphTreeModel* model, graph_type::iterator i
 	GtkTreeIter iter;
 	graph_iterator_write_tree_iter( i, &iter );
 
-	GtkTreePath* tree_path = graph_tree_model_get_path( model, &iter );
+	auto tree_path = graph_tree_model_get_path( model, &iter );
 
 	gtk_tree_model_row_deleted( model, tree_path );
 
@@ -814,12 +814,12 @@ struct GraphTreeModelClass
 	GObjectClass parent_class;
 };
 
-static GtkTreeModelFlags graph_tree_model_get_flags( GtkTreeModel* tree_model ){
+static GtkTreeModelFlags graph_tree_model_get_flags( ui::TreeModel tree_model ){
 	return GTK_TREE_MODEL_ITERS_PERSIST;
 }
 
-static gint graph_tree_model_get_n_columns( GtkTreeModel* tree_model ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static gint graph_tree_model_get_n_columns( ui::TreeModel tree_model ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	//GraphTreeModel* graph_tree_model = (GraphTreeModel*) tree_model;
 
 	return 2;
@@ -841,14 +841,14 @@ inline void graph_iterator_write_tree_iter( GraphTreeNode::iterator i, GtkTreeIt
 	ASSERT_MESSAGE( iter->user_data != 0,  "tree model error" );
 }
 
-static GType graph_tree_model_get_column_type( GtkTreeModel *tree_model, gint index ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static GType graph_tree_model_get_column_type( ui::TreeModel tree_model, gint index ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	//GraphTreeModel *graph_tree_model = (GraphTreeModel *) tree_model;
 
 	return G_TYPE_POINTER;
 }
 
-static gboolean graph_tree_model_get_iter( GraphTreeModel* tree_model, GtkTreeIter* iter, GtkTreePath* path ){
+static gboolean graph_tree_model_get_iter( GraphTreeModel* tree_model, GtkTreeIter* iter, ui::TreePath path ){
 	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
 	gint* indices = gtk_tree_path_get_indices( path );
 	gint depth = gtk_tree_path_get_depth( path );
@@ -876,11 +876,11 @@ static gboolean graph_tree_model_get_iter( GraphTreeModel* tree_model, GtkTreeIt
 	return TRUE;
 }
 
-static GtkTreePath* graph_tree_model_get_path( GraphTreeModel* tree_model, GtkTreeIter* iter ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static ui::TreePath graph_tree_model_get_path( GraphTreeModel *tree_model, GtkTreeIter* iter ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	GraphTreeNode* graph = tree_model->m_graph;
 
-	GtkTreePath* path = ui::TreePath(ui::New);
+    auto path = ui::TreePath(ui::New);
 
 	for ( GraphTreeNode* node = ( *graph_iterator_read_tree_iter( iter ) ).second; node != graph; node = node->m_parent )
 	{
@@ -899,8 +899,8 @@ static GtkTreePath* graph_tree_model_get_path( GraphTreeModel* tree_model, GtkTr
 }
 
 
-static void graph_tree_model_get_value( GtkTreeModel *tree_model, GtkTreeIter  *iter, gint column, GValue *value ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static void graph_tree_model_get_value( ui::TreeModel tree_model, GtkTreeIter  *iter, gint column, GValue *value ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	ASSERT_MESSAGE( column == 0 || column == 1, "tree model error" );
 
 	GraphTreeNode::iterator i = graph_iterator_read_tree_iter( iter );
@@ -916,8 +916,8 @@ static void graph_tree_model_get_value( GtkTreeModel *tree_model, GtkTreeIter  *
 	}
 }
 
-static gboolean graph_tree_model_iter_next( GtkTreeModel  *tree_model, GtkTreeIter   *iter ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static gboolean graph_tree_model_iter_next( ui::TreeModel  tree_model, GtkTreeIter   *iter ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	GraphTreeNode::iterator i = graph_iterator_read_tree_iter( iter );
 	GraphTreeNode& parent = *( *i ).second->m_parent;
 
@@ -943,8 +943,8 @@ static gboolean graph_tree_model_iter_children( GraphTreeModel *tree_model, GtkT
 	return FALSE;
 }
 
-static gboolean graph_tree_model_iter_has_child( GtkTreeModel *tree_model, GtkTreeIter  *iter ){
-	ASSERT_MESSAGE( tree_model != 0, "RUNTIME ERROR" );
+static gboolean graph_tree_model_iter_has_child( ui::TreeModel tree_model, GtkTreeIter  *iter ){
+	ASSERT_MESSAGE( tree_model, "RUNTIME ERROR" );
 	GraphTreeNode& node = *( *graph_iterator_read_tree_iter( iter ) ).second;
 	return !node.empty();
 }
@@ -1026,15 +1026,15 @@ static void graph_tree_model_class_init( GraphTreeModelClass *class_ ){
 }
 
 static void graph_tree_model_tree_model_init( GtkTreeModelIface *iface ){
-	iface->get_flags = graph_tree_model_get_flags;
-	iface->get_n_columns = graph_tree_model_get_n_columns;
-	iface->get_column_type = graph_tree_model_get_column_type;
+	iface->get_flags = reinterpret_cast<GtkTreeModelFlags (*)(GtkTreeModel *)>(graph_tree_model_get_flags);
+	iface->get_n_columns = reinterpret_cast<gint (*)(GtkTreeModel *)>(graph_tree_model_get_n_columns);
+	iface->get_column_type = reinterpret_cast<GType (*)(GtkTreeModel *, gint)>(graph_tree_model_get_column_type);
 	iface->get_iter = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *, GtkTreePath *)>(graph_tree_model_get_iter);
 	iface->get_path = reinterpret_cast<GtkTreePath *(*)(GtkTreeModel *, GtkTreeIter *)>(graph_tree_model_get_path);
-	iface->get_value = graph_tree_model_get_value;
-	iface->iter_next = graph_tree_model_iter_next;
+	iface->get_value = reinterpret_cast<void (*)(GtkTreeModel *, GtkTreeIter *, gint, GValue *)>(graph_tree_model_get_value);
+	iface->iter_next = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *)>(graph_tree_model_iter_next);
 	iface->iter_children = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *, GtkTreeIter *)>(graph_tree_model_iter_children);
-	iface->iter_has_child = graph_tree_model_iter_has_child;
+	iface->iter_has_child = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *)>(graph_tree_model_iter_has_child);
 	iface->iter_n_children = reinterpret_cast<gint (*)(GtkTreeModel *, GtkTreeIter *)>(graph_tree_model_iter_n_children);
 	iface->iter_nth_child = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *, GtkTreeIter *, gint)>(graph_tree_model_iter_nth_child);
 	iface->iter_parent = reinterpret_cast<gboolean (*)(GtkTreeModel *, GtkTreeIter *, GtkTreeIter *)>(graph_tree_model_iter_parent);
@@ -1090,7 +1090,7 @@ void graph_tree_model_row_changed( GraphTreeModel* model, GraphTreeNode::iterato
 	GtkTreeIter iter;
 	graph_iterator_write_tree_iter( i, &iter );
 
-	GtkTreePath* tree_path = graph_tree_model_get_path(model, &iter );
+    auto tree_path = graph_tree_model_get_path(model, &iter );
 
 	gtk_tree_model_row_changed( GTK_TREE_MODEL( model ), tree_path, &iter );
 
@@ -1101,7 +1101,7 @@ void graph_tree_model_row_inserted( GraphTreeModel* model, GraphTreeNode::iterat
 	GtkTreeIter iter;
 	graph_iterator_write_tree_iter( i, &iter );
 
-	GtkTreePath* tree_path = graph_tree_model_get_path(model, &iter );
+    auto tree_path = graph_tree_model_get_path(model, &iter );
 
 	gtk_tree_model_row_inserted( GTK_TREE_MODEL( model ), tree_path, &iter );
 
@@ -1112,7 +1112,7 @@ void graph_tree_model_row_deleted( GraphTreeModel* model, GraphTreeNode::iterato
 	GtkTreeIter iter;
 	graph_iterator_write_tree_iter( i, &iter );
 
-	GtkTreePath* tree_path = graph_tree_model_get_path(model, &iter );
+    auto tree_path = graph_tree_model_get_path(model, &iter );
 
 	gtk_tree_model_row_deleted( GTK_TREE_MODEL( model ), tree_path );
 
@@ -1272,7 +1272,7 @@ TestGraphTreeModel(){
 	rootpath.pop();
 	rootpath.pop();
 
-	GtkTreeModel* model = graph_tree_model_new( &graph );
+	auto model = graph_tree_model_new( &graph );
 
 	{
 		gint n_columns = gtk_tree_model_get_n_columns( model );
@@ -1367,7 +1367,7 @@ TestGraphTreeModel(){
 
 	{
 		GtkTreeIter iter;
-		GtkTreePath* path = ui::TreePath( "0" );
+		auto path = ui::TreePath( "0" );
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_path_free( path );
 
@@ -1377,7 +1377,7 @@ TestGraphTreeModel(){
 
 	{
 		GtkTreeIter iter;
-		GtkTreePath* path = ui::TreePath( "1" );
+		auto path = ui::TreePath( "1" );
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_path_free( path );
 
@@ -1391,7 +1391,7 @@ TestGraphTreeModel(){
 		++i;
 		graph_iterator_write_tree_iter( i, &iter );
 
-		GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+		auto path = gtk_tree_model_get_path( model, &iter );
 
 		gint depth = gtk_tree_path_get_depth( path );
 		gint* indices = gtk_tree_path_get_indices( path );
@@ -1408,7 +1408,7 @@ TestGraphTreeModel(){
 		++i;
 		graph_iterator_write_tree_iter( i, &iter );
 
-		GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+		auto path = gtk_tree_model_get_path( model, &iter );
 
 		gint depth = gtk_tree_path_get_depth( path );
 		gint* indices = gtk_tree_path_get_indices( path );

@@ -167,11 +167,11 @@ struct command_list_dialog_t : public ModalDialog
 
 	ui::TreeView m_list;
 	GtkTreeIter m_command_iter;
-	GtkTreeModel *m_model;
+	ui::TreeModel m_model;
 	bool m_waiting_for_key;
 };
 
-void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
+void accelerator_clear_button_clicked( ui::Button btn, gpointer dialogptr ){
 	command_list_dialog_t &dialog = *(command_list_dialog_t *) dialogptr;
 
 	if ( dialog.m_waiting_for_key ) {
@@ -179,11 +179,11 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 		dialog.m_waiting_for_key = false;
 		gtk_list_store_set( ui::ListStore::from( dialog.m_model ), &dialog.m_command_iter, 2, false, -1 );
 		gtk_widget_set_sensitive( dialog.m_list , true );
-		dialog.m_model = NULL;
+		dialog.m_model = ui::TreeModel(ui::null);
 		return;
 	}
 
-	GtkTreeSelection *sel = gtk_tree_view_get_selection( dialog.m_list );
+	auto sel = gtk_tree_view_get_selection( dialog.m_list );
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	if ( !gtk_tree_selection_get_selected( sel, &model, &iter ) ) {
@@ -209,18 +209,18 @@ void accelerator_clear_button_clicked( GtkButton *btn, gpointer dialogptr ){
 	g_value_unset( &val );
 }
 
-void accelerator_edit_button_clicked( GtkButton *btn, gpointer dialogptr ){
+void accelerator_edit_button_clicked( ui::Button btn, gpointer dialogptr ){
 	command_list_dialog_t &dialog = *(command_list_dialog_t *) dialogptr;
 
 	// 1. find selected row
-	GtkTreeSelection *sel = gtk_tree_view_get_selection( dialog.m_list );
+	auto sel = gtk_tree_view_get_selection( dialog.m_list );
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	if ( !gtk_tree_selection_get_selected( sel, &model, &iter ) ) {
 		return;
 	}
 	dialog.m_command_iter = iter;
-	dialog.m_model = model;
+	dialog.m_model = ui::TreeModel(model);
 
 	// 2. disallow changing the row
 	//gtk_widget_set_sensitive(dialog.m_list, false);
@@ -287,10 +287,10 @@ bool accelerator_window_key_press( ui::Window widget, GdkEventKey *event, gpoint
 	const char *commandName;
 	const Accelerator &newAccel;
 	ui::Widget widget;
-	GtkTreeModel *model;
+	ui::TreeModel model;
 public:
 	bool allow;
-	VerifyAcceleratorNotTaken( const char *name, const Accelerator &accelerator, ui::Widget w, GtkTreeModel *m ) : commandName( name ), newAccel( accelerator ), widget( w ), model( m ), allow( true ){
+	VerifyAcceleratorNotTaken( const char *name, const Accelerator &accelerator, ui::Widget w, ui::TreeModel m ) : commandName( name ), newAccel( accelerator ), widget( w ), model( m ), allow( true ){
 	}
 	void visit( const char* name, Accelerator& accelerator ){
 		if ( !strcmp( name, commandName ) ) {
@@ -360,7 +360,7 @@ public:
 
 	g_value_unset( &val );
 
-	dialog.m_model = NULL;
+	dialog.m_model = ui::TreeModel(ui::null);
 
 	return true;
 }
@@ -412,13 +412,13 @@ void DoCommandListDlg(){
 
 			{
 				auto renderer = ui::CellRendererText(ui::New);
-				GtkTreeViewColumn* column = ui::TreeViewColumn( "Command", renderer, {{"text", 0}, {"weight-set", 2}, {"weight", 3}} );
+				auto column = ui::TreeViewColumn( "Command", renderer, {{"text", 0}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column(view, column );
 			}
 
 			{
 				auto renderer = ui::CellRendererText(ui::New);
-				GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 1}, {"weight-set", 2}, {"weight", 3}} );
+				auto column = ui::TreeViewColumn( "Key", renderer, {{"text", 1}, {"weight-set", 2}, {"weight", 3}} );
 				gtk_tree_view_append_column(view, column );
 			}
 

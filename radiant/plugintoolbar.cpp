@@ -83,7 +83,7 @@ void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, co
 	ERROR_MESSAGE( "invalid toolbar button type" );
 }
 
-void ActivateToolbarButton( GtkToolButton *widget, gpointer data ){
+void ActivateToolbarButton( ui::ToolButton widget, gpointer data ){
 	(const_cast<const IToolbarButton *>( reinterpret_cast<IToolbarButton *>( data )))->activate();
 }
 

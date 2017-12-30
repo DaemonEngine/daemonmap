@@ -3112,7 +3112,7 @@ void GlobalGL_sharedContextCreated(){
 	/* win32 is dodgy here, just use courier new then */
 	g_font = glfont_create( "arial 9" );
 #else
-	GtkSettings *settings = gtk_settings_get_default();
+	auto settings = gtk_settings_get_default();
 	gchar *fontname;
 	g_object_get( settings, "gtk-font-name", &fontname, NULL );
 	g_font = glfont_create( fontname );

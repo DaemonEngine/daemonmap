@@ -542,7 +542,7 @@ void PrefsDlg::showPrefPage( ui::Widget prefpage ){
 	return;
 }
 
-static void treeSelection( GtkTreeSelection* selection, gpointer data ){
+static void treeSelection( ui::TreeSelection selection, gpointer data ){
 	PrefsDlg *dlg = (PrefsDlg*)data;
 
 	GtkTreeModel* model;
@@ -738,7 +738,7 @@ ui::Window PrefsDlg::BuildDialog(){
 
 					{
 						auto renderer = ui::CellRendererText(ui::New);
-						GtkTreeViewColumn* column = ui::TreeViewColumn( "Preferences", renderer, {{"text", 0}} );
+                        auto column = ui::TreeViewColumn( "Preferences", renderer, {{"text", 0}} );
 						gtk_tree_view_append_column(view, column );
 					}
 
@@ -765,7 +765,7 @@ ui::Window PrefsDlg::BuildDialog(){
 								PreferencesPage preferencesPage( *this, getVBox( global ) );
 								Global_constructPreferences( preferencesPage );
 							}
-							GtkTreeIter group = PreferenceTree_appendPage( store, 0, "Global", global );
+                            auto group = PreferenceTree_appendPage( store, 0, "Global", global );
 							{
 								auto game = PreferencePages_addPage( m_notebook, "Game" );
 								PreferencesPage preferencesPage( *this, getVBox( game ) );
@@ -782,7 +782,7 @@ ui::Window PrefsDlg::BuildDialog(){
 								PreferencesPageCallbacks_constructPage( g_interfacePreferences, preferencesPage );
 							}
 
-							GtkTreeIter group = PreferenceTree_appendPage( store, 0, "Interface", interfacePage );
+                            auto group = PreferenceTree_appendPage( store, 0, "Interface", interfacePage );
 							PreferenceTreeGroup preferenceGroup( *this, m_notebook, store, group );
 
 							PreferenceGroupCallbacks_constructGroup( g_interfaceCallbacks, preferenceGroup );
@@ -794,7 +794,7 @@ ui::Window PrefsDlg::BuildDialog(){
 								PreferencesPage preferencesPage( *this, getVBox( display ) );
 								PreferencesPageCallbacks_constructPage( g_displayPreferences, preferencesPage );
 							}
-							GtkTreeIter group = PreferenceTree_appendPage( store, 0, "Display", display );
+                            auto group = PreferenceTree_appendPage( store, 0, "Display", display );
 							PreferenceTreeGroup preferenceGroup( *this, m_notebook, store, group );
 
 							PreferenceGroupCallbacks_constructGroup( g_displayCallbacks, preferenceGroup );
@@ -807,7 +807,7 @@ ui::Window PrefsDlg::BuildDialog(){
 								PreferencesPageCallbacks_constructPage( g_settingsPreferences, preferencesPage );
 							}
 
-							GtkTreeIter group = PreferenceTree_appendPage( store, 0, "Settings", settings );
+                            auto group = PreferenceTree_appendPage( store, 0, "Settings", settings );
 							PreferenceTreeGroup preferenceGroup( *this, m_notebook, store, group );
 
 							PreferenceGroupCallbacks_constructGroup( g_settingsCallbacks, preferenceGroup );

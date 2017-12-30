@@ -196,7 +196,7 @@ void apply(){
 		);
 }
 typedef MemberCaller<Subdivisions, &Subdivisions::apply> ApplyCaller;
-static void applyGtk( GtkToggleButton* toggle, Subdivisions* self ){
+static void applyGtk( ui::ToggleButton toggle, Subdivisions* self ){
 	self->apply();
 }
 };

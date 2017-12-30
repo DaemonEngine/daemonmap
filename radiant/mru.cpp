@@ -130,7 +130,7 @@ void MRU_Init(){
 	}
 }
 
-void MRU_AddWidget( GtkMenuItem *widget, std::size_t pos ){
+void MRU_AddWidget( ui::MenuItem widget, std::size_t pos ){
 	if ( pos < MRU_MAX ) {
 		MRU_items[pos] = widget;
 		if ( pos < MRU_used ) {

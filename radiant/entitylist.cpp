@@ -60,7 +60,7 @@ IdleDraw m_idleDraw;
 WindowPositionTracker m_positionTracker;
 
 ui::Window m_window;
-GtkTreeView* m_tree_view;
+ui::TreeView m_tree_view{ui::null};
 ui::TreeModel m_tree_model{ui::null};
 bool m_selection_disabled;
 
@@ -99,7 +99,7 @@ const char* node_get_name( scene::Node& node ){
 }
 
 template<typename value_type>
-inline void gtk_tree_model_get_pointer( GtkTreeModel* model, GtkTreeIter* iter, gint column, value_type** pointer ){
+inline void gtk_tree_model_get_pointer( ui::TreeModel model, GtkTreeIter* iter, gint column, value_type** pointer ){
 	GValue value = GValue_default();
 	gtk_tree_model_get_value( model, iter, column, &value );
 	*pointer = (value_type*)g_value_get_pointer( &value );
@@ -107,7 +107,7 @@ inline void gtk_tree_model_get_pointer( GtkTreeModel* model, GtkTreeIter* iter, 
 
 
 
-void entitylist_treeviewcolumn_celldatafunc( GtkTreeViewColumn* column, GtkCellRenderer* renderer, GtkTreeModel* model, GtkTreeIter* iter, gpointer data ){
+void entitylist_treeviewcolumn_celldatafunc( ui::TreeViewColumn column, GtkCellRenderer* renderer, ui::TreeModel model, GtkTreeIter* iter, gpointer data ){
 	scene::Node* node;
 	gtk_tree_model_get_pointer( model, iter, 0, &node );
 	scene::Instance* instance;
@@ -118,7 +118,7 @@ void entitylist_treeviewcolumn_celldatafunc( GtkTreeViewColumn* column, GtkCellR
 		g_object_set( G_OBJECT( renderer ), "text", name, "visible", TRUE, NULL );
 
 		//globalOutputStream() << "rendering cell " << makeQuoted(name) << "\n";
-		GtkStyle* style = gtk_widget_get_style( ui::TreeView( getEntityList().m_tree_view ) );
+		auto style = gtk_widget_get_style( ui::TreeView( getEntityList().m_tree_view ) );
 		if ( instance->childSelected() ) {
 			g_object_set( G_OBJECT( renderer ), "cell-background-gdk", &style->base[GTK_STATE_ACTIVE], NULL );
 		}
@@ -134,7 +134,7 @@ void entitylist_treeviewcolumn_celldatafunc( GtkTreeViewColumn* column, GtkCellR
 	}
 }
 
-static gboolean entitylist_tree_select( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, gpointer data ){
+static gboolean entitylist_tree_select( ui::TreeSelection selection, ui::TreeModel model, ui::TreePath path, gboolean path_currently_selected, gpointer data ){
 	GtkTreeIter iter;
 	gtk_tree_model_get_iter( model, &iter, path );
 	scene::Node* node;
@@ -160,31 +160,31 @@ static gboolean entitylist_tree_select( GtkTreeSelection *selection, GtkTreeMode
 	return FALSE;
 }
 
-static gboolean entitylist_tree_select_null( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, gpointer data ){
+static gboolean entitylist_tree_select_null( ui::TreeSelection selection, ui::TreeModel model, ui::TreePath path, gboolean path_currently_selected, gpointer data ){
 	return TRUE;
 }
 
-void EntityList_ConnectSignals( GtkTreeView* view ){
-	GtkTreeSelection* select = gtk_tree_view_get_selection( view );
-	gtk_tree_selection_set_select_function( select, entitylist_tree_select, NULL, 0 );
+void EntityList_ConnectSignals( ui::TreeView view ){
+	auto select = gtk_tree_view_get_selection( view );
+	gtk_tree_selection_set_select_function(select, reinterpret_cast<GtkTreeSelectionFunc>(entitylist_tree_select), NULL, 0 );
 }
 
-void EntityList_DisconnectSignals( GtkTreeView* view ){
-	GtkTreeSelection* select = gtk_tree_view_get_selection( view );
-	gtk_tree_selection_set_select_function( select, entitylist_tree_select_null, 0, 0 );
+void EntityList_DisconnectSignals( ui::TreeView view ){
+	auto select = gtk_tree_view_get_selection( view );
+	gtk_tree_selection_set_select_function(select, reinterpret_cast<GtkTreeSelectionFunc>(entitylist_tree_select_null), 0, 0 );
 }
 
 
 
-gboolean treemodel_update_selection( GtkTreeModel* model, GtkTreePath* path, GtkTreeIter* iter, gpointer data ){
-	GtkTreeView* view = reinterpret_cast<GtkTreeView*>( data );
+gboolean treemodel_update_selection( ui::TreeModel model, ui::TreePath path, GtkTreeIter* iter, gpointer data ){
+	auto view = reinterpret_cast<GtkTreeView*>( data );
 
 	scene::Instance* instance;
 	gtk_tree_model_get_pointer( model, iter, 1, &instance );
 	Selectable* selectable = Instance_getSelectable( *instance );
 
 	if ( selectable != 0 ) {
-		GtkTreeSelection* selection = gtk_tree_view_get_selection( view );
+		auto selection = gtk_tree_view_get_selection( view );
 		if ( selectable->isSelected() ) {
 			gtk_tree_selection_select_path( selection, path );
 		}
@@ -197,9 +197,9 @@ gboolean treemodel_update_selection( GtkTreeModel* model, GtkTreePath* path, Gtk
 	return FALSE;
 }
 
-void EntityList_UpdateSelection( ui::TreeModel model, GtkTreeView* view ){
+void EntityList_UpdateSelection( ui::TreeModel model, ui::TreeView view ){
 	EntityList_DisconnectSignals( view );
-	gtk_tree_model_foreach( model, treemodel_update_selection, view );
+	gtk_tree_model_foreach(model, reinterpret_cast<GtkTreeModelForeachFunc>(treemodel_update_selection), view._handle );
 	EntityList_ConnectSignals( view );
 }
 
@@ -235,10 +235,10 @@ void EntityList_SelectionChanged( const Selectable& selectable ){
 	EntityList_SelectionUpdate();
 }
 
-void entitylist_treeview_rowcollapsed( GtkTreeView* view, GtkTreeIter* iter, GtkTreePath* path, gpointer user_data ){
+void entitylist_treeview_rowcollapsed( ui::TreeView view, GtkTreeIter* iter, ui::TreePath path, gpointer user_data ){
 }
 
-void entitylist_treeview_row_expanded( GtkTreeView* view, GtkTreeIter* iter, GtkTreePath* path, gpointer user_data ){
+void entitylist_treeview_row_expanded( ui::TreeView view, GtkTreeIter* iter, ui::TreePath path, gpointer user_data ){
 	EntityList_SelectionUpdate();
 }
 
@@ -251,7 +251,7 @@ void EntityList_toggleShown(){
 	EntityList_SetShown( !getEntityList().visible() );
 }
 
-gint graph_tree_model_compare_name( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data ){
+gint graph_tree_model_compare_name( ui::TreeModel model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data ){
 	scene::Node* first;
 	gtk_tree_model_get( model, a, 0, (gpointer*)&first, -1 );
 	scene::Node* second;
@@ -300,11 +300,11 @@ void EntityList_constructWindow( ui::Window main_window ){
 			gtk_tree_view_set_headers_visible(view, FALSE );
 
 			auto renderer = ui::CellRendererText(ui::New);
-			GtkTreeViewColumn* column = gtk_tree_view_column_new();
+			auto column = gtk_tree_view_column_new();
 			gtk_tree_view_column_pack_start( column, renderer, TRUE );
-			gtk_tree_view_column_set_cell_data_func( column, renderer, entitylist_treeviewcolumn_celldatafunc, 0, 0 );
+			gtk_tree_view_column_set_cell_data_func(column, renderer, reinterpret_cast<GtkTreeCellDataFunc>(entitylist_treeviewcolumn_celldatafunc), 0, 0 );
 
-			GtkTreeSelection* select = gtk_tree_view_get_selection(view );
+			auto select = gtk_tree_view_get_selection(view );
 			gtk_tree_selection_set_mode( select, GTK_SELECTION_MULTIPLE );
 
 			view.connect( "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );

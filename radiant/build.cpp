@@ -669,7 +669,7 @@ ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
-	GtkTreePath* path = ui::TreePath( path_string );
+	auto path = ui::TreePath( path_string );
 
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
@@ -708,11 +708,11 @@ gboolean project_key_press( ui::TreeView widget, GdkEventKey* event, ProjectList
 	Project& project = projectList->m_project;
 
 	if ( event->keyval == GDK_KEY_Delete ) {
-		GtkTreeSelection* selection = gtk_tree_view_get_selection(widget );
+		auto selection = ui::TreeSelection(gtk_tree_view_get_selection(widget));
 		GtkTreeIter iter;
 		GtkTreeModel* model;
 		if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
-			GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+			auto path = gtk_tree_model_get_path( model, &iter );
 			Project::iterator x = Project_find( project, gtk_tree_path_get_indices( path )[0] );
 			gtk_tree_path_free( path );
 
@@ -731,7 +731,7 @@ gboolean project_key_press( ui::TreeView widget, GdkEventKey* event, ProjectList
 
 Build* g_current_build = 0;
 
-gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore store ){
+gboolean project_selection_changed( ui::TreeSelection selection, ui::ListStore store ){
 	Project& project = g_build_project;
 
 	store.clear();
@@ -739,7 +739,7 @@ gboolean project_selection_changed( GtkTreeSelection* selection, ui::ListStore s
 	GtkTreeIter iter;
 	GtkTreeModel* model;
 	if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
-		GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+		auto path = gtk_tree_model_get_path( model, &iter );
 		Project::iterator x = Project_find( project, gtk_tree_path_get_indices( path )[0] );
 		gtk_tree_path_free( path );
 
@@ -772,7 +772,7 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 	}
 	Build& build = *g_current_build;
 
-	GtkTreePath* path = ui::TreePath( path_string );
+	auto path = ui::TreePath( path_string );
 
 	ASSERT_MESSAGE( gtk_tree_path_get_depth( path ) == 1, "invalid path length" );
 
@@ -809,11 +809,11 @@ gboolean commands_key_press( ui::TreeView widget, GdkEventKey* event, ui::ListSt
 	Build& build = *g_current_build;
 
 	if ( event->keyval == GDK_KEY_Delete ) {
-		GtkTreeSelection* selection = gtk_tree_view_get_selection(widget );
+		auto selection = gtk_tree_view_get_selection(widget );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
 		if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
-			GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+			auto path = gtk_tree_model_get_path( model, &iter );
 			Build::iterator i = Build_find( build, gtk_tree_path_get_indices( path )[0] );
 			gtk_tree_path_free( path );
 
@@ -865,10 +865,10 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect("edited", G_CALLBACK( project_cell_edited ), &projectList );
 
-					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
+					auto column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column(view, column );
 
-					GtkTreeSelection* selection = gtk_tree_view_get_selection(view );
+					auto selection = gtk_tree_view_get_selection(view );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
 					view.show();
@@ -899,10 +899,10 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect( "edited", G_CALLBACK( commands_cell_edited ), store );
 
-					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
+					auto column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 					gtk_tree_view_append_column(view, column );
 
-					GtkTreeSelection* selection = gtk_tree_view_get_selection(view );
+					auto selection = gtk_tree_view_get_selection(view );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
 					view.show();
@@ -963,8 +963,8 @@ class BuildMenuItem
 {
 const char* m_name;
 public:
-GtkMenuItem* m_item;
-BuildMenuItem( const char* name, GtkMenuItem* item )
+ui::MenuItem m_item;
+BuildMenuItem( const char* name, ui::MenuItem item )
 	: m_name( name ), m_item( item ){
 }
 void run(){
@@ -982,7 +982,7 @@ ui::Menu g_bsp_menu{ui::null};
 void Build_constructMenu( ui::Menu menu ){
 	for ( Project::iterator i = g_build_project.begin(); i != g_build_project.end(); ++i )
 	{
-		g_BuildMenuItems.push_back( BuildMenuItem( ( *i ).first.c_str(), 0 ) );
+		g_BuildMenuItems.push_back( BuildMenuItem( ( *i ).first.c_str(), ui::MenuItem(ui::null) ) );
 		if ( is_separator( *i ) ) {
 			g_BuildMenuItems.back().m_item = menu_separator( menu );
 		}

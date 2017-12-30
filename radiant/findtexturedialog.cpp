@@ -90,12 +90,12 @@ static void OnApply( ui::Widget widget, gpointer data ){
 	FindTextureDialog_apply();
 }
 
-static void OnFind( GtkWidget* widget, gpointer data ){
+static void OnFind( ui::Widget widget, gpointer data ){
 	g_FindTextureDialog.exportData();
 	FindTextureDialog_apply();
 }
 
-static void OnOK( GtkWidget* widget, gpointer data ){
+static void OnOK( ui::Widget widget, gpointer data ){
 	g_FindTextureDialog.exportData();
 	FindTextureDialog_apply();
 	g_FindTextureDialog.HideDlg();

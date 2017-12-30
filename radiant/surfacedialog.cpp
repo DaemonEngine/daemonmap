@@ -88,8 +88,8 @@ gboolean expose( ui::Widget, GdkEventExpose *, gpointer );
 gboolean button_press( ui::Widget, GdkEventButton *, gpointer );
 gboolean button_release( ui::Widget, GdkEventButton *, gpointer );
 gboolean motion( ui::Widget, GdkEventMotion *, gpointer );
-void flipX( GtkToggleButton *, gpointer );
-void flipY( GtkToggleButton *, gpointer );
+void flipX( ui::ToggleButton, gpointer );
+void flipY( ui::ToggleButton, gpointer );
 
 //End Textool function prototypes
 
@@ -105,7 +105,7 @@ void queueDraw(){
 
 #endif
 
-inline void spin_button_set_step( GtkSpinButton* spin, gfloat step ){
+inline void spin_button_set_step( ui::SpinButton spin, gfloat step ){
 #if 1
     gtk_adjustment_set_step_increment(gtk_spin_button_get_adjustment( spin ), step);
 #else
@@ -120,7 +120,7 @@ class Increment
 {
 float& m_f;
 public:
-GtkSpinButton* m_spin;
+ui::SpinButton m_spin;
 ui::Entry m_entry;
 Increment( float& f ) : m_f( f ), m_spin( 0 ), m_entry( ui::null ){
 }
@@ -577,7 +577,7 @@ const char* getContentFlagName( std::size_t bit ){
 // =============================================================================
 // SurfaceInspector class
 
-guint togglebutton_connect_toggled( GtkToggleButton* button, const Callback& callback ){
+guint togglebutton_connect_toggled( ui::ToggleButton button, const Callback& callback ){
 	return g_signal_connect_swapped( G_OBJECT( button ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 }
 
@@ -897,7 +897,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								check.show();
 								table.attach(check, {c, c + 1, r, r + 1}, {GTK_EXPAND | GTK_FILL, 0});
 								*p++ = check;
-								guint handler_id = togglebutton_connect_toggled( GTK_TOGGLE_BUTTON( check ), ApplyFlagsCaller( *this ) );
+								guint handler_id = togglebutton_connect_toggled( check, ApplyFlagsCaller( *this ) );
 								g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( handler_id ) );
 							}
 						}
@@ -931,7 +931,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 								check.show();
 								table.attach(check, {c, c + 1, r, r + 1}, {GTK_EXPAND | GTK_FILL, 0});
 								*p++ = check;
-								guint handler_id = togglebutton_connect_toggled( GTK_TOGGLE_BUTTON( check ), ApplyFlagsCaller( *this ) );
+								guint handler_id = togglebutton_connect_toggled( check, ApplyFlagsCaller( *this ) );
 								g_object_set_data( G_OBJECT( check ), "handler", gint_to_pointer( handler_id ) );
 							}
 						}
@@ -1026,15 +1026,15 @@ ui::Window SurfaceInspector::BuildDialog(){
    ===============
  */
 
-void spin_button_set_value_no_signal( GtkSpinButton* spin, gdouble value ){
+void spin_button_set_value_no_signal( ui::SpinButton spin, gdouble value ){
 	guint handler_id = gpointer_to_int( g_object_get_data( G_OBJECT( spin ), "handler" ) );
 	g_signal_handler_block( G_OBJECT( gtk_spin_button_get_adjustment( spin ) ), handler_id );
 	gtk_spin_button_set_value( spin, value );
 	g_signal_handler_unblock( G_OBJECT( gtk_spin_button_get_adjustment( spin ) ), handler_id );
 }
 
-void spin_button_set_step_increment( GtkSpinButton* spin, gdouble value ){
-	GtkAdjustment* adjust = gtk_spin_button_get_adjustment( spin );
+void spin_button_set_step_increment( ui::SpinButton spin, gdouble value ){
+	auto adjust = gtk_spin_button_get_adjustment( spin );
 	gtk_adjustment_set_step_increment(adjust, value);
 }
 
@@ -2208,7 +2208,7 @@ gboolean motion( ui::Widget win, GdkEventMotion * e, gpointer ){
 
 //It seems the fake tex coords conversion is screwing this stuff up... !!! FIX !!!
 //This is still wrong... Prolly need to do something with the oldScaleX/Y stuff...
-void flipX( GtkToggleButton *, gpointer ){
+void flipX( ui::ToggleButton, gpointer ){
 //	globalOutputStream() << "--> Flip X...\n";
 	//Shamus:
 //	SurfaceInspector_GetSelectedBPTexdef();		// Refresh g_selectedBrushPrimitTexdef...
@@ -2222,7 +2222,7 @@ void flipX( GtkToggleButton *, gpointer ){
 	UpdateControlPoints();
 }
 
-void flipY( GtkToggleButton *, gpointer ){
+void flipY( ui::ToggleButton, gpointer ){
 //	globalOutputStream() << "--> Flip Y...\n";
 //	tm.coords[0][1] = -tm.coords[0][1];
 //	tm.coords[1][1] = -tm.coords[1][1];

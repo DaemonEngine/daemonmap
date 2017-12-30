@@ -90,7 +90,7 @@ ui::SpinButton DialogSpinner_new( double value, double lower, double upper, int 
 class DialogSpinnerRow
 {
 public:
-DialogSpinnerRow( ui::Widget row, GtkSpinButton* spin ) : m_row( row ), m_spin( spin ){
+DialogSpinnerRow( ui::Widget row, ui::SpinButton spin ) : m_row( row ), m_spin( spin ){
 }
 ui::Widget m_row;
 ui::SpinButton m_spin;

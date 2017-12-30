@@ -1426,7 +1426,7 @@ void TextureBrowser_updateScroll( TextureBrowser& textureBrowser ){
 
 		totalHeight = std::max( totalHeight, textureBrowser.height );
 
-		GtkAdjustment *vadjustment = gtk_range_get_adjustment( GTK_RANGE( textureBrowser.m_texture_scroll ) );
+        auto vadjustment = gtk_range_get_adjustment( GTK_RANGE( textureBrowser.m_texture_scroll ) );
 
 		gtk_adjustment_set_value(vadjustment, -TextureBrowser_getOriginY( textureBrowser ));
 		gtk_adjustment_set_page_size(vadjustment, textureBrowser.height);
@@ -1548,17 +1548,17 @@ void TextureBrowser_constructTreeStore(){
 void TextureBrowser_constructTreeStoreTags(){
 	TextureGroups groups;
 	auto store = ui::TreeStore(gtk_tree_store_new( 1, G_TYPE_STRING ));
-	GtkTreeModel* model = g_TextureBrowser.m_all_tags_list;
+    auto model = g_TextureBrowser.m_all_tags_list;
 
 	gtk_tree_view_set_model(g_TextureBrowser.m_treeViewTags, model );
 
 	g_object_unref( G_OBJECT( store ) );
 }
 
-void TreeView_onRowActivated( GtkTreeView* treeview, GtkTreePath* path, GtkTreeViewColumn* col, gpointer userdata ){
+void TreeView_onRowActivated( ui::TreeView treeview, GtkTreePath* path, ui::TreeViewColumn col, gpointer userdata ){
 	GtkTreeIter iter;
 
-	GtkTreeModel* model = gtk_tree_view_get_model(treeview );
+    auto model = gtk_tree_view_get_model(treeview );
 
 	if ( gtk_tree_model_get_iter( model, &iter, path ) ) {
 		gchar dirName[1024];
@@ -1622,7 +1622,7 @@ void TextureBrowser_createContextMenu( ui::Widget treeview, GdkEventButton *even
 gboolean TreeViewTags_onButtonPressed( ui::TreeView treeview, GdkEventButton *event ){
 	if ( event->type == GDK_BUTTON_PRESS && event->button == 3 ) {
 		GtkTreePath *path;
-		GtkTreeSelection* selection = gtk_tree_view_get_selection(treeview );
+        auto selection = gtk_tree_view_get_selection(treeview );
 
 		if ( gtk_tree_view_get_path_at_pos(treeview, event->x, event->y, &path, NULL, NULL, NULL ) ) {
 			gtk_tree_selection_unselect_all( selection );
@@ -1729,10 +1729,10 @@ ui::MenuItem TextureBrowser_constructTagsMenu( ui::Menu menu ){
 	return textures_menu_item;
 }
 
-gboolean TextureBrowser_tagMoveHelper( GtkTreeModel* model, GtkTreePath* path, GtkTreeIter* iter, GSList** selected ){
+gboolean TextureBrowser_tagMoveHelper( ui::TreeModel model, ui::TreePath path, GtkTreeIter* iter, GSList** selected ){
 	g_assert( selected != NULL );
 
-	GtkTreeRowReference* rowref = gtk_tree_row_reference_new( model, path );
+    auto rowref = gtk_tree_row_reference_new( model, path );
 	*selected = g_slist_append( *selected, rowref );
 
 	return FALSE;
@@ -1743,14 +1743,14 @@ void TextureBrowser_assignTags(){
 	GSList* node;
 	gchar* tag_assigned;
 
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
+    auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
 
 	gtk_tree_selection_selected_foreach( selection, (GtkTreeSelectionForeachFunc)TextureBrowser_tagMoveHelper, &selected );
 
 	if ( selected != NULL ) {
 		for ( node = selected; node != NULL; node = node->next )
 		{
-			GtkTreePath* path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
+            auto path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
 
 			if ( path ) {
 				GtkTreeIter iter;
@@ -1793,14 +1793,14 @@ void TextureBrowser_removeTags(){
 	GSList* node;
 	gchar* tag;
 
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_assigned_tree );
+    auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_assigned_tree );
 
 	gtk_tree_selection_selected_foreach( selection, (GtkTreeSelectionForeachFunc)TextureBrowser_tagMoveHelper, &selected );
 
 	if ( selected != NULL ) {
 		for ( node = selected; node != NULL; node = node->next )
 		{
-			GtkTreePath* path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
+            auto path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
 
 			if ( path ) {
 				GtkTreeIter iter;
@@ -1842,7 +1842,7 @@ void TextureBrowser_searchTags(){
 	char buffer[256];
 	char tags_searched[256];
 
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
+    auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
 
 	gtk_tree_selection_selected_foreach( selection, (GtkTreeSelectionForeachFunc)TextureBrowser_tagMoveHelper, &selected );
 
@@ -1852,7 +1852,7 @@ void TextureBrowser_searchTags(){
 
 		for ( node = selected; node != NULL; node = node->next )
 		{
-			GtkTreePath* path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
+            auto path = gtk_tree_row_reference_get_path( (GtkTreeRowReference*)node->data );
 
 			if ( path ) {
 				GtkTreeIter iter;
@@ -2068,7 +2068,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	if ( g_TextureBrowser.m_tags ) {
 		{ // fill tag GtkListStore
 			g_TextureBrowser.m_all_tags_list = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
-			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_all_tags_list );
+            auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_all_tags_list );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
 			TagBuilder.GetAllTags( g_TextureBrowser.m_all_tags );
@@ -2089,7 +2089,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			TextureBrowser_createTreeViewTags();
 
-			GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
+            auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( g_TextureBrowser.m_scr_win_tags ), g_TextureBrowser.m_treeViewTags  );
@@ -2123,7 +2123,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 			g_TextureBrowser.m_assigned_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
 
-			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_assigned_store );
+            auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_assigned_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
 			auto renderer = ui::CellRendererText(ui::New);
@@ -2133,10 +2133,10 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			g_TextureBrowser.m_assigned_tree.connect( "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
 			gtk_tree_view_set_headers_visible(g_TextureBrowser.m_assigned_tree, FALSE );
 
-			GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_assigned_tree );
+            auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_assigned_tree );
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
-			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
+            auto column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
 			gtk_tree_view_append_column(g_TextureBrowser.m_assigned_tree, column );
 			g_TextureBrowser.m_assigned_tree.show();
 
@@ -2151,7 +2151,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
 			g_TextureBrowser.m_available_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
-			GtkTreeSortable* sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_available_store );
+            auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_available_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
 			auto renderer = ui::CellRendererText(ui::New);
@@ -2161,10 +2161,10 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			g_TextureBrowser.m_available_tree.connect( "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
 			gtk_tree_view_set_headers_visible(g_TextureBrowser.m_available_tree, FALSE );
 
-			GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
+            auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
-			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
+            auto column = ui::TreeViewColumn( "", renderer, {{"text", TAG_COLUMN}} );
 			gtk_tree_view_append_column(g_TextureBrowser.m_available_tree, column );
 			g_TextureBrowser.m_available_tree.show();
 
@@ -2235,7 +2235,7 @@ void TextureBrowser_setBackgroundColour( TextureBrowser& textureBrowser, const V
 	TextureBrowser_queueDraw( textureBrowser );
 }
 
-void TextureBrowser_selectionHelper( GtkTreeModel* model, GtkTreePath* path, GtkTreeIter* iter, GSList** selected ){
+void TextureBrowser_selectionHelper( ui::TreeModel model, ui::TreePath path, GtkTreeIter* iter, GSList** selected ){
 	g_assert( selected != NULL );
 
 	gchar* name;
@@ -2264,7 +2264,7 @@ void TextureBrowser_addTag(){
 		gtk_list_store_set( g_TextureBrowser.m_available_store, &iter, TAG_COLUMN, tag.c_str(), -1 );
 
 		// Select the currently added tag in the available list
-		GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
+        auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_available_tree );
 		gtk_tree_selection_select_iter( selection, &iter );
 
 		g_TextureBrowser.m_all_tags_list.append(TAG_COLUMN, tag.c_str());
@@ -2281,7 +2281,7 @@ void TextureBrowser_renameTag(){
 
 	GSList* selected = NULL;
 
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
+    auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
 	gtk_tree_selection_selected_foreach( selection, GtkTreeSelectionForeachFunc( TextureBrowser_selectionHelper ), &selected );
 
 	if ( g_slist_length( selected ) == 1 ) { // we only rename a single tag
@@ -2323,7 +2323,7 @@ void TextureBrowser_renameTag(){
 void TextureBrowser_deleteTag(){
 	GSList* selected = NULL;
 
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
+    auto selection = gtk_tree_view_get_selection(g_TextureBrowser.m_treeViewTags );
 	gtk_tree_selection_selected_foreach( selection, GtkTreeSelectionForeachFunc( TextureBrowser_selectionHelper ), &selected );
 
 	if ( g_slist_length( selected ) == 1 ) { // we only delete a single tag
@@ -2408,7 +2408,7 @@ void TextureBrowser_RefreshShaders(){
 	ScopeDisableScreenUpdates disableScreenUpdates( "Processing...", "Loading Shaders" );
 	GlobalShaderSystem().refresh();
 	UpdateAllWindows();
-	GtkTreeSelection* selection = gtk_tree_view_get_selection(GlobalTextureBrowser().m_treeViewTree);
+    auto selection = gtk_tree_view_get_selection(GlobalTextureBrowser().m_treeViewTree);
 	GtkTreeModel* model = NULL;
 	GtkTreeIter iter;
 	if ( gtk_tree_selection_get_selected (selection, &model, &iter) )

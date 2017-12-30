@@ -223,13 +223,13 @@ void CWindingMsg::Draw2D( VIEWTYPE vt ){
 }
 
 // triggered when the user selects an entry in the feedback box
-static void feedback_selection_changed( GtkTreeSelection* selection, gpointer data ){
+static void feedback_selection_changed( ui::TreeSelection selection, gpointer data ){
 	g_DbgDlg.DropHighlight();
 
 	GtkTreeModel* model;
 	GtkTreeIter selected;
 	if ( gtk_tree_selection_get_selected( selection, &model, &selected ) ) {
-		GtkTreePath* path = gtk_tree_model_get_path( model, &selected );
+		auto path = gtk_tree_model_get_path( model, &selected );
 		g_DbgDlg.SetHighlight( gtk_tree_path_get_indices( path )[0] );
 		gtk_tree_path_free( path );
 	}
@@ -305,7 +305,7 @@ ui::Window CDbgDlg::BuildDialog(){
 
 		{
 			auto renderer = ui::CellRendererText(ui::New);
-			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
+			auto column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 			gtk_tree_view_append_column(view, column );
 		}
 

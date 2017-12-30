@@ -633,7 +633,7 @@ class NonModalComboBox
 Callback m_changed;
 guint m_changedHandler;
 
-static gboolean changed( GtkComboBox *widget, NonModalComboBox* self ){
+static gboolean changed( ui::ComboBox widget, NonModalComboBox* self ){
 	self->m_changed();
 	return FALSE;
 }
@@ -710,7 +710,7 @@ int g_entitysplit2_position;
 
 bool g_entityInspector_windowConstructed = false;
 
-GtkTreeView* g_entityClassList;
+ui::TreeView g_entityClassList{ui::null};
 ui::TextView g_entityClassComment{ui::null};
 
 GtkCheckButton* g_entitySpawnflagsCheck[MAX_FLAGS];
@@ -888,7 +888,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 }
 
 void EntityClassList_selectEntityClass( EntityClass* eclass ){
-	GtkTreeModel* model = g_entlist_store;
+	auto model = g_entlist_store;
 	GtkTreeIter iter;
 	for ( gboolean good = gtk_tree_model_get_iter_first( model, &iter ); good != FALSE; good = gtk_tree_model_iter_next( model, &iter ) )
 	{
@@ -896,7 +896,7 @@ void EntityClassList_selectEntityClass( EntityClass* eclass ){
 		gtk_tree_model_get( model, &iter, 0, &text, -1 );
 		if ( strcmp( text, eclass->name() ) == 0 ) {
 			auto view = ui::TreeView(g_entityClassList);
-			GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+			auto path = gtk_tree_model_get_path( model, &iter );
 			gtk_tree_selection_select_path( gtk_tree_view_get_selection( view ), path );
 			if ( gtk_widget_get_realized( view ) ) {
 				gtk_tree_view_scroll_to_cell( view, path, 0, FALSE, 0, 0 );
@@ -1083,7 +1083,7 @@ void EntityInspector_selectionChanged( const Selectable& ){
 // Creates a new entity based on the currently selected brush and entity type.
 //
 void EntityClassList_createEntity(){
-	auto view = ui::Widget::from(g_entityClassList);
+	auto view = g_entityClassList;
 
 	// find out what type of entity we are trying to create
 	GtkTreeModel* model;
@@ -1168,7 +1168,7 @@ void EntityInspector_clearAllKeyValues(){
 // =============================================================================
 // callbacks
 
-static void EntityClassList_selection_changed( GtkTreeSelection* selection, gpointer data ){
+static void EntityClassList_selection_changed( ui::TreeSelection selection, gpointer data ){
 	GtkTreeModel* model;
 	GtkTreeIter selected;
 	if ( gtk_tree_selection_get_selected( selection, &model, &selected ) ) {
@@ -1212,7 +1212,7 @@ static gint EntityClassList_keypress( ui::Widget widget, GdkEventKey* event, gpo
 			gtk_tree_model_get( model, &iter, 0, &text, -1 );
 
 			if ( toupper( text[0] ) == (int)code ) {
-				GtkTreePath* path = gtk_tree_model_get_path( model, &iter );
+				auto path = gtk_tree_model_get_path( model, &iter );
 				gtk_tree_selection_select_path( gtk_tree_view_get_selection( view ), path );
 				if ( gtk_widget_get_realized( view ) ) {
 					gtk_tree_view_scroll_to_cell( view, path, 0, FALSE, 0, 0 );
@@ -1233,7 +1233,7 @@ static gint EntityClassList_keypress( ui::Widget widget, GdkEventKey* event, gpo
 	return FALSE;
 }
 
-static void EntityProperties_selection_changed( GtkTreeSelection* selection, gpointer data ){
+static void EntityProperties_selection_changed( ui::TreeSelection selection, gpointer data ){
 	// find out what type of entity we are trying to create
 	GtkTreeModel* model;
 	GtkTreeIter iter;
@@ -1324,7 +1324,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 					{
 						auto renderer = ui::CellRendererText(ui::New);
-						GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 0}} );
+						auto column = ui::TreeViewColumn( "Key", renderer, {{"text", 0}} );
 						gtk_tree_view_append_column( view, column );
 					}
 
@@ -1406,13 +1406,13 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 
 						{
 							auto renderer = ui::CellRendererText(ui::New);
-							GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
+							auto column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
 							gtk_tree_view_append_column(view, column );
 						}
 
 						{
 							auto renderer = ui::CellRendererText(ui::New);
-							GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 1}} );
+							auto column = ui::TreeViewColumn( "", renderer, {{"text", 1}} );
 							gtk_tree_view_append_column(view, column );
 						}
 

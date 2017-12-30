@@ -865,9 +865,9 @@ inline Quaternion quaternion_for_euler_xyz_degrees( const Vector3& eulerXYZ ){
 
 struct RotateDialog
 {
-	GtkSpinButton* x;
-	GtkSpinButton* y;
-	GtkSpinButton* z;
+	ui::SpinButton x{ui::null};
+	ui::SpinButton y{ui::null};
+	ui::SpinButton z{ui::null};
 	ui::Window window{ui::null};
 };
 

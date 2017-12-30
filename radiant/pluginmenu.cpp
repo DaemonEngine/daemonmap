@@ -125,7 +125,7 @@ void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
 }
 
 ui::Menu g_plugins_menu{ui::null};
-GtkMenuItem* g_plugins_menu_separator = 0;
+ui::MenuItem g_plugins_menu_separator{ui::null};
 
 void PluginsMenu_populate(){
 	class PluginsMenuConstructor : public PluginsVisitor
@@ -146,11 +146,11 @@ public:
 void PluginsMenu_clear(){
 	m_nNextPlugInID = 0;
 
-	GList* lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ), g_plugins_menu_separator  );
+	GList* lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ), g_plugins_menu_separator._handle );
 	while ( lst->next )
 	{
 		g_plugins_menu.remove(ui::Widget::from(lst->next->data));
-		lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ),  g_plugins_menu_separator  );
+		lst = g_list_find( gtk_container_get_children( GTK_CONTAINER( g_plugins_menu ) ),  g_plugins_menu_separator._handle );
 	}
 }
 

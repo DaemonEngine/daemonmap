@@ -199,7 +199,7 @@ class ProjectSettingsDialog
 {
 public:
 GameCombo game_combo;
-GtkComboBox* gamemode_combo;
+ui::ComboBox gamemode_combo{ui::null};
 };
 
 ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, ModalDialog& modal ){
@@ -416,7 +416,7 @@ void about_button_credits( ui::Widget widget, gpointer data ){
 	OpenURL( cred.c_str() );
 }
 
-void about_button_issues( GtkWidget *widget, gpointer data ){
+void about_button_issues( ui::Widget widget, gpointer data ){
 	StringOutputStream cred( 256 );
 	cred << "https://gitlab.com/xonotic/netradiant/issues";
 	OpenURL( cred.c_str() );
@@ -775,7 +775,7 @@ static void DoGtkTextEditor( const char* filename, guint cursorpos ){
 
 		gtk_window_set_title( text_editor, filename );
 
-		GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(ui::TextView::from(text_widget));
+		auto text_buffer = gtk_text_view_get_buffer(ui::TextView::from(text_widget));
 		gtk_text_buffer_set_text( text_buffer, (char*)buf, len );
 
 		old_filename = g_object_get_data( G_OBJECT( text_editor ), "filename" );
