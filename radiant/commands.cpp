@@ -408,18 +408,18 @@ void DoCommandListDlg(){
 			auto view = ui::TreeView(ui::TreeModel(store));
 			dialog.m_list = view;
 
-			gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), false ); // annoying
+			gtk_tree_view_set_enable_search(view, false ); // annoying
 
 			{
 				auto renderer = ui::CellRendererText(ui::New);
 				GtkTreeViewColumn* column = ui::TreeViewColumn( "Command", renderer, {{"text", 0}, {"weight-set", 2}, {"weight", 3}} );
-				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+				gtk_tree_view_append_column(view, column );
 			}
 
 			{
 				auto renderer = ui::CellRendererText(ui::New);
 				GtkTreeViewColumn* column = ui::TreeViewColumn( "Key", renderer, {{"text", 1}, {"weight-set", 2}, {"weight", 3}} );
-				gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+				gtk_tree_view_append_column(view, column );
 			}
 
 			view.show();

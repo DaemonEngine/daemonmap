@@ -296,25 +296,25 @@ void EntityList_constructWindow( ui::Window main_window ){
 		window.add(scr);
 
 		{
-			ui::Widget view = ui::TreeView(ui::New);
-			gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+            auto view = ui::TreeView(ui::New);
+			gtk_tree_view_set_headers_visible(view, FALSE );
 
 			auto renderer = ui::CellRendererText(ui::New);
 			GtkTreeViewColumn* column = gtk_tree_view_column_new();
 			gtk_tree_view_column_pack_start( column, renderer, TRUE );
 			gtk_tree_view_column_set_cell_data_func( column, renderer, entitylist_treeviewcolumn_celldatafunc, 0, 0 );
 
-			GtkTreeSelection* select = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
+			GtkTreeSelection* select = gtk_tree_view_get_selection(view );
 			gtk_tree_selection_set_mode( select, GTK_SELECTION_MULTIPLE );
 
 			view.connect( "row_expanded", G_CALLBACK( entitylist_treeview_row_expanded ), 0 );
 			view.connect( "row_collapsed", G_CALLBACK( entitylist_treeview_rowcollapsed ), 0 );
 
-			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+			gtk_tree_view_append_column(view, column );
 
 			view.show();
 			scr.add(view);
-			getEntityList().m_tree_view = GTK_TREE_VIEW( view );
+			getEntityList().m_tree_view = view;
 		}
 	}
 

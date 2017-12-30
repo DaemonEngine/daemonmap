@@ -300,17 +300,17 @@ ui::Window CDbgDlg::BuildDialog(){
 	{
 		ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-		ui::Widget view = ui::TreeView(ui::TreeModel(store ));
-		gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+		auto view = ui::TreeView(ui::TreeModel(store ));
+		gtk_tree_view_set_headers_visible(view, FALSE );
 
 		{
 			auto renderer = ui::CellRendererText(ui::New);
 			GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
-			gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+			gtk_tree_view_append_column(view, column );
 		}
 
 		{
-			auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
+			auto selection = ui::TreeSelection(gtk_tree_view_get_selection(view ));
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 			selection.connect( "changed", G_CALLBACK( feedback_selection_changed ), NULL );
 		}

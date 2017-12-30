@@ -30,7 +30,7 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 	// get ignore list from ui
 	std::set<std::string> ignore;
 
-	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) );
+	auto view = ui::TreeView::from(lookup_widget(button, "t_materialist"));
 	ui::ListStore list = ui::ListStore::from(gtk_tree_view_get_model( view ));
 
 	GtkTreeIter iter;
@@ -113,14 +113,14 @@ void OnAddMaterial( ui::Button button, gpointer user_data ){
 
 	const gchar* name = gtk_entry_get_text( edit );
 	if ( g_utf8_strlen( name, -1 ) > 0 ) {
-		ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model( GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) ) ) );
+		ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model(ui::TreeView::from(lookup_widget(button, "t_materialist") )) );
 		list.append(0, name);
 		gtk_entry_set_text( edit, "" );
 	}
 }
 
 void OnRemoveMaterial( ui::Button button, gpointer user_data ){
-	GtkTreeView* view = GTK_TREE_VIEW( lookup_widget( button , "t_materialist" ) );
+	GtkTreeView* view = ui::TreeView::from(lookup_widget(button, "t_materialist"));
 	ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model( view ) );
 	GtkTreeSelection* sel = gtk_tree_view_get_selection( view );
 

@@ -103,8 +103,8 @@ create_w_plugplug2( void ){
 	gtk_widget_set_name( t_materialist, "t_materialist" );
 	t_materialist.show();
 	scrolledwindow1.add(t_materialist);
-	gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( t_materialist ), FALSE );
-	gtk_tree_view_set_enable_search( GTK_TREE_VIEW( t_materialist ), FALSE );
+	gtk_tree_view_set_headers_visible(t_materialist, FALSE );
+	gtk_tree_view_set_enable_search(t_materialist, FALSE );
 
 	auto ed_materialname = ui::Entry(ui::New);
 	gtk_widget_set_name( ed_materialname, "ed_materialname" );
@@ -189,13 +189,14 @@ void CreateWindow( void ){
 	// column & renderer
 	GtkTreeViewColumn* col = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title( col, "materials" );
-	gtk_tree_view_append_column( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), col );
+	auto view = ui::TreeView::from(lookup_widget(wnd, "t_materialist"));
+	gtk_tree_view_append_column(view, col );
 	auto renderer = ui::CellRendererText(ui::New);
-	gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), -1, "", renderer, "text", 0, NULL );
+	gtk_tree_view_insert_column_with_attributes(view, -1, "", renderer, "text", 0, NULL );
 
 	// list store
 	ui::ListStore ignorelist = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
-	gtk_tree_view_set_model( GTK_TREE_VIEW( lookup_widget( wnd, "t_materialist" ) ), ignorelist );
+	gtk_tree_view_set_model(view, ignorelist );
     ignorelist.unref();
 
 	gtk_widget_show_all( wnd );

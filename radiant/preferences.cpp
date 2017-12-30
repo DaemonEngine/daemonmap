@@ -734,16 +734,16 @@ ui::Window PrefsDlg::BuildDialog(){
 					auto store = ui::TreeStore(gtk_tree_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
 
 					auto view = ui::TreeView(ui::TreeModel(store));
-					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+					gtk_tree_view_set_headers_visible(view, FALSE );
 
 					{
 						auto renderer = ui::CellRendererText(ui::New);
 						GtkTreeViewColumn* column = ui::TreeViewColumn( "Preferences", renderer, {{"text", 0}} );
-						gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+						gtk_tree_view_append_column(view, column );
 					}
 
 					{
-						auto selection = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) ));
+						auto selection = ui::TreeSelection(gtk_tree_view_get_selection(view ));
 						selection.connect( "changed", G_CALLBACK( treeSelection ), this );
 					}
 
@@ -814,7 +814,7 @@ ui::Window PrefsDlg::BuildDialog(){
 						}
 					}
 
-					gtk_tree_view_expand_all( GTK_TREE_VIEW( view ) );
+					gtk_tree_view_expand_all(view );
 
 					g_object_unref( G_OBJECT( store ) );
 				}

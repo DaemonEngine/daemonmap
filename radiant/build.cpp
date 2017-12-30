@@ -704,11 +704,11 @@ gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gch
 	return FALSE;
 }
 
-gboolean project_key_press( ui::Widget widget, GdkEventKey* event, ProjectList* projectList ){
+gboolean project_key_press( ui::TreeView widget, GdkEventKey* event, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
 	if ( event->keyval == GDK_KEY_Delete ) {
-		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
+		GtkTreeSelection* selection = gtk_tree_view_get_selection(widget );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
 		if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
@@ -802,14 +802,14 @@ gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gc
 	return FALSE;
 }
 
-gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStore store ){
+gboolean commands_key_press( ui::TreeView widget, GdkEventKey* event, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
 	Build& build = *g_current_build;
 
 	if ( event->keyval == GDK_KEY_Delete ) {
-		GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
+		GtkTreeSelection* selection = gtk_tree_view_get_selection(widget );
 		GtkTreeIter iter;
 		GtkTreeModel* model;
 		if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
@@ -832,8 +832,6 @@ gboolean commands_key_press( ui::Widget widget, GdkEventKey* event, ui::ListStor
 ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Build Menu", G_CALLBACK(dialog_delete_callback ), &modal, -1, 400 );
 
-	ui::Widget buildView{ui::null};
-
 	{
 		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
 		window.add(table1);
@@ -849,6 +847,8 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 		}
+		auto buildViewStore = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+		auto buildView = ui::TreeView( ui::TreeModel( buildViewStore ));
 		{
 			auto frame = create_dialog_frame( "Build menu" );
             table1.attach(frame, {0, 1, 0, 1});
@@ -857,24 +857,22 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				frame.add(scr);
 
 				{
-					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
-
-					ui::Widget view = ui::TreeView( ui::TreeModel( store ));
-					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+					auto view = buildView;
+					auto store = buildViewStore;
+					gtk_tree_view_set_headers_visible(view, FALSE );
 
 					auto renderer = ui::CellRendererText(ui::New);
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect("edited", G_CALLBACK( project_cell_edited ), &projectList );
 
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
-					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+					gtk_tree_view_append_column(view, column );
 
-					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
+					GtkTreeSelection* selection = gtk_tree_view_get_selection(view );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
 					view.show();
 
-					buildView = view;
 					projectList.m_store = store;
 					scr.add(view);
 
@@ -892,19 +890,19 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				frame.add(scr);
 
 				{
-					ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					ui::Widget view = ui::TreeView(ui::TreeModel( store ));
-					gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+					auto view = ui::TreeView(ui::TreeModel( store ));
+					gtk_tree_view_set_headers_visible(view, FALSE );
 
 					auto renderer = ui::CellRendererText(ui::New);
 					object_set_boolean_property( G_OBJECT( renderer ), "editable", TRUE );
 					renderer.connect( "edited", G_CALLBACK( commands_cell_edited ), store );
 
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "", renderer, {{"text", 0}} );
-					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+					gtk_tree_view_append_column(view, column );
 
-					GtkTreeSelection* selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
+					GtkTreeSelection* selection = gtk_tree_view_get_selection(view );
 					gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
 					view.show();
@@ -915,7 +913,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					view.connect( "key_press_event", G_CALLBACK( commands_key_press ), store );
 
-					auto sel = ui::TreeSelection(gtk_tree_view_get_selection( GTK_TREE_VIEW( buildView ) ));
+					auto sel = ui::TreeSelection(gtk_tree_view_get_selection(buildView ));
 					sel.connect( "changed", G_CALLBACK( project_selection_changed ), store );
 				}
 			}

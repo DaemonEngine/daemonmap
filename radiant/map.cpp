@@ -835,20 +835,20 @@ void DoMapInfo(){
 			{
 				ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
-				ui::Widget view = ui::TreeView(ui::TreeModel(store ));
-				gtk_tree_view_set_headers_clickable( GTK_TREE_VIEW( view ), TRUE );
+				auto view = ui::TreeView(ui::TreeModel(store ));
+				gtk_tree_view_set_headers_clickable(view, TRUE );
 
 				{
 					auto renderer = ui::CellRendererText(ui::New);
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "Entity", renderer, {{"text", 0}} );
-					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+					gtk_tree_view_append_column(view, column );
 					gtk_tree_view_column_set_sort_column_id( column, 0 );
 				}
 
 				{
 					auto renderer = ui::CellRendererText(ui::New);
 					GtkTreeViewColumn* column = ui::TreeViewColumn( "Count", renderer, {{"text", 1}} );
-					gtk_tree_view_append_column( GTK_TREE_VIEW( view ), column );
+					gtk_tree_view_append_column(view, column );
 					gtk_tree_view_column_set_sort_column_id( column, 1 );
 				}
 
