@@ -249,18 +249,24 @@ endif ()
 #-----------------------------------------------------------------------
 
 option(DOWNLOAD_GAMEPACKS "Download game packs" ON)
-if (DOWNLOAD_GAMEPACKS)
-    add_custom_target(game_packs
-            COMMAND ${CMAKE_COMMAND} -E make_directory games
-            COMMAND DOWNLOAD_GAMEPACKS=yes SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-            COMMENT "Downloading free game packs"
-            )
+add_custom_target(game_packs_free
+        COMMAND ${CMAKE_COMMAND} -E make_directory games
+        COMMAND DOWNLOAD_GAMEPACKS=yes SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
+        COMMENT "Downloading free game packs"
+        )
+add_custom_target(game_packs_all
+        COMMAND ${CMAKE_COMMAND} -E make_directory games
+        COMMAND DOWNLOAD_GAMEPACKS=all SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
+        COMMENT "Downloading all game packs"
+        )
 
-    add_custom_target(game_packs_all
-            COMMAND ${CMAKE_COMMAND} -E make_directory games
-            COMMAND DOWNLOAD_GAMEPACKS=all SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-            COMMENT "Downloading all game packs"
-            )
+if (DOWNLOAD_GAMEPACKS)
+    set(DOWNLOAD_GAMEPACKS "all")
+endif()
+if ("${DOWNLOAD_GAMEPACKS}" STREQUAL "free")
+    add_custom_target(game_packs_go ALL DEPENDS game_packs_free)
+elseif ("${DOWNLOAD_GAMEPACKS}" STREQUAL "all")
+    add_custom_target(game_packs_go ALL DEPENDS game_packs_all)
 endif ()
 
 #-----------------------------------------------------------------------
