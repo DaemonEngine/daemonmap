@@ -2402,15 +2402,15 @@ ui::Widget create_main_statusbar( ui::Widget pStatusLabel[c_count_status] ){
 		gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 		gtk_misc_set_padding( GTK_MISC( label ), 4, 2 );
 		label.show();
-		gtk_table_attach_defaults( table, label , 0, 1, 0, 1 );
+		table.attach(label, {0, 1, 0, 1});
 		pStatusLabel[c_command_status] = ui::Widget(label );
 	}
 
-	for ( int i = 1; i < c_count_status; ++i )
+	for (unsigned int i = 1; (int) i < c_count_status; ++i)
 	{
 		auto frame = ui::Frame();
 		frame.show();
-		gtk_table_attach_defaults( table, frame , i, i + 1, 0, 1 );
+		table.attach(frame, {i, i + 1, 0, 1});
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 		auto label = ui::Label( "Label" );

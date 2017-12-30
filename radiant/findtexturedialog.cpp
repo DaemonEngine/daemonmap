@@ -128,7 +128,7 @@ FindTextureDialog::~FindTextureDialog(){
 }
 
 ui::Window FindTextureDialog::BuildDialog(){
-	ui::Widget table{ui::null}, label{ui::null};
+    ui::Widget label{ui::null};
 	ui::Widget button{ui::null};
 	ui::Entry entry{ui::null};
 
@@ -143,31 +143,25 @@ ui::Window FindTextureDialog::BuildDialog(){
 	vbox.show();
 	hbox.pack_start( vbox, TRUE, TRUE, 0 );
 
-	table = ui::Table( 2, 2, FALSE );
+    auto table = ui::Table(2, 2, FALSE);
 	table.show();
 	vbox.pack_start( table, TRUE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Find:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 
 	label = ui::Label( "Replace:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 
 	entry = ui::Entry(ui::New);
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 	entry.connect( "focus_in_event",
 					  G_CALLBACK( find_focus_in ), 0 );
 	AddDialogData( *GTK_ENTRY(entry), m_strFind );
@@ -175,9 +169,7 @@ ui::Window FindTextureDialog::BuildDialog(){
 
 	entry = ui::Entry(ui::New);
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	entry.connect( "focus_in_event",
 					  G_CALLBACK( replace_focus_in ), 0 );
 	AddDialogData( *GTK_ENTRY(entry), m_strReplace );

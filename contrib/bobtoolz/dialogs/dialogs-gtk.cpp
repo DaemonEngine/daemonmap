@@ -1315,8 +1315,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	auto table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
@@ -1324,34 +1324,24 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	dlgTexReset.cbTexChange = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbTexChange.connect( "toggled", G_CALLBACK( dialog_button_callback_texreset_update ), NULL );
 	dlgTexReset.cbTexChange.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbTexChange, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbTexChange, {0, 1, 0, 1}, {GTK_FILL, 0});
 
 	w = ui::Label( "Old Name: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editTexOld = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editTexOld ), rs->textureName );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editTexOld, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editTexOld, {2, 3, 0, 1}, {GTK_FILL, 0});
 	dlgTexReset.editTexOld.show();
 
 	w = ui::Label( "New Name: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editTexNew = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editTexNew ), rs->textureName );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editTexNew, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editTexNew, {2, 3, 1, 2}, {GTK_FILL, 0});
 	dlgTexReset.editTexNew.show();
 
 	// ---- /frame ----
@@ -1363,8 +1353,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
@@ -1372,42 +1362,30 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	dlgTexReset.cbScaleHor = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbScaleHor.connect( "toggled", G_CALLBACK( dialog_button_callback_texreset_update ), NULL );
 	dlgTexReset.cbScaleHor.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbScaleHor, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbScaleHor, {0, 1, 0, 1}, {GTK_FILL, 0});
 
 	w = ui::Label( "New Horizontal Scale: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editScaleHor = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editScaleHor ), "0.5" );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editScaleHor, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editScaleHor, {2, 3, 0, 1}, {GTK_FILL, 0});
 	dlgTexReset.editScaleHor.show();
 
 
 	dlgTexReset.cbScaleVert = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbScaleVert.connect( "toggled", G_CALLBACK( dialog_button_callback_texreset_update ), NULL );
 	dlgTexReset.cbScaleVert.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbScaleVert, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbScaleVert, {0, 1, 1, 2}, {GTK_FILL, 0});
 
 	w = ui::Label( "New Vertical Scale: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editScaleVert = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editScaleVert ), "0.5" );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editScaleVert, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editScaleVert, {2, 3, 1, 2}, {GTK_FILL, 0});
 	dlgTexReset.editScaleVert.show();
 
 	// ---- /frame ----
@@ -1419,8 +1397,8 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
@@ -1428,42 +1406,30 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	dlgTexReset.cbShiftHor = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbShiftHor.connect( "toggled", G_CALLBACK( dialog_button_callback_texreset_update ), NULL );
 	dlgTexReset.cbShiftHor.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbShiftHor, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbShiftHor, {0, 1, 0, 1}, {GTK_FILL, 0});
 
 	w = ui::Label( "New Horizontal Shift: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editShiftHor = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editShiftHor ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editShiftHor, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editShiftHor, {2, 3, 0, 1}, {GTK_FILL, 0});
 	dlgTexReset.editShiftHor.show();
 
 
 	dlgTexReset.cbShiftVert = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbShiftVert.connect( "toggled", G_CALLBACK( dialog_button_callback_texreset_update ), NULL );
 	dlgTexReset.cbShiftVert.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbShiftVert, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbShiftVert, {0, 1, 1, 2}, {GTK_FILL, 0});
 
 	w = ui::Label( "New Vertical Shift: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editShiftVert = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editShiftVert ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editShiftVert, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editShiftVert, {2, 3, 1, 2}, {GTK_FILL, 0});
 	dlgTexReset.editShiftVert.show();
 
 	// ---- /frame ----
@@ -1475,29 +1441,23 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 	table = ui::Table( 1, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
 
 	dlgTexReset.cbRotation = ui::CheckButton( "Enabled" );
 	dlgTexReset.cbRotation.show();
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.cbRotation, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.cbRotation, {0, 1, 0, 1}, {GTK_FILL, 0});
 
 	w = ui::Label( "New Rotation Value: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {1, 2, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	dlgTexReset.editRotation = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( dlgTexReset.editRotation ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), dlgTexReset.editRotation, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(dlgTexReset.editRotation, {2, 3, 0, 1}, {GTK_FILL, 0});
 	dlgTexReset.editRotation.show();
 
 	// ---- /frame ----
@@ -1641,38 +1601,30 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	auto table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
 
 	w = ui::Label( "X: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	radiusX = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( radiusX ), "100" );
-	gtk_table_attach( GTK_TABLE( table ), radiusX, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(radiusX, {1, 2, 0, 1}, {GTK_FILL, 0});
 	radiusX.show();
 
 
 
 	w = ui::Label( "Y: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	radiusY = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( radiusY ), "100" );
-	gtk_table_attach( GTK_TABLE( table ), radiusY, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(radiusY, {1, 2, 1, 2}, {GTK_FILL, 0});
 	radiusY.show();
 
 
@@ -1684,38 +1636,30 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings((table), 5);
+	gtk_table_set_col_spacings((table), 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
 
 	w = ui::Label( "Start: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	angleStart = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( angleStart ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), angleStart, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(angleStart, {1, 2, 0, 1}, {GTK_FILL, 0});
 	angleStart.show();
 
 
 
 	w = ui::Label( "End: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	angleEnd = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( angleEnd ), "90" );
-	gtk_table_attach( GTK_TABLE( table ), angleEnd, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(angleEnd, {1, 2, 1, 2}, {GTK_FILL, 0});
 	angleEnd.show();
 
 
@@ -1726,38 +1670,30 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
 
 	w = ui::Label( "Start: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	heightStart = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( heightStart ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), heightStart, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(heightStart, {1, 2, 0, 1}, {GTK_FILL, 0});
 	heightStart.show();
 
 
 
 	w = ui::Label( "End: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 1, 2}, {GTK_FILL, 0});
 	w.show();
 
 	heightEnd = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( heightEnd ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), heightEnd, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(heightEnd, {1, 2, 1, 2}, {GTK_FILL, 0});
 	heightEnd.show();
 
 
@@ -1769,23 +1705,19 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 	table = ui::Table( 2, 3, TRUE );
 	table.show();
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+	gtk_table_set_row_spacings(table, 5);
+	gtk_table_set_col_spacings(table, 5);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 
 	// ---- frame ----
 
 	w = ui::Label( "Number: " );
-	gtk_table_attach( GTK_TABLE( table ), w, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(w, {0, 1, 0, 1}, {GTK_FILL, 0});
 	w.show();
 
 	numPoints = ui::Entry( 256 );
 	gtk_entry_set_text( GTK_ENTRY( numPoints ), "0" );
-	gtk_table_attach( GTK_TABLE( table ), numPoints, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+	table.attach(numPoints, {1, 2, 0, 1}, {GTK_FILL, 0});
 	numPoints.show();
 
 

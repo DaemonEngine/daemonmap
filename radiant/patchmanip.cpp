@@ -862,17 +862,13 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			{
 				auto label = ui::Label( "Width:" );
 				label.show();
-				gtk_table_attach( table, label , 0, 1, 0, 1,
-								  (GtkAttachOptions) ( GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 			}
 			{
 				auto label = ui::Label( "Height:" );
 				label.show();
-				gtk_table_attach( table, label , 0, 1, 1, 2,
-								  (GtkAttachOptions) ( GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 			}
 
@@ -896,9 +892,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				D_ITEM( 31 ); // MAX_PATCH_SIZE is 32, so we should be able to do 31...
 #undef D_ITEM
 				combo.show();
-				gtk_table_attach( table, combo , 1, 2, 0, 1,
-								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(combo, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
 				width = combo;
 			}
@@ -922,9 +916,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 				D_ITEM( 31 ); // MAX_PATCH_SIZE is 32, so we should be able to do 31...
 #undef D_ITEM
 				combo.show();
-				gtk_table_attach( table, combo , 1, 2, 1, 2,
-								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(combo, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 
 				height = combo;
 			}
@@ -999,46 +991,34 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					auto image = new_local_image( "cap_bevel.png" );
 					image.show();
-					gtk_table_attach( table, image , 0, 1, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(image, {0, 1, 0, 1}, {GTK_FILL, 0});
 				}
 				{
 					auto image = new_local_image( "cap_endcap.png" );
 					image.show();
-					gtk_table_attach( table, image , 0, 1, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(image, {0, 1, 1, 2}, {GTK_FILL, 0});
 				}
 				{
 					auto image = new_local_image( "cap_ibevel.png" );
 					image.show();
-					gtk_table_attach( table, image , 0, 1, 2, 3,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(image, {0, 1, 2, 3}, {GTK_FILL, 0});
 				}
 				{
 					auto image = new_local_image( "cap_iendcap.png" );
 					image.show();
-					gtk_table_attach( table, image , 0, 1, 3, 4,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(image, {0, 1, 3, 4}, {GTK_FILL, 0});
 				}
 				{
 					auto image = new_local_image( "cap_cylinder.png" );
 					image.show();
-					gtk_table_attach( table, image , 0, 1, 4, 5,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(image, {0, 1, 4, 5}, {GTK_FILL, 0});
 				}
 
 				GSList* group = 0;
 				{
 					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Bevel" ));
 					button.show();
-					gtk_table_attach( table, button, 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(button, {1, 2, 0, 1}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					bevel = button;
@@ -1046,9 +1026,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Endcap" ));
 					button.show();
-					gtk_table_attach( table, button, 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(button, {1, 2, 1, 2}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					endcap = button;
@@ -1056,9 +1034,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Bevel" ));
 					button.show();
-					gtk_table_attach( table, button, 1, 2, 2, 3,
-									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(button, {1, 2, 2, 3}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					ibevel = button;
@@ -1066,9 +1042,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Endcap" ));
 					button.show();
-					gtk_table_attach( table, button, 1, 2, 3, 4,
-									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(button, {1, 2, 3, 4}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					iendcap = button;
@@ -1076,9 +1050,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 				{
 					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Cylinder" ));
 					button.show();
-					gtk_table_attach( table, button, 1, 2, 4, 5,
-									  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(button, {1, 2, 4, 5}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
 
 					cylinder = button;

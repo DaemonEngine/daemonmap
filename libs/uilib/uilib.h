@@ -439,9 +439,24 @@ namespace ui {
     ,
     );
 
+    struct TableAttach {
+        unsigned int left, right, top, bottom;
+    };
+
+    struct TableAttachOptions {
+        // todo: type safety
+        unsigned int x, y;
+    };
+
+    struct TablePadding {
+        unsigned int x, y;
+    };
+
     WRAP(Table, Container, _GtkTable, (),
          Table(std::size_t rows, std::size_t columns, bool homogenous);
     ,
+         // 5 = expand | fill
+         void attach(Widget child, TableAttach attach, TableAttachOptions options = {5, 5}, TablePadding padding = {0, 0});
     );
 
     WRAP(TextView, Container, _GtkTextView, (),

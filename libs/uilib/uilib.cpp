@@ -305,6 +305,14 @@ namespace ui {
     )
     {}
 
+    void ITable::attach(Widget child, TableAttach attach, TableAttachOptions options, TablePadding padding) {
+        gtk_table_attach(this, child,
+                         attach.left, attach.right, attach.top, attach.bottom,
+                         static_cast<GtkAttachOptions>(options.x), static_cast<GtkAttachOptions>(options.y),
+                         padding.x, padding.y
+        );
+    }
+
     IMPL(TextView, GTK_TEXT_VIEW);
 
     TextView::TextView(ui::New_t) : TextView(GTK_TEXT_VIEW(gtk_text_view_new()))

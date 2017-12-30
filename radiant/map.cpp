@@ -786,9 +786,7 @@ void DoMapInfo(){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, entry , 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
 
 					brushes_entry = entry;
@@ -796,9 +794,7 @@ void DoMapInfo(){
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, entry , 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 					gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE );
 
 					entities_entry = entry;
@@ -806,17 +802,13 @@ void DoMapInfo(){
 				{
 					ui::Widget label = ui::Label( "Total Brushes" );
 					label.show();
-					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					ui::Widget label = ui::Label( "Total Entities" );
 					label.show();
-					gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 			}
@@ -2051,32 +2043,24 @@ void DoFind(){
 			{
 				ui::Widget label = ui::Label( "Entity number" );
 				label.show();
-				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-								  (GtkAttachOptions) ( 0 ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                (table).attach(label, {0, 1, 0, 1}, {0, 0});
 			}
 			{
 				ui::Widget label = ui::Label( "Brush number" );
 				label.show();
-				gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-								  (GtkAttachOptions) ( 0 ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                (table).attach(label, {0, 1, 1, 2}, {0, 0});
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_table_attach( table, entry , 1, 2, 0, 1,
-								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 				gtk_widget_grab_focus( entry  );
 				entity = entry;
 			}
 			{
 				auto entry = ui::Entry(ui::New);
 				entry.show();
-				gtk_table_attach( table, entry , 1, 2, 1, 2,
-								  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-								  (GtkAttachOptions) ( 0 ), 0, 0 );
+                table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 
 				brush = entry;
 			}

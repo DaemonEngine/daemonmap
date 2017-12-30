@@ -2001,10 +2001,9 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 
 	g_TextureBrowser.m_parent = toplevel;
 
-	ui::Widget table = ui::Table( 3, 3, FALSE );
-	ui::Widget frame_table{ui::null};
+	auto table = ui::Table(3, 3, FALSE);
 	auto vbox = ui::VBox(FALSE, 0);
-	gtk_table_attach( GTK_TABLE( table ), vbox, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
+	table.attach(vbox, {0, 1, 1, 3}, {GTK_FILL, GTK_FILL});
 	vbox.show();
 
 	ui::Widget menu_bar{ui::null};
@@ -2021,7 +2020,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		gtk_menu_item_set_submenu( GTK_MENU_ITEM( tools_item ), menu_tools );
 		gtk_menu_shell_append( GTK_MENU_SHELL( menu_bar ), tools_item );
 
-		gtk_table_attach( GTK_TABLE( table ), menu_bar, 0, 3, 0, 1, GTK_FILL, GTK_SHRINK, 0, 0 );
+		table.attach(menu_bar, {0, 3, 0, 1}, {GTK_FILL, GTK_SHRINK});
 		menu_bar.show();
 	}
 	{ // Texture TreeView
@@ -2040,7 +2039,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	}
 	{ // gl_widget scrollbar
 		ui::Widget w = ui::Widget(gtk_vscrollbar_new( ui::Adjustment( 0,0,0,1,1,0 ) ));
-		gtk_table_attach( GTK_TABLE( table ), w, 2, 3, 1, 2, GTK_SHRINK, GTK_FILL, 0, 0 );
+		table.attach(w, {2, 3, 1, 2}, {GTK_SHRINK, GTK_FILL});
 		w.show();
 		g_TextureBrowser.m_texture_scroll = w;
 
@@ -2056,7 +2055,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		gtk_widget_set_events( g_TextureBrowser.m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
 		gtk_widget_set_can_focus( g_TextureBrowser.m_gl_widget, true );
 
-		gtk_table_attach_defaults( GTK_TABLE( table ), g_TextureBrowser.m_gl_widget, 1, 2, 1, 2 );
+		table.attach(g_TextureBrowser.m_gl_widget, {1, 2, 1, 2});
 		g_TextureBrowser.m_gl_widget.show();
 
 		g_TextureBrowser.m_sizeHandler = g_TextureBrowser.m_gl_widget.connect( "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
@@ -2107,14 +2106,14 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			TextureBrowser_constructSearchButton();
 			vbox.pack_end(g_TextureBrowser.m_search_button, FALSE, FALSE, 0);
 		}
+		auto frame_table = ui::Table(3, 3, FALSE);
 		{ // Tag frame
-			frame_table = ui::Table( 3, 3, FALSE );
 
 			g_TextureBrowser.m_tag_frame = ui::Frame( "Tag assignment" );
 			gtk_frame_set_label_align( GTK_FRAME( g_TextureBrowser.m_tag_frame ), 0.5, 0.5 );
 			gtk_frame_set_shadow_type( GTK_FRAME( g_TextureBrowser.m_tag_frame ), GTK_SHADOW_NONE );
 
-			gtk_table_attach( GTK_TABLE( table ), g_TextureBrowser.m_tag_frame, 1, 3, 2, 3, GTK_FILL, GTK_SHRINK, 0, 0 );
+			table.attach(g_TextureBrowser.m_tag_frame, {1, 3, 2, 3}, {GTK_FILL, GTK_SHRINK});
 
 			frame_table.show();
 
@@ -2147,7 +2146,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			scrolled_win.show();
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), g_TextureBrowser.m_assigned_tree  );
 
-			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 0, 1, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
+			frame_table.attach(scrolled_win, {0, 1, 1, 3}, {GTK_FILL, GTK_FILL});
 		}
 		{ // available tag list
 			ui::Widget scrolled_win = ui::ScrolledWindow(ui::New);
@@ -2175,7 +2174,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			scrolled_win.show();
 			gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolled_win ), g_TextureBrowser.m_available_tree  );
 
-			gtk_table_attach( GTK_TABLE( frame_table ), scrolled_win, 2, 3, 1, 3, GTK_FILL, GTK_FILL, 0, 0 );
+			frame_table.attach(scrolled_win, {2, 3, 1, 3}, {GTK_FILL, GTK_FILL});
 		}
 		{ // tag arrow buttons
 			auto m_btn_left = ui::Button(ui::New);
@@ -2189,8 +2188,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_widget_set_size_request( m_arrow_left, -1, 68 );
 			gtk_widget_set_size_request( m_arrow_right, -1, 68 );
 
-			gtk_table_attach( GTK_TABLE( frame_table ), m_btn_left, 1, 2, 1, 2, GTK_SHRINK, GTK_EXPAND, 0, 0 );
-			gtk_table_attach( GTK_TABLE( frame_table ), m_btn_right, 1, 2, 2, 3, GTK_SHRINK, GTK_EXPAND, 0, 0 );
+			frame_table.attach(m_btn_left, {1, 2, 1, 2}, {GTK_SHRINK, GTK_EXPAND});
+			frame_table.attach(m_btn_right, {1, 2, 2, 3}, {GTK_SHRINK, GTK_EXPAND});
 
 			m_btn_left.connect( "clicked", G_CALLBACK( TextureBrowser_assignTags ), NULL );
 			m_btn_right.connect( "clicked", G_CALLBACK( TextureBrowser_removeTags ), NULL );
@@ -2204,8 +2203,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			ui::Widget m_lbl_assigned = ui::Label( "Assigned" );
 			ui::Widget m_lbl_unassigned = ui::Label( "Available" );
 
-			gtk_table_attach( GTK_TABLE( frame_table ), m_lbl_assigned, 0, 1, 0, 1, GTK_EXPAND, GTK_SHRINK, 0, 0 );
-			gtk_table_attach( GTK_TABLE( frame_table ), m_lbl_unassigned, 2, 3, 0, 1, GTK_EXPAND, GTK_SHRINK, 0, 0 );
+			frame_table.attach(m_lbl_assigned, {0, 1, 0, 1}, {GTK_EXPAND, GTK_SHRINK});
+			frame_table.attach(m_lbl_unassigned, {2, 3, 0, 1}, {GTK_EXPAND, GTK_SHRINK});
 
 			m_lbl_assigned.show();
 			m_lbl_unassigned.show();

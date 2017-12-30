@@ -924,31 +924,23 @@ void DoRotateDlg(){
 				{
 					ui::Widget label = ui::Label( "  X  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 0, 1,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 0, 1}, {0, 0});
 				}
 				{
 					ui::Widget label = ui::Label( "  Y  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 1, 2,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 1, 2}, {0, 0});
 				}
 				{
 					ui::Widget label = ui::Label( "  Z  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 2, 3,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 2, 3}, {0, 0});
 				}
 				{
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, spin , 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(spin, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
@@ -960,9 +952,7 @@ void DoRotateDlg(){
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, spin , 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(spin, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
@@ -972,9 +962,7 @@ void DoRotateDlg(){
 					auto adj = ui::Adjustment( 0, -359, 359, 1, 10, 0 );
 					auto spin = ui::SpinButton( adj, 1, 0 );
 					spin.show();
-					gtk_table_attach( table, spin , 1, 2, 2, 3,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(spin, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, 0});
 					gtk_widget_set_size_request( spin , 64, -1 );
 					gtk_spin_button_set_wrap( spin, TRUE );
 
@@ -1077,31 +1065,23 @@ void DoScaleDlg(){
 				{
 					ui::Widget label = ui::Label( "  X  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 0, 1,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 0, 1}, {0, 0});
 				}
 				{
 					ui::Widget label = ui::Label( "  Y  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 1, 2,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 1, 2}, {0, 0});
 				}
 				{
 					ui::Widget label = ui::Label( "  Z  " );
 					label.show();
-					gtk_table_attach( table, label, 0, 1, 2, 3,
-									  (GtkAttachOptions) ( 0 ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 2, 3}, {0, 0});
 				}
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
-					gtk_table_attach( table, entry, 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
 					g_scale_dialog.x = entry;
 				}
@@ -1109,9 +1089,7 @@ void DoScaleDlg(){
 					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
-					gtk_table_attach( table, entry, 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 
 					g_scale_dialog.y = entry;
 				}
@@ -1119,9 +1097,7 @@ void DoScaleDlg(){
 					auto entry = ui::Entry(ui::New);
 					entry.text("1.0");
 					entry.show();
-					gtk_table_attach( table, entry, 1, 2, 2, 3,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, 0});
 
 					g_scale_dialog.z = entry;
 				}

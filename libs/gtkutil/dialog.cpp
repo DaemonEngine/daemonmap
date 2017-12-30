@@ -251,13 +251,9 @@ ui::Table DialogRow_new( const char* name, ui::Widget widget ){
 	gtk_table_set_col_spacings( table, 4 );
 	gtk_table_set_row_spacings( table, 0 );
 
-	gtk_table_attach( table, DialogLabel_new( name  ), 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(DialogLabel_new(name), {0, 1, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
-	gtk_table_attach( table, widget, 1, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(widget, {1, 3, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
 	return table;
 }

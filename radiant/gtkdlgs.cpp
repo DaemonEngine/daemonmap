@@ -210,9 +210,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 		window.add(table1);
 		{
             auto vbox = create_dialog_vbox( 4 );
-			gtk_table_attach( table1, vbox , 1, 2, 0, 1,
-							  (GtkAttachOptions) ( GTK_FILL ),
-							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+            table1.attach(vbox, {1, 2, 0, 1}, {GTK_FILL, GTK_FILL});
 			{
                 auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
@@ -224,9 +222,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 		}
 		{
 			auto frame = create_dialog_frame( "Project settings" );
-			gtk_table_attach( table1, frame , 0, 1, 0, 1,
-							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+            table1.attach(frame, {0, 1, 0, 1}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 			{
 				auto table2 = create_dialog_table( ( globalMappingMode().do_mapping_mode ) ? 4 : 3, 2, 4, 4, 4 );
 				frame.add(table2);
@@ -234,9 +230,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				{
 					auto label = ui::Label( "Select mod" );
 					label.show();
-					gtk_table_attach( table2, label , 0, 1, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
@@ -249,9 +243,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_combo_box_text_append_text( dialog.game_combo.game_select, globalGameComboConfiguration().custom );
 
 					dialog.game_combo.game_select.show();
-					gtk_table_attach( table2, dialog.game_combo.game_select , 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(dialog.game_combo.game_select, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
 					dialog.game_combo.game_select.connect( "changed", G_CALLBACK( OnSelchangeComboWhatgame ), &dialog.game_combo );
 				}
@@ -259,17 +251,13 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				{
 					auto label = ui::Label( "fs_game" );
 					label.show();
-					gtk_table_attach( table2, label , 0, 1, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 				}
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table2, entry , 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 
 					dialog.game_combo.fsgame_entry = entry;
 				}
@@ -277,9 +265,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 				if ( globalMappingMode().do_mapping_mode ) {
 					auto label = ui::Label( "Mapping mode" );
 					label.show();
-					gtk_table_attach( table2, label , 0, 1, 3, 4,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(label, {0, 1, 3, 4}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
 					auto combo = ui::ComboBoxText(ui::New);
@@ -287,9 +273,7 @@ ui::Window ProjectSettingsDialog_construct( ProjectSettingsDialog& dialog, Modal
 					gtk_combo_box_text_append_text( combo, globalMappingMode().mp_mapping_mode );
 
 					combo.show();
-					gtk_table_attach( table2, combo , 1, 2, 3, 4,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table2.attach(combo, {1, 2, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
 
 					dialog.gamemode_combo = combo;
 				}
@@ -514,49 +498,37 @@ void DoAbout(){
 				{
 					auto label = ui::Label( "Vendor:" );
 					label.show();
-					gtk_table_attach( table, label , 0, 1, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( "Version:" );
 					label.show();
-					gtk_table_attach( table, label , 0, 1, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( "Renderer:" );
 					label.show();
-					gtk_table_attach( table, label , 0, 1, 2, 3,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 2, 3}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_VENDOR ) ) );
 					label.show();
-					gtk_table_attach( table, label , 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {1, 2, 0, 1}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_VERSION ) ) );
 					label.show();
-					gtk_table_attach( table, label , 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {1, 2, 1, 2}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( reinterpret_cast<const char*>( glGetString( GL_RENDERER ) ) );
 					label.show();
-					gtk_table_attach( table, label , 1, 2, 2, 3,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {1, 2, 2, 3}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 			}
@@ -625,34 +597,26 @@ EMessageBoxReturn DoTextureLayout( float *fx, float *fy ){
 				{
 					auto label = ui::Label( "Texture x:" );
 					label.show();
-					gtk_table_attach( table, label , 0, 1, 0, 1,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto label = ui::Label( "Texture y:" );
 					label.show();
-					gtk_table_attach( table, label , 0, 1, 1, 2,
-									  (GtkAttachOptions) ( GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 					gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 				}
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, entry , 1, 2, 0, 1,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 
 					x = entry;
 				}
 				{
 					auto entry = ui::Entry(ui::New);
 					entry.show();
-					gtk_table_attach( table, entry , 1, 2, 1, 2,
-									  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-									  (GtkAttachOptions) ( 0 ), 0, 0 );
+                    table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 
 					y = entry;
 				}

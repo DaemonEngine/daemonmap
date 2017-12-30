@@ -730,7 +730,7 @@ int g_spawnflag_count;
 int spawn_table[MAX_FLAGS];
 // we change the layout depending on how many spawn flags we need to display
 // the table is a 4x4 in which we need to put the comment box g_entityClassComment and the spawn flags..
-GtkTable* g_spawnflagsTable;
+ui::Table g_spawnflagsTable{ui::null};
 
 ui::VBox g_attributeBox{ui::null};
 typedef std::vector<EntityAttribute*> EntityAttributes;
@@ -840,7 +840,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 
 	g_current_flags = eclass;
 
-	int spawnflag_count = 0;
+	unsigned int spawnflag_count = 0;
 
 	{
 		// do a first pass to count the spawn flags, don't touch the widgets, we don't know in what state they are
@@ -870,7 +870,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 	g_spawnflag_count = spawnflag_count;
 
 	{
-		for ( int i = 0; i < g_spawnflag_count; ++i )
+		for (unsigned int i = 0; (int) i < g_spawnflag_count; ++i)
 		{
 			auto widget = ui::CheckButton(g_entitySpawnflagsCheck[i] );
 			widget.show();
@@ -878,9 +878,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 			StringOutputStream str( 16 );
 			str << LowerCase( eclass->flagnames[spawn_table[i]] );
 
-			gtk_table_attach( g_spawnflagsTable, widget, i % 4, i % 4 + 1, i / 4, i / 4 + 1,
-							  (GtkAttachOptions)( GTK_FILL ),
-							  (GtkAttachOptions)( GTK_FILL ), 0, 0 );
+			g_spawnflagsTable.attach(widget, {i % 4, i % 4 + 1, i / 4, i / 4 + 1}, {GTK_FILL, GTK_FILL});
 			widget.unref();
 
 			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget)) ));
@@ -1444,9 +1442,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					{
 						auto entry = ui::Entry(ui::New);
 						entry.show();
-						gtk_table_attach( table, entry , 1, 2, 0, 1,
-										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
-										  (GtkAttachOptions)( 0 ), 0, 0 );
+						table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 						gtk_widget_set_events( entry , GDK_KEY_PRESS_MASK );
 						entry.connect( "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
 						g_entityKeyEntry = entry;
@@ -1455,9 +1451,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					{
 						auto entry = ui::Entry(ui::New);
 						entry.show();
-						gtk_table_attach( table, entry , 1, 2, 1, 2,
-										  (GtkAttachOptions)( GTK_EXPAND | GTK_FILL ),
-										  (GtkAttachOptions)( 0 ), 0, 0 );
+						table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 						gtk_widget_set_events( entry , GDK_KEY_PRESS_MASK );
 						entry.connect( "key_press_event", G_CALLBACK( EntityEntry_keypress ), 0 );
 						g_entityValueEntry = entry;
@@ -1466,18 +1460,14 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					{
 						auto label = ui::Label( "Value" );
 						label.show();
-						gtk_table_attach( table, label , 0, 1, 1, 2,
-										  (GtkAttachOptions)( GTK_FILL ),
-										  (GtkAttachOptions)( 0 ), 0, 0 );
+						table.attach(label, {0, 1, 1, 2}, {GTK_FILL, 0});
 						gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 					}
 
 					{
 						auto label = ui::Label( "Key" );
 						label.show();
-						gtk_table_attach( table, label , 0, 1, 0, 1,
-										  (GtkAttachOptions)( GTK_FILL ),
-										  (GtkAttachOptions)( 0 ), 0, 0 );
+						table.attach(label, {0, 1, 0, 1}, {GTK_FILL, 0});
 						gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
 					}
 				}

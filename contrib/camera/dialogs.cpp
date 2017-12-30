@@ -1014,17 +1014,15 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 	table.show();
 	window.add(table);
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	// the properties column
 	// -------------------------- //
 
 	vbox = ui::VBox( FALSE, 5 );
 	vbox.show();
-	gtk_table_attach( GTK_TABLE( table ), vbox, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(vbox, {0, 1, 0, 1}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 
 	// -------------------------- //
 
@@ -1072,9 +1070,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 
 	auto frame = ui::Frame( "Path and Target editing" );
 	frame.show();
-	gtk_table_attach( GTK_TABLE( table ), frame, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(frame, {0, 1, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 
 	auto vbox = ui::VBox( FALSE, 5 );
 	frame.add(vbox);
@@ -1166,9 +1162,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 
 	frame = ui::Frame( "Time" );
 	frame.show();
-	gtk_table_attach( GTK_TABLE( table ), frame, 0, 1, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(frame, {0, 1, 2, 3}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 
 	vbox = ui::VBox( FALSE, 5 );
 	frame.add(vbox);
@@ -1295,9 +1289,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 
 	vbox = gtk_vbox_new( FALSE, 5 );
 	vbox.show();
-	gtk_table_attach( GTK_TABLE( table ), vbox, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(vbox, {1, 2, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	w = gtk_button_new_with_label( "New..." );
 	vbox.pack_start( w, FALSE, FALSE, 0 );
@@ -1313,9 +1305,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 
 	vbox = gtk_vbox_new( FALSE, 5 );
 	vbox.show();
-	gtk_table_attach( GTK_TABLE( table ), vbox, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach( vbox, {1, 2, 1, 2}, {GTK_FILL, GTK_FILL});
 
 	w = gtk_button_new_with_label( "Save..." );
 	vbox.pack_start( w, FALSE, FALSE, 0 );
@@ -1345,9 +1335,7 @@ GtkWidget *CreateCameraInspectorDialog( void ){
 
 	vbox = gtk_vbox_new( FALSE, 5 );
 	vbox.show();
-	gtk_table_attach( GTK_TABLE( table ), vbox, 1, 2, 2, 3,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(vbox, {1, 2, 2, 3}, {GTK_FILL, GTK_FILL});
 
 	hbox = gtk_hbox_new( FALSE, 5 );
 	vbox.pack_start( hbox, TRUE, TRUE, 0 );

@@ -277,49 +277,37 @@ void DoConfigDialog(){
 	auto table = ui::Table( 2, 4, FALSE );
 	table.show();
 	vbox2.pack_start( table, TRUE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	auto button = ui::Button( "Color" );
 	button.show();
-	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(button, {0, 1, 0, 1}, {GTK_FILL, 0});
 	button.connect( "clicked", G_CALLBACK( OnColor3d ), NULL );
 
 	button = ui::Button( "Depth Color" );
 	button.show();
-	gtk_table_attach( GTK_TABLE( table ), button, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(button, {0, 1, 1, 2}, {GTK_FILL, 0});
 	button.connect( "clicked", G_CALLBACK( OnColorFog ), NULL );
 
 	auto aa3check = ui::CheckButton( "Anti-Alias (May not work on some video cards)" );
 	aa3check.show();
-	gtk_table_attach( GTK_TABLE( table ), aa3check, 1, 4, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(aa3check, {1, 4, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 	aa3check.connect( "toggled", G_CALLBACK( OnAntiAlias3d ), NULL );
 
 	auto depthcheck = ui::CheckButton( "Depth Cue" );
 	depthcheck.show();
-	gtk_table_attach( GTK_TABLE( table ), depthcheck, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(depthcheck, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	depthcheck.connect( "toggled", G_CALLBACK( OnFog ), NULL );
 
 	auto linescheck = ui::CheckButton( "Lines" );
 	linescheck.show();
-	gtk_table_attach( GTK_TABLE( table ), linescheck, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(linescheck, {2, 3, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	linescheck.connect( "toggled", G_CALLBACK( OnLines ), NULL );
 
 	auto polyscheck = ui::CheckButton( "Polygons" );
 	polyscheck.show();
-	gtk_table_attach( GTK_TABLE( table ), polyscheck, 3, 4, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(polyscheck, {3, 4, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	polyscheck.connect( "toggled", G_CALLBACK( OnPoly ), NULL );
 
 	auto zlist = ui::ComboBoxText(ui::New);
@@ -337,38 +325,30 @@ void DoConfigDialog(){
 	table = ui::Table( 2, 2, FALSE );
 	table.show();
 	vbox2.pack_start( table, TRUE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	adj = ui::Adjustment( portals.trans_3d, 0, 100, 1, 1, 0 );
 	auto transslider = ui::HScale( adj );
 	transslider.show();
-	gtk_table_attach( GTK_TABLE( table ), transslider, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(transslider, {0, 1, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 	gtk_scale_set_draw_value( GTK_SCALE( transslider ), FALSE );
 
 	auto translabel = ui::Label( "" );
 	translabel.show();
-	gtk_table_attach( GTK_TABLE( table ), translabel, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(translabel, {1, 2, 0, 1}, {GTK_FILL, 0});
 	gtk_misc_set_alignment( GTK_MISC( translabel ), 0.0, 0.0 );
 	adj.connect( "value_changed", G_CALLBACK( OnScrollTrans ), translabel );
 
 	adj = ui::Adjustment( portals.clip_range, 1, 128, 1, 1, 0 );
 	auto clipslider = ui::HScale( adj );
 	clipslider.show();
-	gtk_table_attach( GTK_TABLE( table ), clipslider, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(clipslider, {0, 1, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	gtk_scale_set_draw_value( GTK_SCALE( clipslider ), FALSE );
 
 	auto cliplabel = ui::Label( "" );
 	cliplabel.show();
-	gtk_table_attach( GTK_TABLE( table ), cliplabel, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( 0 ), 0, 0 );
+    table.attach(cliplabel, {1, 2, 1, 2}, {GTK_FILL, 0});
 	gtk_misc_set_alignment( GTK_MISC( cliplabel ), 0.0, 0.0 );
 	adj.connect( "value_changed", G_CALLBACK( OnScrollClip ), cliplabel );
 

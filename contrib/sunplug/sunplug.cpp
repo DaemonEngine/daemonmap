@@ -313,7 +313,6 @@ void GetOptimalCoordinates( AABB *levelBoundingBox ){
 
 // MapCoordinator dialog window
 void MapCoordinator(){
-	GtkWidget *spinnerMinX, *spinnerMinY, *spinnerMaxX, *spinnerMaxY;
 	Entity *theWorldspawn = NULL;
 	const char *buffer;
 	char line[20];
@@ -376,52 +375,52 @@ void MapCoordinator(){
 		vbox.pack_start( ui::Widget(gtk_hseparator_new()), FALSE, FALSE, 2 ); // insert separator into vbox
 
 		auto table = ui::Table( 4, 3, TRUE ); // create table
-		gtk_table_set_row_spacings( GTK_TABLE( table ), 8 ); // set row spacings
-		gtk_table_set_col_spacings( GTK_TABLE( table ), 8 ); // set column spacings
+        gtk_table_set_row_spacings(table, 8); // set row spacings
+        gtk_table_set_col_spacings(table, 8); // set column spacings
 		vbox.pack_start( table, FALSE, FALSE, 2 ); // insert table into vbox
 
 		auto label = ui::Label( "x" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
-		gtk_table_attach_defaults( GTK_TABLE( table ), label, 1, 2, 0, 1 ); // insert label into table
+        table.attach(label, {1, 2, 0, 1}); // insert label into table
 
 		label = ui::Label( "y" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
-		gtk_table_attach_defaults( GTK_TABLE( table ), label, 2, 3, 0, 1 ); // insert label into table
+        table.attach(label, {2, 3, 0, 1}); // insert label into table
 
 		label = ui::Label( "mapcoordsmins" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
-		gtk_table_attach_defaults( GTK_TABLE( table ), label, 0, 1, 1, 2 ); // insert label into table
+        table.attach(label, {0, 1, 1, 2}); // insert label into table
 
-		spinnerMinX = ui::SpinButton( spinner_adj_MinX, 1.0, 0 ); // create textbox wiht value spin, value and value range
-		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMinX, 1, 2, 1, 2 ); // insert spinbox into table
+        auto spinnerMinX = ui::SpinButton(spinner_adj_MinX, 1.0, 0); // create textbox wiht value spin, value and value range
+        table.attach(spinnerMinX, {1, 2, 1, 2}); // insert spinbox into table
 
-		spinnerMinY = ui::SpinButton( spinner_adj_MinY, 1.0, 0 ); // create textbox wiht value spin, value and value range
-		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMinY, 2, 3, 1, 2 ); // insert spinbox into table
+        auto spinnerMinY = ui::SpinButton(spinner_adj_MinY, 1.0, 0); // create textbox wiht value spin, value and value range
+        table.attach(spinnerMinY, {2, 3, 1, 2}); // insert spinbox into table
 
 		label = ui::Label( "mapcoordsmaxs" ); // create label
 		gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // align text to the left side
-		gtk_table_attach_defaults( GTK_TABLE( table ), label, 0, 1, 2, 3 ); // insert label into table
+        table.attach(label, {0, 1, 2, 3}); // insert label into table
 
-		spinnerMaxX = ui::SpinButton( spinner_adj_MaxX, 1.0, 0 ); // create textbox wiht value spin, value and value range
-		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMaxX, 1, 2, 2, 3 ); // insert spinbox into table
+        auto spinnerMaxX = ui::SpinButton(spinner_adj_MaxX, 1.0, 0); // create textbox wiht value spin, value and value range
+        table.attach(spinnerMaxX, {1, 2, 2, 3}); // insert spinbox into table
 
-		spinnerMaxY = ui::SpinButton( spinner_adj_MaxY, 1.0, 0 ); // create textbox wiht value spin, value and value range
-		gtk_table_attach_defaults( GTK_TABLE( table ), spinnerMaxY, 2, 3, 2, 3 ); // insert spinbox into table
+        auto spinnerMaxY = ui::SpinButton(spinner_adj_MaxY, 1.0, 0); // create textbox wiht value spin, value and value range
+        table.attach(spinnerMaxY, {2, 3, 2, 3}); // insert spinbox into table
 
 		// put the references to the spinboxes and the worldspawn into the global exchange
-		msp.spinner1 = GTK_SPIN_BUTTON( spinnerMinX );
-		msp.spinner2 = GTK_SPIN_BUTTON( spinnerMinY );
-		msp.spinner3 = GTK_SPIN_BUTTON( spinnerMaxX );
-		msp.spinner4 = GTK_SPIN_BUTTON( spinnerMaxY );
+        msp.spinner1 = spinnerMinX;
+        msp.spinner2 = spinnerMinY;
+        msp.spinner3 = spinnerMaxX;
+        msp.spinner4 = spinnerMaxY;
 		msp.worldspawn = theWorldspawn;
 
 		button = ui::Button( "Set" ); // create button with text
 		button.connect( "clicked", G_CALLBACK( set_coordinates ), NULL ); // connect button with callback function
-		gtk_table_attach_defaults( GTK_TABLE( table ), button, 1, 2, 3, 4 ); // insert button into table
+        table.attach(button, {1, 2, 3, 4}); // insert button into table
 
 		button = ui::Button( "Cancel" ); // create button with text
 		button.connect( "clicked", G_CALLBACK( close_window ), NULL ); // connect button with callback function
-		gtk_table_attach_defaults( GTK_TABLE( table ), button, 2, 3, 3, 4 ); // insert button into table
+        table.attach(button, {2, 3, 3, 4}); // insert button into table
 	}
 	else {
 		globalOutputStream() << "SunPlug: no worldspawn found!\n"; // output error to console

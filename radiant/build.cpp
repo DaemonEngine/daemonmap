@@ -839,9 +839,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		window.add(table1);
 		{
 			auto vbox = create_dialog_vbox( 4 );
-			gtk_table_attach( table1, vbox , 1, 2, 0, 1,
-							  (GtkAttachOptions) ( GTK_FILL ),
-							  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+            table1.attach(vbox, {1, 2, 0, 1}, {GTK_FILL, GTK_FILL});
 			{
 				auto button = create_dialog_button( "OK", G_CALLBACK( dialog_button_ok ), &modal );
 				vbox.pack_start( button, FALSE, FALSE, 0 );
@@ -853,9 +851,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		}
 		{
 			auto frame = create_dialog_frame( "Build menu" );
-			gtk_table_attach( table1, frame , 0, 1, 0, 1,
-							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+            table1.attach(frame, {0, 1, 0, 1});
 			{
 				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
 				frame.add(scr);
@@ -890,9 +886,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 		}
 		{
 			auto frame = create_dialog_frame( "Commandline" );
-			gtk_table_attach( table1, frame , 0, 1, 1, 2,
-							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-							  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+            table1.attach(frame, {0, 1, 1, 2});
 			{
 				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
 				frame.add(scr);

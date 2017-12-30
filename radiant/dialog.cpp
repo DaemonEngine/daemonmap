@@ -548,11 +548,11 @@ void Dialog::addRadio( ui::VBox vbox, const char* name, int& data, StringArrayRa
 }
 
 void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange icons, const IntImportCallback& importViewer, const IntExportCallback& exportViewer ){
-	ui::Widget table = ui::Table( 2, icons.last - icons.first, FALSE );
-	table.show();;
+    auto table = ui::Table(2, icons.last - icons.first, FALSE);
+    table.show();
 
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	GSList* group = 0;
 	ui::RadioButton radio{ui::null};
@@ -561,15 +561,11 @@ void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange ic
 		guint pos = static_cast<guint>( icon - icons.first );
 		auto image = new_local_image( *icon );
 		image.show();
-		gtk_table_attach( GTK_TABLE( table ), image , pos, pos + 1, 0, 1,
-						  (GtkAttachOptions) ( 0 ),
-						  (GtkAttachOptions) ( 0 ), 0, 0 );
+        table.attach(image, {pos, pos + 1, 0, 1}, {0, 0});
 
 		radio = ui::RadioButton(GTK_RADIO_BUTTON(gtk_radio_button_new( group )));
 		radio.show();
-		gtk_table_attach( GTK_TABLE( table ), radio, pos, pos + 1, 1, 2,
-						  (GtkAttachOptions) ( 0 ),
-						  (GtkAttachOptions) ( 0 ), 0, 0 );
+        table.attach(radio, {pos, pos + 1, 1, 2}, {0, 0});
 
 		group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radio ) );
 	}

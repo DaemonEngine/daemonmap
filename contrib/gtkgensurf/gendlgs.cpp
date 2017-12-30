@@ -1377,8 +1377,8 @@ GtkWidget* create_main_dialog(){
 	table = ui::Table( 2, 2, FALSE );
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "General" );
 	label.show();
@@ -1386,9 +1386,7 @@ GtkWidget* create_main_dialog(){
 
 	auto frame = ui::Frame( "Game" );
 	frame.show();
-	gtk_table_attach( GTK_TABLE( table ), frame, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(frame, {0, 1, 0, 1});
 
 	auto vbox = ui::VBox( TRUE, 5 );
 	vbox.show();
@@ -1407,9 +1405,7 @@ GtkWidget* create_main_dialog(){
 
 	frame = ui::Frame( "Waveform" );
 	frame.show();
-	gtk_table_attach( GTK_TABLE( table ), frame, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(frame, {1, 2, 0, 1});
 
 	vbox = ui::VBox( TRUE, 5 );
 	vbox.show();
@@ -1428,9 +1424,7 @@ GtkWidget* create_main_dialog(){
 
 	frame = ui::Frame( "Orientation" );
 	frame.show();
-	gtk_table_attach( GTK_TABLE( table ), frame, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(frame, {0, 1, 1, 2});
 
 	vbox = ui::VBox( TRUE, 5 );
 	vbox.show();
@@ -1449,67 +1443,51 @@ GtkWidget* create_main_dialog(){
 
 	table2 = ui::Table( 4, 2, FALSE );
 	table2.show();
-	gtk_table_set_row_spacings( GTK_TABLE( table2 ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table2 ), 5 );
-	gtk_table_attach( GTK_TABLE( table ), table2, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+    gtk_table_set_row_spacings(table2, 5);
+    gtk_table_set_col_spacings(table2, 5);
+	table.attach(table2, {1, 2, 1, 2});
 
 	label = ui::Label( "Wavelength:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table2 ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table2.attach(label, {0, 1, 0, 1});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	label = ui::Label( "Max. amplitude:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table2 ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table2.attach(label, {0, 1, 1, 2});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	label = ui::Label( "Roughness:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table2 ), label, 0, 1, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+    table2.attach(label, {0, 1, 2, 3});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	label = ui::Label( "Random seed:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table2 ), label, 0, 1, 3, 4,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+    table2.attach(label, {0, 1, 3, 4});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table2 ), entry, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+    table2.attach(entry, {1, 2, 0, 1});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "wavelength", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &WaveLength );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table2 ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+    table2.attach(entry, {1, 2, 1, 2});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "amplitude", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Amplitude );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table2 ), entry, 1, 2, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table2.attach(entry, {1, 2, 2, 3});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "roughness", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Roughness );
@@ -1518,9 +1496,7 @@ GtkWidget* create_main_dialog(){
 	adj.connect( "value_changed", G_CALLBACK( general_random ), NULL );
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
-	gtk_table_attach( GTK_TABLE( table2 ), spin, 1, 2, 3, 4,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table2.attach(spin, {1, 2, 3, 4});
 	gtk_widget_set_size_request( spin, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "random", spin );
 
@@ -1544,81 +1520,61 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "X:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach( label, {0, 1, 1, 2}, {GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "hmin_text", label );
 
 	label = ui::Label( "X:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {2, 3, 1, 2}, {GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "hmax_text", label );
 
 	label = ui::Label( "Y:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 2, 3,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 2, 3}, {GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "vmin_text", label );
 
 	label = ui::Label( "Y:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 2, 3,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {2, 3, 2, 3}, {GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "vmax_text", label );
 
 	label = ui::Label( "Lower-left" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {1, 2, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	label = ui::Label( "Upper-right" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 3, 4, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {3, 4, 0, 1},, {GTK_FILL, GTK_FILL});
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 1, 2});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmin", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hll );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 3, 4, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {3, 4, 1, 2});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "hmax", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Hur );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 2, 3});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmin", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vll );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 3, 4, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {3, 4, 2, 3});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "vmax", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Vur );
@@ -1631,30 +1587,24 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "X:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL, GTK_EXPAND | GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "nh_text", label );
 
 	label = ui::Label( "Y:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 1, 2}, {GTK_FILL, GTK_EXPAND | GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "nv_text", label );
 
 	adj = ui::Adjustment( 8, 1, MAX_ROWS, 1, 10, 0 );
 	adj.connect( "value_changed", G_CALLBACK( extents_nhnv_spin ), &NH );
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
-	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(spin, {1, 2, 0, 1});
 	gtk_widget_set_size_request( spin, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "nh", spin );
 
@@ -1662,9 +1612,7 @@ GtkWidget* create_main_dialog(){
 	adj.connect( "value_changed", G_CALLBACK( extents_nhnv_spin ), &NV );
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
-	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(spin, {1, 2, 1, 2});
 	gtk_widget_set_size_request( spin, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "nv", spin );
 
@@ -1715,74 +1663,56 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	frame.add(table);
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Upper-left:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	label = ui::Label( "Lower-left:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 1, 2}, {GTK_FILL, GTK_FILL});
 
 	label = ui::Label( "Upper-right:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {2, 3, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	label = ui::Label( "Lower-right:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {2, 3, 1, 2}, {GTK_FILL, GTK_FILL});
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 0, 1});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z01", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z01 );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 1, 2});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z00", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z00 );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 3, 4, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {3, 4, 0, 1});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z11", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z11 );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 3, 4, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(entry, {3, 4, 1, 2});
 	gtk_widget_set_size_request( entry, 50, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "z10", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( doublevariable_entryfocusout ), &Z10 );
 
 	check = ui::CheckButton( "Linear borders" );
 	check.show();
-	gtk_table_attach( GTK_TABLE( table ), check, 0, 4, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(check, {0, 4, 2, 3});
 	g_object_set_data( G_OBJECT( dlg ), "linearborder", check );
 	check.connect( "toggled", G_CALLBACK( extents_linearborder ), NULL );
 
@@ -1803,29 +1733,23 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	vbox.pack_start( table, FALSE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Filename:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "bmp_text1", label );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "bmp_file", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( bitmap_file_entryfocusout ), NULL );
 
 	hbox2 = ui::HBox( TRUE, 5 );
 	hbox2.show();
-	gtk_table_attach( GTK_TABLE( table ), hbox2, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( 0 ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(hbox2, {1, 2, 1, 2}, {0, GTK_EXPAND | GTK_FILL});
 
 	button = ui::Button( "Browse..." );
 	button.show();
@@ -1845,32 +1769,26 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	vbox.pack_start( table, FALSE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Map color 0 to:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL | GTK_EXPAND, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "bmp_text2", label );
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	label = ui::Label( "Map color 255 to:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL | GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 1, 2}, {GTK_FILL | GTK_EXPAND, GTK_FILL});
 	g_object_set_data( G_OBJECT( dlg ), "bmp_text3", label );
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
 
 	hbox2 = ui::HBox( FALSE, 5 );
 	hbox2.show();
-	gtk_table_attach( GTK_TABLE( table ), hbox2, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(hbox2, {1, 2, 0, 1});
 
 	entry = ui::Entry();
 	entry.show();
@@ -1881,9 +1799,7 @@ GtkWidget* create_main_dialog(){
 
 	hbox2 = ui::HBox( FALSE, 5 );
 	hbox2.show();
-	gtk_table_attach( GTK_TABLE( table ), hbox2, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ), 0, 0 );
+	table.attach(hbox2, {1, 2, 1, 2});
 
 	entry = ui::Entry();
 	entry.show();
@@ -1913,30 +1829,24 @@ GtkWidget* create_main_dialog(){
 	table.show();
 	gtk_container_set_border_width( GTK_CONTAINER( table ), 5 );
 	vbox.pack_start( table, FALSE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Value:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_value_text", label );
 
 	label = ui::Label( "Range affected:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 1, 2}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_range_text", label );
 
 	label = ui::Label( "Rate of change:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 2, 3,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 2, 3}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_rate_text", label );
 
@@ -1944,45 +1854,35 @@ GtkWidget* create_main_dialog(){
 	adj.connect( "value_changed", G_CALLBACK( fix_value_changed ), NULL );
 	spin = ui::SpinButton( adj, 1, 0 );
 	spin.show();
-	gtk_table_attach( GTK_TABLE( table ), spin, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_EXPAND ), 0, 0 );
+	table.attach(spin, {1, 2, 0, 1}, {GTK_EXPAND, GTK_EXPAND});
 	gtk_widget_set_size_request( spin, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_value", spin );
 	spin.connect( "focus_out_event", G_CALLBACK( fix_value_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_range", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( fix_range_entryfocusout ), NULL );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_rate", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( fix_rate_entryfocusout ), NULL );
 
 	button = ui::Button( "Free" );
 	button.show();
-	gtk_table_attach( GTK_TABLE( table ), button, 2, 3, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(button, {2, 3, 0, 1}, {GTK_EXPAND, GTK_FILL});
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_free", button );
 	button.connect( "clicked", G_CALLBACK( fix_free ), NULL );
 
 	button = ui::Button( "Free All" );
 	button.show();
-	gtk_table_attach( GTK_TABLE( table ), button, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(button, {2, 3, 1, 2}, {GTK_EXPAND, GTK_FILL});
 	gtk_widget_set_size_request( button, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "fix_freeall", button );
 	button.connect( "clicked", G_CALLBACK( fix_freeall ), NULL );
@@ -1999,53 +1899,41 @@ GtkWidget* create_main_dialog(){
 	table = ui::Table( 5, 2, FALSE );
 	table.show();
 	vbox.pack_start( table, FALSE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Surface:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 0, 1}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
 	label = ui::Label( "Other:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 1, 2}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
 	label = ui::Label( "Steep:" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 1, 2, 3,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 1, 2, 3}, {GTK_FILL, GTK_FILL});
 	gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture1", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 0 ) );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture2", entry );
 	entry.connect( "focus_out_event", G_CALLBACK( texture_entryfocusout ), GINT_TO_POINTER( 1 ) );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 2, 3,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texture3", entry );
 
@@ -2066,50 +1954,38 @@ GtkWidget* create_main_dialog(){
 	table = ui::Table( 2, 4, TRUE );
 	table.show();
 	vbox.pack_start( table, FALSE, TRUE, 0 );
-	gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-	gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
+    gtk_table_set_row_spacings(table, 5);
+    gtk_table_set_col_spacings(table, 5);
 
 	label = ui::Label( "Offset <h,v>" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 0, 2, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {0, 2, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	label = ui::Label( "Scale <h,v>" );
 	label.show();
-	gtk_table_attach( GTK_TABLE( table ), label, 2, 4, 0, 1,
-					  (GtkAttachOptions) ( GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(label, {2, 4, 0, 1}, {GTK_FILL, GTK_FILL});
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 0, 1, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {0, 1, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texoffsetx", entry );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 1, 2, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texoffsety", entry );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 2, 3, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {2, 3, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texscalex", entry );
 
 	entry = ui::Entry();
 	entry.show();
-	gtk_table_attach( GTK_TABLE( table ), entry, 3, 4, 1, 2,
-					  (GtkAttachOptions) ( GTK_EXPAND | GTK_FILL ),
-					  (GtkAttachOptions) ( GTK_FILL ), 0, 0 );
+	table.attach(entry, {3, 4, 1, 2}, {GTK_EXPAND | GTK_FILL, GTK_FILL});
 	gtk_widget_set_size_request( entry, 60, -1 );
 	g_object_set_data( G_OBJECT( dlg ), "texscaley", entry );
 
