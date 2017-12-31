@@ -397,12 +397,12 @@ typedef ConstReferenceCaller1<StringImportCallback, bool, Bool_toString> BoolToS
 
 template<typename Caller>
 inline StringImportCallback makeBoolStringImportCallback( const Caller& caller ){
-	return StringImportCallback( caller.getEnvironment(), ImportConvert1<StringImportCallback::first_argument_type, Caller, BoolFromString>::thunk );
+	return StringImportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringImportCallback, 0>, Caller, BoolFromString>::thunk );
 }
 
 template<typename Caller>
 inline StringExportCallback makeBoolStringExportCallback( const Caller& caller ){
-	return StringExportCallback( caller.getEnvironment(), ImportConvert1<StringExportCallback::first_argument_type, Caller, BoolToString>::thunk );
+	return StringExportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringExportCallback, 0>, Caller, BoolToString>::thunk );
 }
 
 
@@ -427,12 +427,12 @@ typedef ConstReferenceCaller1<StringImportCallback, int, Int_toString> IntToStri
 
 template<typename Caller>
 inline StringImportCallback makeIntStringImportCallback( const Caller& caller ){
-	return StringImportCallback( caller.getEnvironment(), ImportConvert1<StringImportCallback::first_argument_type, Caller, IntFromString>::thunk );
+	return StringImportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringImportCallback, 0>, Caller, IntFromString>::thunk );
 }
 
 template<typename Caller>
 inline StringExportCallback makeIntStringExportCallback( const Caller& caller ){
-	return StringExportCallback( caller.getEnvironment(), ImportConvert1<StringExportCallback::first_argument_type, Caller, IntToString>::thunk );
+	return StringExportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringExportCallback, 0>, Caller, IntToString>::thunk );
 }
 
 
@@ -458,12 +458,12 @@ typedef ConstReferenceCaller1<StringImportCallback, std::size_t, Size_toString> 
 
 template<typename Caller>
 inline StringImportCallback makeSizeStringImportCallback( const Caller& caller ){
-	return StringImportCallback( caller.getEnvironment(), ImportConvert1<StringImportCallback::first_argument_type, Caller, SizeFromString>::thunk );
+	return StringImportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringImportCallback, 0>, Caller, SizeFromString>::thunk );
 }
 
 template<typename Caller>
 inline StringExportCallback makeSizeStringExportCallback( const Caller& caller ){
-	return StringExportCallback( caller.getEnvironment(), ImportConvert1<StringExportCallback::first_argument_type, Caller, SizeToString>::thunk );
+	return StringExportCallback( caller.getEnvironment(), ImportConvert1<get_argument<StringExportCallback, 0>, Caller, SizeToString>::thunk );
 }
 
 #endif
