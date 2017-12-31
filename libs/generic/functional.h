@@ -1,9 +1,56 @@
 #if !defined( INCLUDED_FUNCTIONAL_H )
 #define INCLUDED_FUNCTIONAL_H
 
+#include <functional>
 #include <tuple>
 
 namespace detail {
+
+    template<int N>
+    struct rank : rank<N - 1> {
+    };
+
+    template<>
+    struct rank<0> {
+    };
+
+    struct get_func {
+
+        template<class T>
+        struct wrapper {
+            using type = T;
+        };
+
+        template<class F>
+        using func_member = wrapper<typename F::func>;
+
+        template<class F>
+        static wrapper<func_member<F>> test(rank<2>) { return {}; }
+
+        template<class F>
+        struct func_lambda {
+            using type = typename func_lambda<decltype(&F::operator())>::type;
+        };
+
+        template<class R, class... Ts>
+        struct func_lambda<R(*)(Ts...)> {
+            using type = R(Ts...);
+        };
+
+        template<class Object, class R, class... Ts>
+        struct func_lambda<R(Object::*)(Ts...) const> {
+            using type = R(Ts...);
+        };
+
+        template<class Object, class R, class... Ts>
+        struct func_lambda<R(Object::*)(Ts...)> {
+            using type = R(Ts...);
+        };
+
+        template<class F, class = func_lambda<F>>
+        static wrapper<func_lambda<F>> test(rank<1>) { return {}; }
+    };
+
     template<class F>
     struct Fn;
 
@@ -17,10 +64,13 @@ namespace detail {
 }
 
 template<class Caller>
-using get_result_type = typename detail::Fn<typename Caller::func>::result_type;
+using get_func = typename decltype(detail::get_func::test<Caller>(detail::rank<2>{}))::type::type;
+
+template<class Caller>
+using get_result_type = typename detail::Fn<get_func<Caller>>::result_type;
 
 template<class Caller, int N>
-using get_argument = typename detail::Fn<typename Caller::func>::template get<N>;
+using get_argument = typename detail::Fn<get_func<Caller>>::template get<N>;
 
 template<class Object, class F>
 class MemberN;
@@ -132,7 +182,7 @@ public:
 };
 
 template<class Functor>
-using FunctorInvoke = FunctorNInvoke<Functor, typename Functor::func>;
+using FunctorInvoke = FunctorNInvoke<Functor, get_func<Functor>>;
 
 template<class Object, class R, R(Object::*member)()>
 using Member = typename MemberN<Object, R()>::template instance<member>;
