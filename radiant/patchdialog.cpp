@@ -137,20 +137,11 @@ void Scene_PatchGetFixedSubdivisions( PatchFixedSubdivisions& subdivisions ){
 #endif
 }
 
-class PatchSetFixedSubdivisions
-{
-const PatchFixedSubdivisions& m_subdivisions;
-public:
-PatchSetFixedSubdivisions( const PatchFixedSubdivisions& subdivisions ) : m_subdivisions( subdivisions ){
-}
-void operator()( Patch& patch ) const {
-	Patch_setFixedSubdivisions( patch, m_subdivisions );
-}
-};
-
 void Scene_PatchSetFixedSubdivisions( const PatchFixedSubdivisions& subdivisions ){
 	UndoableCommand command( "patchSetFixedSubdivisions" );
-	Scene_forEachVisibleSelectedPatch( PatchSetFixedSubdivisions( subdivisions ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		Patch_setFixedSubdivisions(patch, subdivisions);
+	});
 }
 
 
@@ -350,19 +341,10 @@ static void OnSelchangeComboColRow( ui::Widget widget, gpointer data ){
 	g_PatchInspector.importData();
 }
 
-class PatchSetTextureRepeat
-{
-float m_s, m_t;
-public:
-PatchSetTextureRepeat( float s, float t ) : m_s( s ), m_t( t ){
-}
-void operator()( Patch& patch ) const {
-	patch.SetTextureRepeat( m_s, m_t );
-}
-};
-
 void Scene_PatchTileTexture_Selected( scene::Graph& graph, float s, float t ){
-	Scene_forEachVisibleSelectedPatch( PatchSetTextureRepeat( s, t ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.SetTextureRepeat(s, t);
+	});
 	SceneChangeNotify();
 }
 
@@ -390,31 +372,11 @@ static void OnBtnPatchFlipY( ui::Widget widget, gpointer data ){
 	Patch_FlipTextureY();
 }
 
-struct PatchRotateTexture
-{
-	float m_angle;
-public:
-	PatchRotateTexture( float angle ) : m_angle( angle ){
-	}
-	void operator()( Patch& patch ) const {
-		patch.RotateTexture( m_angle );
-	}
-};
-
 void Scene_PatchRotateTexture_Selected( scene::Graph& graph, float angle ){
-	Scene_forEachVisibleSelectedPatch( PatchRotateTexture( angle ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.RotateTexture(angle);
+	});
 }
-
-class PatchScaleTexture
-{
-float m_s, m_t;
-public:
-PatchScaleTexture( float s, float t ) : m_s( s ), m_t( t ){
-}
-void operator()( Patch& patch ) const {
-	patch.ScaleTexture( m_s, m_t );
-}
-};
 
 float Patch_convertScale( float scale ){
 	if ( scale > 0 ) {
@@ -427,23 +389,17 @@ float Patch_convertScale( float scale ){
 }
 
 void Scene_PatchScaleTexture_Selected( scene::Graph& graph, float s, float t ){
-	Scene_forEachVisibleSelectedPatch( PatchScaleTexture( Patch_convertScale( s ), Patch_convertScale( t ) ) );
+	s = Patch_convertScale(s);
+	t = Patch_convertScale(t);
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.ScaleTexture(s, t);
+	});
 }
-
-class PatchTranslateTexture
-{
-float m_s, m_t;
-public:
-PatchTranslateTexture( float s, float t )
-	: m_s( s ), m_t( t ){
-}
-void operator()( Patch& patch ) const {
-	patch.TranslateTexture( m_s, m_t );
-}
-};
 
 void Scene_PatchTranslateTexture_Selected( scene::Graph& graph, float s, float t ){
-	Scene_forEachVisibleSelectedPatch( PatchTranslateTexture( s, t ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.TranslateTexture(s, t);
+	});
 }
 
 static void OnBtnPatchAutoCap( ui::Widget widget, gpointer data ){

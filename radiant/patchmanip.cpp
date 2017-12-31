@@ -147,17 +147,6 @@ void Patch_makeCaps( Patch& patch, scene::Instance& instance, EPatchCap type, co
 
 typedef std::vector<scene::Instance*> InstanceVector;
 
-class PatchStoreInstance
-{
-InstanceVector& m_instances;
-public:
-PatchStoreInstance( InstanceVector& instances ) : m_instances( instances ){
-}
-void operator()( PatchInstance& patch ) const {
-	m_instances.push_back( &patch );
-}
-};
-
 enum ECapDialog {
 	PATCHCAP_BEVEL = 0,
 	PATCHCAP_ENDCAP,
@@ -196,7 +185,9 @@ void Scene_PatchDoCap_Selected( scene::Graph& graph, const char* shader ){
 		}
 
 		InstanceVector instances;
-		Scene_forEachVisibleSelectedPatchInstance( PatchStoreInstance( instances ) );
+		Scene_forEachVisibleSelectedPatchInstance([&](PatchInstance &patch) {
+			instances.push_back(&patch);
+		});
 		for ( InstanceVector::const_iterator i = instances.begin(); i != instances.end(); ++i )
 		{
 			Patch_makeCaps( *Node_getPatch( ( *i )->path().top() ), *( *i ), eType, shader );
@@ -215,132 +206,62 @@ Patch* Scene_GetUltimateSelectedVisiblePatch(){
 }
 
 
-class PatchCapTexture
-{
-public:
-void operator()( Patch& patch ) const {
-	patch.ProjectTexture( Patch::m_CycleCapIndex );
-}
-};
-
 void Scene_PatchCapTexture_Selected( scene::Graph& graph ){
-	Scene_forEachVisibleSelectedPatch( PatchCapTexture() );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.ProjectTexture(Patch::m_CycleCapIndex);
+	});
 	Patch::m_CycleCapIndex = ( Patch::m_CycleCapIndex == 0 ) ? 1 : ( Patch::m_CycleCapIndex == 1 ) ? 2 : 0;
 	SceneChangeNotify();
 }
 
-class PatchFlipTexture
-{
-int m_axis;
-public:
-PatchFlipTexture( int axis ) : m_axis( axis ){
-}
-void operator()( Patch& patch ) const {
-	patch.FlipTexture( m_axis );
-}
-};
-
 void Scene_PatchFlipTexture_Selected( scene::Graph& graph, int axis ){
-	Scene_forEachVisibleSelectedPatch( PatchFlipTexture( axis ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.FlipTexture(axis);
+	});
 }
-
-class PatchNaturalTexture
-{
-public:
-void operator()( Patch& patch ) const {
-	patch.NaturalTexture();
-}
-};
 
 void Scene_PatchNaturalTexture_Selected( scene::Graph& graph ){
-	Scene_forEachVisibleSelectedPatch( PatchNaturalTexture() );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.NaturalTexture();
+	});
 	SceneChangeNotify();
 }
 
 
-class PatchInsertRemove
-{
-bool m_insert, m_column, m_first;
-public:
-PatchInsertRemove( bool insert, bool column, bool first ) : m_insert( insert ), m_column( column ), m_first( first ){
-}
-void operator()( Patch& patch ) const {
-	patch.InsertRemove( m_insert, m_column, m_first );
-}
-};
-
 void Scene_PatchInsertRemove_Selected( scene::Graph& graph, bool bInsert, bool bColumn, bool bFirst ){
-	Scene_forEachVisibleSelectedPatch( PatchInsertRemove( bInsert, bColumn, bFirst ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.InsertRemove(bInsert, bColumn, bFirst);
+	});
 }
-
-class PatchInvertMatrix
-{
-public:
-void operator()( Patch& patch ) const {
-	patch.InvertMatrix();
-}
-};
 
 void Scene_PatchInvert_Selected( scene::Graph& graph ){
-	Scene_forEachVisibleSelectedPatch( PatchInvertMatrix() );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.InvertMatrix();
+	});
 }
-
-class PatchRedisperse
-{
-EMatrixMajor m_major;
-public:
-PatchRedisperse( EMatrixMajor major ) : m_major( major ){
-}
-void operator()( Patch& patch ) const {
-	patch.Redisperse( m_major );
-}
-};
 
 void Scene_PatchRedisperse_Selected( scene::Graph& graph, EMatrixMajor major ){
-	Scene_forEachVisibleSelectedPatch( PatchRedisperse( major ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.Redisperse(major);
+	});
 }
-
-class PatchSmooth
-{
-EMatrixMajor m_major;
-public:
-PatchSmooth( EMatrixMajor major ) : m_major( major ){
-}
-void operator()( Patch& patch ) const {
-	patch.Smooth( m_major );
-}
-};
 
 void Scene_PatchSmooth_Selected( scene::Graph& graph, EMatrixMajor major ){
-	Scene_forEachVisibleSelectedPatch( PatchSmooth( major ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.Smooth(major);
+	});
 }
-
-class PatchTransposeMatrix
-{
-public:
-void operator()( Patch& patch ) const {
-	patch.TransposeMatrix();
-}
-};
 
 void Scene_PatchTranspose_Selected( scene::Graph& graph ){
-	Scene_forEachVisibleSelectedPatch( PatchTransposeMatrix() );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.TransposeMatrix();
+	});
 }
-
-class PatchSetShader
-{
-const char* m_name;
-public:
-PatchSetShader( const char* name )
-	: m_name( name ){
-}
-void operator()( Patch& patch ) const {
-	patch.SetShader( m_name );
-}
-};
 
 void Scene_PatchSetShader_Selected( scene::Graph& graph, const char* name ){
-	Scene_forEachVisibleSelectedPatch( PatchSetShader( name ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		patch.SetShader(name);
+	});
 	SceneChangeNotify();
 }
 
@@ -351,45 +272,29 @@ void Scene_PatchGetShader_Selected( scene::Graph& graph, CopiedString& name ){
 	}
 }
 
-class PatchSelectByShader
-{
-const char* m_name;
-public:
-inline PatchSelectByShader( const char* name )
-	: m_name( name ){
-}
-void operator()( PatchInstance& patch ) const {
-	if ( shader_equal( patch.getPatch().GetShader(), m_name ) ) {
-		patch.setSelected( true );
-	}
-}
-};
-
 void Scene_PatchSelectByShader( scene::Graph& graph, const char* name ){
-	Scene_forEachVisiblePatchInstance( PatchSelectByShader( name ) );
+	Scene_forEachVisiblePatchInstance([&](PatchInstance &patch) {
+		if (shader_equal(patch.getPatch().GetShader(), name)) {
+			patch.setSelected(true);
+		}
+	});
 }
 
-
-class PatchFindReplaceShader
-{
-const char* m_find;
-const char* m_replace;
-public:
-PatchFindReplaceShader( const char* find, const char* replace ) : m_find( find ), m_replace( replace ){
-}
-void operator()( Patch& patch ) const {
-	if ( shader_equal( patch.GetShader(), m_find ) ) {
-		patch.SetShader( m_replace );
-	}
-}
-};
 
 void Scene_PatchFindReplaceShader( scene::Graph& graph, const char* find, const char* replace ){
-	Scene_forEachVisiblePatch( PatchFindReplaceShader( find, replace ) );
+	Scene_forEachVisiblePatch([&](Patch &patch) {
+		if (shader_equal(patch.GetShader(), find)) {
+			patch.SetShader(replace);
+		}
+	});
 }
 
 void Scene_PatchFindReplaceShader_Selected( scene::Graph& graph, const char* find, const char* replace ){
-	Scene_forEachVisibleSelectedPatch( PatchFindReplaceShader( find, replace ) );
+	Scene_forEachVisibleSelectedPatch([&](Patch &patch) {
+		if (shader_equal(patch.GetShader(), find)) {
+			patch.SetShader(replace);
+		}
+	});
 }
 
 

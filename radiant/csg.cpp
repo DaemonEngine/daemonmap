@@ -42,22 +42,10 @@ void Face_makeBrush( Face& face, const Brush& brush, brush_vector_t& out, float 
 	}
 }
 
-class FaceMakeBrush
-{
-const Brush& brush;
-brush_vector_t& out;
-float offset;
-public:
-FaceMakeBrush( const Brush& brush, brush_vector_t& out, float offset )
-	: brush( brush ), out( out ), offset( offset ){
-}
-void operator()( Face& face ) const {
-	Face_makeBrush( face, brush, out, offset );
-}
-};
-
 void Brush_makeHollow( const Brush& brush, brush_vector_t& out, float offset ){
-	Brush_forEachFace( brush, FaceMakeBrush( brush, out, offset ) );
+	Brush_forEachFace(brush, [&](Face &face) {
+		Face_makeBrush(face, brush, out, offset);
+	});
 }
 
 class BrushHollowSelectedWalker : public scene::Graph::Walker

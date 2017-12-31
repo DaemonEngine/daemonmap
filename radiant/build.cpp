@@ -311,21 +311,12 @@ static bool is_separator( const BuildPair &p ){
 }
 
 
-class BuildPairEqual
-{
-const char* m_name;
-public:
-BuildPairEqual( const char* name ) : m_name( name ){
-}
-bool operator()( const BuildPair& self ) const {
-	return string_equal( self.first.c_str(), m_name );
-}
-};
-
 typedef std::list<BuildPair> Project;
 
 Project::iterator Project_find( Project& project, const char* name ){
-	return std::find_if( project.begin(), project.end(), BuildPairEqual( name ) );
+	return std::find_if(project.begin(), project.end(), [&](const BuildPair &self) {
+		return string_equal(self.first.c_str(), name);
+	});
 }
 
 Project::iterator Project_find( Project& project, std::size_t index ){

@@ -405,146 +405,96 @@ void ConstructRegionBrushes( scene::Node* brushes[6], const Vector3& region_mins
 }
 
 
-class FaceSetTexdef
-{
-const TextureProjection& m_projection;
-public:
-FaceSetTexdef( const TextureProjection& projection ) : m_projection( projection ){
-}
-void operator()( Face& face ) const {
-	face.SetTexdef( m_projection );
-}
-};
-
 void Scene_BrushSetTexdef_Selected( scene::Graph& graph, const TextureProjection& projection ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceSetTexdef( projection ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.SetTexdef(projection);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushSetTexdef_Component_Selected( scene::Graph& graph, const TextureProjection& projection ){
-	Scene_ForEachSelectedBrushFace( graph, FaceSetTexdef( projection ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.SetTexdef(projection);
+	});
 	SceneChangeNotify();
 }
 
 
-class FaceSetFlags
-{
-const ContentsFlagsValue& m_projection;
-public:
-FaceSetFlags( const ContentsFlagsValue& flags ) : m_projection( flags ){
-}
-void operator()( Face& face ) const {
-	face.SetFlags( m_projection );
-}
-};
-
 void Scene_BrushSetFlags_Selected( scene::Graph& graph, const ContentsFlagsValue& flags ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceSetFlags( flags ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.SetFlags(flags);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushSetFlags_Component_Selected( scene::Graph& graph, const ContentsFlagsValue& flags ){
-	Scene_ForEachSelectedBrushFace( graph, FaceSetFlags( flags ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.SetFlags(flags);
+	});
 	SceneChangeNotify();
 }
 
-class FaceShiftTexdef
-{
-float m_s, m_t;
-public:
-FaceShiftTexdef( float s, float t ) : m_s( s ), m_t( t ){
-}
-void operator()( Face& face ) const {
-	face.ShiftTexdef( m_s, m_t );
-}
-};
-
 void Scene_BrushShiftTexdef_Selected( scene::Graph& graph, float s, float t ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceShiftTexdef( s, t ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.ShiftTexdef(s, t);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushShiftTexdef_Component_Selected( scene::Graph& graph, float s, float t ){
-	Scene_ForEachSelectedBrushFace( graph, FaceShiftTexdef( s, t ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.ShiftTexdef(s, t);
+	});
 	SceneChangeNotify();
 }
 
-class FaceScaleTexdef
-{
-float m_s, m_t;
-public:
-FaceScaleTexdef( float s, float t ) : m_s( s ), m_t( t ){
-}
-void operator()( Face& face ) const {
-	face.ScaleTexdef( m_s, m_t );
-}
-};
-
 void Scene_BrushScaleTexdef_Selected( scene::Graph& graph, float s, float t ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceScaleTexdef( s, t ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.ScaleTexdef(s, t);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushScaleTexdef_Component_Selected( scene::Graph& graph, float s, float t ){
-	Scene_ForEachSelectedBrushFace( graph, FaceScaleTexdef( s, t ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.ScaleTexdef(s, t);
+	});
 	SceneChangeNotify();
 }
 
-class FaceRotateTexdef
-{
-float m_angle;
-public:
-FaceRotateTexdef( float angle ) : m_angle( angle ){
-}
-void operator()( Face& face ) const {
-	face.RotateTexdef( m_angle );
-}
-};
-
 void Scene_BrushRotateTexdef_Selected( scene::Graph& graph, float angle ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceRotateTexdef( angle ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.RotateTexdef(angle);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushRotateTexdef_Component_Selected( scene::Graph& graph, float angle ){
-	Scene_ForEachSelectedBrushFace( graph, FaceRotateTexdef( angle ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.RotateTexdef(angle);
+	});
 	SceneChangeNotify();
 }
 
 
-class FaceSetShader
-{
-const char* m_name;
-public:
-FaceSetShader( const char* name ) : m_name( name ) {}
-void operator()( Face& face ) const {
-	face.SetShader( m_name );
-}
-};
-
 void Scene_BrushSetShader_Selected( scene::Graph& graph, const char* name ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceSetShader( name ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.SetShader(name);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushSetShader_Component_Selected( scene::Graph& graph, const char* name ){
-	Scene_ForEachSelectedBrushFace( graph, FaceSetShader( name ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.SetShader(name);
+	});
 	SceneChangeNotify();
 }
 
-class FaceSetDetail
-{
-bool m_detail;
-public:
-FaceSetDetail( bool detail ) : m_detail( detail ){
-}
-void operator()( Face& face ) const {
-	face.setDetail( m_detail );
-}
-};
-
 void Scene_BrushSetDetail_Selected( scene::Graph& graph, bool detail ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceSetDetail( detail ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.setDetail(detail);
+	});
 	SceneChangeNotify();
 }
 
@@ -556,55 +506,37 @@ bool Face_FindReplaceShader( Face& face, const char* find, const char* replace )
 	return false;
 }
 
-class FaceFindReplaceShader
-{
-const char* m_find;
-const char* m_replace;
-public:
-FaceFindReplaceShader( const char* find, const char* replace ) : m_find( find ), m_replace( replace ){
-}
-void operator()( Face& face ) const {
-	Face_FindReplaceShader( face, m_find, m_replace );
-}
-};
-
-class FaceFindShader
-{
-const char* m_find;
-const char* m_replace;
-public:
-FaceFindShader( const char* find ) : m_find( find ){
-}
-void operator()( FaceInstance& faceinst ) const {
-	if ( shader_equal( faceinst.getFace().GetShader(), m_find ) ) {
-		faceinst.setSelected( SelectionSystem::eFace, true );
-	}
-}
-};
-
 bool DoingSearch( const char *repl ){
 	return ( repl == NULL || ( strcmp( "textures/", repl ) == 0 ) );
 }
 
 void Scene_BrushFindReplaceShader( scene::Graph& graph, const char* find, const char* replace ){
 	if ( DoingSearch( replace ) ) {
-		Scene_ForEachBrush_ForEachFaceInstance( graph, FaceFindShader( find ) );
+		Scene_ForEachBrush_ForEachFaceInstance(graph, [&](FaceInstance &faceinst) {
+			if (shader_equal(faceinst.getFace().GetShader(), find)) {
+				faceinst.setSelected(SelectionSystem::eFace, true);
+			}
+		});
 	}
 	else
 	{
-		Scene_ForEachBrush_ForEachFace( graph, FaceFindReplaceShader( find, replace ) );
+		Scene_ForEachBrush_ForEachFace(graph, [&](Face &face) { Face_FindReplaceShader(face, find, replace); });
 	}
 }
 
 void Scene_BrushFindReplaceShader_Selected( scene::Graph& graph, const char* find, const char* replace ){
 	if ( DoingSearch( replace ) ) {
-		Scene_ForEachSelectedBrush_ForEachFaceInstance( graph,
-														FaceFindShader( find ) );
+		Scene_ForEachSelectedBrush_ForEachFaceInstance(graph, [&](FaceInstance &faceinst) {
+			if (shader_equal(faceinst.getFace().GetShader(), find)) {
+				faceinst.setSelected(SelectionSystem::eFace, true);
+			}
+		});
 	}
 	else
 	{
-		Scene_ForEachSelectedBrush_ForEachFace( graph,
-												FaceFindReplaceShader( find, replace ) );
+		Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+			Face_FindReplaceShader(face, find, replace);
+		});
 	}
 }
 
@@ -616,29 +548,24 @@ void Scene_BrushFindReplaceShader_Component_Selected( scene::Graph& graph, const
 	}
 	else
 	{
-		Scene_ForEachSelectedBrushFace( graph, FaceFindReplaceShader( find, replace ) );
+		Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+			Face_FindReplaceShader(face, find, replace);
+		});
 	}
 }
 
 
-class FaceFitTexture
-{
-float m_s_repeat, m_t_repeat;
-public:
-FaceFitTexture( float s_repeat, float t_repeat ) : m_s_repeat( s_repeat ), m_t_repeat( t_repeat ){
-}
-void operator()( Face& face ) const {
-	face.FitTexture( m_s_repeat, m_t_repeat );
-}
-};
-
 void Scene_BrushFitTexture_Selected( scene::Graph& graph, float s_repeat, float t_repeat ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceFitTexture( s_repeat, t_repeat ) );
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		face.FitTexture(s_repeat, t_repeat);
+	});
 	SceneChangeNotify();
 }
 
 void Scene_BrushFitTexture_Component_Selected( scene::Graph& graph, float s_repeat, float t_repeat ){
-	Scene_ForEachSelectedBrushFace( graph, FaceFitTexture( s_repeat, t_repeat ) );
+	Scene_ForEachSelectedBrushFace(graph, [&](Face &face) {
+		face.FitTexture(s_repeat, t_repeat);
+	});
 	SceneChangeNotify();
 }
 
@@ -705,44 +632,23 @@ void Scene_BrushSelectByShader( scene::Graph& graph, const char* name ){
 	graph.traverse( BrushSelectByShaderWalker( name ) );
 }
 
-class FaceSelectByShader
-{
-const char* m_name;
-public:
-FaceSelectByShader( const char* name )
-	: m_name( name ){
-}
-void operator()( FaceInstance& face ) const {
-	printf( "checking %s = %s\n", face.getFace().GetShader(), m_name );
-	if ( shader_equal( face.getFace().GetShader(), m_name ) ) {
-		face.setSelected( SelectionSystem::eFace, true );
-	}
-}
-};
-
 void Scene_BrushSelectByShader_Component( scene::Graph& graph, const char* name ){
-	Scene_ForEachSelectedBrush_ForEachFaceInstance( graph, FaceSelectByShader( name ) );
+	Scene_ForEachSelectedBrush_ForEachFaceInstance(graph, [&](FaceInstance &face) {
+		printf("checking %s = %s\n", face.getFace().GetShader(), name);
+		if (shader_equal(face.getFace().GetShader(), name)) {
+			face.setSelected(SelectionSystem::eFace, true);
+		}
+	});
 }
-
-class FaceGetTexdef
-{
-TextureProjection& m_projection;
-mutable bool m_done;
-public:
-FaceGetTexdef( TextureProjection& projection )
-	: m_projection( projection ), m_done( false ){
-}
-void operator()( Face& face ) const {
-	if ( !m_done ) {
-		m_done = true;
-		face.GetTexdef( m_projection );
-	}
-}
-};
-
 
 void Scene_BrushGetTexdef_Selected( scene::Graph& graph, TextureProjection& projection ){
-	Scene_ForEachSelectedBrush_ForEachFace( graph, FaceGetTexdef( projection ) );
+	bool done = false;
+	Scene_ForEachSelectedBrush_ForEachFace(graph, [&](Face &face) {
+		if (!done) {
+			done = true;
+			face.GetTexdef(projection);
+		}
+	});
 }
 
 void Scene_BrushGetTexdef_Component_Selected( scene::Graph& graph, TextureProjection& projection ){
@@ -766,29 +672,18 @@ void Scene_BrushGetShaderSize_Component_Selected( scene::Graph& graph, size_t& w
 }
 
 
-class FaceGetFlags
-{
-ContentsFlagsValue& m_flags;
-mutable bool m_done;
-public:
-FaceGetFlags( ContentsFlagsValue& flags )
-	: m_flags( flags ), m_done( false ){
-}
-void operator()( Face& face ) const {
-	if ( !m_done ) {
-		m_done = true;
-		face.GetFlags( m_flags );
-	}
-}
-};
-
-
 void Scene_BrushGetFlags_Selected( scene::Graph& graph, ContentsFlagsValue& flags ){
 #if 1
 	if ( GlobalSelectionSystem().countSelected() != 0 ) {
 		BrushInstance* brush = Instance_getBrush( GlobalSelectionSystem().ultimateSelected() );
 		if ( brush != 0 ) {
-			Brush_forEachFace( *brush, FaceGetFlags( flags ) );
+			bool done = false;
+			Brush_forEachFace(*brush, [&](Face &face) {
+				if (!done) {
+					done = true;
+					face.GetFlags(flags);
+				}
+			});
 		}
 	}
 #else
@@ -808,28 +703,18 @@ void Scene_BrushGetFlags_Component_Selected( scene::Graph& graph, ContentsFlagsV
 }
 
 
-class FaceGetShader
-{
-CopiedString& m_shader;
-mutable bool m_done;
-public:
-FaceGetShader( CopiedString& shader )
-	: m_shader( shader ), m_done( false ){
-}
-void operator()( Face& face ) const {
-	if ( !m_done ) {
-		m_done = true;
-		m_shader = face.GetShader();
-	}
-}
-};
-
 void Scene_BrushGetShader_Selected( scene::Graph& graph, CopiedString& shader ){
 #if 1
 	if ( GlobalSelectionSystem().countSelected() != 0 ) {
 		BrushInstance* brush = Instance_getBrush( GlobalSelectionSystem().ultimateSelected() );
 		if ( brush != 0 ) {
-			Brush_forEachFace( *brush, FaceGetShader( shader ) );
+			bool done = false;
+			Brush_forEachFace(*brush, [&](Face &face) {
+				if (!done) {
+					done = true;
+					shader = face.GetShader();
+				}
+			});
 		}
 	}
 #else
@@ -896,21 +781,6 @@ bool filter( const Face& face ) const {
 
 
 
-class FaceFilterAny
-{
-FaceFilter* m_filter;
-bool& m_filtered;
-public:
-FaceFilterAny( FaceFilter* filter, bool& filtered ) : m_filter( filter ), m_filtered( filtered ){
-	m_filtered = false;
-}
-void operator()( Face& face ) const {
-	if ( m_filter->filter( face ) ) {
-		m_filtered = true;
-	}
-}
-};
-
 class filter_brush_any_face : public BrushFilter
 {
 FaceFilter* m_filter;
@@ -918,24 +788,13 @@ public:
 filter_brush_any_face( FaceFilter* filter ) : m_filter( filter ){
 }
 bool filter( const Brush& brush ) const {
-	bool filtered;
-	Brush_forEachFace( brush, FaceFilterAny( m_filter, filtered ) );
+	bool filtered = false;
+	Brush_forEachFace(brush, [&](Face &face) {
+		if (m_filter->filter(face)) {
+			filtered = true;
+		}
+	});
 	return filtered;
-}
-};
-
-class FaceFilterAll
-{
-FaceFilter* m_filter;
-bool& m_filtered;
-public:
-FaceFilterAll( FaceFilter* filter, bool& filtered ) : m_filter( filter ), m_filtered( filtered ){
-	m_filtered = true;
-}
-void operator()( Face& face ) const {
-	if ( !m_filter->filter( face ) ) {
-		m_filtered = false;
-	}
 }
 };
 
@@ -946,8 +805,12 @@ public:
 filter_brush_all_faces( FaceFilter* filter ) : m_filter( filter ){
 }
 bool filter( const Brush& brush ) const {
-	bool filtered;
-	Brush_forEachFace( brush, FaceFilterAll( m_filter, filtered ) );
+	bool filtered = true;
+	Brush_forEachFace(brush, [&](Face &face) {
+		if (!m_filter->filter(face)) {
+			filtered = false;
+		}
+	});
 	return filtered;
 }
 };

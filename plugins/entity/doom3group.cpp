@@ -423,17 +423,6 @@ void transformChanged(){
 typedef MemberCaller<Doom3Group, &Doom3Group::transformChanged> TransformChangedCaller;
 };
 
-class ControlPointAddBounds
-{
-AABB& m_bounds;
-public:
-ControlPointAddBounds( AABB& bounds ) : m_bounds( bounds ){
-}
-void operator()( const Vector3& point ) const {
-	aabb_extend_by_point_safe( m_bounds, point );
-}
-};
-
 class Doom3GroupInstance :
 	public TargetableInstance,
 	public TransformModifier,
@@ -555,8 +544,12 @@ void transformComponents( const Matrix4& matrix ){
 
 const AABB& getSelectedComponentsBounds() const {
 	m_aabb_component = AABB();
-	m_curveNURBS.forEachSelected( ControlPointAddBounds( m_aabb_component ) );
-	m_curveCatmullRom.forEachSelected( ControlPointAddBounds( m_aabb_component ) );
+	m_curveNURBS.forEachSelected([&](const Vector3 &point) {
+		aabb_extend_by_point_safe(m_aabb_component, point);
+	});
+	m_curveCatmullRom.forEachSelected([&](const Vector3 &point) {
+		aabb_extend_by_point_safe(m_aabb_component, point);
+	});
 	return m_aabb_component;
 }
 

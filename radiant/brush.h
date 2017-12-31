@@ -311,22 +311,6 @@ virtual void realiseShader() = 0;
 virtual void unrealiseShader() = 0;
 };
 
-class FaceShaderObserverRealise
-{
-public:
-void operator()( FaceShaderObserver& observer ) const {
-	observer.realiseShader();
-}
-};
-
-class FaceShaderObserverUnrealise
-{
-public:
-void operator()( FaceShaderObserver& observer ) const {
-	observer.unrealiseShader();
-}
-};
-
 typedef ReferencePair<FaceShaderObserver> FaceShaderObserverPair;
 
 
@@ -426,11 +410,15 @@ void releaseShader(){
 void realise(){
 	ASSERT_MESSAGE( !m_realised, "FaceTexdef::realise: already realised" );
 	m_realised = true;
-	m_observers.forEach( FaceShaderObserverRealise() );
+	m_observers.forEach([](FaceShaderObserver &observer) {
+		observer.realiseShader();
+	});
 }
 void unrealise(){
 	ASSERT_MESSAGE( m_realised, "FaceTexdef::unrealise: already unrealised" );
-	m_observers.forEach( FaceShaderObserverUnrealise() );
+	m_observers.forEach([](FaceShaderObserver &observer) {
+		observer.unrealiseShader();
+	});
 	m_realised = false;
 }
 
@@ -2560,23 +2548,16 @@ void SelectedComponents_foreach( Functor functor ) const {
 }
 
 void iterate_selected( AABB& aabb ) const {
-	SelectedComponents_foreach( AABBExtendByPoint( aabb ) );
+	SelectedComponents_foreach([&](const Vector3 &point) {
+		aabb_extend_by_point_safe(aabb, point);
+	});
 }
-
-class RenderablePointVectorPushBack
-{
-RenderablePointVector& m_points;
-public:
-RenderablePointVectorPushBack( RenderablePointVector& points ) : m_points( points ){
-}
-void operator()( const Vector3& point ) const {
-	const Colour4b colour_selected( 0, 0, 255, 255 );
-	m_points.push_back( pointvertex_for_windingpoint( point, colour_selected ) );
-}
-};
 
 void iterate_selected( RenderablePointVector& points ) const {
-	SelectedComponents_foreach( RenderablePointVectorPushBack( points ) );
+	SelectedComponents_foreach([&](const Vector3 &point) {
+		const Colour4b colour_selected(0, 0, 255, 255);
+		points.push_back(pointvertex_for_windingpoint(point, colour_selected));
+	});
 }
 
 bool intersectVolume( const VolumeTest& volume, const Matrix4& localToWorld ) const {
