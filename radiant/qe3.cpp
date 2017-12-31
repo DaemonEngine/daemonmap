@@ -113,6 +113,13 @@ void QE_InitVFS(){
 		globalBasePath << globalRoot << basegame << '/';
 		GlobalFileSystem().initDirectory( globalBasePath.c_str() );
 	}
+
+	// extra pakpaths
+	for ( int i = 0; i < g_pakPathCount; i++ ) {
+		if (g_strcmp0( g_strPakPath[i].c_str(), "")) {
+			GlobalFileSystem().initDirectory( g_strPakPath[i].c_str() );
+		}
+	}
 }
 
 int g_numbrushes = 0;
@@ -166,6 +173,17 @@ void bsp_init(){
 	build_set_variable( "UserEnginePath", g_qeglobals.m_userEnginePath.c_str() );
 	build_set_variable( "MonitorAddress", ( g_WatchBSP_Enabled ) ? "127.0.0.1:39000" : "" );
 	build_set_variable( "GameName", gamename_get() );
+
+	StringBuffer ExtraQ3map2Args;
+	// extra pakpaths
+	for ( int i = 0; i < g_pakPathCount; i++ ) {
+		if ( g_strcmp0( g_strPakPath[i].c_str(), "") ) {
+			ExtraQ3map2Args.push_string( " -fs_pakpath \"" );
+			ExtraQ3map2Args.push_string( g_strPakPath[i].c_str() );
+			ExtraQ3map2Args.push_string( "\"" );
+		}
+	}
+	build_set_variable( "ExtraQ3map2Args", ExtraQ3map2Args.c_str() );
 
 	const char* mapname = Map_Name( g_map );
 	StringOutputStream name( 256 );
