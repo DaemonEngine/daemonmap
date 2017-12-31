@@ -407,6 +407,8 @@ void InitPaths( int *argc, char **argv ){
 	int i, j, k, len, len2;
 	char temp[ MAX_OS_PATH ];
 
+	int noBasePath = 0;
+	int noHomePath = 0;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- InitPaths ---\n" );
@@ -454,6 +456,12 @@ void InitPaths( int *argc, char **argv ){
 			argv[ i ] = NULL;
 		}
 
+		/* -fs_nobasepath */
+		else if ( strcmp( argv[ i ], "-fs_nobasepath" ) == 0 ) {
+			noBasePath = 1;
+			argv[ i ] = NULL;
+		}		
+
 		/* -fs_basepath */
 		else if ( strcmp( argv[ i ], "-fs_basepath" ) == 0 ) {
 			if ( ++i >= *argc ) {
@@ -483,6 +491,12 @@ void InitPaths( int *argc, char **argv ){
 			homePath = argv[i];
 			argv[ i ] = NULL;
 		}
+
+		/* -fs_nohomepath */
+		else if ( strcmp( argv[ i ], "-fs_nohomepath" ) == 0 ) {
+			noHomePath = 1;
+			argv[ i ] = NULL;
+		}		
 
 		/* -fs_homebase */
 		else if ( strcmp( argv[ i ], "-fs_homebase" ) == 0 ) {
@@ -532,7 +546,7 @@ void InitPaths( int *argc, char **argv ){
 	AddGamePath( game->gamePath );
 
 	/* if there is no base path set, figure it out */
-	if ( numBasePaths == 0 ) {
+	if ( numBasePaths == 0 && noBasePath == 0 ) {
 		/* this is another crappy replacement for SetQdirFromPath() */
 		len2 = strlen( game->magic );
 		for ( i = 0; i < *argc && numBasePaths == 0; i++ )
@@ -570,12 +584,18 @@ void InitPaths( int *argc, char **argv ){
 		}
 	}
 
-	/* this only affects unix */
-	if ( homeBasePath ) {
-		AddHomeBasePath( homeBasePath );
+	if ( noBasePath == 1 ) {
+		numBasePaths = 0;
 	}
-	else{
-		AddHomeBasePath( game->homeBasePath );
+
+	if ( noHomePath == 0 ) {
+		/* this only affects unix */
+		if ( homeBasePath ) {
+			AddHomeBasePath( homeBasePath );
+		}
+		else{
+			AddHomeBasePath( game->homeBasePath );
+		}
 	}
 
 	/* initialize vfs paths */

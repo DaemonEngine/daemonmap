@@ -1551,6 +1551,15 @@ tryDecompile:
 			}
 		}
 
+		// extra switches
+		if ( g_disableEnginePath ) {
+			output.push_string( " -fs_nobasepath " );
+		}
+
+		if ( g_disableHomePath ) {
+			output.push_string( " -fs_nohomepath " );
+		}
+
 		output.push_string( " -fs_game " );
 		output.push_string( gamename_get() );
 		output.push_string( " -convert -format " );

@@ -523,8 +523,21 @@ struct PakPath4 {
 	}
 };
 
+bool g_disableEnginePath = false;
+bool g_disableHomePath = false;
+
 void Paths_constructPreferences( PreferencesPage& page ){
 	page.appendPathEntry( "Engine Path", true, make_property<EnginePath>(g_strEnginePath) );
+
+	page.appendCheckBox(
+		"", "Do not use Engine Path",
+		g_disableEnginePath
+		);
+
+	page.appendCheckBox(
+		"", "Do not use Home Path",
+		g_disableHomePath
+		);
 
 	for ( int i = 0; i < g_pakPathCount; i++ ) {
 		std::string label = "Pak Path " + std::to_string(i);
@@ -3439,6 +3452,9 @@ void MainFrame_Construct(){
 	}
 
 	GlobalPreferenceSystem().registerPreference( "EnginePath", make_property_string( g_strEnginePath ) );
+
+	GlobalPreferenceSystem().registerPreference( "DisableEnginePath", make_property_string( g_disableEnginePath ) );
+	GlobalPreferenceSystem().registerPreference( "DisableHomePath", make_property_string( g_disableHomePath ) );
 
 	for ( int i = 0; i < g_pakPathCount; i++ ) {
 		std::string label = "PakPath" + std::to_string(i);
