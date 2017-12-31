@@ -25,7 +25,7 @@
 #include <limits>
 
 #include "iscenegraph.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 const std::size_t MAPFILE_MAX_CHANGES = std::numeric_limits<std::size_t>::max();
 

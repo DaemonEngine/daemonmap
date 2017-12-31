@@ -23,7 +23,7 @@
 #define INCLUDED_GTKUTIL_MENU_H
 
 #include <uilib/uilib.h>
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 typedef int gint;
 typedef gint gboolean;

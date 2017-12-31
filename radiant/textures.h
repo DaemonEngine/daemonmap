@@ -22,7 +22,7 @@
 #if !defined ( INCLUDED_TEXTURES_H )
 #define INCLUDED_TEXTURES_H
 
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 void Textures_Realise();
 void Textures_Unrealise();

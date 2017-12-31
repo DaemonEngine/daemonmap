@@ -23,7 +23,7 @@
 #define INCLUDED_GTKUTIL_TOOLBAR_H
 
 #include <uilib/uilib.h>
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 class Command;
 class Toggle;

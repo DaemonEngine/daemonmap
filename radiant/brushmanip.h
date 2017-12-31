@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <uilib/uilib.h>
 #include "string/stringfwd.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 enum EBrushPrefab
 {

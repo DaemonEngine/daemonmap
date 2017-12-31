@@ -23,7 +23,7 @@
 #define INCLUDED_NAMEABLE_H
 
 #include "generic/constant.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 typedef Callback1<const char*> NameCallback;
 

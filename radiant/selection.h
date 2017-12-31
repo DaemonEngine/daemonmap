@@ -23,7 +23,7 @@
 #define INCLUDED_SELECTION_H
 
 #include "windowobserver.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 struct rect_t
 {

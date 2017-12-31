@@ -23,7 +23,7 @@
 #define INCLUDED_ISHADERS_H
 
 #include "generic/constant.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 enum
 {

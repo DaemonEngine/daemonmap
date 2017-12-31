@@ -24,7 +24,7 @@
 
 #include <uilib/uilib.h>
 #include "math/vector.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 #include "signal/signalfwd.h"
 #include "xml/xmltextags.h"
 
@@ -44,8 +44,6 @@ void TextureBrowser_Construct();
 void TextureBrowser_Destroy();
 
 typedef Callback1<const char*> StringImportCallback;
-template<typename FirstArgument, void( *func ) (FirstArgument)>
-class FreeCaller1;
 
 extern ui::Widget g_page_textures;
 void TextureBrowser_exportTitle( const StringImportCallback& importer );

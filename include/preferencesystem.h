@@ -23,7 +23,7 @@
 #define INCLUDED_PREFERENCESYSTEM_H
 
 #include "generic/constant.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 typedef Callback1<const char*> StringImportCallback;
 typedef Callback1<const StringImportCallback&> StringExportCallback;

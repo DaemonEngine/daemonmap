@@ -2,7 +2,6 @@ add_library(generic
         arrayrange.h
         bitfield.h
         callback.cpp callback.h
-        callbackfwd.h
         constant.cpp constant.h
         enumeration.h
         functional.h

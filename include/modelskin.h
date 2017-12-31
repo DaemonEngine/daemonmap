@@ -23,7 +23,7 @@
 #define INCLUDED_MODELSKIN_H
 
 #include "generic/constant.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 class SkinRemap
 {

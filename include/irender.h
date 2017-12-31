@@ -23,7 +23,7 @@
 #define INCLUDED_IRENDER_H
 
 #include "generic/constant.h"
-#include "generic/callbackfwd.h"
+#include "generic/callback.h"
 
 
 // Rendering states to sort by.
