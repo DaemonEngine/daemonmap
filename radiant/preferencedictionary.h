@@ -33,16 +33,16 @@ class PreferenceDictionary : public PreferenceSystem
 {
 class PreferenceEntry
 {
-StringImportCallback m_importer;
-StringExportCallback m_exporter;
+ImportExportCallback<const char *>::Import_t m_importer;
+ImportExportCallback<const char *>::Export_t m_exporter;
 public:
-PreferenceEntry( const StringImportCallback& importer, const StringExportCallback& exporter )
+PreferenceEntry( const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter )
 	: m_importer( importer ), m_exporter( exporter ){
 }
 void importString( const char* string ){
 	m_importer( string );
 }
-void exportString( const StringImportCallback& importer ){
+void exportString( const ImportExportCallback<const char *>::Import_t& importer ){
 	m_exporter( importer );
 }
 };
@@ -66,7 +66,7 @@ iterator find( const char* name ){
 	return m_preferences.find( name );
 }
 
-void registerPreference( const char* name, const StringImportCallback& importer, const StringExportCallback& exporter ){
+void registerPreference( const char* name, const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter ){
 	m_preferences.insert( PreferenceEntries::value_type( name, PreferenceEntry( importer, exporter ) ) );
 	PreferenceCache::iterator i = m_cache.find( name );
 	if ( i != m_cache.end() ) {

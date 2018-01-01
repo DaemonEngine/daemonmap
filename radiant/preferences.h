@@ -46,11 +46,11 @@ PreferencesPage( Dialog& dialog, ui::VBox vbox ) : m_dialog( dialog ), m_vbox( v
 ui::CheckButton appendCheckBox( const char* name, const char* flag, bool& data ){
 	return m_dialog.addCheckBox( m_vbox, name, flag, data );
 }
-ui::CheckButton appendCheckBox( const char* name, const char* flag, const BoolImportCallback& importCallback, const BoolExportCallback& exportCallback ){
-	return m_dialog.addCheckBox( m_vbox, name, flag, importCallback, exportCallback );
+ui::CheckButton appendCheckBox( const char* name, const char* flag, ImportExportCallback<bool> const &cb ){
+	return m_dialog.addCheckBox( m_vbox, name, flag, cb );
 }
-void appendCombo( const char* name, StringArrayRange values, const IntImportCallback& importCallback, const IntExportCallback& exportCallback ){
-	m_dialog.addCombo( m_vbox, name, values, importCallback, exportCallback );
+void appendCombo( const char* name, StringArrayRange values, ImportExportCallback<int> const &cb ){
+	m_dialog.addCombo( m_vbox, name, values, cb );
 }
 void appendCombo( const char* name, int& data, StringArrayRange values ){
 	m_dialog.addCombo( m_vbox, name, data, values );
@@ -58,38 +58,38 @@ void appendCombo( const char* name, int& data, StringArrayRange values ){
 void appendSlider( const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment ){
 	m_dialog.addSlider( m_vbox, name, data, draw_value, low, high, value, lower, upper, step_increment, page_increment );
 }
-void appendRadio( const char* name, StringArrayRange names, const IntImportCallback& importCallback, const IntExportCallback& exportCallback ){
-	m_dialog.addRadio( m_vbox, name, names, importCallback, exportCallback );
+void appendRadio( const char* name, StringArrayRange names, ImportExportCallback<int> const &cb ){
+	m_dialog.addRadio( m_vbox, name, names, cb );
 }
 void appendRadio( const char* name, int& data, StringArrayRange names ){
 	m_dialog.addRadio( m_vbox, name, data, names );
 }
-void appendRadioIcons( const char* name, StringArrayRange icons, const IntImportCallback& importCallback, const IntExportCallback& exportCallback ){
-	m_dialog.addRadioIcons( m_vbox, name, icons, importCallback, exportCallback );
+void appendRadioIcons( const char* name, StringArrayRange icons, ImportExportCallback<int> const &cb ){
+	m_dialog.addRadioIcons( m_vbox, name, icons, cb );
 }
 void appendRadioIcons( const char* name, int& data, StringArrayRange icons ){
 	m_dialog.addRadioIcons( m_vbox, name, data, icons );
 }
-ui::Widget appendEntry( const char* name, const IntImportCallback& importCallback, const IntExportCallback& exportCallback ){
-	return m_dialog.addIntEntry( m_vbox, name, importCallback, exportCallback );
+ui::Widget appendEntry( const char* name, ImportExportCallback<int> const &cb ){
+	return m_dialog.addIntEntry( m_vbox, name, cb );
 }
 ui::Widget appendEntry( const char* name, int& data ){
 	return m_dialog.addEntry( m_vbox, name, data );
 }
-ui::Widget appendEntry( const char* name, const SizeImportCallback& importCallback, const SizeExportCallback& exportCallback ){
-	return m_dialog.addSizeEntry( m_vbox, name, importCallback, exportCallback );
+ui::Widget appendEntry( const char* name, ImportExportCallback<std::size_t> const &cb){
+	return m_dialog.addSizeEntry( m_vbox, name, cb );
 }
 ui::Widget appendEntry( const char* name, std::size_t& data ){
 	return m_dialog.addEntry( m_vbox, name, data );
 }
-ui::Widget appendEntry( const char* name, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback ){
-	return m_dialog.addFloatEntry( m_vbox, name, importCallback, exportCallback );
+ui::Widget appendEntry( const char* name, ImportExportCallback<float> const &cb ){
+	return m_dialog.addFloatEntry( m_vbox, name, cb );
 }
 ui::Widget appendEntry( const char* name, float& data ){
 	return m_dialog.addEntry( m_vbox, name, data );
 }
-ui::Widget appendPathEntry( const char* name, bool browse_directory, const StringImportCallback& importCallback, const StringExportCallback& exportCallback ){
-	return m_dialog.addPathEntry( m_vbox, name, browse_directory, importCallback, exportCallback );
+ui::Widget appendPathEntry( const char* name, bool browse_directory, ImportExportCallback<const char *> const &cb ){
+	return m_dialog.addPathEntry( m_vbox, name, browse_directory, cb );
 }
 ui::Widget appendPathEntry( const char* name, CopiedString& data, bool directory ){
 	return m_dialog.addPathEntry( m_vbox, name, data, directory );
@@ -97,11 +97,11 @@ ui::Widget appendPathEntry( const char* name, CopiedString& data, bool directory
 ui::SpinButton appendSpinner( const char* name, int& data, double value, double lower, double upper ){
 	return m_dialog.addSpinner( m_vbox, name, data, value, lower, upper );
 }
-ui::SpinButton appendSpinner( const char* name, double value, double lower, double upper, const IntImportCallback& importCallback, const IntExportCallback& exportCallback ){
-	return m_dialog.addSpinner( m_vbox, name, value, lower, upper, importCallback, exportCallback );
+ui::SpinButton appendSpinner( const char* name, double value, double lower, double upper, ImportExportCallback<int> const &cb ){
+	return m_dialog.addSpinner( m_vbox, name, value, lower, upper, cb );
 }
-ui::SpinButton appendSpinner( const char* name, double value, double lower, double upper, const FloatImportCallback& importCallback, const FloatExportCallback& exportCallback ){
-	return m_dialog.addSpinner( m_vbox, name, value, lower, upper, importCallback, exportCallback );
+ui::SpinButton appendSpinner( const char* name, double value, double lower, double upper, ImportExportCallback<float> const &cb ){
+	return m_dialog.addSpinner( m_vbox, name, value, lower, upper, cb );
 }
 };
 
@@ -125,31 +125,34 @@ void PreferencesDialog_addSettingsPage( const PreferenceGroupCallback& callback 
 void PreferencesDialog_restartRequired( const char* staticName );
 
 template<typename Value>
-class LatchedValue
-{
+class LatchedValue {
 public:
-Value m_value;
-Value m_latched;
-const char* m_description;
+    Value m_value;
+    Value m_latched;
+    const char *m_description;
 
-LatchedValue( Value value, const char* description ) : m_latched( value ), m_description( description ){
-}
-void useLatched(){
-	m_value = m_latched;
-}
-void import( Value value ){
-	m_latched = value;
-	if ( m_latched != m_value ) {
-		PreferencesDialog_restartRequired( m_description );
-	}
-}
+    LatchedValue(Value value, const char *description) : m_latched(value), m_description(description) {
+    }
+
+    void useLatched() {
+        m_value = m_latched;
+    }
+
+    void import(Value value) {
+        m_latched = value;
+        if (m_latched != m_value) {
+            PreferencesDialog_restartRequired(m_description);
+        }
+    }
 };
 
-typedef LatchedValue<bool> LatchedBool;
-typedef MemberCaller<LatchedBool, void(bool), &LatchedBool::import> LatchedBoolImportCaller;
-
-typedef LatchedValue<int> LatchedInt;
-typedef MemberCaller<LatchedInt, void(int), &LatchedInt::import> LatchedIntImportCaller;
+template<class Self, class T = Self>
+ImportExportCallback<T> mkImportExportCallback(LatchedValue<Self> &self) {
+	return {
+			MemberCaller<LatchedValue<Self>, void(T), &LatchedValue<Self>::import>(self),
+			ReferenceCaller<Self, void(const Callback<void(T)> &), impexp<Self, T>::Export>(self.m_latched)
+	};
+}
 
 /*!
    holds information for a given game
@@ -272,7 +275,7 @@ void DoGameDialog();
 ui::Window BuildDialog();
 
 void GameFileImport( int value );
-void GameFileExport( const IntImportCallback& importCallback ) const;
+void GameFileExport( const ImportExportCallback<int>::Import_t& importCallback ) const;
 
 /*!
    construction of the dialog frame

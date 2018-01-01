@@ -421,8 +421,8 @@ typedef ReferenceCaller<CopiedString, void(const char*), EnginePathImport> Engin
 
 void Paths_constructPreferences( PreferencesPage& page ){
 	page.appendPathEntry( "Engine Path", true,
-						  StringImportCallback( EnginePathImportCaller( g_strEnginePath ) ),
-						  StringExportCallback( StringExportCaller( g_strEnginePath ) )
+						  {ImportExportCallback<const char *>::Import_t( EnginePathImportCaller( g_strEnginePath ) ),
+						   ImportExportCallback<const char *>::Export_t( StringExportCaller( g_strEnginePath ) )}
 						  );
 }
 void Paths_constructPage( PreferenceGroup& group ){
@@ -999,24 +999,24 @@ template<bool( *BoolFunction ) ( )>
 class BoolFunctionExport
 {
 public:
-static void apply( const BoolImportCallback& importCallback ){
+static void apply( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( BoolFunction() );
 }
 };
 
-typedef FreeCaller<void(const BoolImportCallback&), &BoolFunctionExport<EdgeMode>::apply> EdgeModeApplyCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<EdgeMode>::apply> EdgeModeApplyCaller;
 EdgeModeApplyCaller g_edgeMode_button_caller;
-BoolExportCallback g_edgeMode_button_callback( g_edgeMode_button_caller );
+ImportExportCallback<bool>::Export_t g_edgeMode_button_callback( g_edgeMode_button_caller );
 ToggleItem g_edgeMode_button( g_edgeMode_button_callback );
 
-typedef FreeCaller<void(const BoolImportCallback&), &BoolFunctionExport<VertexMode>::apply> VertexModeApplyCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<VertexMode>::apply> VertexModeApplyCaller;
 VertexModeApplyCaller g_vertexMode_button_caller;
-BoolExportCallback g_vertexMode_button_callback( g_vertexMode_button_caller );
+ImportExportCallback<bool>::Export_t g_vertexMode_button_callback( g_vertexMode_button_caller );
 ToggleItem g_vertexMode_button( g_vertexMode_button_callback );
 
-typedef FreeCaller<void(const BoolImportCallback&), &BoolFunctionExport<FaceMode>::apply> FaceModeApplyCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<FaceMode>::apply> FaceModeApplyCaller;
 FaceModeApplyCaller g_faceMode_button_caller;
-BoolExportCallback g_faceMode_button_callback( g_faceMode_button_caller );
+ImportExportCallback<bool>::Export_t g_faceMode_button_callback( g_faceMode_button_caller );
 ToggleItem g_faceMode_button( g_faceMode_button_callback );
 
 void ComponentModeChanged(){
@@ -1290,44 +1290,44 @@ void Selection_NudgeRight(){
 }
 
 
-void TranslateToolExport( const BoolImportCallback& importCallback ){
+void TranslateToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eTranslate );
 }
 
-void RotateToolExport( const BoolImportCallback& importCallback ){
+void RotateToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eRotate );
 }
 
-void ScaleToolExport( const BoolImportCallback& importCallback ){
+void ScaleToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eScale );
 }
 
-void DragToolExport( const BoolImportCallback& importCallback ){
+void DragToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eDrag );
 }
 
-void ClipperToolExport( const BoolImportCallback& importCallback ){
+void ClipperToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eClip );
 }
 
-FreeCaller<void(const BoolImportCallback&), TranslateToolExport> g_translatemode_button_caller;
-BoolExportCallback g_translatemode_button_callback( g_translatemode_button_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TranslateToolExport> g_translatemode_button_caller;
+ImportExportCallback<bool>::Export_t g_translatemode_button_callback( g_translatemode_button_caller );
 ToggleItem g_translatemode_button( g_translatemode_button_callback );
 
-FreeCaller<void(const BoolImportCallback&), RotateToolExport> g_rotatemode_button_caller;
-BoolExportCallback g_rotatemode_button_callback( g_rotatemode_button_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), RotateToolExport> g_rotatemode_button_caller;
+ImportExportCallback<bool>::Export_t g_rotatemode_button_callback( g_rotatemode_button_caller );
 ToggleItem g_rotatemode_button( g_rotatemode_button_callback );
 
-FreeCaller<void(const BoolImportCallback&), ScaleToolExport> g_scalemode_button_caller;
-BoolExportCallback g_scalemode_button_callback( g_scalemode_button_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ScaleToolExport> g_scalemode_button_caller;
+ImportExportCallback<bool>::Export_t g_scalemode_button_callback( g_scalemode_button_caller );
 ToggleItem g_scalemode_button( g_scalemode_button_callback );
 
-FreeCaller<void(const BoolImportCallback&), DragToolExport> g_dragmode_button_caller;
-BoolExportCallback g_dragmode_button_callback( g_dragmode_button_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), DragToolExport> g_dragmode_button_caller;
+ImportExportCallback<bool>::Export_t g_dragmode_button_callback( g_dragmode_button_caller );
 ToggleItem g_dragmode_button( g_dragmode_button_callback );
 
-FreeCaller<void(const BoolImportCallback&), ClipperToolExport> g_clipper_button_caller;
-BoolExportCallback g_clipper_button_callback( g_clipper_button_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ClipperToolExport> g_clipper_button_caller;
+ImportExportCallback<bool>::Export_t g_clipper_button_callback( g_clipper_button_caller );
 ToggleItem g_clipper_button( g_clipper_button_callback );
 
 void ToolChanged(){
@@ -1770,10 +1770,10 @@ void ClipperChangeNotify(){
 }
 
 
-LatchedInt g_Layout_viewStyle( 0, "Window Layout" );
-LatchedBool g_Layout_enableDetachableMenus( true, "Detachable Menus" );
-LatchedBool g_Layout_enablePatchToolbar( true, "Patch Toolbar" );
-LatchedBool g_Layout_enablePluginToolbar( true, "Plugin Toolbar" );
+LatchedValue<int> g_Layout_viewStyle( 0, "Window Layout" );
+LatchedValue<bool> g_Layout_enableDetachableMenus( true, "Detachable Menus" );
+LatchedValue<bool> g_Layout_enablePatchToolbar( true, "Patch Toolbar" );
+LatchedValue<bool> g_Layout_enablePluginToolbar( true, "Plugin Toolbar" );
 
 
 
@@ -3126,26 +3126,22 @@ void Layout_constructPreferences( PreferencesPage& page ){
 		page.appendRadioIcons(
 			"Window Layout",
 			STRING_ARRAY_RANGE( layouts ),
-			LatchedIntImportCaller( g_Layout_viewStyle ),
-			IntExportCaller( g_Layout_viewStyle.m_latched )
+			mkImportExportCallback( g_Layout_viewStyle )
 			);
 	}
 	page.appendCheckBox(
 		"", "Detachable Menus",
-		LatchedBoolImportCaller( g_Layout_enableDetachableMenus ),
-		BoolExportCaller( g_Layout_enableDetachableMenus.m_latched )
+		mkImportExportCallback( g_Layout_enableDetachableMenus )
 		);
 	if ( !string_empty( g_pGameDescription->getKeyValue( "no_patch" ) ) ) {
 		page.appendCheckBox(
 			"", "Patch Toolbar",
-			LatchedBoolImportCaller( g_Layout_enablePatchToolbar ),
-			BoolExportCaller( g_Layout_enablePatchToolbar.m_latched )
+			mkImportExportCallback( g_Layout_enablePatchToolbar )
 			);
 	}
 	page.appendCheckBox(
 		"", "Plugin Toolbar",
-		LatchedBoolImportCaller( g_Layout_enablePluginToolbar ),
-		BoolExportCaller( g_Layout_enablePluginToolbar.m_latched )
+		mkImportExportCallback( g_Layout_enablePluginToolbar )
 		);
 }
 

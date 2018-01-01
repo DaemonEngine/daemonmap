@@ -190,7 +190,7 @@ void WindowPosition_Parse(WindowPosition &position, const char *value)
 	}
 }
 
-void WindowPosition_Write(const WindowPosition &position, const StringImportCallback &importCallback)
+void WindowPosition_Write(const WindowPosition &position, const ImportExportCallback<const char *>::Import_t &importCallback)
 {
 	char buffer[64];
 	sprintf( buffer, "%d %d %d %d", position.x, position.y, position.w, position.h );
@@ -204,7 +204,7 @@ void WindowPositionTracker_importString(WindowPositionTracker &self, const char 
 	self.setPosition( position );
 }
 
-void WindowPositionTracker_exportString(const WindowPositionTracker &self, const StringImportCallback &importer)
+void WindowPositionTracker_exportString(const WindowPositionTracker &self, const ImportExportCallback<const char *>::Import_t &importer)
 {
 	WindowPosition_Write( self.getPosition(), importer );
 }

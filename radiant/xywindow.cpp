@@ -2587,97 +2587,97 @@ void ShowNamesToggle(){
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowNamesToggle> ShowNamesToggleCaller;
-void ShowNamesExport( const BoolImportCallback& importer ){
+void ShowNamesExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( GlobalEntityCreator().getShowNames() );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowNamesExport> ShowNamesExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowNamesExport> ShowNamesExportCaller;
 
 void ShowAnglesToggle(){
 	GlobalEntityCreator().setShowAngles( !GlobalEntityCreator().getShowAngles() );
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowAnglesToggle> ShowAnglesToggleCaller;
-void ShowAnglesExport( const BoolImportCallback& importer ){
+void ShowAnglesExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( GlobalEntityCreator().getShowAngles() );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowAnglesExport> ShowAnglesExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowAnglesExport> ShowAnglesExportCaller;
 
 void ShowBlocksToggle(){
 	g_xywindow_globals_private.show_blocks ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowBlocksToggle> ShowBlocksToggleCaller;
-void ShowBlocksExport( const BoolImportCallback& importer ){
+void ShowBlocksExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_xywindow_globals_private.show_blocks );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowBlocksExport> ShowBlocksExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowBlocksExport> ShowBlocksExportCaller;
 
 void ShowCoordinatesToggle(){
 	g_xywindow_globals_private.show_coordinates ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowCoordinatesToggle> ShowCoordinatesToggleCaller;
-void ShowCoordinatesExport( const BoolImportCallback& importer ){
+void ShowCoordinatesExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_xywindow_globals_private.show_coordinates );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowCoordinatesExport> ShowCoordinatesExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowCoordinatesExport> ShowCoordinatesExportCaller;
 
 void ShowOutlineToggle(){
 	g_xywindow_globals_private.show_outline ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowOutlineToggle> ShowOutlineToggleCaller;
-void ShowOutlineExport( const BoolImportCallback& importer ){
+void ShowOutlineExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_xywindow_globals_private.show_outline );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowOutlineExport> ShowOutlineExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowOutlineExport> ShowOutlineExportCaller;
 
 void ShowAxesToggle(){
 	g_xywindow_globals_private.show_axis ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowAxesToggle> ShowAxesToggleCaller;
-void ShowAxesExport( const BoolImportCallback& importer ){
+void ShowAxesExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_xywindow_globals_private.show_axis );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowAxesExport> ShowAxesExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowAxesExport> ShowAxesExportCaller;
 
 void ShowWorkzoneToggle(){
 	g_xywindow_globals_private.d_show_work ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowWorkzoneToggle> ShowWorkzoneToggleCaller;
-void ShowWorkzoneExport( const BoolImportCallback& importer ){
+void ShowWorkzoneExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_xywindow_globals_private.d_show_work );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowWorkzoneExport> ShowWorkzoneExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowWorkzoneExport> ShowWorkzoneExportCaller;
 
 ShowNamesExportCaller g_show_names_caller;
-BoolExportCallback g_show_names_callback( g_show_names_caller );
+ImportExportCallback<bool>::Export_t g_show_names_callback( g_show_names_caller );
 ToggleItem g_show_names( g_show_names_callback );
 
 ShowAnglesExportCaller g_show_angles_caller;
-BoolExportCallback g_show_angles_callback( g_show_angles_caller );
+ImportExportCallback<bool>::Export_t g_show_angles_callback( g_show_angles_caller );
 ToggleItem g_show_angles( g_show_angles_callback );
 
 ShowBlocksExportCaller g_show_blocks_caller;
-BoolExportCallback g_show_blocks_callback( g_show_blocks_caller );
+ImportExportCallback<bool>::Export_t g_show_blocks_callback( g_show_blocks_caller );
 ToggleItem g_show_blocks( g_show_blocks_callback );
 
 ShowCoordinatesExportCaller g_show_coordinates_caller;
-BoolExportCallback g_show_coordinates_callback( g_show_coordinates_caller );
+ImportExportCallback<bool>::Export_t g_show_coordinates_callback( g_show_coordinates_caller );
 ToggleItem g_show_coordinates( g_show_coordinates_callback );
 
 ShowOutlineExportCaller g_show_outline_caller;
-BoolExportCallback g_show_outline_callback( g_show_outline_caller );
+ImportExportCallback<bool>::Export_t g_show_outline_callback( g_show_outline_caller );
 ToggleItem g_show_outline( g_show_outline_callback );
 
 ShowAxesExportCaller g_show_axes_caller;
-BoolExportCallback g_show_axes_callback( g_show_axes_caller );
+ImportExportCallback<bool>::Export_t g_show_axes_callback( g_show_axes_caller );
 ToggleItem g_show_axes( g_show_axes_callback );
 
 ShowWorkzoneExportCaller g_show_workzone_caller;
-BoolExportCallback g_show_workzone_callback( g_show_workzone_caller );
+ImportExportCallback<bool>::Export_t g_show_workzone_callback( g_show_workzone_caller );
 ToggleItem g_show_workzone( g_show_workzone_callback );
 
 void XYShow_registerCommands(){
@@ -2733,10 +2733,10 @@ void ToggleShown_importBool( ToggleShown& self, bool value ){
 	self.set( value );
 }
 typedef ReferenceCaller<ToggleShown, void(bool), ToggleShown_importBool> ToggleShownImportBoolCaller;
-void ToggleShown_exportBool( const ToggleShown& self, const BoolImportCallback& importer ){
+void ToggleShown_exportBool( const ToggleShown& self, const ImportExportCallback<bool>::Import_t& importer ){
 	importer( self.active() );
 }
-typedef ConstReferenceCaller<ToggleShown, void(const BoolImportCallback&), ToggleShown_exportBool> ToggleShownExportBoolCaller;
+typedef ConstReferenceCaller<ToggleShown, void(const ImportExportCallback<bool>::Import_t&), ToggleShown_exportBool> ToggleShownExportBoolCaller;
 
 
 void XYWindow_Construct(){

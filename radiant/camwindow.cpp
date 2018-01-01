@@ -1392,12 +1392,12 @@ void ShowStatsToggle(){
 	g_camwindow_globals_private.m_showStats ^= 1;
 }
 
-void ShowStatsExport( const BoolImportCallback& importer ){
+void ShowStatsExport( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( g_camwindow_globals_private.m_showStats );
 }
 
-FreeCaller<void(const BoolImportCallback&), ShowStatsExport> g_show_stats_caller;
-BoolExportCallback g_show_stats_callback( g_show_stats_caller );
+FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowStatsExport> g_show_stats_caller;
+ImportExportCallback<bool>::Export_t g_show_stats_callback( g_show_stats_caller );
 ToggleItem g_show_stats( g_show_stats_callback );
 
 void CamWnd::Cam_Draw(){
@@ -1767,7 +1767,7 @@ void RenderModeImport( int value ){
 }
 typedef FreeCaller<void(int), RenderModeImport> RenderModeImportCaller;
 
-void RenderModeExport( const IntImportCallback& importer ){
+void RenderModeExport( const ImportExportCallback<int>::Import_t& importer ){
 	switch ( CamWnd_GetMode() )
 	{
 	case cd_wire:
@@ -1784,7 +1784,7 @@ void RenderModeExport( const IntImportCallback& importer ){
 		break;
 	}
 }
-typedef FreeCaller<void(const IntImportCallback&), RenderModeExport> RenderModeExportCaller;
+typedef FreeCaller<void(const ImportExportCallback<int>::Import_t&), RenderModeExport> RenderModeExportCaller;
 
 void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendSlider( "Movement Speed", g_camwindow_globals_private.m_nMoveSpeed, TRUE, 0, 0, 100, MIN_CAM_SPEED, MAX_CAM_SPEED, 1, 10 );
@@ -1793,13 +1793,13 @@ void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox( "", "Invert mouse vertical axis", g_camwindow_globals_private.m_bCamInverseMouse );
 	page.appendCheckBox(
 		"", "Discrete movement",
-		FreeCaller<void(bool), CamWnd_Move_Discrete_Import>(),
-		BoolExportCaller( g_camwindow_globals_private.m_bCamDiscrete )
+		{FreeCaller<void(bool), CamWnd_Move_Discrete_Import>(),
+		BoolExportCaller( g_camwindow_globals_private.m_bCamDiscrete )}
 		);
 	page.appendCheckBox(
 		"", "Enable far-clip plane",
-		FreeCaller<void(bool), Camera_SetFarClip>(),
-		BoolExportCaller( g_camwindow_globals_private.m_bCubicClipping )
+		{FreeCaller<void(bool), Camera_SetFarClip>(),
+		BoolExportCaller( g_camwindow_globals_private.m_bCubicClipping )}
 		);
 
 	if ( g_pGameDescription->mGameType == "doom3" ) {
@@ -1808,8 +1808,8 @@ void Camera_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Render Mode",
 			STRING_ARRAY_RANGE( render_mode ),
-			IntImportCallback( RenderModeImportCaller() ),
-			IntExportCallback( RenderModeExportCaller() )
+			{ImportExportCallback<int>::Import_t( RenderModeImportCaller() ),
+			ImportExportCallback<int>::Export_t( RenderModeExportCaller() )}
 			);
 	}
 	else
@@ -1819,8 +1819,8 @@ void Camera_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Render Mode",
 			STRING_ARRAY_RANGE( render_mode ),
-			IntImportCallback( RenderModeImportCaller() ),
-			IntExportCallback( RenderModeExportCaller() )
+			{ImportExportCallback<int>::Import_t( RenderModeImportCaller() ),
+			ImportExportCallback<int>::Export_t( RenderModeExportCaller() )}
 			);
 	}
 

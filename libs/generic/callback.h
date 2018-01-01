@@ -314,21 +314,12 @@ inline Callback<F> makeCallbackF(F *func) {
 	return Callback<F>(reinterpret_cast<void *>(func), BindFirstOpaque<detail::freecallwrapper<F>>::thunk);
 }
 
-// todo: remove
-
-using BoolImportCallback = Callback<void(bool)>;
-using BoolExportCallback = Callback<void(const BoolImportCallback&)>;
-
-using IntImportCallback = Callback<void(int)>;
-using IntExportCallback = Callback<void(const IntImportCallback&)>;
-
-using FloatImportCallback = Callback<void(float)>;
-using FloatExportCallback = Callback<void(const FloatImportCallback&)>;
-
-using StringImportCallback = Callback<void(const char*)>;
-using StringExportCallback = Callback<void(const StringImportCallback&)>;
-
-using SizeImportCallback = Callback<void(std::size_t)>;
-using SizeExportCallback = Callback<void(const SizeImportCallback&)>;
+template <class T>
+struct ImportExportCallback {
+	using Import_t = Callback<void(T)>;
+	Import_t Import;
+	using Export_t = Callback<void(const Callback<void(T)> &)>;
+    Export_t Export;
+};
 
 #endif

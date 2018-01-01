@@ -29,14 +29,13 @@
 
 multimon_globals_t g_multimon_globals;
 
-LatchedBool g_Multimon_enableSysMenuPopups( false, "Floating windows sysmenu icons" );
+LatchedValue<bool> g_Multimon_enableSysMenuPopups( false, "Floating windows sysmenu icons" );
 
 void MultiMonitor_constructPreferences( PreferencesPage& page ){
 	ui::CheckButton primary_monitor = page.appendCheckBox( "Multi Monitor", "Start on Primary Monitor", g_multimon_globals.m_bStartOnPrimMon );
 	ui::CheckButton popup = page.appendCheckBox(
 		"", "Disable system menu on popup windows",
-		LatchedBoolImportCaller( g_Multimon_enableSysMenuPopups ),
-		BoolExportCaller( g_Multimon_enableSysMenuPopups.m_latched )
+		mkImportExportCallback( g_Multimon_enableSysMenuPopups )
 		);
 	Widget_connectToggleDependency( popup, primary_monitor );
 }

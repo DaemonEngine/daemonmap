@@ -381,10 +381,10 @@ void UndoLevels_importString( RadiantUndoSystem& undo, const char* value ){
 	undo.setLevels( levels );
 }
 typedef ReferenceCaller<RadiantUndoSystem, void(const char*), UndoLevels_importString> UndoLevelsImportStringCaller;
-void UndoLevels_exportString( const RadiantUndoSystem& undo, const StringImportCallback& importer ){
+void UndoLevels_exportString( const RadiantUndoSystem& undo, const ImportExportCallback<const char *>::Import_t& importer ){
 	Int_exportString( static_cast<int>( undo.getLevels() ), importer );
 }
-typedef ConstReferenceCaller<RadiantUndoSystem, void(const StringImportCallback&), UndoLevels_exportString> UndoLevelsExportStringCaller;
+typedef ConstReferenceCaller<RadiantUndoSystem, void(const ImportExportCallback<const char *>::Import_t&), UndoLevels_exportString> UndoLevelsExportStringCaller;
 
 #include "generic/callback.h"
 
@@ -392,14 +392,14 @@ void UndoLevelsImport( RadiantUndoSystem& self, int value ){
 	self.setLevels( value );
 }
 typedef ReferenceCaller<RadiantUndoSystem, void(int), UndoLevelsImport> UndoLevelsImportCaller;
-void UndoLevelsExport( const RadiantUndoSystem& self, const IntImportCallback& importCallback ){
+void UndoLevelsExport( const RadiantUndoSystem& self, const ImportExportCallback<int>::Import_t& importCallback ){
 	importCallback( static_cast<int>( self.getLevels() ) );
 }
-typedef ConstReferenceCaller<RadiantUndoSystem, void(const IntImportCallback&), UndoLevelsExport> UndoLevelsExportCaller;
+typedef ConstReferenceCaller<RadiantUndoSystem, void(const ImportExportCallback<int>::Import_t&), UndoLevelsExport> UndoLevelsExportCaller;
 
 
 void Undo_constructPreferences( RadiantUndoSystem& undo, PreferencesPage& page ){
-	page.appendSpinner( "Undo Queue Size", 64, 0, 1024, IntImportCallback( UndoLevelsImportCaller( undo ) ), IntExportCallback( UndoLevelsExportCaller( undo ) ) );
+	page.appendSpinner( "Undo Queue Size", 64, 0, 1024, {ImportExportCallback<int>::Import_t( UndoLevelsImportCaller( undo ) ), ImportExportCallback<int>::Export_t( UndoLevelsExportCaller( undo ) )} );
 }
 void Undo_constructPage( RadiantUndoSystem& undo, PreferenceGroup& group ){
 	PreferencesPage page( group.createPage( "Undo", "Undo Queue Settings" ) );

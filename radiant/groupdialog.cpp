@@ -71,7 +71,7 @@ namespace
 GroupDlg g_GroupDlg;
 
 std::size_t g_current_page;
-std::vector<StringExportCallback> g_pages;
+std::vector<ImportExportCallback<const char *>::Export_t> g_pages;
 }
 
 void GroupDialog_updatePageTitle( ui::Window window, std::size_t pageIndex ){
@@ -123,7 +123,7 @@ void GroupDlg::Create( ui::Window parent ){
 }
 
 
-ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const StringExportCallback& title ){
+ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const ImportExportCallback<const char *>::Export_t& title ){
 	ui::Widget w = ui::Label( tabLabel );
 	w.show();
 	ui::Widget page = ui::Widget(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gtk_notebook_insert_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), widget, w, -1 ) ));

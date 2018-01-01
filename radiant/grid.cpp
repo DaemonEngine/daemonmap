@@ -134,10 +134,10 @@ void set(){
 	setGridPower( m_id );
 }
 typedef MemberCaller<GridMenuItem, void(), &GridMenuItem::set> SetCaller;
-void active( const BoolImportCallback& importCallback ){
+void active( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( g_grid_power == m_id );
 }
-typedef MemberCaller<GridMenuItem, void(const BoolImportCallback&), &GridMenuItem::active> ExportCaller;
+typedef MemberCaller<GridMenuItem, void(const ImportExportCallback<bool>::Import_t&), &GridMenuItem::active> ExportCaller;
 };
 
 GridMenuItem g_gridMenu0125( GRIDPOWER_0125 );

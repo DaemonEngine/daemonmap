@@ -166,7 +166,7 @@ inline const int& min_int( const int& left, const int& right ){
 
 int max_tex_size = 0;
 const int max_texture_quality = 3;
-LatchedInt g_Textures_textureQuality( 3, "Texture Quality" );
+LatchedValue<int> g_Textures_textureQuality( 3, "Texture Quality" );
 
 /// \brief This function does the actual processing of raw RGBA data into a GL texture.
 /// It will also resample to power-of-two dimensions, generate the mipmaps and adjust gamma.
@@ -685,7 +685,7 @@ void TextureModeImport( ETexturesMode& self, int value ){
 }
 typedef ReferenceCaller<ETexturesMode, void(int), TextureModeImport> TextureModeImportCaller;
 
-void TextureModeExport( ETexturesMode& self, const IntImportCallback& importer ){
+void TextureModeExport( ETexturesMode& self, const ImportExportCallback<int>::Import_t& importer ){
 	switch ( self )
 	{
 	case eTextures_NEAREST:
@@ -713,7 +713,7 @@ void TextureModeExport( ETexturesMode& self, const IntImportCallback& importer )
 		importer( 4 );
 	}
 }
-typedef ReferenceCaller<ETexturesMode, void(const IntImportCallback&), TextureModeExport> TextureModeExportCaller;
+typedef ReferenceCaller<ETexturesMode, void(const ImportExportCallback<int>::Import_t&), TextureModeExport> TextureModeExportCaller;
 
 void Textures_constructPreferences( PreferencesPage& page ){
 	{
@@ -721,8 +721,7 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		page.appendRadio(
 			"Texture Quality",
 			STRING_ARRAY_RANGE( percentages ),
-			LatchedIntImportCaller( g_Textures_textureQuality ),
-			IntExportCaller( g_Textures_textureQuality.m_latched )
+			mkImportExportCallback( g_Textures_textureQuality )
 			);
 	}
 	page.appendSpinner(
@@ -730,16 +729,16 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		1.0,
 		0.0,
 		1.0,
-		FloatImportCallback( TextureGammaImportCaller( g_texture_globals.fGamma ) ),
-		FloatExportCallback( FloatExportCaller( g_texture_globals.fGamma ) )
+		{ImportExportCallback<float>::Import_t( TextureGammaImportCaller( g_texture_globals.fGamma ) ),
+		ImportExportCallback<float>::Export_t( FloatExportCaller( g_texture_globals.fGamma ) )}
 		);
 	{
 		const char* texture_mode[] = { "Nearest", "Nearest Mipmap", "Linear", "Bilinear", "Bilinear Mipmap", "Trilinear", "Anisotropy" };
 		page.appendCombo(
 			"Texture Render Mode",
 			STRING_ARRAY_RANGE( texture_mode ),
-			IntImportCallback( TextureModeImportCaller( g_texture_mode ) ),
-			IntExportCallback( TextureModeExportCaller( g_texture_mode ) )
+			{ImportExportCallback<int>::Import_t( TextureModeImportCaller( g_texture_mode ) ),
+			ImportExportCallback<int>::Export_t( TextureModeExportCaller( g_texture_mode ) )}
 			);
 	}
 	{
@@ -759,8 +758,8 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Hardware Texture Compression",
 			compression,
-			TextureCompressionImportCaller( g_texture_globals.m_nTextureCompressionFormat ),
-			IntExportCaller( reinterpret_cast<int&>( g_texture_globals.m_nTextureCompressionFormat ) )
+			{TextureCompressionImportCaller( g_texture_globals.m_nTextureCompressionFormat ),
+			IntExportCaller( reinterpret_cast<int&>( g_texture_globals.m_nTextureCompressionFormat ) )}
 			);
 	}
 }

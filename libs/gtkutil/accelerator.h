@@ -111,8 +111,8 @@ class Toggle
 {
 public:
 Command m_command;
-BoolExportCallback m_exportCallback;
-Toggle( const Callback<void()>& callback, const Accelerator& accelerator, const BoolExportCallback& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
+ImportExportCallback<bool>::Export_t m_exportCallback;
+Toggle( const Callback<void()>& callback, const Accelerator& accelerator, const ImportExportCallback<bool>::Export_t& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
 }
 };
 

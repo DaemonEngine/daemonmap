@@ -87,7 +87,7 @@ typedef std::map<CopiedString, Toggle> Toggles;
 
 Toggles g_toggles;
 
-void GlobalToggles_insert( const char* name, const Callback<void()>& callback, const BoolExportCallback& exportCallback, const Accelerator& accelerator ){
+void GlobalToggles_insert( const char* name, const Callback<void()>& callback, const ImportExportCallback<bool>::Export_t& exportCallback, const Accelerator& accelerator ){
 	bool added = g_toggles.insert( Toggles::value_type( name, Toggle( callback, GlobalShortcuts_insert( name, accelerator ), exportCallback ) ) ).second;
 	ASSERT_MESSAGE( added, "toggle already registered: " << makeQuoted( name ) );
 }

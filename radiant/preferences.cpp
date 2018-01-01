@@ -280,7 +280,7 @@ void CGameDialog::GameFileImport( int value ){
 	m_sGameFile = ( *iGame )->mGameFile;
 }
 
-void CGameDialog::GameFileExport( const IntImportCallback& importCallback ) const {
+void CGameDialog::GameFileExport( const ImportExportCallback<int>::Import_t& importCallback ) const {
 	// use m_sGameFile to set value
 	std::list<CGameDescription *>::const_iterator iGame;
 	int i = 0;
@@ -299,7 +299,7 @@ void CGameDialog_GameFileImport( CGameDialog& self, int value ){
 	self.GameFileImport( value );
 }
 
-void CGameDialog_GameFileExport( CGameDialog& self, const IntImportCallback& importCallback ){
+void CGameDialog_GameFileExport( CGameDialog& self, const ImportExportCallback<int>::Import_t& importCallback ){
 	self.GameFileExport( importCallback );
 }
 
@@ -313,8 +313,8 @@ void CGameDialog::CreateGlobalFrame( PreferencesPage& page ){
 	page.appendCombo(
 		"Select the game",
 		StringArrayRange( &( *games.begin() ), &( *games.end() ) ),
-		ReferenceCaller<CGameDialog, void(int), CGameDialog_GameFileImport>( *this ),
-		ReferenceCaller<CGameDialog, void(const IntImportCallback&), CGameDialog_GameFileExport>( *this )
+		{ReferenceCaller<CGameDialog, void(int), CGameDialog_GameFileImport>( *this ),
+		ReferenceCaller<CGameDialog, void(const ImportExportCallback<int>::Import_t&), CGameDialog_GameFileExport>( *this )}
 		);
 	page.appendCheckBox( "Startup", "Show Global Preferences", m_bGamePrompt );
 }
@@ -922,19 +922,19 @@ void GameName_importString( const char* value ){
 	gamename_set( value );
 }
 typedef FreeCaller<void(const char*), GameName_importString> GameNameImportStringCaller;
-void GameName_exportString( const StringImportCallback& importer ){
+void GameName_exportString( const ImportExportCallback<const char *>::Import_t& importer ){
 	importer( gamename_get() );
 }
-typedef FreeCaller<void(const StringImportCallback&), GameName_exportString> GameNameExportStringCaller;
+typedef FreeCaller<void(const ImportExportCallback<const char *>::Import_t&), GameName_exportString> GameNameExportStringCaller;
 
 void GameMode_importString( const char* value ){
 	gamemode_set( value );
 }
 typedef FreeCaller<void(const char*), GameMode_importString> GameModeImportStringCaller;
-void GameMode_exportString( const StringImportCallback& importer ){
+void GameMode_exportString( const ImportExportCallback<const char *>::Import_t& importer ){
 	importer( gamemode_get() );
 }
-typedef FreeCaller<void(const StringImportCallback&), GameMode_exportString> GameModeExportStringCaller;
+typedef FreeCaller<void(const ImportExportCallback<const char *>::Import_t&), GameMode_exportString> GameModeExportStringCaller;
 
 
 void RegisterPreferences( PreferenceSystem& preferences ){

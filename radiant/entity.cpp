@@ -547,16 +547,16 @@ void LightRadiiImport( EntityCreator& self, bool value ){
 }
 typedef ReferenceCaller<EntityCreator, void(bool), LightRadiiImport> LightRadiiImportCaller;
 
-void LightRadiiExport( EntityCreator& self, const BoolImportCallback& importer ){
+void LightRadiiExport( EntityCreator& self, const ImportExportCallback<bool>::Import_t& importer ){
 	importer( self.getLightRadii() );
 }
-typedef ReferenceCaller<EntityCreator, void(const BoolImportCallback&), LightRadiiExport> LightRadiiExportCaller;
+typedef ReferenceCaller<EntityCreator, void(const ImportExportCallback<bool>::Import_t&), LightRadiiExport> LightRadiiExportCaller;
 
 void Entity_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox(
 		"Show", "Light Radii",
-		LightRadiiImportCaller( GlobalEntityCreator() ),
-		LightRadiiExportCaller( GlobalEntityCreator() )
+		{LightRadiiImportCaller( GlobalEntityCreator() ),
+		LightRadiiExportCaller( GlobalEntityCreator() )}
 		);
 }
 void Entity_constructPage( PreferenceGroup& group ){

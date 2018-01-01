@@ -25,16 +25,13 @@
 #include "generic/constant.h"
 #include "generic/callback.h"
 
-typedef Callback<void(const char*)> StringImportCallback;
-typedef Callback<void(const StringImportCallback&)> StringExportCallback;
-
 class PreferenceSystem
 {
 public:
 INTEGER_CONSTANT( Version, 1 );
 STRING_CONSTANT( Name, "preferences" );
 
-virtual void registerPreference( const char* name, const StringImportCallback& importer, const StringExportCallback& exporter ) = 0;
+virtual void registerPreference( const char* name, const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter ) = 0;
 };
 
 #include "modulesystem.h"

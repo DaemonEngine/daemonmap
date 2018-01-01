@@ -30,11 +30,11 @@
 #include "debugging/debugging.h"
 
 class ToggleItem {
-    BoolExportCallback m_exportCallback;
-    typedef std::list<BoolImportCallback> ImportCallbacks;
+    ImportExportCallback<bool>::Export_t m_exportCallback;
+    typedef std::list<ImportExportCallback<bool>::Import_t> ImportCallbacks;
     ImportCallbacks m_importCallbacks;
 public:
-    ToggleItem(const BoolExportCallback &exportCallback) : m_exportCallback(exportCallback)
+    ToggleItem(const ImportExportCallback<bool>::Export_t &exportCallback) : m_exportCallback(exportCallback)
     {
     }
 
@@ -45,13 +45,13 @@ public:
         }
     }
 
-    void addCallback(const BoolImportCallback &callback)
+    void addCallback(const ImportExportCallback<bool>::Import_t &callback)
     {
         m_importCallbacks.push_back(callback);
         m_exportCallback(callback);
     }
 
-    typedef MemberCaller<ToggleItem, void(const BoolImportCallback &), &ToggleItem::addCallback> AddCallbackCaller;
+    typedef MemberCaller<ToggleItem, void(const ImportExportCallback<bool>::Import_t &), &ToggleItem::addCallback> AddCallbackCaller;
 };
 
 class ToggleShown {
@@ -77,9 +77,9 @@ public:
 
     bool active() const;
 
-    void exportActive(const BoolImportCallback &importCallback);
+    void exportActive(const ImportExportCallback<bool>::Import_t &importCallback);
 
-    typedef MemberCaller<ToggleShown, void(const BoolImportCallback &), &ToggleShown::exportActive> ActiveCaller;
+    typedef MemberCaller<ToggleShown, void(const ImportExportCallback<bool>::Import_t &), &ToggleShown::exportActive> ActiveCaller;
 
     void set(bool shown);
 

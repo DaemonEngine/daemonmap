@@ -39,7 +39,7 @@ bool ToggleShown::active() const
     }
 }
 
-void ToggleShown::exportActive(const BoolImportCallback &importCallback)
+void ToggleShown::exportActive(const ImportExportCallback<bool>::Import_t &importCallback)
 {
     importCallback(active());
 }

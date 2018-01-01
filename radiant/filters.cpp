@@ -127,10 +127,10 @@ ToggleFilterFlag( unsigned int mask ) : m_mask( mask ), m_item( ActiveCaller( *t
 }
 ToggleFilterFlag( const ToggleFilterFlag& other ) : m_mask( other.m_mask ), m_item( ActiveCaller( *this ) ){
 }
-void active( const BoolImportCallback& importCallback ){
+void active( const ImportExportCallback<bool>::Import_t& importCallback ){
 	importCallback( ( g_filters_globals.exclude & m_mask ) != 0 );
 }
-typedef MemberCaller<ToggleFilterFlag, void(const BoolImportCallback&), &ToggleFilterFlag::active> ActiveCaller;
+typedef MemberCaller<ToggleFilterFlag, void(const ImportExportCallback<bool>::Import_t&), &ToggleFilterFlag::active> ActiveCaller;
 void toggle(){
 	g_filters_globals.exclude ^= m_mask;
 	m_item.update();

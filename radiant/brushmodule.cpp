@@ -34,7 +34,7 @@
 #include "mainframe.h"
 #include "preferences.h"
 
-LatchedBool g_useAlternativeTextureProjection( false, "Use alternative texture-projection (\"brush primitives\")" );
+LatchedValue<bool> g_useAlternativeTextureProjection( false, "Use alternative texture-projection (\"brush primitives\")" );
 bool g_showAlternativeTextureProjectionOption = false;
 bool g_brush_always_caulk;
 
@@ -46,15 +46,15 @@ void Face_importSnapPlanes( bool value ){
 	Face::m_quantise = value ? quantiseInteger : quantiseFloating;
 }
 
-void Face_exportSnapPlanes( const BoolImportCallback& importer ){
+void Face_exportSnapPlanes( const ImportExportCallback<bool>::Import_t& importer ){
 	importer( Face::m_quantise == quantiseInteger );
 }
 
 void Brush_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox(
 		"", "Snap planes to integer grid",
-		makeCallbackF(Face_importSnapPlanes),
-		makeCallbackF(Face_exportSnapPlanes)
+		{makeCallbackF(Face_importSnapPlanes),
+		 makeCallbackF(Face_exportSnapPlanes)}
 		);
 	page.appendEntry(
 		"Default texture scale",
@@ -63,8 +63,7 @@ void Brush_constructPreferences( PreferencesPage& page ){
 	if ( g_showAlternativeTextureProjectionOption ) {
 		page.appendCheckBox(
 			"", "Use alternative texture-projection (\"brush primitives\")",
-			LatchedBoolImportCaller( g_useAlternativeTextureProjection ),
-			BoolExportCaller( g_useAlternativeTextureProjection.m_latched )
+			mkImportExportCallback(g_useAlternativeTextureProjection)
 			);
 	}
 	// d1223m
@@ -153,7 +152,7 @@ void Brush_Construct( EBrushType type ){
 	}
 
 	GlobalPreferenceSystem().registerPreference( "TextureLock", BoolImportStringCaller( g_brush_texturelock_enabled ), BoolExportStringCaller( g_brush_texturelock_enabled ) );
-	GlobalPreferenceSystem().registerPreference( "BrushSnapPlanes", makeBoolStringImportCallback( FreeCaller<void(bool), Face_importSnapPlanes>() ), makeBoolStringExportCallback( FreeCaller<void(const BoolImportCallback&), Face_exportSnapPlanes>() ) );
+	GlobalPreferenceSystem().registerPreference( "BrushSnapPlanes", makeBoolStringImportCallback( FreeCaller<void(bool), Face_importSnapPlanes>() ), makeBoolStringExportCallback( FreeCaller<void(const ImportExportCallback<bool>::Import_t&), Face_exportSnapPlanes>() ) );
 	GlobalPreferenceSystem().registerPreference( "TexdefDefaultScale", FloatImportStringCaller( g_texdef_default_scale ), FloatExportStringCaller( g_texdef_default_scale ) );
 
 	GridStatus_getTextureLockEnabled = getTextureLockEnabled;
