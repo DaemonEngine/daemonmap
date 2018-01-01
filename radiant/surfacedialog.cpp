@@ -1393,15 +1393,15 @@ void SurfaceInspector_constructPage( PreferenceGroup& group ){
 	SurfaceInspector_constructPreferences( page );
 }
 void SurfaceInspector_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), SurfaceInspector_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(SurfaceInspector_constructPage) );
 }
 
 void SurfaceInspector_registerCommands(){
-	GlobalCommands_insert( "FitTexture", FreeCaller<void(), SurfaceInspector_FitTexture>(), Accelerator( 'B', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "SurfaceInspector", FreeCaller<void(), SurfaceInspector_toggleShown>(), Accelerator( 'S' ) );
+	GlobalCommands_insert( "FitTexture", makeCallbackF(SurfaceInspector_FitTexture), Accelerator( 'B', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "SurfaceInspector", makeCallbackF(SurfaceInspector_toggleShown), Accelerator( 'S' ) );
 
-	GlobalCommands_insert( "FaceCopyTexture", FreeCaller<void(), SelectedFaces_copyTexture>() );
-	GlobalCommands_insert( "FacePasteTexture", FreeCaller<void(), SelectedFaces_pasteTexture>() );
+	GlobalCommands_insert( "FaceCopyTexture", makeCallbackF(SelectedFaces_copyTexture) );
+	GlobalCommands_insert( "FacePasteTexture", makeCallbackF(SelectedFaces_pasteTexture) );
 }
 
 

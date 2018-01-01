@@ -2598,7 +2598,7 @@ void TextureBrowser_constructPage( PreferenceGroup& group ){
 	TextureBrowser_constructPreferences( page );
 }
 void TextureBrowser_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), TextureBrowser_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(TextureBrowser_constructPage) );
 }
 
 
@@ -2612,23 +2612,23 @@ typedef ReferenceCaller<TextureBrowser, void(std::size_t), TextureBrowser_setSca
 void TextureClipboard_textureSelected( const char* shader );
 
 void TextureBrowser_Construct(){
-	GlobalCommands_insert( "ShaderInfo", FreeCaller<void(), TextureBrowser_shaderInfo>() );
-	GlobalCommands_insert( "ShowUntagged", FreeCaller<void(), TextureBrowser_showUntagged>() );
-	GlobalCommands_insert( "AddTag", FreeCaller<void(), TextureBrowser_addTag>() );
-	GlobalCommands_insert( "RenameTag", FreeCaller<void(), TextureBrowser_renameTag>() );
-	GlobalCommands_insert( "DeleteTag", FreeCaller<void(), TextureBrowser_deleteTag>() );
-	GlobalCommands_insert( "CopyTag", FreeCaller<void(), TextureBrowser_copyTag>() );
-	GlobalCommands_insert( "PasteTag", FreeCaller<void(), TextureBrowser_pasteTag>() );
-	GlobalCommands_insert( "RefreshShaders", FreeCaller<void(), VFS_Refresh>() );
-	GlobalToggles_insert( "ShowInUse", FreeCaller<void(), TextureBrowser_ToggleHideUnused>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_hideunused_item ), Accelerator( 'U' ) );
-	GlobalCommands_insert( "ShowAllTextures", FreeCaller<void(), TextureBrowser_showAll>(), Accelerator( 'A', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "ToggleTextures", FreeCaller<void(), TextureBrowser_toggleShow>(), Accelerator( 'T' ) );
-	GlobalToggles_insert( "ToggleShowShaders", FreeCaller<void(), TextureBrowser_ToggleShowShaders>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_showshaders_item ) );
-	GlobalToggles_insert( "ToggleShowShaderlistOnly", FreeCaller<void(), TextureBrowser_ToggleShowShaderListOnly>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_showshaderlistonly_item ) );
-	GlobalToggles_insert( "FixedSize", FreeCaller<void(), TextureBrowser_FixedSize>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_fixedsize_item ) );
-	GlobalToggles_insert( "FilterMissing", FreeCaller<void(), TextureBrowser_FilterMissing>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_filternotex_item ) );
-	GlobalToggles_insert( "FilterFallback", FreeCaller<void(), TextureBrowser_FilterFallback>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_hidenotex_item ) );
-	GlobalToggles_insert( "EnableAlpha", FreeCaller<void(), TextureBrowser_EnableAlpha>(), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_enablealpha_item ) );
+	GlobalCommands_insert( "ShaderInfo", makeCallbackF(TextureBrowser_shaderInfo) );
+	GlobalCommands_insert( "ShowUntagged", makeCallbackF(TextureBrowser_showUntagged) );
+	GlobalCommands_insert( "AddTag", makeCallbackF(TextureBrowser_addTag) );
+	GlobalCommands_insert( "RenameTag", makeCallbackF(TextureBrowser_renameTag) );
+	GlobalCommands_insert( "DeleteTag", makeCallbackF(TextureBrowser_deleteTag) );
+	GlobalCommands_insert( "CopyTag", makeCallbackF(TextureBrowser_copyTag) );
+	GlobalCommands_insert( "PasteTag", makeCallbackF(TextureBrowser_pasteTag) );
+	GlobalCommands_insert( "RefreshShaders", makeCallbackF(VFS_Refresh) );
+	GlobalToggles_insert( "ShowInUse", makeCallbackF(TextureBrowser_ToggleHideUnused), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_hideunused_item ), Accelerator( 'U' ) );
+	GlobalCommands_insert( "ShowAllTextures", makeCallbackF(TextureBrowser_showAll), Accelerator( 'A', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "ToggleTextures", makeCallbackF(TextureBrowser_toggleShow), Accelerator( 'T' ) );
+	GlobalToggles_insert( "ToggleShowShaders", makeCallbackF(TextureBrowser_ToggleShowShaders), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_showshaders_item ) );
+	GlobalToggles_insert( "ToggleShowShaderlistOnly", makeCallbackF(TextureBrowser_ToggleShowShaderListOnly), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_showshaderlistonly_item ) );
+	GlobalToggles_insert( "FixedSize", makeCallbackF(TextureBrowser_FixedSize), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_fixedsize_item ) );
+	GlobalToggles_insert( "FilterMissing", makeCallbackF(TextureBrowser_FilterMissing), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_filternotex_item ) );
+	GlobalToggles_insert( "FilterFallback", makeCallbackF(TextureBrowser_FilterFallback), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_hidenotex_item ) );
+	GlobalToggles_insert( "EnableAlpha", makeCallbackF(TextureBrowser_EnableAlpha), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_enablealpha_item ) );
 
 	GlobalPreferenceSystem().registerPreference( "TextureScale",
 												 makeSizeStringImportCallback( TextureBrowserSetScaleCaller( g_TextureBrowser ) ),

@@ -92,7 +92,7 @@ void MultiMon_Construct(){
 
 	g_Multimon_enableSysMenuPopups.useLatched();
 
-	PreferencesDialog_addInterfacePreferences( FreeCaller<void(PreferencesPage&), MultiMonitor_constructPreferences>() );
+	PreferencesDialog_addInterfacePreferences( makeCallbackF(MultiMonitor_constructPreferences) );
 }
 void MultiMon_Destroy(){
 }

@@ -197,7 +197,7 @@ void GroupDialog_updatePageTitle( ui::Widget page ){
 void GroupDialog_Construct(){
 	GlobalPreferenceSystem().registerPreference( "EntityWnd", WindowPositionTrackerImportStringCaller( g_GroupDlg.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_GroupDlg.m_position_tracker ) );
 
-	GlobalCommands_insert( "ViewEntityInfo", FreeCaller<void(), GroupDialog_ToggleShow>(), Accelerator( 'N' ) );
+	GlobalCommands_insert( "ViewEntityInfo", makeCallbackF(GroupDialog_ToggleShow), Accelerator( 'N' ) );
 }
 void GroupDialog_Destroy(){
 }

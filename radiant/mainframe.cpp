@@ -430,7 +430,7 @@ void Paths_constructPage( PreferenceGroup& group ){
 	Paths_constructPreferences( page );
 }
 void Paths_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Paths_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(Paths_constructPage) );
 }
 
 
@@ -2085,7 +2085,7 @@ ui::MenuItem create_misc_menu(){
 	}
 
 #if 0
-	create_menu_item_with_mnemonic( menu, "_Benchmark", FreeCaller<void(), GlobalCamera_Benchmark>() );
+	create_menu_item_with_mnemonic( menu, "_Benchmark", makeCallbackF(GlobalCamera_Benchmark) );
 #endif
     menu.add(create_colours_menu());
 
@@ -2093,7 +2093,7 @@ ui::MenuItem create_misc_menu(){
 	create_menu_item_with_mnemonic( menu, "Map Info...", "MapInfo" );
 	// http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=394
 //  create_menu_item_with_mnemonic(menu, "_Print XY View", FreeCaller<void(), WXY_Print>());
-	create_menu_item_with_mnemonic( menu, "_Background select", FreeCaller<void(), WXY_BackgroundSelect>() );
+	create_menu_item_with_mnemonic( menu, "_Background select", makeCallbackF(WXY_BackgroundSelect) );
 	return misc_menu_item;
 }
 
@@ -2150,9 +2150,9 @@ ui::MenuItem create_help_menu(){
 	// it will take care of hooking the Sys_OpenURL calls etc.
 	create_game_help_menu( menu );
 
-	create_menu_item_with_mnemonic( menu, "Bug report", FreeCaller<void(), OpenBugReportURL>() );
-	create_menu_item_with_mnemonic( menu, "Shortcuts list", FreeCaller<void(), DoCommandListDlg>() );
-	create_menu_item_with_mnemonic( menu, "_About", FreeCaller<void(), DoAbout>() );
+	create_menu_item_with_mnemonic( menu, "Bug report", makeCallbackF(OpenBugReportURL) );
+	create_menu_item_with_mnemonic( menu, "Shortcuts list", makeCallbackF(DoCommandListDlg) );
+	create_menu_item_with_mnemonic( menu, "_About", makeCallbackF(DoAbout) );
 
 	return help_menu_item;
 }
@@ -3155,7 +3155,7 @@ void Layout_constructPage( PreferenceGroup& group ){
 }
 
 void Layout_registerPreferencesPage(){
-	PreferencesDialog_addInterfacePage( FreeCaller<void(PreferenceGroup&), Layout_constructPage>() );
+	PreferencesDialog_addInterfacePage( makeCallbackF(Layout_constructPage) );
 }
 
 
@@ -3163,75 +3163,75 @@ void Layout_registerPreferencesPage(){
 #include "stringio.h"
 
 void MainFrame_Construct(){
-	GlobalCommands_insert( "OpenManual", FreeCaller<void(), OpenHelpURL>(), Accelerator( GDK_KEY_F1 ) );
+	GlobalCommands_insert( "OpenManual", makeCallbackF(OpenHelpURL), Accelerator( GDK_KEY_F1 ) );
 
-	GlobalCommands_insert( "Sleep", FreeCaller<void(), thunk_OnSleep>(), Accelerator( 'P', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "NewMap", FreeCaller<void(), NewMap>() );
-	GlobalCommands_insert( "OpenMap", FreeCaller<void(), OpenMap>(), Accelerator( 'O', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "ImportMap", FreeCaller<void(), ImportMap>() );
-	GlobalCommands_insert( "SaveMap", FreeCaller<void(), SaveMap>(), Accelerator( 'S', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "SaveMapAs", FreeCaller<void(), SaveMapAs>() );
-	GlobalCommands_insert( "ExportSelected", FreeCaller<void(), ExportMap>() );
-	GlobalCommands_insert( "SaveRegion", FreeCaller<void(), SaveRegion>() );
-	GlobalCommands_insert( "RefreshReferences", FreeCaller<void(), VFS_Refresh>() );
-	GlobalCommands_insert( "ProjectSettings", FreeCaller<void(), DoProjectSettings>() );
-	GlobalCommands_insert( "Exit", FreeCaller<void(), Exit>() );
+	GlobalCommands_insert( "Sleep", makeCallbackF(thunk_OnSleep), Accelerator( 'P', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "NewMap", makeCallbackF(NewMap) );
+	GlobalCommands_insert( "OpenMap", makeCallbackF(OpenMap), Accelerator( 'O', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "ImportMap", makeCallbackF(ImportMap) );
+	GlobalCommands_insert( "SaveMap", makeCallbackF(SaveMap), Accelerator( 'S', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "SaveMapAs", makeCallbackF(SaveMapAs) );
+	GlobalCommands_insert( "ExportSelected", makeCallbackF(ExportMap) );
+	GlobalCommands_insert( "SaveRegion", makeCallbackF(SaveRegion) );
+	GlobalCommands_insert( "RefreshReferences", makeCallbackF(VFS_Refresh) );
+	GlobalCommands_insert( "ProjectSettings", makeCallbackF(DoProjectSettings) );
+	GlobalCommands_insert( "Exit", makeCallbackF(Exit) );
 
-	GlobalCommands_insert( "Undo", FreeCaller<void(), Undo>(), Accelerator( 'Z', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "Redo", FreeCaller<void(), Redo>(), Accelerator( 'Y', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "Copy", FreeCaller<void(), Copy>(), Accelerator( 'C', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "Paste", FreeCaller<void(), Paste>(), Accelerator( 'V', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "PasteToCamera", FreeCaller<void(), PasteToCamera>(), Accelerator( 'V', (GdkModifierType)GDK_MOD1_MASK ) );
-	GlobalCommands_insert( "CloneSelection", FreeCaller<void(), Selection_Clone>(), Accelerator( GDK_KEY_space ) );
-	GlobalCommands_insert( "CloneSelectionAndMakeUnique", FreeCaller<void(), Selection_Clone_MakeUnique>(), Accelerator( GDK_KEY_space, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "DeleteSelection", FreeCaller<void(), deleteSelection>(), Accelerator( GDK_KEY_BackSpace ) );
-	GlobalCommands_insert( "ParentSelection", FreeCaller<void(), Scene_parentSelected>() );
-	GlobalCommands_insert( "UnSelectSelection", FreeCaller<void(), Selection_Deselect>(), Accelerator( GDK_KEY_Escape ) );
-	GlobalCommands_insert( "InvertSelection", FreeCaller<void(), Select_Invert>(), Accelerator( 'I' ) );
-	GlobalCommands_insert( "SelectInside", FreeCaller<void(), Select_Inside>() );
-	GlobalCommands_insert( "SelectTouching", FreeCaller<void(), Select_Touching>() );
-	GlobalCommands_insert( "ExpandSelectionToEntities", FreeCaller<void(), Scene_ExpandSelectionToEntities>(), Accelerator( 'E', (GdkModifierType)( GDK_MOD1_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "Preferences", FreeCaller<void(), PreferencesDialog_showDialog>(), Accelerator( 'P' ) );
+	GlobalCommands_insert( "Undo", makeCallbackF(Undo), Accelerator( 'Z', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "Redo", makeCallbackF(Redo), Accelerator( 'Y', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "Copy", makeCallbackF(Copy), Accelerator( 'C', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "Paste", makeCallbackF(Paste), Accelerator( 'V', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PasteToCamera", makeCallbackF(PasteToCamera), Accelerator( 'V', (GdkModifierType)GDK_MOD1_MASK ) );
+	GlobalCommands_insert( "CloneSelection", makeCallbackF(Selection_Clone), Accelerator( GDK_KEY_space ) );
+	GlobalCommands_insert( "CloneSelectionAndMakeUnique", makeCallbackF(Selection_Clone_MakeUnique), Accelerator( GDK_KEY_space, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "DeleteSelection", makeCallbackF(deleteSelection), Accelerator( GDK_KEY_BackSpace ) );
+	GlobalCommands_insert( "ParentSelection", makeCallbackF(Scene_parentSelected) );
+	GlobalCommands_insert( "UnSelectSelection", makeCallbackF(Selection_Deselect), Accelerator( GDK_KEY_Escape ) );
+	GlobalCommands_insert( "InvertSelection", makeCallbackF(Select_Invert), Accelerator( 'I' ) );
+	GlobalCommands_insert( "SelectInside", makeCallbackF(Select_Inside) );
+	GlobalCommands_insert( "SelectTouching", makeCallbackF(Select_Touching) );
+	GlobalCommands_insert( "ExpandSelectionToEntities", makeCallbackF(Scene_ExpandSelectionToEntities), Accelerator( 'E', (GdkModifierType)( GDK_MOD1_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "Preferences", makeCallbackF(PreferencesDialog_showDialog), Accelerator( 'P' ) );
 
-	GlobalCommands_insert( "ToggleConsole", FreeCaller<void(), Console_ToggleShow>(), Accelerator( 'O' ) );
-	GlobalCommands_insert( "ToggleEntityInspector", FreeCaller<void(), EntityInspector_ToggleShow>(), Accelerator( 'N' ) );
-	GlobalCommands_insert( "EntityList", FreeCaller<void(), EntityList_toggleShown>(), Accelerator( 'L' ) );
+	GlobalCommands_insert( "ToggleConsole", makeCallbackF(Console_ToggleShow), Accelerator( 'O' ) );
+	GlobalCommands_insert( "ToggleEntityInspector", makeCallbackF(EntityInspector_ToggleShow), Accelerator( 'N' ) );
+	GlobalCommands_insert( "EntityList", makeCallbackF(EntityList_toggleShown), Accelerator( 'L' ) );
 
-	GlobalCommands_insert( "ShowHidden", FreeCaller<void(), Select_ShowAllHidden>(), Accelerator( 'H', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "HideSelected", FreeCaller<void(), HideSelected>(), Accelerator( 'H' ) );
+	GlobalCommands_insert( "ShowHidden", makeCallbackF(Select_ShowAllHidden), Accelerator( 'H', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "HideSelected", makeCallbackF(HideSelected), Accelerator( 'H' ) );
 
-	GlobalToggles_insert( "DragVertices", FreeCaller<void(), SelectVertexMode>(), ToggleItem::AddCallbackCaller( g_vertexMode_button ), Accelerator( 'V' ) );
-	GlobalToggles_insert( "DragEdges", FreeCaller<void(), SelectEdgeMode>(), ToggleItem::AddCallbackCaller( g_edgeMode_button ), Accelerator( 'E' ) );
-	GlobalToggles_insert( "DragFaces", FreeCaller<void(), SelectFaceMode>(), ToggleItem::AddCallbackCaller( g_faceMode_button ), Accelerator( 'F' ) );
+	GlobalToggles_insert( "DragVertices", makeCallbackF(SelectVertexMode), ToggleItem::AddCallbackCaller( g_vertexMode_button ), Accelerator( 'V' ) );
+	GlobalToggles_insert( "DragEdges", makeCallbackF(SelectEdgeMode), ToggleItem::AddCallbackCaller( g_edgeMode_button ), Accelerator( 'E' ) );
+	GlobalToggles_insert( "DragFaces", makeCallbackF(SelectFaceMode), ToggleItem::AddCallbackCaller( g_faceMode_button ), Accelerator( 'F' ) );
 
-	GlobalCommands_insert( "MirrorSelectionX", FreeCaller<void(), Selection_Flipx>() );
-	GlobalCommands_insert( "RotateSelectionX", FreeCaller<void(), Selection_Rotatex>() );
-	GlobalCommands_insert( "MirrorSelectionY", FreeCaller<void(), Selection_Flipy>() );
-	GlobalCommands_insert( "RotateSelectionY", FreeCaller<void(), Selection_Rotatey>() );
-	GlobalCommands_insert( "MirrorSelectionZ", FreeCaller<void(), Selection_Flipz>() );
-	GlobalCommands_insert( "RotateSelectionZ", FreeCaller<void(), Selection_Rotatez>() );
+	GlobalCommands_insert( "MirrorSelectionX", makeCallbackF(Selection_Flipx) );
+	GlobalCommands_insert( "RotateSelectionX", makeCallbackF(Selection_Rotatex) );
+	GlobalCommands_insert( "MirrorSelectionY", makeCallbackF(Selection_Flipy) );
+	GlobalCommands_insert( "RotateSelectionY", makeCallbackF(Selection_Rotatey) );
+	GlobalCommands_insert( "MirrorSelectionZ", makeCallbackF(Selection_Flipz) );
+	GlobalCommands_insert( "RotateSelectionZ", makeCallbackF(Selection_Rotatez) );
 
-	GlobalCommands_insert( "ArbitraryRotation", FreeCaller<void(), DoRotateDlg>() );
-	GlobalCommands_insert( "ArbitraryScale", FreeCaller<void(), DoScaleDlg>() );
+	GlobalCommands_insert( "ArbitraryRotation", makeCallbackF(DoRotateDlg) );
+	GlobalCommands_insert( "ArbitraryScale", makeCallbackF(DoScaleDlg) );
 
-	GlobalCommands_insert( "BuildMenuCustomize", FreeCaller<void(), DoBuildMenu>() );
+	GlobalCommands_insert( "BuildMenuCustomize", makeCallbackF(DoBuildMenu) );
 
-	GlobalCommands_insert( "FindBrush", FreeCaller<void(), DoFind>() );
+	GlobalCommands_insert( "FindBrush", makeCallbackF(DoFind) );
 
-	GlobalCommands_insert( "MapInfo", FreeCaller<void(), DoMapInfo>(), Accelerator( 'M' ) );
+	GlobalCommands_insert( "MapInfo", makeCallbackF(DoMapInfo), Accelerator( 'M' ) );
 
 
-	GlobalToggles_insert( "ToggleClipper", FreeCaller<void(), ClipperMode>(), ToggleItem::AddCallbackCaller( g_clipper_button ), Accelerator( 'X' ) );
+	GlobalToggles_insert( "ToggleClipper", makeCallbackF(ClipperMode), ToggleItem::AddCallbackCaller( g_clipper_button ), Accelerator( 'X' ) );
 
-	GlobalToggles_insert( "MouseTranslate", FreeCaller<void(), TranslateMode>(), ToggleItem::AddCallbackCaller( g_translatemode_button ), Accelerator( 'W' ) );
-	GlobalToggles_insert( "MouseRotate", FreeCaller<void(), RotateMode>(), ToggleItem::AddCallbackCaller( g_rotatemode_button ), Accelerator( 'R' ) );
-	GlobalToggles_insert( "MouseScale", FreeCaller<void(), ScaleMode>(), ToggleItem::AddCallbackCaller( g_scalemode_button ) );
-	GlobalToggles_insert( "MouseDrag", FreeCaller<void(), DragMode>(), ToggleItem::AddCallbackCaller( g_dragmode_button ), Accelerator( 'Q' ) );
+	GlobalToggles_insert( "MouseTranslate", makeCallbackF(TranslateMode), ToggleItem::AddCallbackCaller( g_translatemode_button ), Accelerator( 'W' ) );
+	GlobalToggles_insert( "MouseRotate", makeCallbackF(RotateMode), ToggleItem::AddCallbackCaller( g_rotatemode_button ), Accelerator( 'R' ) );
+	GlobalToggles_insert( "MouseScale", makeCallbackF(ScaleMode), ToggleItem::AddCallbackCaller( g_scalemode_button ) );
+	GlobalToggles_insert( "MouseDrag", makeCallbackF(DragMode), ToggleItem::AddCallbackCaller( g_dragmode_button ), Accelerator( 'Q' ) );
 
-	GlobalCommands_insert( "ColorSchemeOriginal", FreeCaller<void(), ColorScheme_Original>() );
-	GlobalCommands_insert( "ColorSchemeQER", FreeCaller<void(), ColorScheme_QER>() );
-	GlobalCommands_insert( "ColorSchemeBlackAndGreen", FreeCaller<void(), ColorScheme_Black>() );
-	GlobalCommands_insert( "ColorSchemeYdnar", FreeCaller<void(), ColorScheme_Ydnar>() );
+	GlobalCommands_insert( "ColorSchemeOriginal", makeCallbackF(ColorScheme_Original) );
+	GlobalCommands_insert( "ColorSchemeQER", makeCallbackF(ColorScheme_QER) );
+	GlobalCommands_insert( "ColorSchemeBlackAndGreen", makeCallbackF(ColorScheme_Black) );
+	GlobalCommands_insert( "ColorSchemeYdnar", makeCallbackF(ColorScheme_Ydnar) );
 	GlobalCommands_insert( "ChooseTextureBackgroundColor", makeCallback( g_ColoursMenu.m_textureback ) );
 	GlobalCommands_insert( "ChooseGridBackgroundColor", makeCallback( g_ColoursMenu.m_xyback ) );
 	GlobalCommands_insert( "ChooseGridMajorColor", makeCallback( g_ColoursMenu.m_gridmajor ) );
@@ -3248,34 +3248,34 @@ void MainFrame_Construct(){
 	GlobalCommands_insert( "ChooseOrthoViewNameColor", makeCallback( g_ColoursMenu.m_viewname ) );
 
 
-	GlobalCommands_insert( "CSGSubtract", FreeCaller<void(), CSG_Subtract>(), Accelerator( 'U', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "CSGMerge", FreeCaller<void(), CSG_Merge>(), Accelerator( 'U', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "CSGHollow", FreeCaller<void(), CSG_MakeHollow>() );
+	GlobalCommands_insert( "CSGSubtract", makeCallbackF(CSG_Subtract), Accelerator( 'U', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CSGMerge", makeCallbackF(CSG_Merge), Accelerator( 'U', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "CSGHollow", makeCallbackF(CSG_MakeHollow) );
 
 	Grid_registerCommands();
 
-	GlobalCommands_insert( "SnapToGrid", FreeCaller<void(), Selection_SnapToGrid>(), Accelerator( 'G', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "SnapToGrid", makeCallbackF(Selection_SnapToGrid), Accelerator( 'G', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "SelectAllOfType", FreeCaller<void(), Select_AllOfType>(), Accelerator( 'A', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "SelectAllOfType", makeCallbackF(Select_AllOfType), Accelerator( 'A', (GdkModifierType)GDK_SHIFT_MASK ) );
 
-	GlobalCommands_insert( "TexRotateClock", FreeCaller<void(), Texdef_RotateClockwise>(), Accelerator( GDK_KEY_Next, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "TexRotateCounter", FreeCaller<void(), Texdef_RotateAntiClockwise>(), Accelerator( GDK_KEY_Prior, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "TexScaleUp", FreeCaller<void(), Texdef_ScaleUp>(), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "TexScaleDown", FreeCaller<void(), Texdef_ScaleDown>(), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "TexScaleLeft", FreeCaller<void(), Texdef_ScaleLeft>(), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "TexScaleRight", FreeCaller<void(), Texdef_ScaleRight>(), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "TexShiftUp", FreeCaller<void(), Texdef_ShiftUp>(), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "TexShiftDown", FreeCaller<void(), Texdef_ShiftDown>(), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "TexShiftLeft", FreeCaller<void(), Texdef_ShiftLeft>(), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "TexShiftRight", FreeCaller<void(), Texdef_ShiftRight>(), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexRotateClock", makeCallbackF(Texdef_RotateClockwise), Accelerator( GDK_KEY_Next, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexRotateCounter", makeCallbackF(Texdef_RotateAntiClockwise), Accelerator( GDK_KEY_Prior, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexScaleUp", makeCallbackF(Texdef_ScaleUp), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "TexScaleDown", makeCallbackF(Texdef_ScaleDown), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "TexScaleLeft", makeCallbackF(Texdef_ScaleLeft), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "TexScaleRight", makeCallbackF(Texdef_ScaleRight), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "TexShiftUp", makeCallbackF(Texdef_ShiftUp), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexShiftDown", makeCallbackF(Texdef_ShiftDown), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexShiftLeft", makeCallbackF(Texdef_ShiftLeft), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "TexShiftRight", makeCallbackF(Texdef_ShiftRight), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_SHIFT_MASK ) );
 
-	GlobalCommands_insert( "MoveSelectionDOWN", FreeCaller<void(), Selection_MoveDown>(), Accelerator( GDK_KEY_KP_Subtract ) );
-	GlobalCommands_insert( "MoveSelectionUP", FreeCaller<void(), Selection_MoveUp>(), Accelerator( GDK_KEY_KP_Add ) );
+	GlobalCommands_insert( "MoveSelectionDOWN", makeCallbackF(Selection_MoveDown), Accelerator( GDK_KEY_KP_Subtract ) );
+	GlobalCommands_insert( "MoveSelectionUP", makeCallbackF(Selection_MoveUp), Accelerator( GDK_KEY_KP_Add ) );
 
-	GlobalCommands_insert( "SelectNudgeLeft", FreeCaller<void(), Selection_NudgeLeft>(), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_MOD1_MASK ) );
-	GlobalCommands_insert( "SelectNudgeRight", FreeCaller<void(), Selection_NudgeRight>(), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_MOD1_MASK ) );
-	GlobalCommands_insert( "SelectNudgeUp", FreeCaller<void(), Selection_NudgeUp>(), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_MOD1_MASK ) );
-	GlobalCommands_insert( "SelectNudgeDown", FreeCaller<void(), Selection_NudgeDown>(), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_MOD1_MASK ) );
+	GlobalCommands_insert( "SelectNudgeLeft", makeCallbackF(Selection_NudgeLeft), Accelerator( GDK_KEY_Left, (GdkModifierType)GDK_MOD1_MASK ) );
+	GlobalCommands_insert( "SelectNudgeRight", makeCallbackF(Selection_NudgeRight), Accelerator( GDK_KEY_Right, (GdkModifierType)GDK_MOD1_MASK ) );
+	GlobalCommands_insert( "SelectNudgeUp", makeCallbackF(Selection_NudgeUp), Accelerator( GDK_KEY_Up, (GdkModifierType)GDK_MOD1_MASK ) );
+	GlobalCommands_insert( "SelectNudgeDown", makeCallbackF(Selection_NudgeDown), Accelerator( GDK_KEY_Down, (GdkModifierType)GDK_MOD1_MASK ) );
 
 	Patch_registerCommands();
 	XYShow_registerCommands();
@@ -3330,8 +3330,8 @@ void MainFrame_Construct(){
 	Layout_registerPreferencesPage();
 	Paths_registerPreferencesPage();
 
-	g_brushCount.setCountChangedCallback( FreeCaller<void(), QE_brushCountChanged>() );
-	g_entityCount.setCountChangedCallback( FreeCaller<void(), QE_entityCountChanged>() );
+	g_brushCount.setCountChangedCallback( makeCallbackF(QE_brushCountChanged) );
+	g_entityCount.setCountChangedCallback( makeCallbackF(QE_entityCountChanged) );
 	GlobalEntityCreator().setCounter( &g_entityCount );
 
 	GLWidget_sharedContextCreated = GlobalGL_sharedContextCreated;

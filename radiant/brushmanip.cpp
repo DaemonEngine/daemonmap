@@ -1216,7 +1216,7 @@ void Texdef_ToggleMoveLock(){
 
 
 void Brush_registerCommands(){
-	GlobalToggles_insert( "TogTexLock", FreeCaller<void(), Texdef_ToggleMoveLock>(), ToggleItem::AddCallbackCaller( g_texdef_movelock_item ), Accelerator( 'T', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalToggles_insert( "TogTexLock", makeCallbackF(Texdef_ToggleMoveLock), ToggleItem::AddCallbackCaller( g_texdef_movelock_item ), Accelerator( 'T', (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalCommands_insert( "BrushPrism", BrushPrefab::SetCaller( g_brushprism ) );
 	GlobalCommands_insert( "BrushCone", BrushPrefab::SetCaller( g_brushcone ) );
@@ -1231,12 +1231,12 @@ void Brush_registerCommands(){
 	GlobalCommands_insert( "Brush8Sided", BrushMakeSided::SetCaller( g_brushmakesided8 ), Accelerator( '8', (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "Brush9Sided", BrushMakeSided::SetCaller( g_brushmakesided9 ), Accelerator( '9', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "ClipSelected", FreeCaller<void(), ClipSelected>(), Accelerator( GDK_KEY_Return ) );
-	GlobalCommands_insert( "SplitSelected", FreeCaller<void(), SplitSelected>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "FlipClip", FreeCaller<void(), FlipClipper>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "ClipSelected", makeCallbackF(ClipSelected), Accelerator( GDK_KEY_Return ) );
+	GlobalCommands_insert( "SplitSelected", makeCallbackF(SplitSelected), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "FlipClip", makeCallbackF(FlipClipper), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "MakeDetail", FreeCaller<void(), Select_MakeDetail>(), Accelerator( 'M', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "MakeStructural", FreeCaller<void(), Select_MakeStructural>(), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "MakeDetail", makeCallbackF(Select_MakeDetail), Accelerator( 'M', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "MakeStructural", makeCallbackF(Select_MakeStructural), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 }
 
 void Brush_constructMenu( ui::Menu menu ){

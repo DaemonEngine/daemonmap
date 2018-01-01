@@ -1033,7 +1033,7 @@ void PatchInspector_SelectionChanged( const Selectable& selectable ){
 
 
 void PatchInspector_Construct(){
-	GlobalCommands_insert( "PatchInspector", FreeCaller<void(), PatchInspector_toggleShown>(), Accelerator( 'S', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "PatchInspector", makeCallbackF(PatchInspector_toggleShown), Accelerator( 'S', (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalPreferenceSystem().registerPreference( "PatchWnd", WindowPositionTrackerImportStringCaller( g_PatchInspector.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_PatchInspector.m_position_tracker ) );
 	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale1", FloatImportStringCaller( g_pi_globals.scale[0] ), FloatExportStringCaller( g_pi_globals.scale[0] ) );

@@ -192,10 +192,10 @@ void ToggleGridSnap(){
 }
 
 void Grid_registerCommands(){
-	GlobalCommands_insert( "GridDown", FreeCaller<void(), GridPrev>(), Accelerator( '[' ) );
-	GlobalCommands_insert( "GridUp", FreeCaller<void(), GridNext>(), Accelerator( ']' ) );
+	GlobalCommands_insert( "GridDown", makeCallbackF(GridPrev), Accelerator( '[' ) );
+	GlobalCommands_insert( "GridUp", makeCallbackF(GridNext), Accelerator( ']' ) );
 
-	GlobalCommands_insert( "ToggleGridSnap", FreeCaller<void(), ToggleGridSnap>() );
+	GlobalCommands_insert( "ToggleGridSnap", makeCallbackF(ToggleGridSnap) );
 
 	GlobalToggles_insert( "SetGrid0.125", GridMenuItem::SetCaller( g_gridMenu0125 ), ToggleItem::AddCallbackCaller( g_gridMenu0125.m_item ) );
 	GlobalToggles_insert( "SetGrid0.25", GridMenuItem::SetCaller( g_gridMenu025 ), ToggleItem::AddCallbackCaller( g_gridMenu025.m_item ) );
@@ -246,7 +246,7 @@ void Grid_constructPage( PreferenceGroup& group ){
 	Grid_constructPreferences( page );
 }
 void Grid_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Grid_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(Grid_constructPage) );
 }
 
 void Grid_construct(){

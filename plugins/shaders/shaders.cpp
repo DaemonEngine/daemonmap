@@ -1442,9 +1442,6 @@ void LoadShaderFile( const char* filename ){
 	}
 }
 
-typedef FreeCaller<void(const char*), LoadShaderFile> LoadShaderFileCaller;
-
-
 void loadGuideFile( const char* filename ){
 	StringOutputStream fullname( 256 );
 	fullname << "guides/" << filename;
@@ -1465,9 +1462,6 @@ void loadGuideFile( const char* filename ){
 		globalOutputStream() << "Unable to read guide file " << fullname.c_str() << "\n";
 	}
 }
-
-typedef FreeCaller<void(const char*), loadGuideFile> LoadGuideFileCaller;
-
 
 CShader* Try_Shader_ForName( const char* name ){
 	{
@@ -1567,9 +1561,6 @@ void ShaderList_addShaderFile( const char* dirstring ){
 	}
 }
 
-typedef FreeCaller<void(const char*), ShaderList_addShaderFile> AddShaderFileCaller;
-
-
 /*
    ==================
    BuildShaderList
@@ -1624,8 +1615,6 @@ void ShaderList_addFromArchive( const char *archivename ){
 	}
 }
 
-typedef FreeCaller<void(const char *), ShaderList_addFromArchive> AddShaderListFromArchiveCaller;
-
 #include "stream/filestream.h"
 
 bool shaderlist_findOrInstall( const char* enginePath, const char* toolsPath, const char* shaderPath, const char* gamename ){
@@ -1653,7 +1642,7 @@ bool shaderlist_findOrInstall( const char* enginePath, const char* toolsPath, co
 
 void Shaders_Load(){
 	if ( g_shaderLanguage == SHADERLANGUAGE_QUAKE4 ) {
-		GlobalFileSystem().forEachFile( "guides/", "guide", LoadGuideFileCaller(), 0 );
+		GlobalFileSystem().forEachFile("guides/", "guide", makeCallbackF(loadGuideFile), 0);
 	}
 
 	const char* shaderPath = GlobalRadiant().getGameDescriptionKeyValue( "shaderpath" );
@@ -1675,12 +1664,12 @@ void Shaders_Load(){
 				shaderlist_findOrInstall( enginePath, toolsPath, path.c_str(), gamename );
 			}
 
-			GlobalFileSystem().forEachArchive( AddShaderListFromArchiveCaller(), false, true );
+			GlobalFileSystem().forEachArchive(makeCallbackF(ShaderList_addFromArchive), false, true);
 			DumpUnreferencedShaders();
 		}
 		else
 		{
-			GlobalFileSystem().forEachFile( path.c_str(), g_shadersExtension, AddShaderFileCaller(), 0 );
+			GlobalFileSystem().forEachFile(path.c_str(), g_shadersExtension, makeCallbackF(ShaderList_addShaderFile), 0);
 		}
 
 		GSList *lst = l_shaderfiles;

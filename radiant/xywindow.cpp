@@ -2708,7 +2708,7 @@ void Orthographic_constructPage( PreferenceGroup& group ){
 	Orthographic_constructPreferences( page );
 }
 void Orthographic_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Orthographic_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(Orthographic_constructPage) );
 }
 
 void Clipper_constructPreferences( PreferencesPage& page ){
@@ -2719,7 +2719,7 @@ void Clipper_constructPage( PreferenceGroup& group ){
 	Clipper_constructPreferences( page );
 }
 void Clipper_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Clipper_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(Clipper_constructPage) );
 }
 
 
@@ -2740,21 +2740,21 @@ typedef ConstReferenceCaller<ToggleShown, void(const BoolImportCallback&), Toggl
 
 
 void XYWindow_Construct(){
-	GlobalCommands_insert( "ToggleCrosshairs", FreeCaller<void(), ToggleShowCrosshair>(), Accelerator( 'X', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "ToggleSizePaint", FreeCaller<void(), ToggleShowSizeInfo>(), Accelerator( 'J' ) );
-	GlobalCommands_insert( "ToggleGrid", FreeCaller<void(), ToggleShowGrid>(), Accelerator( '0' ) );
+	GlobalCommands_insert( "ToggleCrosshairs", makeCallbackF(ToggleShowCrosshair), Accelerator( 'X', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "ToggleSizePaint", makeCallbackF(ToggleShowSizeInfo), Accelerator( 'J' ) );
+	GlobalCommands_insert( "ToggleGrid", makeCallbackF(ToggleShowGrid), Accelerator( '0' ) );
 
 	GlobalToggles_insert( "ToggleView", ToggleShown::ToggleCaller( g_xy_top_shown ), ToggleItem::AddCallbackCaller( g_xy_top_shown.m_item ), Accelerator( 'V', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 	GlobalToggles_insert( "ToggleSideView", ToggleShown::ToggleCaller( g_yz_side_shown ), ToggleItem::AddCallbackCaller( g_yz_side_shown.m_item ) );
 	GlobalToggles_insert( "ToggleFrontView", ToggleShown::ToggleCaller( g_xz_front_shown ), ToggleItem::AddCallbackCaller( g_xz_front_shown.m_item ) );
-	GlobalCommands_insert( "NextView", FreeCaller<void(), XY_Next>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)GDK_CONTROL_MASK ) ); // fixme: doesn't show its shortcut
-	GlobalCommands_insert( "ZoomIn", FreeCaller<void(), XY_ZoomIn>(), Accelerator( GDK_KEY_Delete ) );
-	GlobalCommands_insert( "ZoomOut", FreeCaller<void(), XY_ZoomOut>(), Accelerator( GDK_KEY_Insert ) );
-	GlobalCommands_insert( "ViewTop", FreeCaller<void(), XY_Top>(), Accelerator( GDK_KEY_KP_Home ) );
-	GlobalCommands_insert( "ViewSide", FreeCaller<void(), XY_Side>(), Accelerator( GDK_KEY_KP_Page_Down ) );
-	GlobalCommands_insert( "ViewFront", FreeCaller<void(), XY_Front>(), Accelerator( GDK_KEY_KP_End ) );
-	GlobalCommands_insert( "Zoom100", FreeCaller<void(), XY_Zoom100>() );
-	GlobalCommands_insert( "CenterXYView", FreeCaller<void(), XY_Focus>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "NextView", makeCallbackF(XY_Next), Accelerator( GDK_KEY_Tab, (GdkModifierType)GDK_CONTROL_MASK ) ); // fixme: doesn't show its shortcut
+	GlobalCommands_insert( "ZoomIn", makeCallbackF(XY_ZoomIn), Accelerator( GDK_KEY_Delete ) );
+	GlobalCommands_insert( "ZoomOut", makeCallbackF(XY_ZoomOut), Accelerator( GDK_KEY_Insert ) );
+	GlobalCommands_insert( "ViewTop", makeCallbackF(XY_Top), Accelerator( GDK_KEY_KP_Home ) );
+	GlobalCommands_insert( "ViewSide", makeCallbackF(XY_Side), Accelerator( GDK_KEY_KP_Page_Down ) );
+	GlobalCommands_insert( "ViewFront", makeCallbackF(XY_Front), Accelerator( GDK_KEY_KP_End ) );
+	GlobalCommands_insert( "Zoom100", makeCallbackF(XY_Zoom100) );
+	GlobalCommands_insert( "CenterXYView", makeCallbackF(XY_Focus), Accelerator( GDK_KEY_Tab, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 
 	GlobalPreferenceSystem().registerPreference( "ClipCaulk", BoolImportStringCaller( g_clip_useCaulk ), BoolExportStringCaller( g_clip_useCaulk ) );
 

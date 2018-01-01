@@ -81,7 +81,7 @@ void Mouse_constructPage( PreferenceGroup& group ){
 	Mouse_constructPreferences( page );
 }
 void Mouse_registerPreferencesPage(){
-	PreferencesDialog_addInterfacePage( FreeCaller<void(PreferenceGroup&), Mouse_constructPage>() );
+	PreferencesDialog_addInterfacePage( makeCallbackF(Mouse_constructPage) );
 }
 
 
@@ -668,7 +668,7 @@ PreferencesPage createPage( const char* treeName, const char* frameName ){
 };
 
 ui::Window PrefsDlg::BuildDialog(){
-	PreferencesDialog_addInterfacePreferences( FreeCaller<void(PreferencesPage&), Interface_constructPreferences>() );
+	PreferencesDialog_addInterfacePreferences( makeCallbackF(Interface_constructPreferences) );
 	Mouse_registerPreferencesPage();
 
 	ui::Window dialog = ui::Window(create_floating_window( "NetRadiant Preferences", m_parent ));

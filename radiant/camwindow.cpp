@@ -1391,14 +1391,12 @@ void render( const Matrix4& modelview, const Matrix4& projection ){
 void ShowStatsToggle(){
 	g_camwindow_globals_private.m_showStats ^= 1;
 }
-typedef FreeCaller<void(), ShowStatsToggle> ShowStatsToggleCaller;
 
 void ShowStatsExport( const BoolImportCallback& importer ){
 	importer( g_camwindow_globals_private.m_showStats );
 }
-typedef FreeCaller<void(const BoolImportCallback&), ShowStatsExport> ShowStatsExportCaller;
 
-ShowStatsExportCaller g_show_stats_caller;
+FreeCaller<void(const BoolImportCallback&), ShowStatsExport> g_show_stats_caller;
 BoolExportCallback g_show_stats_callback( g_show_stats_caller );
 ToggleItem g_show_stats( g_show_stats_callback );
 
@@ -1839,7 +1837,7 @@ void Camera_constructPage( PreferenceGroup& group ){
 	Camera_constructPreferences( page );
 }
 void Camera_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Camera_constructPage>() );
+	PreferencesDialog_addSettingsPage( makeCallbackF(Camera_constructPage) );
 }
 
 #include "preferencesystem.h"
@@ -1868,25 +1866,25 @@ void CameraSpeed_decrease(){
 
 /// \brief Initialisation for things that have the same lifespan as this module.
 void CamWnd_Construct(){
-	GlobalCommands_insert( "CenterView", FreeCaller<void(), GlobalCamera_ResetAngles>(), Accelerator( GDK_KEY_End ) );
+	GlobalCommands_insert( "CenterView", makeCallbackF(GlobalCamera_ResetAngles), Accelerator( GDK_KEY_End ) );
 
-	GlobalToggles_insert( "ToggleCubicClip", FreeCaller<void(), Camera_ToggleFarClip>(), ToggleItem::AddCallbackCaller( g_getfarclip_item ), Accelerator( '\\', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "CubicClipZoomIn", FreeCaller<void(), Camera_CubeIn>(), Accelerator( '[', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "CubicClipZoomOut", FreeCaller<void(), Camera_CubeOut>(), Accelerator( ']', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalToggles_insert( "ToggleCubicClip", makeCallbackF(Camera_ToggleFarClip), ToggleItem::AddCallbackCaller( g_getfarclip_item ), Accelerator( '\\', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "CubicClipZoomIn", makeCallbackF(Camera_CubeIn), Accelerator( '[', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "CubicClipZoomOut", makeCallbackF(Camera_CubeOut), Accelerator( ']', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "UpFloor", FreeCaller<void(), Camera_ChangeFloorUp>(), Accelerator( GDK_KEY_Prior ) );
-	GlobalCommands_insert( "DownFloor", FreeCaller<void(), Camera_ChangeFloorDown>(), Accelerator( GDK_KEY_Next ) );
+	GlobalCommands_insert( "UpFloor", makeCallbackF(Camera_ChangeFloorUp), Accelerator( GDK_KEY_Prior ) );
+	GlobalCommands_insert( "DownFloor", makeCallbackF(Camera_ChangeFloorDown), Accelerator( GDK_KEY_Next ) );
 
 	GlobalToggles_insert( "ToggleCamera", ToggleShown::ToggleCaller( g_camera_shown ), ToggleItem::AddCallbackCaller( g_camera_shown.m_item ), Accelerator( 'C', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "LookThroughSelected", FreeCaller<void(), GlobalCamera_LookThroughSelected>() );
-	GlobalCommands_insert( "LookThroughCamera", FreeCaller<void(), GlobalCamera_LookThroughCamera>() );
+	GlobalCommands_insert( "LookThroughSelected", makeCallbackF(GlobalCamera_LookThroughSelected) );
+	GlobalCommands_insert( "LookThroughCamera", makeCallbackF(GlobalCamera_LookThroughCamera) );
 
 	if ( g_pGameDescription->mGameType == "doom3" ) {
-		GlobalCommands_insert( "TogglePreview", FreeCaller<void(), CamWnd_TogglePreview>(), Accelerator( GDK_KEY_F3 ) );
+		GlobalCommands_insert( "TogglePreview", makeCallbackF(CamWnd_TogglePreview), Accelerator( GDK_KEY_F3 ) );
 	}
 
-	GlobalCommands_insert( "CameraSpeedInc", FreeCaller<void(), CameraSpeed_increase>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "CameraSpeedDec", FreeCaller<void(), CameraSpeed_decrease>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CameraSpeedInc", makeCallbackF(CameraSpeed_increase), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CameraSpeedDec", makeCallbackF(CameraSpeed_decrease), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalShortcuts_insert( "CameraForward", Accelerator( GDK_KEY_Up ) );
 	GlobalShortcuts_insert( "CameraBack", Accelerator( GDK_KEY_Down ) );
@@ -1905,7 +1903,7 @@ void CamWnd_Construct(){
 	GlobalShortcuts_insert( "CameraFreeMoveLeft", Accelerator( GDK_KEY_Left ) );
 	GlobalShortcuts_insert( "CameraFreeMoveRight", Accelerator( GDK_KEY_Right ) );
 
-	GlobalToggles_insert( "ShowStats", ShowStatsToggleCaller(), ToggleItem::AddCallbackCaller( g_show_stats ) );
+	GlobalToggles_insert( "ShowStats", makeCallbackF(ShowStatsToggle), ToggleItem::AddCallbackCaller( g_show_stats ) );
 
 	GlobalPreferenceSystem().registerPreference( "ShowStats", BoolImportStringCaller( g_camwindow_globals_private.m_showStats ), BoolExportStringCaller( g_camwindow_globals_private.m_showStats ) );
 	GlobalPreferenceSystem().registerPreference( "MoveSpeed", IntImportStringCaller( g_camwindow_globals_private.m_nMoveSpeed ), IntExportStringCaller( g_camwindow_globals_private.m_nMoveSpeed ) );

@@ -218,8 +218,8 @@ void Filters_constructMenu( ui::Menu menu_in_menu ){
 void ConstructFilters(){
 	GlobalPreferenceSystem().registerPreference( "SI_Exclude", SizeImportStringCaller( g_filters_globals.exclude ), SizeExportStringCaller( g_filters_globals.exclude ) );
 
-	GlobalCommands_insert( "InvertFilters", FreeCaller<void(), InvertFilters>() );
-	GlobalCommands_insert( "ResetFilters", FreeCaller<void(), ResetFilters>() );
+	GlobalCommands_insert( "InvertFilters", makeCallbackF(InvertFilters) );
+	GlobalCommands_insert( "ResetFilters", makeCallbackF(ResetFilters) );
 
 	add_filter_command( EXCLUDE_WORLD, "FilterWorldBrushes", Accelerator( '1', (GdkModifierType)GDK_MOD1_MASK ) );
 	add_filter_command( EXCLUDE_ENT, "FilterEntities", Accelerator( '2', (GdkModifierType)GDK_MOD1_MASK ) );

@@ -564,7 +564,7 @@ void Entity_constructPage( PreferenceGroup& group ){
 	Entity_constructPreferences( page );
 }
 void Entity_registerPreferencesPage(){
-	PreferencesDialog_addDisplayPage( FreeCaller<void(PreferenceGroup&), Entity_constructPage>() );
+	PreferencesDialog_addDisplayPage( makeCallbackF(Entity_constructPage) );
 }
 
 
@@ -584,12 +584,12 @@ void Entity_constructMenu( ui::Menu menu ){
 #include "stringio.h"
 
 void Entity_Construct(){
-	GlobalCommands_insert( "EntityColor", FreeCaller<void(), Entity_setColour>(), Accelerator( 'K' ) );
-	GlobalCommands_insert( "NormalizeColor", FreeCaller<void(), Entity_normalizeColor>() );
-	GlobalCommands_insert( "ConnectSelection", FreeCaller<void(), Entity_connectSelected>(), Accelerator( 'K', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "KillConnectSelection", FreeCaller<void(), Entity_killconnectSelected>(), Accelerator( 'K', (GdkModifierType)( GDK_SHIFT_MASK ) ) );
-	GlobalCommands_insert( "GroupSelection", FreeCaller<void(), Entity_groupSelected>() );
-	GlobalCommands_insert( "UngroupSelection", FreeCaller<void(), Entity_ungroupSelected>() );
+	GlobalCommands_insert( "EntityColor", makeCallbackF(Entity_setColour), Accelerator( 'K' ) );
+	GlobalCommands_insert( "NormalizeColor", makeCallbackF(Entity_normalizeColor) );
+	GlobalCommands_insert( "ConnectSelection", makeCallbackF(Entity_connectSelected), Accelerator( 'K', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "KillConnectSelection", makeCallbackF(Entity_killconnectSelected), Accelerator( 'K', (GdkModifierType)( GDK_SHIFT_MASK ) ) );
+	GlobalCommands_insert( "GroupSelection", makeCallbackF(Entity_groupSelected) );
+	GlobalCommands_insert( "UngroupSelection", makeCallbackF(Entity_ungroupSelected) );
 
 	GlobalPreferenceSystem().registerPreference( "SI_Colors5", Vector3ImportStringCaller( g_entity_globals.color_entity ), Vector3ExportStringCaller( g_entity_globals.color_entity ) );
 	GlobalPreferenceSystem().registerPreference( "LastLightIntensity", IntImportStringCaller( g_iLastLightIntensity ), IntExportStringCaller( g_iLastLightIntensity ) );
