@@ -357,7 +357,7 @@ void Selection_UpdateWorkzone(){
 		Select_GetBounds( g_select_workzone.d_work_min, g_select_workzone.d_work_max );
 	}
 }
-typedef FreeCaller<Selection_UpdateWorkzone> SelectionUpdateWorkzoneCaller;
+typedef FreeCaller<void(), Selection_UpdateWorkzone> SelectionUpdateWorkzoneCaller;
 
 IdleDraw g_idleWorkzone = IdleDraw( SelectionUpdateWorkzoneCaller() );
 }
@@ -818,11 +818,11 @@ void SceneSelectionChange( const Selectable& selectable ){
 SignalHandlerId Selection_boundsChanged;
 
 void Selection_construct(){
-	typedef FreeCaller1<const Selectable&, SceneSelectionChange> SceneSelectionChangeCaller;
+	typedef FreeCaller<void(const Selectable&), SceneSelectionChange> SceneSelectionChangeCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( SceneSelectionChangeCaller() );
-	typedef FreeCaller1<const Selectable&, UpdateWorkzone_ForSelectionChanged> UpdateWorkzoneForSelectionChangedCaller;
+	typedef FreeCaller<void(const Selectable&), UpdateWorkzone_ForSelectionChanged> UpdateWorkzoneForSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( UpdateWorkzoneForSelectionChangedCaller() );
-	typedef FreeCaller<UpdateWorkzone_ForSelection> UpdateWorkzoneForSelectionCaller;
+	typedef FreeCaller<void(), UpdateWorkzone_ForSelection> UpdateWorkzoneForSelectionCaller;
 	Selection_boundsChanged = GlobalSceneGraph().addBoundsChangedCallback( UpdateWorkzoneForSelectionCaller() );
 }
 

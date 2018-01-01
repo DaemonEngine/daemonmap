@@ -176,7 +176,7 @@ void update(){
 void cancel(){
 	update();
 }
-typedef MemberCaller<Subdivisions, &Subdivisions::cancel> CancelCaller;
+typedef MemberCaller<Subdivisions, void(), &Subdivisions::cancel> CancelCaller;
 void apply(){
 	Scene_PatchSetFixedSubdivisions(
 		PatchFixedSubdivisions(
@@ -186,7 +186,7 @@ void apply(){
 			)
 		);
 }
-typedef MemberCaller<Subdivisions, &Subdivisions::apply> ApplyCaller;
+typedef MemberCaller<Subdivisions, void(), &Subdivisions::apply> ApplyCaller;
 static void applyGtk( ui::ToggleButton toggle, Subdivisions* self ){
 	self->apply();
 }
@@ -230,7 +230,7 @@ bool m_bListenChanged;
 PatchInspector() :
 	m_horizontalSubdivisionsEntry( Subdivisions::ApplyCaller( m_subdivisions ), Subdivisions::CancelCaller( m_subdivisions ) ),
 	m_verticalSubdivisionsEntry( Subdivisions::ApplyCaller( m_subdivisions ), Subdivisions::CancelCaller( m_subdivisions ) ),
-	m_idleDraw( MemberCaller<PatchInspector, &PatchInspector::GetPatchInfo>( *this ) ){
+	m_idleDraw( MemberCaller<PatchInspector, void(), &PatchInspector::GetPatchInfo>( *this ) ){
 	m_fS = 0.0f;
 	m_fT = 0.0f;
 	m_fX = 0.0f;
@@ -1033,7 +1033,7 @@ void PatchInspector_SelectionChanged( const Selectable& selectable ){
 
 
 void PatchInspector_Construct(){
-	GlobalCommands_insert( "PatchInspector", FreeCaller<PatchInspector_toggleShown>(), Accelerator( 'S', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "PatchInspector", FreeCaller<void(), PatchInspector_toggleShown>(), Accelerator( 'S', (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalPreferenceSystem().registerPreference( "PatchWnd", WindowPositionTrackerImportStringCaller( g_PatchInspector.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_PatchInspector.m_position_tracker ) );
 	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale1", FloatImportStringCaller( g_pi_globals.scale[0] ), FloatExportStringCaller( g_pi_globals.scale[0] ) );
@@ -1042,9 +1042,9 @@ void PatchInspector_Construct(){
 	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Shift2", FloatImportStringCaller( g_pi_globals.shift[1] ), FloatExportStringCaller( g_pi_globals.shift[1] ) );
 	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Rotate", FloatImportStringCaller( g_pi_globals.rotate ), FloatExportStringCaller( g_pi_globals.rotate ) );
 
-	typedef FreeCaller1<const Selectable&, PatchInspector_SelectionChanged> PatchInspectorSelectionChangedCaller;
+	typedef FreeCaller<void(const Selectable&), PatchInspector_SelectionChanged> PatchInspectorSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( PatchInspectorSelectionChangedCaller() );
-	typedef FreeCaller<PatchInspector_queueDraw> PatchInspectorQueueDrawCaller;
+	typedef FreeCaller<void(), PatchInspector_queueDraw> PatchInspectorQueueDrawCaller;
 	Patch_addTextureChangedCallback( PatchInspectorQueueDrawCaller() );
 }
 void PatchInspector_Destroy(){

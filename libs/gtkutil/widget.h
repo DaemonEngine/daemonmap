@@ -51,7 +51,7 @@ public:
         m_exportCallback(callback);
     }
 
-    typedef MemberCaller1<ToggleItem, const BoolImportCallback &, &ToggleItem::addCallback> AddCallbackCaller;
+    typedef MemberCaller<ToggleItem, void(const BoolImportCallback &), &ToggleItem::addCallback> AddCallbackCaller;
 };
 
 class ToggleShown {
@@ -79,13 +79,13 @@ public:
 
     void exportActive(const BoolImportCallback &importCallback);
 
-    typedef MemberCaller1<ToggleShown, const BoolImportCallback &, &ToggleShown::exportActive> ActiveCaller;
+    typedef MemberCaller<ToggleShown, void(const BoolImportCallback &), &ToggleShown::exportActive> ActiveCaller;
 
     void set(bool shown);
 
     void toggle();
 
-    typedef MemberCaller<ToggleShown, &ToggleShown::toggle> ToggleCaller;
+    typedef MemberCaller<ToggleShown, void(), &ToggleShown::toggle> ToggleCaller;
 
     void connect(ui::Widget widget);
 };
@@ -93,7 +93,7 @@ public:
 
 void widget_queue_draw(ui::Widget &widget);
 
-typedef ReferenceCaller<ui::Widget, widget_queue_draw> WidgetQueueDrawCaller;
+typedef ReferenceCaller<ui::Widget, void(), widget_queue_draw> WidgetQueueDrawCaller;
 
 
 void widget_make_default(ui::Widget widget);

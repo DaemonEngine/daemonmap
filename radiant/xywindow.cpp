@@ -826,7 +826,7 @@ XYWnd::XYWnd() :
 	GlobalWindowObservers_add( m_window_observer );
 	GlobalWindowObservers_connectWidget( m_gl_widget );
 
-	m_window_observer->setRectangleDrawCallback( ReferenceCaller1<XYWnd, rect_t, xy_update_xor_rectangle>( *this ) );
+	m_window_observer->setRectangleDrawCallback( ReferenceCaller<XYWnd, void(rect_t), xy_update_xor_rectangle>( *this ) );
 	m_window_observer->setView( m_view );
 
 	g_object_ref( m_gl_widget._handle );
@@ -849,8 +849,8 @@ XYWnd::XYWnd() :
 	updateProjection();
 	updateModelview();
 
-	AddSceneChangeCallback( ReferenceCaller<XYWnd, &XYWnd_Update>( *this ) );
-	AddCameraMovedCallback( ReferenceCaller<XYWnd, &XYWnd_CameraMoved>( *this ) );
+	AddSceneChangeCallback( ReferenceCaller<XYWnd, void(), &XYWnd_Update>( *this ) );
+	AddCameraMovedCallback( ReferenceCaller<XYWnd, void(), &XYWnd_CameraMoved>( *this ) );
 
 	PressedButtons_connect( g_pressedButtons, m_gl_widget );
 
@@ -2586,71 +2586,71 @@ void ShowNamesToggle(){
 	GlobalEntityCreator().setShowNames( !GlobalEntityCreator().getShowNames() );
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowNamesToggle> ShowNamesToggleCaller;
+typedef FreeCaller<void(), ShowNamesToggle> ShowNamesToggleCaller;
 void ShowNamesExport( const BoolImportCallback& importer ){
 	importer( GlobalEntityCreator().getShowNames() );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowNamesExport> ShowNamesExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowNamesExport> ShowNamesExportCaller;
 
 void ShowAnglesToggle(){
 	GlobalEntityCreator().setShowAngles( !GlobalEntityCreator().getShowAngles() );
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowAnglesToggle> ShowAnglesToggleCaller;
+typedef FreeCaller<void(), ShowAnglesToggle> ShowAnglesToggleCaller;
 void ShowAnglesExport( const BoolImportCallback& importer ){
 	importer( GlobalEntityCreator().getShowAngles() );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowAnglesExport> ShowAnglesExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowAnglesExport> ShowAnglesExportCaller;
 
 void ShowBlocksToggle(){
 	g_xywindow_globals_private.show_blocks ^= 1;
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowBlocksToggle> ShowBlocksToggleCaller;
+typedef FreeCaller<void(), ShowBlocksToggle> ShowBlocksToggleCaller;
 void ShowBlocksExport( const BoolImportCallback& importer ){
 	importer( g_xywindow_globals_private.show_blocks );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowBlocksExport> ShowBlocksExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowBlocksExport> ShowBlocksExportCaller;
 
 void ShowCoordinatesToggle(){
 	g_xywindow_globals_private.show_coordinates ^= 1;
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowCoordinatesToggle> ShowCoordinatesToggleCaller;
+typedef FreeCaller<void(), ShowCoordinatesToggle> ShowCoordinatesToggleCaller;
 void ShowCoordinatesExport( const BoolImportCallback& importer ){
 	importer( g_xywindow_globals_private.show_coordinates );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowCoordinatesExport> ShowCoordinatesExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowCoordinatesExport> ShowCoordinatesExportCaller;
 
 void ShowOutlineToggle(){
 	g_xywindow_globals_private.show_outline ^= 1;
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowOutlineToggle> ShowOutlineToggleCaller;
+typedef FreeCaller<void(), ShowOutlineToggle> ShowOutlineToggleCaller;
 void ShowOutlineExport( const BoolImportCallback& importer ){
 	importer( g_xywindow_globals_private.show_outline );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowOutlineExport> ShowOutlineExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowOutlineExport> ShowOutlineExportCaller;
 
 void ShowAxesToggle(){
 	g_xywindow_globals_private.show_axis ^= 1;
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowAxesToggle> ShowAxesToggleCaller;
+typedef FreeCaller<void(), ShowAxesToggle> ShowAxesToggleCaller;
 void ShowAxesExport( const BoolImportCallback& importer ){
 	importer( g_xywindow_globals_private.show_axis );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowAxesExport> ShowAxesExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowAxesExport> ShowAxesExportCaller;
 
 void ShowWorkzoneToggle(){
 	g_xywindow_globals_private.d_show_work ^= 1;
 	XY_UpdateAllWindows();
 }
-typedef FreeCaller<ShowWorkzoneToggle> ShowWorkzoneToggleCaller;
+typedef FreeCaller<void(), ShowWorkzoneToggle> ShowWorkzoneToggleCaller;
 void ShowWorkzoneExport( const BoolImportCallback& importer ){
 	importer( g_xywindow_globals_private.d_show_work );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowWorkzoneExport> ShowWorkzoneExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowWorkzoneExport> ShowWorkzoneExportCaller;
 
 ShowNamesExportCaller g_show_names_caller;
 BoolExportCallback g_show_names_callback( g_show_names_caller );
@@ -2708,7 +2708,7 @@ void Orthographic_constructPage( PreferenceGroup& group ){
 	Orthographic_constructPreferences( page );
 }
 void Orthographic_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller1<PreferenceGroup&, Orthographic_constructPage>() );
+	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Orthographic_constructPage>() );
 }
 
 void Clipper_constructPreferences( PreferencesPage& page ){
@@ -2719,7 +2719,7 @@ void Clipper_constructPage( PreferenceGroup& group ){
 	Clipper_constructPreferences( page );
 }
 void Clipper_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller1<PreferenceGroup&, Clipper_constructPage>() );
+	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Clipper_constructPage>() );
 }
 
 
@@ -2732,29 +2732,29 @@ void Clipper_registerPreferencesPage(){
 void ToggleShown_importBool( ToggleShown& self, bool value ){
 	self.set( value );
 }
-typedef ReferenceCaller1<ToggleShown, bool, ToggleShown_importBool> ToggleShownImportBoolCaller;
+typedef ReferenceCaller<ToggleShown, void(bool), ToggleShown_importBool> ToggleShownImportBoolCaller;
 void ToggleShown_exportBool( const ToggleShown& self, const BoolImportCallback& importer ){
 	importer( self.active() );
 }
-typedef ConstReferenceCaller1<ToggleShown, const BoolImportCallback&, ToggleShown_exportBool> ToggleShownExportBoolCaller;
+typedef ConstReferenceCaller<ToggleShown, void(const BoolImportCallback&), ToggleShown_exportBool> ToggleShownExportBoolCaller;
 
 
 void XYWindow_Construct(){
-	GlobalCommands_insert( "ToggleCrosshairs", FreeCaller<ToggleShowCrosshair>(), Accelerator( 'X', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "ToggleSizePaint", FreeCaller<ToggleShowSizeInfo>(), Accelerator( 'J' ) );
-	GlobalCommands_insert( "ToggleGrid", FreeCaller<ToggleShowGrid>(), Accelerator( '0' ) );
+	GlobalCommands_insert( "ToggleCrosshairs", FreeCaller<void(), ToggleShowCrosshair>(), Accelerator( 'X', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "ToggleSizePaint", FreeCaller<void(), ToggleShowSizeInfo>(), Accelerator( 'J' ) );
+	GlobalCommands_insert( "ToggleGrid", FreeCaller<void(), ToggleShowGrid>(), Accelerator( '0' ) );
 
 	GlobalToggles_insert( "ToggleView", ToggleShown::ToggleCaller( g_xy_top_shown ), ToggleItem::AddCallbackCaller( g_xy_top_shown.m_item ), Accelerator( 'V', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 	GlobalToggles_insert( "ToggleSideView", ToggleShown::ToggleCaller( g_yz_side_shown ), ToggleItem::AddCallbackCaller( g_yz_side_shown.m_item ) );
 	GlobalToggles_insert( "ToggleFrontView", ToggleShown::ToggleCaller( g_xz_front_shown ), ToggleItem::AddCallbackCaller( g_xz_front_shown.m_item ) );
-	GlobalCommands_insert( "NextView", FreeCaller<XY_Next>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)GDK_CONTROL_MASK ) ); // fixme: doesn't show its shortcut
-	GlobalCommands_insert( "ZoomIn", FreeCaller<XY_ZoomIn>(), Accelerator( GDK_KEY_Delete ) );
-	GlobalCommands_insert( "ZoomOut", FreeCaller<XY_ZoomOut>(), Accelerator( GDK_KEY_Insert ) );
-	GlobalCommands_insert( "ViewTop", FreeCaller<XY_Top>(), Accelerator( GDK_KEY_KP_Home ) );
-	GlobalCommands_insert( "ViewSide", FreeCaller<XY_Side>(), Accelerator( GDK_KEY_KP_Page_Down ) );
-	GlobalCommands_insert( "ViewFront", FreeCaller<XY_Front>(), Accelerator( GDK_KEY_KP_End ) );
-	GlobalCommands_insert( "Zoom100", FreeCaller<XY_Zoom100>() );
-	GlobalCommands_insert( "CenterXYView", FreeCaller<XY_Focus>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "NextView", FreeCaller<void(), XY_Next>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)GDK_CONTROL_MASK ) ); // fixme: doesn't show its shortcut
+	GlobalCommands_insert( "ZoomIn", FreeCaller<void(), XY_ZoomIn>(), Accelerator( GDK_KEY_Delete ) );
+	GlobalCommands_insert( "ZoomOut", FreeCaller<void(), XY_ZoomOut>(), Accelerator( GDK_KEY_Insert ) );
+	GlobalCommands_insert( "ViewTop", FreeCaller<void(), XY_Top>(), Accelerator( GDK_KEY_KP_Home ) );
+	GlobalCommands_insert( "ViewSide", FreeCaller<void(), XY_Side>(), Accelerator( GDK_KEY_KP_Page_Down ) );
+	GlobalCommands_insert( "ViewFront", FreeCaller<void(), XY_Front>(), Accelerator( GDK_KEY_KP_End ) );
+	GlobalCommands_insert( "Zoom100", FreeCaller<void(), XY_Zoom100>() );
+	GlobalCommands_insert( "CenterXYView", FreeCaller<void(), XY_Focus>(), Accelerator( GDK_KEY_Tab, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 
 	GlobalPreferenceSystem().registerPreference( "ClipCaulk", BoolImportStringCaller( g_clip_useCaulk ), BoolExportStringCaller( g_clip_useCaulk ) );
 

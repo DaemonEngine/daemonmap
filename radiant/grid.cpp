@@ -133,11 +133,11 @@ void set(){
 	m_item.update();
 	setGridPower( m_id );
 }
-typedef MemberCaller<GridMenuItem, &GridMenuItem::set> SetCaller;
+typedef MemberCaller<GridMenuItem, void(), &GridMenuItem::set> SetCaller;
 void active( const BoolImportCallback& importCallback ){
 	importCallback( g_grid_power == m_id );
 }
-typedef MemberCaller1<GridMenuItem, const BoolImportCallback&, &GridMenuItem::active> ExportCaller;
+typedef MemberCaller<GridMenuItem, void(const BoolImportCallback&), &GridMenuItem::active> ExportCaller;
 };
 
 GridMenuItem g_gridMenu0125( GRIDPOWER_0125 );
@@ -192,10 +192,10 @@ void ToggleGridSnap(){
 }
 
 void Grid_registerCommands(){
-	GlobalCommands_insert( "GridDown", FreeCaller<GridPrev>(), Accelerator( '[' ) );
-	GlobalCommands_insert( "GridUp", FreeCaller<GridNext>(), Accelerator( ']' ) );
+	GlobalCommands_insert( "GridDown", FreeCaller<void(), GridPrev>(), Accelerator( '[' ) );
+	GlobalCommands_insert( "GridUp", FreeCaller<void(), GridNext>(), Accelerator( ']' ) );
 
-	GlobalCommands_insert( "ToggleGridSnap", FreeCaller<ToggleGridSnap>() );
+	GlobalCommands_insert( "ToggleGridSnap", FreeCaller<void(), ToggleGridSnap>() );
 
 	GlobalToggles_insert( "SetGrid0.125", GridMenuItem::SetCaller( g_gridMenu0125 ), ToggleItem::AddCallbackCaller( g_gridMenu0125.m_item ) );
 	GlobalToggles_insert( "SetGrid0.25", GridMenuItem::SetCaller( g_gridMenu025 ), ToggleItem::AddCallbackCaller( g_gridMenu025.m_item ) );
@@ -246,7 +246,7 @@ void Grid_constructPage( PreferenceGroup& group ){
 	Grid_constructPreferences( page );
 }
 void Grid_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller1<PreferenceGroup&, Grid_constructPage>() );
+	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Grid_constructPage>() );
 }
 
 void Grid_construct(){

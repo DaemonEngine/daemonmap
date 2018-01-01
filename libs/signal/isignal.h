@@ -77,8 +77,8 @@ public:
     }
 };
 
-class SignalHandler : public SignalHandlerN<Callback0<SignalHandlerResult>, SignalHandlerCaller1> {
-    using SignalHandlerN<Callback0<SignalHandlerResult>, SignalHandlerCaller1>::SignalHandlerN;
+class SignalHandler : public SignalHandlerN<Callback<SignalHandlerResult()>, SignalHandlerCaller1> {
+    using SignalHandlerN<Callback<SignalHandlerResult()>, SignalHandlerCaller1>::SignalHandlerN;
 };
 
 template<typename Caller>
@@ -91,8 +91,8 @@ inline SignalHandler makeSignalHandler(const Caller &caller, get_argument<Caller
 }
 
 template<typename FirstArgument>
-class SignalHandler1 : public SignalHandlerN<Callback1<FirstArgument, SignalHandlerResult>, SignalHandlerCaller2> {
-    using SignalHandlerN<Callback1<FirstArgument, SignalHandlerResult>, SignalHandlerCaller2>::SignalHandlerN;
+class SignalHandler1 : public SignalHandlerN<Callback<SignalHandlerResult(FirstArgument)>, SignalHandlerCaller2> {
+    using SignalHandlerN<Callback<SignalHandlerResult(FirstArgument)>, SignalHandlerCaller2>::SignalHandlerN;
 };
 
 template<typename Caller>
@@ -107,8 +107,8 @@ makeSignalHandler1(const Caller &caller, get_argument<Caller, 0> callee) {
 
 template<typename FirstArgument, typename SecondArgument>
 class SignalHandler2
-        : public SignalHandlerN<Callback2<FirstArgument, SecondArgument, SignalHandlerResult>, SignalHandlerCaller3> {
-    using SignalHandlerN<Callback2<FirstArgument, SecondArgument, SignalHandlerResult>, SignalHandlerCaller3>::SignalHandlerN;
+        : public SignalHandlerN<Callback<SignalHandlerResult(FirstArgument, SecondArgument)>, SignalHandlerCaller3> {
+    using SignalHandlerN<Callback<SignalHandlerResult(FirstArgument, SecondArgument)>, SignalHandlerCaller3>::SignalHandlerN;
 };
 
 template<typename Caller>
@@ -134,8 +134,8 @@ inline SignalHandler2<
 
 template<typename FirstArgument, typename SecondArgument, typename ThirdArgument>
 class SignalHandler3
-        : public SignalHandlerN<Callback3<FirstArgument, SecondArgument, ThirdArgument, SignalHandlerResult>, SignalHandlerCaller4> {
-    using SignalHandlerN<Callback3<FirstArgument, SecondArgument, ThirdArgument, SignalHandlerResult>, SignalHandlerCaller4>::SignalHandlerN;
+        : public SignalHandlerN<Callback<SignalHandlerResult(FirstArgument, SecondArgument, ThirdArgument)>, SignalHandlerCaller4> {
+    using SignalHandlerN<Callback<SignalHandlerResult(FirstArgument, SecondArgument, ThirdArgument)>, SignalHandlerCaller4>::SignalHandlerN;
 };
 
 template<typename Caller>

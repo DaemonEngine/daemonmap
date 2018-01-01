@@ -26,11 +26,11 @@
 #include "generic/callback.h"
 
 inline void closure_destroy( gpointer data, GClosure* closure ){
-	delete reinterpret_cast<Callback*>( data );
+	delete reinterpret_cast<Callback<void()>*>( data );
 }
 
-inline GClosure* create_cclosure( GCallback func, const Callback& callback ){
-	return g_cclosure_new( func, new Callback( callback ), closure_destroy );
+inline GClosure* create_cclosure( GCallback func, const Callback<void()>& callback ){
+	return g_cclosure_new( func, new Callback<void()>( callback ), closure_destroy );
 }
 
 inline GValue GValue_default(){

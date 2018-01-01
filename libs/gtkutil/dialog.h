@@ -107,8 +107,8 @@ PathEntry PathEntry_new();
 class BrowsedPathEntry
 {
 public:
-typedef Callback1<const char*> SetPathCallback;
-typedef Callback1<const SetPathCallback&> BrowseCallback;
+typedef Callback<void(const char*)> SetPathCallback;
+typedef Callback<void(const SetPathCallback&)> BrowseCallback;
 
 PathEntry m_entry;
 BrowseCallback m_browse;

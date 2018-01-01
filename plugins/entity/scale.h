@@ -87,12 +87,12 @@ inline Vector3 scale_scaled( const Vector3& scale, const Vector3& scaling ){
 
 class ScaleKey
 {
-Callback m_scaleChanged;
+Callback<void()> m_scaleChanged;
 public:
 Vector3 m_scale;
 
 
-ScaleKey( const Callback& scaleChanged )
+ScaleKey( const Callback<void()>& scaleChanged )
 	: m_scaleChanged( scaleChanged ), m_scale( SCALEKEY_IDENTITY ){
 }
 
@@ -100,13 +100,13 @@ void uniformScaleChanged( const char* value ){
 	read_scale( m_scale, value );
 	m_scaleChanged();
 }
-typedef MemberCaller1<ScaleKey, const char*, &ScaleKey::uniformScaleChanged> UniformScaleChangedCaller;
+typedef MemberCaller<ScaleKey, void(const char*), &ScaleKey::uniformScaleChanged> UniformScaleChangedCaller;
 
 void scaleChanged( const char* value ){
 	read_scalevec( m_scale, value );
 	m_scaleChanged();
 }
-typedef MemberCaller1<ScaleKey, const char*, &ScaleKey::scaleChanged> ScaleChangedCaller;
+typedef MemberCaller<ScaleKey, void(const char*), &ScaleKey::scaleChanged> ScaleChangedCaller;
 
 void write( Entity* entity ) const {
 	write_scale( m_scale, entity );

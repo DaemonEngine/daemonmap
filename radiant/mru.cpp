@@ -185,7 +185,7 @@ void load(){
 }
 };
 
-typedef MemberCaller<LoadMRU, &LoadMRU::load> LoadMRUCaller;
+typedef MemberCaller<LoadMRU, void(), &LoadMRU::load> LoadMRUCaller;
 
 LoadMRU g_load_mru1( 1 );
 LoadMRU g_load_mru2( 2 );

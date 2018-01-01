@@ -31,7 +31,7 @@ struct rect_t
 	float max[2];
 };
 
-typedef Callback1<rect_t> RectangleCallback;
+typedef Callback<void(rect_t)> RectangleCallback;
 
 class View;
 

@@ -34,10 +34,10 @@ class EModel : public ModuleObserver
 ResourceReference m_resource;
 scene::Traversable& m_traverse;
 scene::Node* m_node;
-Callback m_modelChanged;
+Callback<void()> m_modelChanged;
 
 public:
-EModel( scene::Traversable& traversable, const Callback& modelChanged )
+EModel( scene::Traversable& traversable, const Callback<void()>& modelChanged )
 	: m_resource( "" ), m_traverse( traversable ), m_node( 0 ), m_modelChanged( modelChanged ){
 	m_resource.attach( *this );
 }
@@ -66,7 +66,7 @@ void modelChanged( const char* value ){
 	m_resource.attach( *this );
 	m_modelChanged();
 }
-typedef MemberCaller1<EModel, const char*, &EModel::modelChanged> ModelChangedCaller;
+typedef MemberCaller<EModel, void(const char*), &EModel::modelChanged> ModelChangedCaller;
 
 const char* getName() const {
 	return m_resource.getName();
@@ -82,7 +82,7 @@ TraversableNode m_traverse;
 EModel m_model;
 public:
 SingletonModel()
-	: m_model( m_traverse, Callback() ){
+	: m_model( m_traverse, Callback<void()>() ){
 }
 
 void attach( scene::Traversable::Observer* observer ){
@@ -99,7 +99,7 @@ scene::Traversable& getTraversable(){
 void modelChanged( const char* value ){
 	m_model.modelChanged( value );
 }
-typedef MemberCaller1<SingletonModel, const char*, &SingletonModel::modelChanged> ModelChangedCaller;
+typedef MemberCaller<SingletonModel, void(const char*), &SingletonModel::modelChanged> ModelChangedCaller;
 
 scene::Node* getNode() const {
 	return m_model.getNode();

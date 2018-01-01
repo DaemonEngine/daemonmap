@@ -244,7 +244,7 @@ void DEntity_loadBrush( DEntity& entity, scene::Instance& brush ){
 	DBrush* loadBrush = entity.NewBrush( static_cast<int>( entity.brushList.size() ) );
 	loadBrush->LoadFromBrush( brush, true );
 }
-typedef ReferenceCaller1<DEntity, scene::Instance&, DEntity_loadBrush> DEntityLoadBrushCaller;
+typedef ReferenceCaller<DEntity, void(scene::Instance&), DEntity_loadBrush> DEntityLoadBrushCaller;
 
 void DEntity::LoadSelectedBrushes(){
 	ClearBrushes();
@@ -277,7 +277,7 @@ void DEntity_loadPatch( DEntity& entity, scene::Instance& patch ){
 	DPatch* loadPatch = entity.NewPatch();
 	loadPatch->LoadFromPatch( patch );
 }
-typedef ReferenceCaller1<DEntity, scene::Instance&, DEntity_loadPatch> DEntityLoadPatchCaller;
+typedef ReferenceCaller<DEntity, void(scene::Instance&), DEntity_loadPatch> DEntityLoadPatchCaller;
 
 void DEntity::LoadSelectedPatches(){
 	ClearPatches();

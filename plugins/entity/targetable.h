@@ -113,7 +113,7 @@ void targetnameChanged( const char* name ){
 	m_targets = getTargetables( name );
 	construct();
 }
-typedef MemberCaller1<TargetedEntity, const char*, &TargetedEntity::targetnameChanged> TargetnameChangedCaller;
+typedef MemberCaller<TargetedEntity, void(const char*), &TargetedEntity::targetnameChanged> TargetnameChangedCaller;
 };
 
 
@@ -127,7 +127,7 @@ TargetingEntity() :
 void targetChanged( const char* target ){
 	m_targets = getTargetables( target );
 }
-typedef MemberCaller1<TargetingEntity, const char*, &TargetingEntity::targetChanged> TargetChangedCaller;
+typedef MemberCaller<TargetingEntity, void(const char*), &TargetingEntity::targetChanged> TargetChangedCaller;
 
 typedef targetables_t::iterator iterator;
 
@@ -194,7 +194,7 @@ void operator()( const Vector3& worldPosition ) const {
 class TargetKeys : public Entity::Observer
 {
 TargetingEntities m_targetingEntities;
-Callback m_targetsChanged;
+Callback<void()> m_targetsChanged;
 
 bool readTargetKey( const char* key, std::size_t& index ){
 	if ( string_equal_n( key, "target", 6 ) ) {
@@ -210,7 +210,7 @@ bool readTargetKey( const char* key, std::size_t& index ){
 	return false;
 }
 public:
-void setTargetsChanged( const Callback& targetsChanged ){
+void setTargetsChanged( const Callback<void()>& targetsChanged ){
 	m_targetsChanged = targetsChanged;
 }
 void targetsChanged(){
@@ -323,7 +323,7 @@ TargetableInstance(
 	m_entity.detach( *this );
 }
 
-void setTargetsChanged( const Callback& targetsChanged ){
+void setTargetsChanged( const Callback<void()>& targetsChanged ){
 	m_targeting.setTargetsChanged( targetsChanged );
 }
 void targetsChanged(){

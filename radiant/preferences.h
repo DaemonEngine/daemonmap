@@ -105,7 +105,7 @@ ui::SpinButton appendSpinner( const char* name, double value, double lower, doub
 }
 };
 
-typedef Callback1<PreferencesPage&> PreferencesPageCallback;
+typedef Callback<void(PreferencesPage&)> PreferencesPageCallback;
 
 class PreferenceGroup
 {
@@ -113,7 +113,7 @@ public:
 virtual PreferencesPage createPage( const char* treeName, const char* frameName ) = 0;
 };
 
-typedef Callback1<PreferenceGroup&> PreferenceGroupCallback;
+typedef Callback<void(PreferenceGroup&)> PreferenceGroupCallback;
 
 void PreferencesDialog_addInterfacePreferences( const PreferencesPageCallback& callback );
 void PreferencesDialog_addInterfacePage( const PreferenceGroupCallback& callback );
@@ -146,10 +146,10 @@ void import( Value value ){
 };
 
 typedef LatchedValue<bool> LatchedBool;
-typedef MemberCaller1<LatchedBool, bool, &LatchedBool::import> LatchedBoolImportCaller;
+typedef MemberCaller<LatchedBool, void(bool), &LatchedBool::import> LatchedBoolImportCaller;
 
 typedef LatchedValue<int> LatchedInt;
-typedef MemberCaller1<LatchedInt, int, &LatchedInt::import> LatchedIntImportCaller;
+typedef MemberCaller<LatchedInt, void(int), &LatchedInt::import> LatchedIntImportCaller;
 
 /*!
    holds information for a given game

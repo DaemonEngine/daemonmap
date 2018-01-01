@@ -76,7 +76,7 @@ std::vector<StringExportCallback> g_pages;
 
 void GroupDialog_updatePageTitle( ui::Window window, std::size_t pageIndex ){
 	if ( pageIndex < g_pages.size() ) {
-		g_pages[pageIndex]( PointerCaller1<GtkWindow, const char*, gtk_window_set_title>( window ) );
+		g_pages[pageIndex]( PointerCaller<GtkWindow, void(const char*), gtk_window_set_title>( window ) );
 	}
 }
 
@@ -197,7 +197,7 @@ void GroupDialog_updatePageTitle( ui::Widget page ){
 void GroupDialog_Construct(){
 	GlobalPreferenceSystem().registerPreference( "EntityWnd", WindowPositionTrackerImportStringCaller( g_GroupDlg.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_GroupDlg.m_position_tracker ) );
 
-	GlobalCommands_insert( "ViewEntityInfo", FreeCaller<GroupDialog_ToggleShow>(), Accelerator( 'N' ) );
+	GlobalCommands_insert( "ViewEntityInfo", FreeCaller<void(), GroupDialog_ToggleShow>(), Accelerator( 'N' ) );
 }
 void GroupDialog_Destroy(){
 }

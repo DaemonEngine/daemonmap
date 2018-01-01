@@ -47,7 +47,7 @@ inline void write_colour( const Vector3& colour, Entity* entity ){
 
 class Colour
 {
-Callback m_colourChanged;
+Callback<void()> m_colourChanged;
 Shader* m_state;
 
 void capture_state(){
@@ -60,7 +60,7 @@ void release_state(){
 public:
 Vector3 m_colour;
 
-Colour( const Callback& colourChanged )
+Colour( const Callback<void()>& colourChanged )
 	: m_colourChanged( colourChanged ){
 	default_colour( m_colour );
 	capture_state();
@@ -76,7 +76,7 @@ void colourChanged( const char* value ){
 
 	m_colourChanged();
 }
-typedef MemberCaller1<Colour, const char*, &Colour::colourChanged> ColourChangedCaller;
+typedef MemberCaller<Colour, void(const char*), &Colour::colourChanged> ColourChangedCaller;
 
 
 void write( Entity* entity ) const {

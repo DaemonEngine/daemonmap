@@ -213,7 +213,7 @@ BindArguments2<Caller> bindArguments( const Caller& caller, FirstBound firstBoun
 inline bool Face_testPlane( const Face& face, const Plane3& plane, bool flipped ){
 	return face.contributes() && !Winding_TestPlane( face.getWinding(), plane, flipped );
 }
-typedef Function3<const Face&, const Plane3&, bool, bool, Face_testPlane> FaceTestPlane;
+typedef Function<bool(const Face&, const Plane3&, bool), Face_testPlane> FaceTestPlane;
 
 
 

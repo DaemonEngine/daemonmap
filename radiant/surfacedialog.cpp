@@ -127,12 +127,12 @@ Increment( float& f ) : m_f( f ), m_spin( 0 ), m_entry( ui::null ){
 void cancel(){
 	entry_set_float( m_entry, m_f );
 }
-typedef MemberCaller<Increment, &Increment::cancel> CancelCaller;
+typedef MemberCaller<Increment, void(), &Increment::cancel> CancelCaller;
 void apply(){
 	m_f = static_cast<float>( entry_get_float( m_entry ) );
 	spin_button_set_step( m_spin, m_f );
 }
-typedef MemberCaller<Increment, &Increment::apply> ApplyCaller;
+typedef MemberCaller<Increment, void(), &Increment::apply> ApplyCaller;
 };
 
 void SurfaceInspector_GridChange();
@@ -205,7 +205,7 @@ SurfaceInspector() :
 void constructWindow( ui::Window main_window ){
 	m_parent = main_window;
 	Create();
-	AddGridChangeCallback( FreeCaller<SurfaceInspector_GridChange>() );
+	AddGridChangeCallback( FreeCaller<void(), SurfaceInspector_GridChange>() );
 }
 void destroyWindow(){
 	Destroy();
@@ -220,13 +220,13 @@ void queueDraw(){
 }
 
 void Update();
-typedef MemberCaller<SurfaceInspector, &SurfaceInspector::Update> UpdateCaller;
+typedef MemberCaller<SurfaceInspector, void(), &SurfaceInspector::Update> UpdateCaller;
 void ApplyShader();
-typedef MemberCaller<SurfaceInspector, &SurfaceInspector::ApplyShader> ApplyShaderCaller;
+typedef MemberCaller<SurfaceInspector, void(), &SurfaceInspector::ApplyShader> ApplyShaderCaller;
 void ApplyTexdef();
-typedef MemberCaller<SurfaceInspector, &SurfaceInspector::ApplyTexdef> ApplyTexdefCaller;
+typedef MemberCaller<SurfaceInspector, void(), &SurfaceInspector::ApplyTexdef> ApplyTexdefCaller;
 void ApplyFlags();
-typedef MemberCaller<SurfaceInspector, &SurfaceInspector::ApplyFlags> ApplyFlagsCaller;
+typedef MemberCaller<SurfaceInspector, void(), &SurfaceInspector::ApplyFlags> ApplyFlagsCaller;
 };
 
 namespace
@@ -577,7 +577,7 @@ const char* getContentFlagName( std::size_t bit ){
 // =============================================================================
 // SurfaceInspector class
 
-guint togglebutton_connect_toggled( ui::ToggleButton button, const Callback& callback ){
+guint togglebutton_connect_toggled( ui::ToggleButton button, const Callback<void()>& callback ){
 	return g_signal_connect_swapped( G_OBJECT( button ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 }
 
@@ -1183,14 +1183,14 @@ void Face_getTexture( Face& face, CopiedString& shader, TextureProjection& proje
 	face.GetTexdef( projection );
 	flags = face.getShader().m_flags;
 }
-typedef Function4<Face&, CopiedString&, TextureProjection&, ContentsFlagsValue&, void, Face_getTexture> FaceGetTexture;
+typedef Function<void(Face&, CopiedString&, TextureProjection&, ContentsFlagsValue&), Face_getTexture> FaceGetTexture;
 
 void Face_setTexture( Face& face, const char* shader, const TextureProjection& projection, const ContentsFlagsValue& flags ){
 	face.SetShader( shader );
 	face.SetTexdef( projection );
 	face.SetFlags( flags );
 }
-typedef Function4<Face&, const char*, const TextureProjection&, const ContentsFlagsValue&, void, Face_setTexture> FaceSetTexture;
+typedef Function<void(Face&, const char*, const TextureProjection&, const ContentsFlagsValue&), Face_setTexture> FaceSetTexture;
 
 
 void Patch_getTexture( Patch& patch, CopiedString& shader, TextureProjection& projection, ContentsFlagsValue& flags ){
@@ -1198,16 +1198,16 @@ void Patch_getTexture( Patch& patch, CopiedString& shader, TextureProjection& pr
 	projection = TextureProjection( texdef_t(), brushprimit_texdef_t(), Vector3( 0, 0, 0 ), Vector3( 0, 0, 0 ) );
 	flags = ContentsFlagsValue( 0, 0, 0, false );
 }
-typedef Function4<Patch&, CopiedString&, TextureProjection&, ContentsFlagsValue&, void, Patch_getTexture> PatchGetTexture;
+typedef Function<void(Patch&, CopiedString&, TextureProjection&, ContentsFlagsValue&), Patch_getTexture> PatchGetTexture;
 
 void Patch_setTexture( Patch& patch, const char* shader, const TextureProjection& projection, const ContentsFlagsValue& flags ){
 	patch.SetShader( shader );
 }
-typedef Function4<Patch&, const char*, const TextureProjection&, const ContentsFlagsValue&, void, Patch_setTexture> PatchSetTexture;
+typedef Function<void(Patch&, const char*, const TextureProjection&, const ContentsFlagsValue&), Patch_setTexture> PatchSetTexture;
 
 
-typedef Callback3<CopiedString&, TextureProjection&, ContentsFlagsValue&> GetTextureCallback;
-typedef Callback3<const char*, const TextureProjection&, const ContentsFlagsValue&> SetTextureCallback;
+typedef Callback<void(CopiedString&, TextureProjection&, ContentsFlagsValue&)> GetTextureCallback;
+typedef Callback<void(const char*, const TextureProjection&, const ContentsFlagsValue&)> SetTextureCallback;
 
 struct Texturable
 {
@@ -1222,8 +1222,8 @@ void Face_getClosest( Face& face, SelectionTest& test, SelectionIntersection& be
 	if ( intersection.valid()
 		 && SelectionIntersection_closer( intersection, bestIntersection ) ) {
 		bestIntersection = intersection;
-		texturable.setTexture = makeCallback3( FaceSetTexture(), face );
-		texturable.getTexture = makeCallback3( FaceGetTexture(), face );
+		texturable.setTexture = makeCallback( FaceSetTexture(), face );
+		texturable.getTexture = makeCallback( FaceGetTexture(), face );
 	}
 }
 
@@ -1277,8 +1277,8 @@ bool pre( const scene::Path& path, scene::Instance& instance ) const {
 				if ( occluded ) {
 					Patch* patch = Node_getPatch( path.top() );
 					if ( patch != 0 ) {
-						m_texturable.setTexture = makeCallback3( PatchSetTexture(), *patch );
-						m_texturable.getTexture = makeCallback3( PatchGetTexture(), *patch );
+						m_texturable.setTexture = makeCallback( PatchSetTexture(), *patch );
+						m_texturable.getTexture = makeCallback( PatchGetTexture(), *patch );
 					}
 					else
 					{
@@ -1393,15 +1393,15 @@ void SurfaceInspector_constructPage( PreferenceGroup& group ){
 	SurfaceInspector_constructPreferences( page );
 }
 void SurfaceInspector_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller1<PreferenceGroup&, SurfaceInspector_constructPage>() );
+	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), SurfaceInspector_constructPage>() );
 }
 
 void SurfaceInspector_registerCommands(){
-	GlobalCommands_insert( "FitTexture", FreeCaller<SurfaceInspector_FitTexture>(), Accelerator( 'B', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "SurfaceInspector", FreeCaller<SurfaceInspector_toggleShown>(), Accelerator( 'S' ) );
+	GlobalCommands_insert( "FitTexture", FreeCaller<void(), SurfaceInspector_FitTexture>(), Accelerator( 'B', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "SurfaceInspector", FreeCaller<void(), SurfaceInspector_toggleShown>(), Accelerator( 'S' ) );
 
-	GlobalCommands_insert( "FaceCopyTexture", FreeCaller<SelectedFaces_copyTexture>() );
-	GlobalCommands_insert( "FacePasteTexture", FreeCaller<SelectedFaces_pasteTexture>() );
+	GlobalCommands_insert( "FaceCopyTexture", FreeCaller<void(), SelectedFaces_copyTexture>() );
+	GlobalCommands_insert( "FacePasteTexture", FreeCaller<void(), SelectedFaces_pasteTexture>() );
 }
 
 
@@ -1423,9 +1423,9 @@ void SurfaceInspector_Construct(){
 	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Rotate", FloatImportStringCaller( g_si_globals.rotate ), FloatExportStringCaller( g_si_globals.rotate ) );
 	GlobalPreferenceSystem().registerPreference( "SnapTToGrid", BoolImportStringCaller( g_si_globals.m_bSnapTToGrid ), BoolExportStringCaller( g_si_globals.m_bSnapTToGrid ) );
 
-	typedef FreeCaller1<const Selectable&, SurfaceInspector_SelectionChanged> SurfaceInspectorSelectionChangedCaller;
+	typedef FreeCaller<void(const Selectable&), SurfaceInspector_SelectionChanged> SurfaceInspectorSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( SurfaceInspectorSelectionChangedCaller() );
-	typedef FreeCaller<SurfaceInspector_updateSelection> SurfaceInspectorUpdateSelectionCaller;
+	typedef FreeCaller<void(), SurfaceInspector_updateSelection> SurfaceInspectorUpdateSelectionCaller;
 	Brush_addTextureChangedCallback( SurfaceInspectorUpdateSelectionCaller() );
 	Patch_addTextureChangedCallback( SurfaceInspectorUpdateSelectionCaller() );
 

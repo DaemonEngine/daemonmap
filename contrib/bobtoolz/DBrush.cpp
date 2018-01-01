@@ -128,12 +128,12 @@ int DBrush::BuildPoints(){
 void DBrush_addFace( DBrush& brush, const _QERFaceData& faceData ){
 	brush.AddFace( vector3_to_array( faceData.m_p0 ), vector3_to_array( faceData.m_p1 ), vector3_to_array( faceData.m_p2 ), 0 );
 }
-typedef ReferenceCaller1<DBrush, const _QERFaceData&, DBrush_addFace> DBrushAddFaceCaller;
+typedef ReferenceCaller<DBrush, void(const _QERFaceData&), DBrush_addFace> DBrushAddFaceCaller;
 
 void DBrush_addFaceTextured( DBrush& brush, const _QERFaceData& faceData ){
 	brush.AddFace( vector3_to_array( faceData.m_p0 ), vector3_to_array( faceData.m_p1 ), vector3_to_array( faceData.m_p2 ), &faceData );
 }
-typedef ReferenceCaller1<DBrush, const _QERFaceData&, DBrush_addFaceTextured> DBrushAddFaceTexturedCaller;
+typedef ReferenceCaller<DBrush, void(const _QERFaceData&), DBrush_addFaceTextured> DBrushAddFaceTexturedCaller;
 
 void DBrush::LoadFromBrush( scene::Instance& brush, bool textured ){
 	ClearFaces();

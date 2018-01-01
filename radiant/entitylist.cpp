@@ -41,7 +41,7 @@
 #include "treemodel.h"
 
 void RedrawEntityList();
-typedef FreeCaller<RedrawEntityList> RedrawEntityListCaller;
+typedef FreeCaller<void(), RedrawEntityList> RedrawEntityListCaller;
 
 
 class EntityList
@@ -377,7 +377,7 @@ void EntityList_Construct(){
 
 	GlobalPreferenceSystem().registerPreference( "EntityInfoDlg", WindowPositionTrackerImportStringCaller( getEntityList().m_positionTracker ), WindowPositionTrackerExportStringCaller( getEntityList().m_positionTracker ) );
 
-	typedef FreeCaller1<const Selectable&, EntityList_SelectionChanged> EntityListSelectionChangedCaller;
+	typedef FreeCaller<void(const Selectable&), EntityList_SelectionChanged> EntityListSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( EntityListSelectionChangedCaller() );
 }
 void EntityList_Destroy(){

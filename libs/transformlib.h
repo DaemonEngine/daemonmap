@@ -116,12 +116,12 @@ class TransformModifier : public Transformable
 Translation m_translation;
 Rotation m_rotation;
 Scale m_scale;
-Callback m_changed;
-Callback m_apply;
+Callback<void()> m_changed;
+Callback<void()> m_apply;
 TransformModifierType m_type;
 public:
 
-TransformModifier( const Callback& changed, const Callback& apply ) :
+TransformModifier( const Callback<void()>& changed, const Callback<void()>& apply ) :
 	m_translation( c_translation_identity ),
 	m_rotation( c_quaternion_identity ),
 	m_scale( c_scale_identity ),

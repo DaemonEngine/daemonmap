@@ -78,7 +78,7 @@ void destroyShaders();
 void valueChanged( const char* value ){
 	UpdatePath();
 }
-typedef MemberCaller1<DBobView, const char*, &DBobView::valueChanged> ValueChangedCaller;
+typedef MemberCaller<DBobView, void(const char*), &DBobView::valueChanged> ValueChangedCaller;
 void insert( const char* key, EntityKeyValue& value ){
 	value.attach( ValueChangedCaller( *this ) );
 }

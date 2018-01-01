@@ -103,8 +103,8 @@ SignalHandlerId m_curveCatmullRomChanged;
 private:
 mutable AABB m_curveBounds;
 
-Callback m_transformChanged;
-Callback m_evaluateTransform;
+Callback<void()> m_transformChanged;
+Callback<void()> m_evaluateTransform;
 
 CopiedString m_name;
 CopiedString m_modelKey;
@@ -199,7 +199,7 @@ void nameChanged( const char* value ){
 	m_name = value;
 	updateIsModel();
 }
-typedef MemberCaller1<Doom3Group, const char*, &Doom3Group::nameChanged> NameChangedCaller;
+typedef MemberCaller<Doom3Group, void(const char*), &Doom3Group::nameChanged> NameChangedCaller;
 
 void modelChanged( const char* value ){
 	m_modelKey = value;
@@ -212,7 +212,7 @@ void modelChanged( const char* value ){
 		m_model.modelChanged( "" );
 	}
 }
-typedef MemberCaller1<Doom3Group, const char*, &Doom3Group::modelChanged> ModelChangedCaller;
+typedef MemberCaller<Doom3Group, void(const char*), &Doom3Group::modelChanged> ModelChangedCaller;
 
 void updateTransform(){
 	m_transform.localToParent() = g_matrix4_identity;
@@ -225,19 +225,19 @@ void updateTransform(){
 		m_funcStaticOrigin.originChanged();
 	}
 }
-typedef MemberCaller<Doom3Group, &Doom3Group::updateTransform> UpdateTransformCaller;
+typedef MemberCaller<Doom3Group, void(), &Doom3Group::updateTransform> UpdateTransformCaller;
 
 void originChanged(){
 	m_origin = m_originKey.m_origin;
 	updateTransform();
 }
-typedef MemberCaller<Doom3Group, &Doom3Group::originChanged> OriginChangedCaller;
+typedef MemberCaller<Doom3Group, void(), &Doom3Group::originChanged> OriginChangedCaller;
 
 void rotationChanged(){
 	rotation_assign( m_rotation, m_rotationKey.m_rotation );
 	updateTransform();
 }
-typedef MemberCaller<Doom3Group, &Doom3Group::rotationChanged> RotationChangedCaller;
+typedef MemberCaller<Doom3Group, void(), &Doom3Group::rotationChanged> RotationChangedCaller;
 
 void skinChanged(){
 	if ( isModel() ) {
@@ -247,10 +247,10 @@ void skinChanged(){
 		}
 	}
 }
-typedef MemberCaller<Doom3Group, &Doom3Group::skinChanged> SkinChangedCaller;
+typedef MemberCaller<Doom3Group, void(), &Doom3Group::skinChanged> SkinChangedCaller;
 
 public:
-Doom3Group( EntityClass* eclass, scene::Node& node, const Callback& transformChanged, const Callback& boundsChanged, const Callback& evaluateTransform ) :
+Doom3Group( EntityClass* eclass, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& boundsChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( eclass ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -269,7 +269,7 @@ Doom3Group( EntityClass* eclass, scene::Node& node, const Callback& transformCha
 	m_traversable( 0 ){
 	construct();
 }
-Doom3Group( const Doom3Group& other, scene::Node& node, const Callback& transformChanged, const Callback& boundsChanged, const Callback& evaluateTransform ) :
+Doom3Group( const Doom3Group& other, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& boundsChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( other.m_entity ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -420,7 +420,7 @@ void transformChanged(){
 	m_curveNURBS.curveChanged();
 	m_curveCatmullRom.curveChanged();
 }
-typedef MemberCaller<Doom3Group, &Doom3Group::transformChanged> TransformChangedCaller;
+typedef MemberCaller<Doom3Group, void(), &Doom3Group::transformChanged> TransformChangedCaller;
 };
 
 class Doom3GroupInstance :
@@ -579,13 +579,13 @@ void applyTransform(){
 	evaluateTransform();
 	m_contained.freezeTransform();
 }
-typedef MemberCaller<Doom3GroupInstance, &Doom3GroupInstance::applyTransform> ApplyTransformCaller;
+typedef MemberCaller<Doom3GroupInstance, void(), &Doom3GroupInstance::applyTransform> ApplyTransformCaller;
 
 void selectionChangedComponent( const Selectable& selectable ){
 	GlobalSelectionSystem().getObserver ( SelectionSystem::eComponent )( selectable );
 	GlobalSelectionSystem().onComponentSelection( *this, selectable );
 }
-typedef MemberCaller1<Doom3GroupInstance, const Selectable&, &Doom3GroupInstance::selectionChangedComponent> SelectionChangedComponentCaller;
+typedef MemberCaller<Doom3GroupInstance, void(const Selectable&), &Doom3GroupInstance::selectionChangedComponent> SelectionChangedComponentCaller;
 };
 
 class Doom3GroupNode :

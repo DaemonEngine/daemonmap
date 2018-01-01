@@ -76,8 +76,8 @@ RenderablePivot m_renderOrigin;
 RenderableNamedEntity m_renderName;
 ModelSkinKey m_skin;
 
-Callback m_transformChanged;
-Callback m_evaluateTransform;
+Callback<void()> m_transformChanged;
+Callback<void()> m_evaluateTransform;
 
 void construct(){
 	default_rotation( m_rotation );
@@ -114,23 +114,23 @@ void updateTransform(){
 
 	m_transformChanged();
 }
-typedef MemberCaller<EclassModel, &EclassModel::updateTransform> UpdateTransformCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::updateTransform> UpdateTransformCaller;
 
 void originChanged(){
 	m_origin = m_originKey.m_origin;
 	updateTransform();
 }
-typedef MemberCaller<EclassModel, &EclassModel::originChanged> OriginChangedCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::originChanged> OriginChangedCaller;
 void angleChanged(){
 	m_angle = m_angleKey.m_angle;
 	updateTransform();
 }
-typedef MemberCaller<EclassModel, &EclassModel::angleChanged> AngleChangedCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::angleChanged> AngleChangedCaller;
 void rotationChanged(){
 	rotation_assign( m_rotation, m_rotationKey.m_rotation );
 	updateTransform();
 }
-typedef MemberCaller<EclassModel, &EclassModel::rotationChanged> RotationChangedCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::rotationChanged> RotationChangedCaller;
 
 void skinChanged(){
 	scene::Node* node = m_model.getNode();
@@ -138,11 +138,11 @@ void skinChanged(){
 		Node_modelSkinChanged( *node );
 	}
 }
-typedef MemberCaller<EclassModel, &EclassModel::skinChanged> SkinChangedCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::skinChanged> SkinChangedCaller;
 
 public:
 
-EclassModel( EntityClass* eclass, scene::Node& node, const Callback& transformChanged, const Callback& evaluateTransform ) :
+EclassModel( EntityClass* eclass, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( eclass ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -158,7 +158,7 @@ EclassModel( EntityClass* eclass, scene::Node& node, const Callback& transformCh
 	m_evaluateTransform( evaluateTransform ){
 	construct();
 }
-EclassModel( const EclassModel& other, scene::Node& node, const Callback& transformChanged, const Callback& evaluateTransform ) :
+EclassModel( const EclassModel& other, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( other.m_entity ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -283,7 +283,7 @@ void transformChanged(){
 	m_evaluateTransform();
 	updateTransform();
 }
-typedef MemberCaller<EclassModel, &EclassModel::transformChanged> TransformChangedCaller;
+typedef MemberCaller<EclassModel, void(), &EclassModel::transformChanged> TransformChangedCaller;
 };
 
 class EclassModelInstance : public TargetableInstance, public TransformModifier, public Renderable
@@ -340,7 +340,7 @@ void applyTransform(){
 	evaluateTransform();
 	m_contained.freezeTransform();
 }
-typedef MemberCaller<EclassModelInstance, &EclassModelInstance::applyTransform> ApplyTransformCaller;
+typedef MemberCaller<EclassModelInstance, void(), &EclassModelInstance::applyTransform> ApplyTransformCaller;
 };
 
 class EclassModelNode :

@@ -96,12 +96,12 @@ inline Vector3 angles_rotated( const Vector3& angles, const Quaternion& rotation
 
 class AnglesKey
 {
-Callback m_anglesChanged;
+Callback<void()> m_anglesChanged;
 public:
 Vector3 m_angles;
 
 
-AnglesKey( const Callback& anglesChanged )
+AnglesKey( const Callback<void()>& anglesChanged )
 	: m_anglesChanged( anglesChanged ), m_angles( ANGLESKEY_IDENTITY ){
 }
 
@@ -109,13 +109,13 @@ void angleChanged( const char* value ){
 	read_angle( m_angles, value );
 	m_anglesChanged();
 }
-typedef MemberCaller1<AnglesKey, const char*, &AnglesKey::angleChanged> AngleChangedCaller;
+typedef MemberCaller<AnglesKey, void(const char*), &AnglesKey::angleChanged> AngleChangedCaller;
 
 void anglesChanged( const char* value ){
 	read_angles( m_angles, value );
 	m_anglesChanged();
 }
-typedef MemberCaller1<AnglesKey, const char*, &AnglesKey::anglesChanged> AnglesChangedCaller;
+typedef MemberCaller<AnglesKey, void(const char*), &AnglesKey::anglesChanged> AnglesChangedCaller;
 
 void write( Entity* entity ) const {
 	write_angles( m_angles, entity );

@@ -43,11 +43,11 @@ const char* TextureBrowser_GetSelectedShader( TextureBrowser& textureBrower );
 void TextureBrowser_Construct();
 void TextureBrowser_Destroy();
 
-typedef Callback1<const char*> StringImportCallback;
+typedef Callback<void(const char*)> StringImportCallback;
 
 extern ui::Widget g_page_textures;
 void TextureBrowser_exportTitle( const StringImportCallback& importer );
-typedef FreeCaller1<const StringImportCallback&, TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
+typedef FreeCaller<void(const StringImportCallback&), TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
 
 const Vector3& TextureBrowser_getBackgroundColour( TextureBrowser& textureBrowser );
 void TextureBrowser_setBackgroundColour( TextureBrowser& textureBrowser, const Vector3& colour );

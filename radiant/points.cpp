@@ -330,9 +330,9 @@ void Pointfile_Construct(){
 
 	GlobalShaderCache().attachRenderable( s_pointfile );
 
-	GlobalCommands_insert( "TogglePointfile", FreeCaller<Pointfile_Toggle>() );
-	GlobalCommands_insert( "NextLeakSpot", FreeCaller<Pointfile_Next>(), Accelerator( 'K', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "PrevLeakSpot", FreeCaller<Pointfile_Prev>(), Accelerator( 'L', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "TogglePointfile", FreeCaller<void(), Pointfile_Toggle>() );
+	GlobalCommands_insert( "NextLeakSpot", FreeCaller<void(), Pointfile_Next>(), Accelerator( 'K', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "PrevLeakSpot", FreeCaller<void(), Pointfile_Prev>(), Accelerator( 'L', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 }
 
 void Pointfile_Destroy(){

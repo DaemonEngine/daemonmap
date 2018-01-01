@@ -96,7 +96,7 @@ void loadArchiveFile( const char* filename ){
 	archives.push_back( filename );
 }
 
-typedef FreeCaller1<const char*, loadArchiveFile> LoadArchiveFileCaller;
+typedef FreeCaller<void(const char*), loadArchiveFile> LoadArchiveFileCaller;
 
 void LoadTextureFile( const char* filename ){
 	std::string s_filename = filename;
@@ -116,7 +116,7 @@ void LoadTextureFile( const char* filename ){
 	}
 }
 
-typedef FreeCaller1<const char*, LoadTextureFile> LoadTextureFileCaller;
+typedef FreeCaller<void(const char*), LoadTextureFile> LoadTextureFileCaller;
 
 void GetTextures( const char* extension ){
 	GlobalFileSystem().forEachFile( "textures/", extension, LoadTextureFileCaller(), 0 );
@@ -128,7 +128,7 @@ void LoadShaderList( const char* filename ){
 	}
 }
 
-typedef FreeCaller1<const char*, LoadShaderList> LoadShaderListCaller;
+typedef FreeCaller<void(const char*), LoadShaderList> LoadShaderListCaller;
 
 void GetAllShaders(){
 	GlobalShaderSystem().foreachShaderName( LoadShaderListCaller() );

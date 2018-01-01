@@ -124,7 +124,7 @@ void nameChanged( const char* name ){
 	m_name = name;
 	construct();
 }
-typedef MemberCaller1<NameObserver, const char*, &NameObserver::nameChanged> NameChangedCaller;
+typedef MemberCaller<NameObserver, void(const char*), &NameObserver::nameChanged> NameChangedCaller;
 };
 
 class BasicNamespace : public Namespace
@@ -2161,16 +2161,16 @@ CopiedString g_strLastMap;
 bool g_bLoadLastMap = false;
 
 void Map_Construct(){
-	GlobalCommands_insert( "RegionOff", FreeCaller<RegionOff>() );
-	GlobalCommands_insert( "RegionSetXY", FreeCaller<RegionXY>() );
-	GlobalCommands_insert( "RegionSetBrush", FreeCaller<RegionBrush>() );
-	GlobalCommands_insert( "RegionSetSelection", FreeCaller<RegionSelected>(), Accelerator( 'R', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "RegionOff", FreeCaller<void(), RegionOff>() );
+	GlobalCommands_insert( "RegionSetXY", FreeCaller<void(), RegionXY>() );
+	GlobalCommands_insert( "RegionSetBrush", FreeCaller<void(), RegionBrush>() );
+	GlobalCommands_insert( "RegionSetSelection", FreeCaller<void(), RegionSelected>(), Accelerator( 'R', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 
 	GlobalPreferenceSystem().registerPreference( "LastMap", CopiedStringImportStringCaller( g_strLastMap ), CopiedStringExportStringCaller( g_strLastMap ) );
 	GlobalPreferenceSystem().registerPreference( "LoadLastMap", BoolImportStringCaller( g_bLoadLastMap ), BoolExportStringCaller( g_bLoadLastMap ) );
 	GlobalPreferenceSystem().registerPreference( "MapInfoDlg", WindowPositionImportStringCaller( g_posMapInfoWnd ), WindowPositionExportStringCaller( g_posMapInfoWnd ) );
 
-	PreferencesDialog_addSettingsPreferences( FreeCaller1<PreferencesPage&, Map_constructPreferences>() );
+	PreferencesDialog_addSettingsPreferences( FreeCaller<void(PreferencesPage&), Map_constructPreferences>() );
 
 	GlobalEntityClassManager().attach( g_MapEntityClasses );
 	Radiant_attachHomePathsObserver( g_MapModuleObserver );

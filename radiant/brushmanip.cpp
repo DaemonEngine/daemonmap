@@ -1131,7 +1131,7 @@ BrushMakeSided( std::size_t count )
 void set(){
 	Scene_BrushConstructPrefab( GlobalSceneGraph(), eBrushPrism, m_count, TextureBrowser_GetSelectedShader( GlobalTextureBrowser() ) );
 }
-typedef MemberCaller<BrushMakeSided, &BrushMakeSided::set> SetCaller;
+typedef MemberCaller<BrushMakeSided, void(), &BrushMakeSided::set> SetCaller;
 };
 
 
@@ -1166,7 +1166,7 @@ BrushPrefab( EBrushPrefab type )
 void set(){
 	DoSides( m_type, axis_for_viewtype( GetViewAxis() ) );
 }
-typedef MemberCaller<BrushPrefab, &BrushPrefab::set> SetCaller;
+typedef MemberCaller<BrushPrefab, void(), &BrushPrefab::set> SetCaller;
 };
 
 BrushPrefab g_brushprism( eBrushPrism );
@@ -1201,7 +1201,7 @@ void FlipClipper(){
 }
 
 
-Callback g_texture_lock_status_changed;
+Callback<void()> g_texture_lock_status_changed;
 BoolExportCaller g_texdef_movelock_caller( g_brush_texturelock_enabled );
 ToggleItem g_texdef_movelock_item( g_texdef_movelock_caller );
 
@@ -1216,7 +1216,7 @@ void Texdef_ToggleMoveLock(){
 
 
 void Brush_registerCommands(){
-	GlobalToggles_insert( "TogTexLock", FreeCaller<Texdef_ToggleMoveLock>(), ToggleItem::AddCallbackCaller( g_texdef_movelock_item ), Accelerator( 'T', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalToggles_insert( "TogTexLock", FreeCaller<void(), Texdef_ToggleMoveLock>(), ToggleItem::AddCallbackCaller( g_texdef_movelock_item ), Accelerator( 'T', (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalCommands_insert( "BrushPrism", BrushPrefab::SetCaller( g_brushprism ) );
 	GlobalCommands_insert( "BrushCone", BrushPrefab::SetCaller( g_brushcone ) );
@@ -1231,12 +1231,12 @@ void Brush_registerCommands(){
 	GlobalCommands_insert( "Brush8Sided", BrushMakeSided::SetCaller( g_brushmakesided8 ), Accelerator( '8', (GdkModifierType)GDK_CONTROL_MASK ) );
 	GlobalCommands_insert( "Brush9Sided", BrushMakeSided::SetCaller( g_brushmakesided9 ), Accelerator( '9', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "ClipSelected", FreeCaller<ClipSelected>(), Accelerator( GDK_KEY_Return ) );
-	GlobalCommands_insert( "SplitSelected", FreeCaller<SplitSelected>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "FlipClip", FreeCaller<FlipClipper>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "ClipSelected", FreeCaller<void(), ClipSelected>(), Accelerator( GDK_KEY_Return ) );
+	GlobalCommands_insert( "SplitSelected", FreeCaller<void(), SplitSelected>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "FlipClip", FreeCaller<void(), FlipClipper>(), Accelerator( GDK_KEY_Return, (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "MakeDetail", FreeCaller<Select_MakeDetail>(), Accelerator( 'M', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "MakeStructural", FreeCaller<Select_MakeStructural>(), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "MakeDetail", FreeCaller<void(), Select_MakeDetail>(), Accelerator( 'M', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "MakeStructural", FreeCaller<void(), Select_MakeStructural>(), Accelerator( 'S', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 }
 
 void Brush_constructMenu( ui::Menu menu ){

@@ -74,7 +74,7 @@ void Scene_BrushFitTexture_Component_Selected( scene::Graph& graph, float s_repe
 
 void Brush_constructMenu( ui::Menu menu );
 
-extern Callback g_texture_lock_status_changed;
+extern Callback<void()> g_texture_lock_status_changed;
 
 void BrushFilters_construct();
 void Brush_registerCommands();

@@ -961,7 +961,7 @@ BuildMenuItem( const char* name, ui::MenuItem item )
 void run(){
 	RunBSP( m_name );
 }
-typedef MemberCaller<BuildMenuItem, &BuildMenuItem::run> RunCaller;
+typedef MemberCaller<BuildMenuItem, void(), &BuildMenuItem::run> RunCaller;
 };
 
 typedef std::list<BuildMenuItem> BuildMenuItems;

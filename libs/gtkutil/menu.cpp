@@ -78,10 +78,10 @@ ui::Menu create_sub_menu_with_mnemonic( ui::Menu parent, const char* mnemonic ){
 }
 
 void activate_closure_callback( ui::Widget widget, gpointer data ){
-	( *reinterpret_cast<Callback*>( data ) )( );
+	( *reinterpret_cast<Callback<void()>*>( data ) )( );
 }
 
-guint menu_item_connect_callback( ui::MenuItem item, const Callback& callback ){
+guint menu_item_connect_callback( ui::MenuItem item, const Callback<void()>& callback ){
 #if 1
 	return g_signal_connect_swapped( G_OBJECT( item ), "activate", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -89,7 +89,7 @@ guint menu_item_connect_callback( ui::MenuItem item, const Callback& callback ){
 #endif
 }
 
-guint check_menu_item_connect_callback( ui::CheckMenuItem item, const Callback& callback ){
+guint check_menu_item_connect_callback( ui::CheckMenuItem item, const Callback<void()>& callback ){
 #if 1
 	guint handler = g_signal_connect_swapped( G_OBJECT( item ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -99,33 +99,33 @@ guint check_menu_item_connect_callback( ui::CheckMenuItem item, const Callback& 
 	return handler;
 }
 
-ui::MenuItem new_menu_item_with_mnemonic( const char *mnemonic, const Callback& callback ){
+ui::MenuItem new_menu_item_with_mnemonic( const char *mnemonic, const Callback<void()>& callback ){
 	auto item = ui::MenuItem( mnemonic, true );
 	item.show();
 	menu_item_connect_callback( item, callback );
 	return item;
 }
 
-ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const Callback& callback ){
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const Callback<void()>& callback ){
 	auto item = new_menu_item_with_mnemonic( mnemonic, callback );
 	menu.add(item);
 	return item;
 }
 
-ui::CheckMenuItem new_check_menu_item_with_mnemonic( const char* mnemonic, const Callback& callback ){
+ui::CheckMenuItem new_check_menu_item_with_mnemonic( const char* mnemonic, const Callback<void()>& callback ){
 	auto item = ui::CheckMenuItem(GTK_CHECK_MENU_ITEM( gtk_check_menu_item_new_with_mnemonic( mnemonic ) ));
 	item.show();
 	check_menu_item_connect_callback( item, callback );
 	return item;
 }
 
-ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback& callback ){
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback<void()>& callback ){
 	auto item = new_check_menu_item_with_mnemonic( mnemonic, callback );
 	menu.add(item);
 	return item;
 }
 
-ui::RadioMenuItem new_radio_menu_item_with_mnemonic( GSList** group, const char* mnemonic, const Callback& callback ){
+ui::RadioMenuItem new_radio_menu_item_with_mnemonic( GSList** group, const char* mnemonic, const Callback<void()>& callback ){
 	auto item = ui::RadioMenuItem(GTK_RADIO_MENU_ITEM( gtk_radio_menu_item_new_with_mnemonic( *group, mnemonic ) ));
 	if ( *group == 0 ) {
 		gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ), TRUE );
@@ -136,7 +136,7 @@ ui::RadioMenuItem new_radio_menu_item_with_mnemonic( GSList** group, const char*
 	return item;
 }
 
-ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback& callback ){
+ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback<void()>& callback ){
 	auto item = new_radio_menu_item_with_mnemonic( group, mnemonic, callback );
 	menu.add(item);
 	return item;
@@ -241,7 +241,7 @@ ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic
 void check_menu_item_set_active_callback( GtkCheckMenuItem &item, bool enabled ){
 	check_menu_item_set_active_no_signal( ui::CheckMenuItem(&item), enabled );
 }
-typedef ReferenceCaller1<GtkCheckMenuItem, bool, check_menu_item_set_active_callback> CheckMenuItemSetActiveCaller;
+typedef ReferenceCaller<GtkCheckMenuItem, void(bool), check_menu_item_set_active_callback> CheckMenuItemSetActiveCaller;
 
 ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Toggle& toggle ){
 	auto item = create_check_menu_item_with_mnemonic( menu, mnemonic, toggle.m_command.m_callback );

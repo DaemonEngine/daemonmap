@@ -35,9 +35,9 @@ ui::TearoffMenuItem menu_tearoff( ui::Menu menu );
 ui::MenuItem new_sub_menu_item_with_mnemonic( const char* mnemonic );
 ui::Menu create_sub_menu_with_mnemonic( ui::MenuBar bar, const char* mnemonic );
 ui::Menu create_sub_menu_with_mnemonic( ui::Menu parent, const char* mnemonic );
-ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback& callback );
-ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback& callback );
-ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback& callback );
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback<void()>& callback );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback<void()>& callback );
+ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback<void()>& callback );
 
 class Command;
 ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Command& command );

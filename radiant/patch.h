@@ -447,8 +447,8 @@ RenderableIndexBuffer m_render_lattice;
 bool m_bOverlay;
 
 bool m_transformChanged;
-Callback m_evaluateTransform;
-Callback m_boundsChanged;
+Callback<void()> m_evaluateTransform;
+Callback<void()> m_boundsChanged;
 
 void construct(){
 	m_bOverlay = false;
@@ -465,14 +465,14 @@ void construct(){
 }
 
 public:
-Callback m_lightsChanged;
+Callback<void()> m_lightsChanged;
 
 static int m_CycleCapIndex;  // = 0;
 static EPatchType m_type;
 
 STRING_CONSTANT( Name, "Patch" );
 
-Patch( scene::Node& node, const Callback& evaluateTransform, const Callback& boundsChanged ) :
+Patch( scene::Node& node, const Callback<void()>& evaluateTransform, const Callback<void()>& boundsChanged ) :
 	m_node( &node ),
 	m_shader( texdef_name_default() ),
 	m_state( 0 ),
@@ -488,7 +488,7 @@ Patch( scene::Node& node, const Callback& evaluateTransform, const Callback& bou
 	m_boundsChanged( boundsChanged ){
 	construct();
 }
-Patch( const Patch& other, scene::Node& node, const Callback& evaluateTransform, const Callback& boundsChanged ) :
+Patch( const Patch& other, scene::Node& node, const Callback<void()>& evaluateTransform, const Callback<void()>& boundsChanged ) :
 	m_node( &node ),
 	m_shader( texdef_name_default() ),
 	m_state( 0 ),
@@ -674,7 +674,7 @@ void transformChanged(){
 	m_lightsChanged();
 	SceneChangeNotify();
 }
-typedef MemberCaller<Patch, &Patch::transformChanged> TransformChangedCaller;
+typedef MemberCaller<Patch, void(), &Patch::transformChanged> TransformChangedCaller;
 
 void evaluateTransform(){
 	if ( m_transformChanged ) {
@@ -1338,7 +1338,7 @@ typedef LazyStatic<TypeCasts> StaticTypeCasts;
 void lightsChanged(){
 	m_lightList->lightsChanged();
 }
-typedef MemberCaller<PatchInstance, &PatchInstance::lightsChanged> LightsChangedCaller;
+typedef MemberCaller<PatchInstance, void(), &PatchInstance::lightsChanged> LightsChangedCaller;
 
 STRING_CONSTANT( Name, "PatchInstance" );
 
@@ -1358,9 +1358,9 @@ PatchInstance( const scene::Path& path, scene::Instance* parent, Patch& patch ) 
 	Instance::setTransformChangedCallback( LightsChangedCaller( *this ) );
 }
 ~PatchInstance(){
-	Instance::setTransformChangedCallback( Callback() );
+	Instance::setTransformChangedCallback( Callback<void()>() );
 
-	m_patch.m_lightsChanged = Callback();
+	m_patch.m_lightsChanged = Callback<void()>();
 	GlobalShaderCache().detach( *this );
 
 	m_patch.detach( this );
@@ -1373,13 +1373,13 @@ void selectedChanged( const Selectable& selectable ){
 
 	Instance::selectedChanged();
 }
-typedef MemberCaller1<PatchInstance, const Selectable&, &PatchInstance::selectedChanged> SelectedChangedCaller;
+typedef MemberCaller<PatchInstance, void(const Selectable&), &PatchInstance::selectedChanged> SelectedChangedCaller;
 
 void selectedChangedComponent( const Selectable& selectable ){
 	GlobalSelectionSystem().getObserver ( SelectionSystem::eComponent )( selectable );
 	GlobalSelectionSystem().onComponentSelection( *this, selectable );
 }
-typedef MemberCaller1<PatchInstance, const Selectable&, &PatchInstance::selectedChangedComponent> SelectedChangedComponentCaller;
+typedef MemberCaller<PatchInstance, void(const Selectable&), &PatchInstance::selectedChangedComponent> SelectedChangedComponentCaller;
 
 Patch& getPatch(){
 	return m_patch;
@@ -1612,7 +1612,7 @@ void applyTransform(){
 	evaluateTransform();
 	m_patch.freezeTransform();
 }
-typedef MemberCaller<PatchInstance, &PatchInstance::applyTransform> ApplyTransformCaller;
+typedef MemberCaller<PatchInstance, void(), &PatchInstance::applyTransform> ApplyTransformCaller;
 
 
 bool testLight( const RendererLight& light ) const {

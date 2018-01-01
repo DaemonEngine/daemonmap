@@ -79,7 +79,7 @@ void identifierChanged( const char* value ){
 	}
 	m_name = value;
 }
-typedef MemberCaller1<NamedEntity, const char*, &NamedEntity::identifierChanged> IdentifierChangedCaller;
+typedef MemberCaller<NamedEntity, void(const char*), &NamedEntity::identifierChanged> IdentifierChangedCaller;
 };
 
 class RenderableNamedEntity : public OpenGLRenderable

@@ -130,7 +130,7 @@ ToggleFilterFlag( const ToggleFilterFlag& other ) : m_mask( other.m_mask ), m_it
 void active( const BoolImportCallback& importCallback ){
 	importCallback( ( g_filters_globals.exclude & m_mask ) != 0 );
 }
-typedef MemberCaller1<ToggleFilterFlag, const BoolImportCallback&, &ToggleFilterFlag::active> ActiveCaller;
+typedef MemberCaller<ToggleFilterFlag, void(const BoolImportCallback&), &ToggleFilterFlag::active> ActiveCaller;
 void toggle(){
 	g_filters_globals.exclude ^= m_mask;
 	m_item.update();
@@ -141,7 +141,7 @@ void reset(){
 	m_item.update();
 	PerformFiltering();
 }
-typedef MemberCaller<ToggleFilterFlag, &ToggleFilterFlag::toggle> ToggleCaller;
+typedef MemberCaller<ToggleFilterFlag, void(), &ToggleFilterFlag::toggle> ToggleCaller;
 };
 
 
@@ -218,8 +218,8 @@ void Filters_constructMenu( ui::Menu menu_in_menu ){
 void ConstructFilters(){
 	GlobalPreferenceSystem().registerPreference( "SI_Exclude", SizeImportStringCaller( g_filters_globals.exclude ), SizeExportStringCaller( g_filters_globals.exclude ) );
 
-	GlobalCommands_insert( "InvertFilters", FreeCaller<InvertFilters>() );
-	GlobalCommands_insert( "ResetFilters", FreeCaller<ResetFilters>() );
+	GlobalCommands_insert( "InvertFilters", FreeCaller<void(), InvertFilters>() );
+	GlobalCommands_insert( "ResetFilters", FreeCaller<void(), ResetFilters>() );
 
 	add_filter_command( EXCLUDE_WORLD, "FilterWorldBrushes", Accelerator( '1', (GdkModifierType)GDK_MOD1_MASK ) );
 	add_filter_command( EXCLUDE_ENT, "FilterEntities", Accelerator( '2', (GdkModifierType)GDK_MOD1_MASK ) );

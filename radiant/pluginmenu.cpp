@@ -166,7 +166,7 @@ ui::MenuItem create_plugins_menu(){
 
 	//TODO: some modules/plugins do not yet support refresh
 #if 0
-	create_menu_item_with_mnemonic( menu, "Refresh", FreeCaller<Restart>() );
+	create_menu_item_with_mnemonic( menu, "Refresh", FreeCaller<void(), Restart>() );
 
 	// NOTE: the seperator is used when doing a refresh of the list, everything past the seperator is removed
 	g_plugins_menu_separator = menu_separator( menu );

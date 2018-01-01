@@ -323,7 +323,7 @@ surfaces_t m_surfaces;
 
 AABB m_aabb_local;
 public:
-Callback m_lightsChanged;
+Callback<void()> m_lightsChanged;
 
 PicoModel(){
 	constructNull();
@@ -472,7 +472,7 @@ Cullable& get( NullType<Cullable>){
 void lightsChanged(){
 	m_lightList->lightsChanged();
 }
-typedef MemberCaller<PicoModelInstance, &PicoModelInstance::lightsChanged> LightsChangedCaller;
+typedef MemberCaller<PicoModelInstance, void(), &PicoModelInstance::lightsChanged> LightsChangedCaller;
 
 void constructRemaps(){
 	ASSERT_MESSAGE( m_skins.size() == m_picomodel.size(), "ERROR" );
@@ -524,9 +524,9 @@ PicoModelInstance( const scene::Path& path, scene::Instance* parent, PicoModel& 
 ~PicoModelInstance(){
 	destroyRemaps();
 
-	Instance::setTransformChangedCallback( Callback() );
+	Instance::setTransformChangedCallback( Callback<void()>() );
 
-	m_picomodel.m_lightsChanged = Callback();
+	m_picomodel.m_lightsChanged = Callback<void()>();
 	GlobalShaderCache().detach( *this );
 }
 

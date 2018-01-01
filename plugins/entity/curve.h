@@ -253,7 +253,7 @@ void curveChanged(){
 
 	m_selectedRender.reserve( m_controlPoints.size() );
 }
-typedef MemberCaller<CurveEdit, &CurveEdit::curveChanged> CurveChangedCaller;
+typedef MemberCaller<CurveEdit, void(), &CurveEdit::curveChanged> CurveChangedCaller;
 };
 
 
@@ -263,7 +263,7 @@ const int NURBS_degree = 3;
 class NURBSCurve
 {
 Signal0 m_curveChanged;
-Callback m_boundsChanged;
+Callback<void()> m_boundsChanged;
 public:
 ControlPoints m_controlPoints;
 ControlPoints m_controlPointsTransformed;
@@ -272,7 +272,7 @@ Knots m_knots;
 RenderableCurve m_renderCurve;
 AABB m_bounds;
 
-NURBSCurve( const Callback& boundsChanged ) : m_boundsChanged( boundsChanged ){
+NURBSCurve( const Callback<void()>& boundsChanged ) : m_boundsChanged( boundsChanged ){
 }
 
 SignalHandlerId connect( const SignalHandler& curveChanged ){
@@ -343,20 +343,20 @@ void curveChanged( const char* value ){
 	m_controlPointsTransformed = m_controlPoints;
 	curveChanged();
 }
-typedef MemberCaller1<NURBSCurve, const char*, &NURBSCurve::curveChanged> CurveChangedCaller;
+typedef MemberCaller<NURBSCurve, void(const char*), &NURBSCurve::curveChanged> CurveChangedCaller;
 };
 
 class CatmullRomSpline
 {
 Signal0 m_curveChanged;
-Callback m_boundsChanged;
+Callback<void()> m_boundsChanged;
 public:
 ControlPoints m_controlPoints;
 ControlPoints m_controlPointsTransformed;
 RenderableCurve m_renderCurve;
 AABB m_bounds;
 
-CatmullRomSpline( const Callback& boundsChanged ) : m_boundsChanged( boundsChanged ){
+CatmullRomSpline( const Callback<void()>& boundsChanged ) : m_boundsChanged( boundsChanged ){
 }
 
 SignalHandlerId connect( const SignalHandler& curveChanged ){
@@ -411,7 +411,7 @@ void curveChanged( const char* value ){
 	m_controlPointsTransformed = m_controlPoints;
 	curveChanged();
 }
-typedef MemberCaller1<CatmullRomSpline, const char*, &CatmullRomSpline::curveChanged> CurveChangedCaller;
+typedef MemberCaller<CatmullRomSpline, void(const char*), &CatmullRomSpline::curveChanged> CurveChangedCaller;
 };
 
 const char* const curve_Nurbs = "curve_Nurbs";

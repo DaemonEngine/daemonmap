@@ -91,7 +91,7 @@ void importPref( const char* name, const char* value ){
 inline void XMLPreference_importString( XMLImporter& importer, const char* value ){
 	importer.write( value, string_length( value ) );
 }
-typedef ReferenceCaller1<XMLImporter, const char*, XMLPreference_importString> XMLPreferenceImportStringCaller;
+typedef ReferenceCaller<XMLImporter, void(const char*), XMLPreference_importString> XMLPreferenceImportStringCaller;
 
 class XMLPreferenceDictionaryExporter : public XMLExporter
 {

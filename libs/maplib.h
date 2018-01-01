@@ -58,7 +58,7 @@ std::size_t m_size;
 std::size_t m_saved;
 typedef void ( UndoFileChangeTracker::*Pending )();
 Pending m_pending;
-Callback m_changed;
+Callback<void()> m_changed;
 
 public:
 UndoFileChangeTracker() : m_size( 0 ), m_saved( MAPFILE_MAX_CHANGES ), m_pending( 0 ){
@@ -114,7 +114,7 @@ bool saved() const {
 	return m_saved == m_size;
 }
 
-void setChangedCallback( const Callback& changed ){
+void setChangedCallback( const Callback<void()>& changed ){
 	m_changed = changed;
 	m_changed();
 }

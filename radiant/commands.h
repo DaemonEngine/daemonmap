@@ -35,13 +35,13 @@ public:
 virtual void visit( const char* name, Accelerator& accelerator ) = 0;
 };
 
-void GlobalCommands_insert( const char* name, const Callback& callback, const Accelerator& accelerator = accelerator_null() );
+void GlobalCommands_insert( const char* name, const Callback<void()>& callback, const Accelerator& accelerator = accelerator_null() );
 const Command& GlobalCommands_find( const char* name );
 
-void GlobalToggles_insert( const char* name, const Callback& callback, const BoolExportCallback& exportCallback, const Accelerator& accelerator = accelerator_null() );
+void GlobalToggles_insert( const char* name, const Callback<void()>& callback, const BoolExportCallback& exportCallback, const Accelerator& accelerator = accelerator_null() );
 const Toggle& GlobalToggles_find( const char* name );
 
-void GlobalKeyEvents_insert( const char* name, const Accelerator& accelerator, const Callback& keyDown, const Callback& keyUp );
+void GlobalKeyEvents_insert( const char* name, const Accelerator& accelerator, const Callback<void()>& keyDown, const Callback<void()>& keyUp );
 const KeyEvent& GlobalKeyEvents_find( const char* name );
 
 

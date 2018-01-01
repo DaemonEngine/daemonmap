@@ -34,8 +34,8 @@ void widget_connect_escape_clear_focus_widget(ui::Widget widget);
 
 class NonModalEntry {
     bool m_editing;
-    Callback m_apply;
-    Callback m_cancel;
+    Callback<void()> m_apply;
+    Callback<void()> m_cancel;
 
     static gboolean focus_in(ui::Entry entry, GdkEventFocus *event, NonModalEntry *self);
 
@@ -48,7 +48,7 @@ class NonModalEntry {
     static gboolean escape(ui::Entry entry, GdkEventKey *event, NonModalEntry *self);
 
 public:
-    NonModalEntry(const Callback &apply, const Callback &cancel) : m_editing(false), m_apply(apply), m_cancel(cancel)
+    NonModalEntry(const Callback<void()> &apply, const Callback<void()> &cancel) : m_editing(false), m_apply(apply), m_cancel(cancel)
     {
     }
 
@@ -57,8 +57,8 @@ public:
 
 
 class NonModalSpinner {
-    Callback m_apply;
-    Callback m_cancel;
+    Callback<void()> m_apply;
+    Callback<void()> m_cancel;
 
     static gboolean changed(ui::SpinButton spin, NonModalSpinner *self);
 
@@ -67,7 +67,7 @@ class NonModalSpinner {
     static gboolean escape(ui::SpinButton spin, GdkEventKey *event, NonModalSpinner *self);
 
 public:
-    NonModalSpinner(const Callback &apply, const Callback &cancel) : m_apply(apply), m_cancel(cancel)
+    NonModalSpinner(const Callback<void()> &apply, const Callback<void()> &cancel) : m_apply(apply), m_cancel(cancel)
     {
     }
 
@@ -76,10 +76,10 @@ public:
 
 
 class NonModalRadio {
-    Callback m_changed;
+    Callback<void()> m_changed;
 
 public:
-    NonModalRadio(const Callback &changed) : m_changed(changed)
+    NonModalRadio(const Callback<void()> &changed) : m_changed(changed)
     {
     }
 

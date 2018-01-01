@@ -1723,7 +1723,7 @@ void insert( const Plane3& plane ){
 bool contains( const Plane3& plane ) const {
 	return PlaneSet_contains( m_selectedPlanes, plane );
 }
-typedef MemberCaller1<SelectedPlaneSet, const Plane3&, &SelectedPlaneSet::insert> InsertCaller;
+typedef MemberCaller<SelectedPlaneSet, void(const Plane3&), &SelectedPlaneSet::insert> InsertCaller;
 };
 
 
@@ -2601,11 +2601,11 @@ void pivotChanged() const {
 	m_pivotChanged = true;
 	SceneChangeNotify();
 }
-typedef ConstMemberCaller<RadiantSelectionSystem, &RadiantSelectionSystem::pivotChanged> PivotChangedCaller;
+typedef ConstMemberCaller<RadiantSelectionSystem, void(), &RadiantSelectionSystem::pivotChanged> PivotChangedCaller;
 void pivotChangedSelection( const Selectable& selectable ){
 	pivotChanged();
 }
-typedef MemberCaller1<RadiantSelectionSystem, const Selectable&, &RadiantSelectionSystem::pivotChangedSelection> PivotChangedSelectionCaller;
+typedef MemberCaller<RadiantSelectionSystem, void(const Selectable&), &RadiantSelectionSystem::pivotChangedSelection> PivotChangedSelectionCaller;
 
 void SetMode( EMode mode ){
 	if ( m_mode != mode ) {
@@ -2640,11 +2640,11 @@ EManipulatorMode ManipulatorMode() const {
 
 SelectionChangeCallback getObserver( EMode mode ){
 	if ( mode == ePrimitive ) {
-		return makeCallback1( m_count_primitive );
+		return makeCallback( m_count_primitive );
 	}
 	else
 	{
-		return makeCallback1( m_count_component );
+		return makeCallback( m_count_component );
 	}
 }
 std::size_t countSelected() const {
@@ -2717,7 +2717,7 @@ void addSelectionChangeCallback( const SelectionChangeHandler& handler ){
 void selectionChanged( const Selectable& selectable ){
 	m_selectionChanged_callbacks( selectable );
 }
-typedef MemberCaller1<RadiantSelectionSystem, const Selectable&, &RadiantSelectionSystem::selectionChanged> SelectionChangedCaller;
+typedef MemberCaller<RadiantSelectionSystem, void(const Selectable&), &RadiantSelectionSystem::selectionChanged> SelectionChangedCaller;
 
 
 void startMove(){
@@ -3398,7 +3398,7 @@ void SelectionSystem_Construct(){
 
 	g_RadiantSelectionSystem = new RadiantSelectionSystem;
 
-	SelectionSystem_boundsChanged = GlobalSceneGraph().addBoundsChangedCallback( FreeCaller<SelectionSystem_OnBoundsChanged>() );
+	SelectionSystem_boundsChanged = GlobalSceneGraph().addBoundsChangedCallback( FreeCaller<void(), SelectionSystem_OnBoundsChanged>() );
 
 	GlobalShaderCache().attachRenderable( getSelectionSystem() );
 }
@@ -3442,7 +3442,7 @@ inline WindowVector window_constrained( WindowVector window, std::size_t x, std:
 	return WindowVector( window_constrained( window.x(), x, width ), window_constrained( window.y(), y, height ) );
 }
 
-typedef Callback1<DeviceVector> MouseEventCallback;
+typedef Callback<void(DeviceVector)> MouseEventCallback;
 
 Single<MouseEventCallback> g_mouseMovedCallback;
 Single<MouseEventCallback> g_mouseUpCallback;
@@ -3561,7 +3561,7 @@ void mouseMoved( DeviceVector position ){
 	m_current = device_constrained( position );
 	draw_area();
 }
-typedef MemberCaller1<Selector_, DeviceVector, &Selector_::mouseMoved> MouseMovedCaller;
+typedef MemberCaller<Selector_, void(DeviceVector), &Selector_::mouseMoved> MouseMovedCaller;
 
 void mouseUp( DeviceVector position ){
 	testSelect( device_constrained( position ) );
@@ -3569,7 +3569,7 @@ void mouseUp( DeviceVector position ){
 	g_mouseMovedCallback.clear();
 	g_mouseUpCallback.clear();
 }
-typedef MemberCaller1<Selector_, DeviceVector, &Selector_::mouseUp> MouseUpCaller;
+typedef MemberCaller<Selector_, void(DeviceVector), &Selector_::mouseUp> MouseUpCaller;
 };
 
 
@@ -3586,14 +3586,14 @@ bool mouseDown( DeviceVector position ){
 void mouseMoved( DeviceVector position ){
 	getSelectionSystem().MoveSelected( *m_view, &position[0] );
 }
-typedef MemberCaller1<Manipulator_, DeviceVector, &Manipulator_::mouseMoved> MouseMovedCaller;
+typedef MemberCaller<Manipulator_, void(DeviceVector), &Manipulator_::mouseMoved> MouseMovedCaller;
 
 void mouseUp( DeviceVector position ){
 	getSelectionSystem().endMove();
 	g_mouseMovedCallback.clear();
 	g_mouseUpCallback.clear();
 }
-typedef MemberCaller1<Manipulator_, DeviceVector, &Manipulator_::mouseUp> MouseUpCaller;
+typedef MemberCaller<Manipulator_, void(DeviceVector), &Manipulator_::mouseUp> MouseUpCaller;
 };
 
 void Scene_copyClosestTexture( SelectionTest& test );

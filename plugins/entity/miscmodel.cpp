@@ -72,8 +72,8 @@ NameKeys m_nameKeys;
 RenderablePivot m_renderOrigin;
 RenderableNamedEntity m_renderName;
 
-Callback m_transformChanged;
-Callback m_evaluateTransform;
+Callback<void()> m_transformChanged;
+Callback<void()> m_evaluateTransform;
 
 void construct(){
 	m_keyObservers.insert( "classname", ClassnameFilter::ClassnameChangedCaller( m_filter ) );
@@ -101,20 +101,20 @@ void originChanged(){
 	m_origin = m_originKey.m_origin;
 	updateTransform();
 }
-typedef MemberCaller<MiscModel, &MiscModel::originChanged> OriginChangedCaller;
+typedef MemberCaller<MiscModel, void(), &MiscModel::originChanged> OriginChangedCaller;
 void anglesChanged(){
 	m_angles = m_anglesKey.m_angles;
 	updateTransform();
 }
-typedef MemberCaller<MiscModel, &MiscModel::anglesChanged> AnglesChangedCaller;
+typedef MemberCaller<MiscModel, void(), &MiscModel::anglesChanged> AnglesChangedCaller;
 void scaleChanged(){
 	m_scale = m_scaleKey.m_scale;
 	updateTransform();
 }
-typedef MemberCaller<MiscModel, &MiscModel::scaleChanged> ScaleChangedCaller;
+typedef MemberCaller<MiscModel, void(), &MiscModel::scaleChanged> ScaleChangedCaller;
 public:
 
-MiscModel( EntityClass* eclass, scene::Node& node, const Callback& transformChanged, const Callback& evaluateTransform ) :
+MiscModel( EntityClass* eclass, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( eclass ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -130,7 +130,7 @@ MiscModel( EntityClass* eclass, scene::Node& node, const Callback& transformChan
 	m_evaluateTransform( evaluateTransform ){
 	construct();
 }
-MiscModel( const MiscModel& other, scene::Node& node, const Callback& transformChanged, const Callback& evaluateTransform ) :
+MiscModel( const MiscModel& other, scene::Node& node, const Callback<void()>& transformChanged, const Callback<void()>& evaluateTransform ) :
 	m_entity( other.m_entity ),
 	m_originKey( OriginChangedCaller( *this ) ),
 	m_origin( ORIGINKEY_IDENTITY ),
@@ -235,7 +235,7 @@ void transformChanged(){
 	m_evaluateTransform();
 	updateTransform();
 }
-typedef MemberCaller<MiscModel, &MiscModel::transformChanged> TransformChangedCaller;
+typedef MemberCaller<MiscModel, void(), &MiscModel::transformChanged> TransformChangedCaller;
 };
 
 class MiscModelInstance : public TargetableInstance, public TransformModifier, public Renderable
@@ -290,7 +290,7 @@ void applyTransform(){
 	evaluateTransform();
 	m_contained.freezeTransform();
 }
-typedef MemberCaller<MiscModelInstance, &MiscModelInstance::applyTransform> ApplyTransformCaller;
+typedef MemberCaller<MiscModelInstance, void(), &MiscModelInstance::applyTransform> ApplyTransformCaller;
 };
 
 class MiscModelNode :

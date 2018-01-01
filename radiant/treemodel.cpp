@@ -110,7 +110,7 @@ bool graph_tree_model_find_parent( GraphTreeModel* model, const scene::Path& pat
 	return true;
 }
 
-void node_attach_name_changed_callback( scene::Node& node, const Callback& callback ){
+void node_attach_name_changed_callback( scene::Node& node, const Callback<void()>& callback ){
 	if ( node != 0 ) {
 		Nameable* nameable = Node_getNameable( node );
 		if ( nameable != 0 ) {
@@ -118,7 +118,7 @@ void node_attach_name_changed_callback( scene::Node& node, const Callback& callb
 		}
 	}
 }
-void node_detach_name_changed_callback( scene::Node& node, const Callback& callback ){
+void node_detach_name_changed_callback( scene::Node& node, const Callback<void()>& callback ){
 	if ( node != 0 ) {
 		Nameable* nameable = Node_getNameable( node );
 		if ( nameable != 0 ) {
@@ -153,14 +153,14 @@ void graph_tree_model_row_inserted( GraphTreeModel* model, const scene::Instance
 	gtk_tree_store_append( GTK_TREE_STORE( model ), &child, parent_pointer );
 	gtk_tree_store_set( GTK_TREE_STORE( model ), &child, 0, node, 1, selectable, -1 );
 
-	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, graph_tree_model_row_changed>( instance ) );
+	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(), graph_tree_model_row_changed>( instance ) );
 }
 
 void graph_tree_model_row_deleted( GraphTreeModel* model, const scene::Instance& instance ){
 	GtkTreeIter child;
 	ASSERT_MESSAGE( graph_tree_model_find_top( model, instance.path(), child ), "RUNTIME ERROR" );
 
-	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, graph_tree_model_row_changed>( instance ) );
+	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(), graph_tree_model_row_changed>( instance ) );
 
 	gtk_tree_store_remove( GTK_TREE_STORE( model ), &child );
 }
@@ -724,11 +724,11 @@ void graph_tree_model_insert( GraphTreeModel* model, const scene::Instance& inst
 
 	graph_tree_model_row_inserted( model, i );
 
-	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller1<scene::Instance, const char*, graph_tree_model_set_name>( instance ) );
+	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(const char*), graph_tree_model_set_name>( instance ) );
 }
 
 void graph_tree_model_erase( GraphTreeModel* model, const scene::Instance& instance ){
-	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller1<scene::Instance, const char*, graph_tree_model_set_name>( instance ) );
+	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(const char*), graph_tree_model_set_name>( instance ) );
 
 	graph_type::iterator i = model->graph->find( PathConstReference( instance.path() ) );
 	ASSERT_MESSAGE( i != model->graph->end(), "ERROR" );
@@ -760,7 +760,7 @@ GraphTreeNode( scene::Instance& instance ) : m_instance( instance ), m_parent( 0
 	m_instance.get().setChildSelectedChangedCallback( RowChangedCaller( *this ) );
 }
 ~GraphTreeNode(){
-	m_instance.get().setChildSelectedChangedCallback( Callback() );
+	m_instance.get().setChildSelectedChangedCallback( Callback<void()>() );
 	ASSERT_MESSAGE( empty(), "GraphTreeNode::~GraphTreeNode: memory leak" );
 }
 
@@ -799,7 +799,7 @@ void swap( GraphTreeNode& other ){
 void rowChanged(){
 	graph_tree_model_row_changed( *this );
 }
-typedef MemberCaller<GraphTreeNode, &GraphTreeNode::rowChanged> RowChangedCaller;
+typedef MemberCaller<GraphTreeNode, void(), &GraphTreeNode::rowChanged> RowChangedCaller;
 };
 
 struct GraphTreeModel
@@ -1169,7 +1169,7 @@ void node_detach_name_changed_callback( scene::Node& node, const NameCallback& c
 
 GraphTreeModel* scene_graph_get_tree_model(); // temp hack
 
-void graph_tree_node_foreach_pre( GraphTreeNode::iterator root, const Callback1<GraphTreeNode::iterator>& callback ){
+void graph_tree_node_foreach_pre( GraphTreeNode::iterator root, const Callback<void(GraphTreeNode::iterator)>& callback ){
 	callback( root );
 	for ( GraphTreeNode::iterator i = ( *root ).second->begin(); i != ( *root ).second->end(); ++i )
 	{
@@ -1177,7 +1177,7 @@ void graph_tree_node_foreach_pre( GraphTreeNode::iterator root, const Callback1<
 	}
 }
 
-void graph_tree_node_foreach_post( GraphTreeNode::iterator root, const Callback1<GraphTreeNode::iterator>& callback ){
+void graph_tree_node_foreach_post( GraphTreeNode::iterator root, const Callback<void(GraphTreeNode::iterator)>& callback ){
 	for ( GraphTreeNode::iterator i = ( *root ).second->begin(); i != ( *root ).second->end(); ++i )
 	{
 		graph_tree_node_foreach_post( i, callback );
@@ -1199,12 +1199,12 @@ void graph_tree_model_set_name( const scene::Instance& instance, const char* nam
 	GraphTreeNode* parent = graph_tree_model_find_parent( model, instance.path() );
 
 	GraphTreeNode::iterator oldNode = parent->find( GraphTreeNode::key_type( node_get_name_safe( instance.path().top().get() ), instance.path().top().get_pointer() ) );
-	graph_tree_node_foreach_post( oldNode, ReferenceCaller1<GraphTreeModel, GraphTreeNode::iterator, graph_tree_model_row_deleted>( *model ) );
+	graph_tree_node_foreach_post( oldNode, ReferenceCaller<GraphTreeModel, void(GraphTreeNode::iterator), graph_tree_model_row_deleted>( *model ) );
 	GraphTreeNode* node( ( *oldNode ).second );
 	parent->erase( oldNode );
 
 	GraphTreeNode::iterator newNode = parent->insert( GraphTreeNode::value_type( GraphTreeNode::key_type( name, &instance.path().top().get() ), node ) );
-	graph_tree_node_foreach_pre( newNode, ReferenceCaller1<GraphTreeModel, GraphTreeNode::iterator, graph_tree_model_row_inserted>( *model ) );
+	graph_tree_node_foreach_pre( newNode, ReferenceCaller<GraphTreeModel, void(GraphTreeNode::iterator), graph_tree_model_row_inserted>( *model ) );
 }
 
 void graph_tree_model_insert( GraphTreeModel* model, const scene::Instance& instance ){
@@ -1214,11 +1214,11 @@ void graph_tree_model_insert( GraphTreeModel* model, const scene::Instance& inst
 
 	graph_tree_model_row_inserted( model, i );
 
-	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller1<scene::Instance, const char*, graph_tree_model_set_name>( instance ) );
+	node_attach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(const char*), graph_tree_model_set_name>( instance ) );
 }
 
 void graph_tree_model_erase( GraphTreeModel* model, const scene::Instance& instance ){
-	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller1<scene::Instance, const char*, graph_tree_model_set_name>( instance ) );
+	node_detach_name_changed_callback( instance.path().top(), ConstReferenceCaller<scene::Instance, void(const char*), graph_tree_model_set_name>( instance ) );
 
 	GraphTreeNode* parent = graph_tree_model_find_parent( model, instance.path() );
 

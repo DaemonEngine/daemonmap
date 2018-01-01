@@ -86,10 +86,10 @@ void accelerator_write( const Accelerator& accelerator, TextOutputStream& ostrea
 	ostream << gtk_accelerator_get_label( accelerator.key, accelerator.modifiers );
 }
 
-typedef std::map<Accelerator, Callback> AcceleratorMap;
+typedef std::map<Accelerator, Callback<void()>> AcceleratorMap;
 typedef std::set<Accelerator> AcceleratorSet;
 
-bool accelerator_map_insert( AcceleratorMap& acceleratorMap, Accelerator accelerator, const Callback& callback ){
+bool accelerator_map_insert( AcceleratorMap& acceleratorMap, Accelerator accelerator, const Callback<void()>& callback ){
 	if ( accelerator.key != 0 ) {
 		return acceleratorMap.insert( AcceleratorMap::value_type( accelerator, callback ) ).second;
 	}
@@ -186,13 +186,13 @@ bool global_accel_enabled(){
 }
 
 
-GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback& callback );
+GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback<void()>& callback );
 void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerator );
 
 AcceleratorMap g_queuedAcceleratorsAdd;
 AcceleratorSet g_queuedAcceleratorsRemove;
 
-void globalQueuedAccelerators_add( Accelerator accelerator, const Callback& callback ){
+void globalQueuedAccelerators_add( Accelerator accelerator, const Callback<void()>& callback ){
 	if ( !g_queuedAcceleratorsAdd.insert( AcceleratorMap::value_type( accelerator, callback ) ).second ) {
 		globalErrorStream() << "globalQueuedAccelerators_add: accelerator already queued: " << accelerator << "\n";
 	}
@@ -398,7 +398,7 @@ void GlobalPressedKeys_disconnect( ui::Window window ){
 
 
 
-void special_accelerators_add( Accelerator accelerator, const Callback& callback ){
+void special_accelerators_add( Accelerator accelerator, const Callback<void()>& callback ){
 	//globalOutputStream() << "special_accelerators_add: " << makeQuoted(accelerator) << "\n";
 	if ( !accelerator_map_insert( g_special_accelerators, accelerator, callback ) ) {
 		globalErrorStream() << "special_accelerators_add: already exists: " << makeQuoted( accelerator ) << "\n";
@@ -411,7 +411,7 @@ void special_accelerators_remove( Accelerator accelerator ){
 	}
 }
 
-void keydown_accelerators_add( Accelerator accelerator, const Callback& callback ){
+void keydown_accelerators_add( Accelerator accelerator, const Callback<void()>& callback ){
 	//globalOutputStream() << "keydown_accelerators_add: " << makeQuoted(accelerator) << "\n";
 	if ( !accelerator_map_insert( g_keydown_accelerators, accelerator, callback ) ) {
 		globalErrorStream() << "keydown_accelerators_add: already exists: " << makeQuoted( accelerator ) << "\n";
@@ -424,7 +424,7 @@ void keydown_accelerators_remove( Accelerator accelerator ){
 	}
 }
 
-void keyup_accelerators_add( Accelerator accelerator, const Callback& callback ){
+void keyup_accelerators_add( Accelerator accelerator, const Callback<void()>& callback ){
 	//globalOutputStream() << "keyup_accelerators_add: " << makeQuoted(accelerator) << "\n";
 	if ( !accelerator_map_insert( g_keyup_accelerators, accelerator, callback ) ) {
 		globalErrorStream() << "keyup_accelerators_add: already exists: " << makeQuoted( accelerator ) << "\n";
@@ -439,11 +439,11 @@ void keyup_accelerators_remove( Accelerator accelerator ){
 
 
 gboolean accel_closure_callback( GtkAccelGroup* group, GtkWidget* widget, guint key, GdkModifierType modifiers, gpointer data ){
-	( *reinterpret_cast<Callback*>( data ) )( );
+	( *reinterpret_cast<Callback<void()>*>( data ) )( );
 	return TRUE;
 }
 
-GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback& callback ){
+GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback<void()>& callback ){
 	if ( accelerator.key != 0 && gtk_accelerator_valid( accelerator.key, accelerator.modifiers ) ) {
 		//globalOutputStream() << "global_accel_connect: " << makeQuoted(accelerator) << "\n";
 		GClosure* closure = create_cclosure( G_CALLBACK( accel_closure_callback ), callback );
@@ -470,7 +470,7 @@ void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerat
 
 ui::AccelGroup global_accel{ui::New};
 
-GClosure* global_accel_group_add_accelerator( Accelerator accelerator, const Callback& callback ){
+GClosure* global_accel_group_add_accelerator( Accelerator accelerator, const Callback<void()>& callback ){
 	if ( !global_accel_enabled() ) {
 		// workaround: cannot add to GtkAccelGroup while it is disabled
 		//globalOutputStream() << "queued for add: " << accelerator << "\n";
@@ -542,13 +542,13 @@ GClosure* global_accel_group_find( Accelerator accelerator ){
 	return 0;
 }
 
-void global_accel_group_connect( const Accelerator& accelerator, const Callback& callback ){
+void global_accel_group_connect( const Accelerator& accelerator, const Callback<void()>& callback ){
 	if ( accelerator.key != 0 ) {
 		global_accel_group_add_accelerator( accelerator, callback );
 	}
 }
 
-void global_accel_group_disconnect( const Accelerator& accelerator, const Callback& callback ){
+void global_accel_group_disconnect( const Accelerator& accelerator, const Callback<void()>& callback ){
 	if ( accelerator.key != 0 ) {
 		global_accel_group_remove_accelerator( accelerator );
 	}

@@ -160,11 +160,11 @@ struct camera_t
 	}
 
 	View* m_view;
-	Callback m_update;
+	Callback<void()> m_update;
 
 	static camera_draw_mode draw_mode;
 
-	camera_t( View* view, const Callback& update )
+	camera_t( View* view, const Callback<void()>& update )
 		: width( 0 ),
 		height( 0 ),
 		timing( false ),
@@ -513,18 +513,18 @@ void Camera_PitchDown_KeyUp( camera_t& camera ){
 }
 
 
-typedef ReferenceCaller<camera_t, &Camera_MoveForward_KeyDown> FreeMoveCameraMoveForwardKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveForward_KeyUp> FreeMoveCameraMoveForwardKeyUpCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveBack_KeyDown> FreeMoveCameraMoveBackKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveBack_KeyUp> FreeMoveCameraMoveBackKeyUpCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveLeft_KeyDown> FreeMoveCameraMoveLeftKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveLeft_KeyUp> FreeMoveCameraMoveLeftKeyUpCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveRight_KeyDown> FreeMoveCameraMoveRightKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveRight_KeyUp> FreeMoveCameraMoveRightKeyUpCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveUp_KeyDown> FreeMoveCameraMoveUpKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveUp_KeyUp> FreeMoveCameraMoveUpKeyUpCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveDown_KeyDown> FreeMoveCameraMoveDownKeyDownCaller;
-typedef ReferenceCaller<camera_t, &Camera_MoveDown_KeyUp> FreeMoveCameraMoveDownKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveForward_KeyDown> FreeMoveCameraMoveForwardKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveForward_KeyUp> FreeMoveCameraMoveForwardKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveBack_KeyDown> FreeMoveCameraMoveBackKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveBack_KeyUp> FreeMoveCameraMoveBackKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveLeft_KeyDown> FreeMoveCameraMoveLeftKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveLeft_KeyUp> FreeMoveCameraMoveLeftKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveRight_KeyDown> FreeMoveCameraMoveRightKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveRight_KeyUp> FreeMoveCameraMoveRightKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveUp_KeyDown> FreeMoveCameraMoveUpKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveUp_KeyUp> FreeMoveCameraMoveUpKeyUpCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveDown_KeyDown> FreeMoveCameraMoveDownKeyDownCaller;
+typedef ReferenceCaller<camera_t, void(), &Camera_MoveDown_KeyUp> FreeMoveCameraMoveDownKeyUpCaller;
 
 
 const float SPEED_MOVE = 32;
@@ -595,9 +595,9 @@ class RadiantCameraView : public CameraView
 {
 camera_t& m_camera;
 View* m_view;
-Callback m_update;
+Callback<void()> m_update;
 public:
-RadiantCameraView( camera_t& camera, View* view, const Callback& update ) : m_camera( camera ), m_view( view ), m_update( update ){
+RadiantCameraView( camera_t& camera, View* view, const Callback<void()>& update ) : m_camera( camera ), m_view( view ), m_update( update ){
 }
 void update(){
 	m_view->Construct( m_camera.projection, m_camera.modelview, m_camera.width, m_camera.height );
@@ -723,7 +723,7 @@ private:
 void Cam_Draw();
 };
 
-typedef MemberCaller<CamWnd, &CamWnd::queue_draw> CamWndQueueDraw;
+typedef MemberCaller<CamWnd, void(), &CamWnd::queue_draw> CamWndQueueDraw;
 
 Shader* CamWnd::m_state_select1 = 0;
 Shader* CamWnd::m_state_select2 = 0;
@@ -909,44 +909,44 @@ void KeyEvent_disconnect( const char* name ){
 
 void CamWnd_registerCommands( CamWnd& camwnd ){
 	GlobalKeyEvents_insert( "CameraForward", Accelerator( GDK_KEY_Up ),
-							ReferenceCaller<camera_t, Camera_MoveForward_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveForward_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveForward_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveForward_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraBack", Accelerator( GDK_KEY_Down ),
-							ReferenceCaller<camera_t, Camera_MoveBack_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveBack_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveBack_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveBack_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraLeft", Accelerator( GDK_KEY_Left ),
-							ReferenceCaller<camera_t, Camera_RotateLeft_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_RotateLeft_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_RotateLeft_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_RotateLeft_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraRight", Accelerator( GDK_KEY_Right ),
-							ReferenceCaller<camera_t, Camera_RotateRight_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_RotateRight_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_RotateRight_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_RotateRight_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraStrafeRight", Accelerator( GDK_KEY_period ),
-							ReferenceCaller<camera_t, Camera_MoveRight_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveRight_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveRight_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveRight_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraStrafeLeft", Accelerator( GDK_KEY_comma ),
-							ReferenceCaller<camera_t, Camera_MoveLeft_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveLeft_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveLeft_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveLeft_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraUp", Accelerator( 'D' ),
-							ReferenceCaller<camera_t, Camera_MoveUp_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveUp_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveUp_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveUp_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraDown", Accelerator( 'C' ),
-							ReferenceCaller<camera_t, Camera_MoveDown_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_MoveDown_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_MoveDown_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_MoveDown_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraAngleDown", Accelerator( 'A' ),
-							ReferenceCaller<camera_t, Camera_PitchDown_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_PitchDown_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_PitchDown_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_PitchDown_KeyUp>( camwnd.getCamera() )
 							);
 	GlobalKeyEvents_insert( "CameraAngleUp", Accelerator( 'Z' ),
-							ReferenceCaller<camera_t, Camera_PitchUp_KeyDown>( camwnd.getCamera() ),
-							ReferenceCaller<camera_t, Camera_PitchUp_KeyUp>( camwnd.getCamera() )
+							ReferenceCaller<camera_t, void(), Camera_PitchUp_KeyDown>( camwnd.getCamera() ),
+							ReferenceCaller<camera_t, void(), Camera_PitchUp_KeyUp>( camwnd.getCamera() )
 							);
 
 	GlobalKeyEvents_insert( "CameraFreeMoveForward", Accelerator( GDK_KEY_Up ),
@@ -974,17 +974,17 @@ void CamWnd_registerCommands( CamWnd& camwnd ){
 							FreeMoveCameraMoveDownKeyUpCaller( camwnd.getCamera() )
 							);
 
-	GlobalCommands_insert( "CameraForward", ReferenceCaller<camera_t, Camera_MoveForward_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Up ) );
-	GlobalCommands_insert( "CameraBack", ReferenceCaller<camera_t, Camera_MoveBack_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Down ) );
-	GlobalCommands_insert( "CameraLeft", ReferenceCaller<camera_t, Camera_RotateLeft_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Left ) );
-	GlobalCommands_insert( "CameraRight", ReferenceCaller<camera_t, Camera_RotateRight_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Right ) );
-	GlobalCommands_insert( "CameraStrafeRight", ReferenceCaller<camera_t, Camera_MoveRight_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_period ) );
-	GlobalCommands_insert( "CameraStrafeLeft", ReferenceCaller<camera_t, Camera_MoveLeft_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_comma ) );
+	GlobalCommands_insert( "CameraForward", ReferenceCaller<camera_t, void(), Camera_MoveForward_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Up ) );
+	GlobalCommands_insert( "CameraBack", ReferenceCaller<camera_t, void(), Camera_MoveBack_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Down ) );
+	GlobalCommands_insert( "CameraLeft", ReferenceCaller<camera_t, void(), Camera_RotateLeft_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Left ) );
+	GlobalCommands_insert( "CameraRight", ReferenceCaller<camera_t, void(), Camera_RotateRight_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_Right ) );
+	GlobalCommands_insert( "CameraStrafeRight", ReferenceCaller<camera_t, void(), Camera_MoveRight_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_period ) );
+	GlobalCommands_insert( "CameraStrafeLeft", ReferenceCaller<camera_t, void(), Camera_MoveLeft_Discrete>( camwnd.getCamera() ), Accelerator( GDK_KEY_comma ) );
 
-	GlobalCommands_insert( "CameraUp", ReferenceCaller<camera_t, Camera_MoveUp_Discrete>( camwnd.getCamera() ), Accelerator( 'D' ) );
-	GlobalCommands_insert( "CameraDown", ReferenceCaller<camera_t, Camera_MoveDown_Discrete>( camwnd.getCamera() ), Accelerator( 'C' ) );
-	GlobalCommands_insert( "CameraAngleUp", ReferenceCaller<camera_t, Camera_PitchUp_Discrete>( camwnd.getCamera() ), Accelerator( 'A' ) );
-	GlobalCommands_insert( "CameraAngleDown", ReferenceCaller<camera_t, Camera_PitchDown_Discrete>( camwnd.getCamera() ), Accelerator( 'Z' ) );
+	GlobalCommands_insert( "CameraUp", ReferenceCaller<camera_t, void(), Camera_MoveUp_Discrete>( camwnd.getCamera() ), Accelerator( 'D' ) );
+	GlobalCommands_insert( "CameraDown", ReferenceCaller<camera_t, void(), Camera_MoveDown_Discrete>( camwnd.getCamera() ), Accelerator( 'C' ) );
+	GlobalCommands_insert( "CameraAngleUp", ReferenceCaller<camera_t, void(), Camera_PitchUp_Discrete>( camwnd.getCamera() ), Accelerator( 'A' ) );
+	GlobalCommands_insert( "CameraAngleDown", ReferenceCaller<camera_t, void(), Camera_PitchDown_Discrete>( camwnd.getCamera() ), Accelerator( 'Z' ) );
 }
 
 void CamWnd_Move_Enable( CamWnd& camwnd ){
@@ -1136,7 +1136,7 @@ void CamWnd_Remove_Handlers_FreeMove( CamWnd& camwnd ){
 CamWnd::CamWnd() :
 	m_view( true ),
 	m_Camera( &m_view, CamWndQueueDraw( *this ) ),
-	m_cameraview( m_Camera, &m_view, ReferenceCaller<CamWnd, CamWnd_Update>( *this ) ),
+	m_cameraview( m_Camera, &m_view, ReferenceCaller<CamWnd, void(), CamWnd_Update>( *this ) ),
 	m_gl_widget( glwidget_new( TRUE ) ),
 	m_window_observer( NewWindowObserver() ),
 	m_XORRectangle( m_gl_widget ),
@@ -1152,7 +1152,7 @@ CamWnd::CamWnd() :
 	GlobalWindowObservers_add( m_window_observer );
 	GlobalWindowObservers_connectWidget( m_gl_widget );
 
-	m_window_observer->setRectangleDrawCallback( ReferenceCaller1<CamWnd, rect_t, camwnd_update_xor_rectangle>( *this ) );
+	m_window_observer->setRectangleDrawCallback( ReferenceCaller<CamWnd, void(rect_t), camwnd_update_xor_rectangle>( *this ) );
 	m_window_observer->setView( m_view );
 
 	g_object_ref( m_gl_widget._handle );
@@ -1171,7 +1171,7 @@ CamWnd::CamWnd() :
 
 	m_gl_widget.connect( "scroll_event", G_CALLBACK( wheelmove_scroll ), this );
 
-	AddSceneChangeCallback( ReferenceCaller<CamWnd, CamWnd_Update>( *this ) );
+	AddSceneChangeCallback( ReferenceCaller<CamWnd, void(), CamWnd_Update>( *this ) );
 
 	PressedButtons_connect( g_pressedButtons, m_gl_widget );
 }
@@ -1391,12 +1391,12 @@ void render( const Matrix4& modelview, const Matrix4& projection ){
 void ShowStatsToggle(){
 	g_camwindow_globals_private.m_showStats ^= 1;
 }
-typedef FreeCaller<ShowStatsToggle> ShowStatsToggleCaller;
+typedef FreeCaller<void(), ShowStatsToggle> ShowStatsToggleCaller;
 
 void ShowStatsExport( const BoolImportCallback& importer ){
 	importer( g_camwindow_globals_private.m_showStats );
 }
-typedef FreeCaller1<const BoolImportCallback&, ShowStatsExport> ShowStatsExportCaller;
+typedef FreeCaller<void(const BoolImportCallback&), ShowStatsExport> ShowStatsExportCaller;
 
 ShowStatsExportCaller g_show_stats_caller;
 BoolExportCallback g_show_stats_callback( g_show_stats_caller );
@@ -1711,7 +1711,7 @@ CameraModel* g_camera_model = 0;
 void CamWnd_LookThroughCamera( CamWnd& camwnd ){
 	if ( g_camera_model != 0 ) {
 		CamWnd_Add_Handlers_Move( camwnd );
-		g_camera_model->setCameraView( 0, Callback() );
+		g_camera_model->setCameraView( 0, Callback<void()>() );
 		g_camera_model = 0;
 		Camera_updateModelview( camwnd.getCamera() );
 		Camera_updateProjection( camwnd.getCamera() );
@@ -1734,7 +1734,7 @@ void CamWnd_LookThroughSelected( CamWnd& camwnd ){
 		if ( cameraModel != 0 ) {
 			CamWnd_Remove_Handlers_Move( camwnd );
 			g_camera_model = cameraModel;
-			g_camera_model->setCameraView( &camwnd.getCameraView(), ReferenceCaller<CamWnd, CamWnd_LookThroughCamera>( camwnd ) );
+			g_camera_model->setCameraView( &camwnd.getCameraView(), ReferenceCaller<CamWnd, void(), CamWnd_LookThroughCamera>( camwnd ) );
 		}
 	}
 }
@@ -1767,7 +1767,7 @@ void RenderModeImport( int value ){
 		CamWnd_SetMode( cd_texture );
 	}
 }
-typedef FreeCaller1<int, RenderModeImport> RenderModeImportCaller;
+typedef FreeCaller<void(int), RenderModeImport> RenderModeImportCaller;
 
 void RenderModeExport( const IntImportCallback& importer ){
 	switch ( CamWnd_GetMode() )
@@ -1786,7 +1786,7 @@ void RenderModeExport( const IntImportCallback& importer ){
 		break;
 	}
 }
-typedef FreeCaller1<const IntImportCallback&, RenderModeExport> RenderModeExportCaller;
+typedef FreeCaller<void(const IntImportCallback&), RenderModeExport> RenderModeExportCaller;
 
 void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendSlider( "Movement Speed", g_camwindow_globals_private.m_nMoveSpeed, TRUE, 0, 0, 100, MIN_CAM_SPEED, MAX_CAM_SPEED, 1, 10 );
@@ -1795,12 +1795,12 @@ void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox( "", "Invert mouse vertical axis", g_camwindow_globals_private.m_bCamInverseMouse );
 	page.appendCheckBox(
 		"", "Discrete movement",
-		FreeCaller1<bool, CamWnd_Move_Discrete_Import>(),
+		FreeCaller<void(bool), CamWnd_Move_Discrete_Import>(),
 		BoolExportCaller( g_camwindow_globals_private.m_bCamDiscrete )
 		);
 	page.appendCheckBox(
 		"", "Enable far-clip plane",
-		FreeCaller1<bool, Camera_SetFarClip>(),
+		FreeCaller<void(bool), Camera_SetFarClip>(),
 		BoolExportCaller( g_camwindow_globals_private.m_bCubicClipping )
 		);
 
@@ -1839,14 +1839,14 @@ void Camera_constructPage( PreferenceGroup& group ){
 	Camera_constructPreferences( page );
 }
 void Camera_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( FreeCaller1<PreferenceGroup&, Camera_constructPage>() );
+	PreferencesDialog_addSettingsPage( FreeCaller<void(PreferenceGroup&), Camera_constructPage>() );
 }
 
 #include "preferencesystem.h"
 #include "stringio.h"
 #include "dialog.h"
 
-typedef FreeCaller1<bool, CamWnd_Move_Discrete_Import> CamWndMoveDiscreteImportCaller;
+typedef FreeCaller<void(bool), CamWnd_Move_Discrete_Import> CamWndMoveDiscreteImportCaller;
 
 void CameraSpeed_increase(){
 	if ( g_camwindow_globals_private.m_nMoveSpeed <= ( MAX_CAM_SPEED - CAM_SPEED_STEP - 10 ) ) {
@@ -1868,25 +1868,25 @@ void CameraSpeed_decrease(){
 
 /// \brief Initialisation for things that have the same lifespan as this module.
 void CamWnd_Construct(){
-	GlobalCommands_insert( "CenterView", FreeCaller<GlobalCamera_ResetAngles>(), Accelerator( GDK_KEY_End ) );
+	GlobalCommands_insert( "CenterView", FreeCaller<void(), GlobalCamera_ResetAngles>(), Accelerator( GDK_KEY_End ) );
 
-	GlobalToggles_insert( "ToggleCubicClip", FreeCaller<Camera_ToggleFarClip>(), ToggleItem::AddCallbackCaller( g_getfarclip_item ), Accelerator( '\\', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "CubicClipZoomIn", FreeCaller<Camera_CubeIn>(), Accelerator( '[', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "CubicClipZoomOut", FreeCaller<Camera_CubeOut>(), Accelerator( ']', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalToggles_insert( "ToggleCubicClip", FreeCaller<void(), Camera_ToggleFarClip>(), ToggleItem::AddCallbackCaller( g_getfarclip_item ), Accelerator( '\\', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "CubicClipZoomIn", FreeCaller<void(), Camera_CubeIn>(), Accelerator( '[', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "CubicClipZoomOut", FreeCaller<void(), Camera_CubeOut>(), Accelerator( ']', (GdkModifierType)GDK_CONTROL_MASK ) );
 
-	GlobalCommands_insert( "UpFloor", FreeCaller<Camera_ChangeFloorUp>(), Accelerator( GDK_KEY_Prior ) );
-	GlobalCommands_insert( "DownFloor", FreeCaller<Camera_ChangeFloorDown>(), Accelerator( GDK_KEY_Next ) );
+	GlobalCommands_insert( "UpFloor", FreeCaller<void(), Camera_ChangeFloorUp>(), Accelerator( GDK_KEY_Prior ) );
+	GlobalCommands_insert( "DownFloor", FreeCaller<void(), Camera_ChangeFloorDown>(), Accelerator( GDK_KEY_Next ) );
 
 	GlobalToggles_insert( "ToggleCamera", ToggleShown::ToggleCaller( g_camera_shown ), ToggleItem::AddCallbackCaller( g_camera_shown.m_item ), Accelerator( 'C', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "LookThroughSelected", FreeCaller<GlobalCamera_LookThroughSelected>() );
-	GlobalCommands_insert( "LookThroughCamera", FreeCaller<GlobalCamera_LookThroughCamera>() );
+	GlobalCommands_insert( "LookThroughSelected", FreeCaller<void(), GlobalCamera_LookThroughSelected>() );
+	GlobalCommands_insert( "LookThroughCamera", FreeCaller<void(), GlobalCamera_LookThroughCamera>() );
 
 	if ( g_pGameDescription->mGameType == "doom3" ) {
-		GlobalCommands_insert( "TogglePreview", FreeCaller<CamWnd_TogglePreview>(), Accelerator( GDK_KEY_F3 ) );
+		GlobalCommands_insert( "TogglePreview", FreeCaller<void(), CamWnd_TogglePreview>(), Accelerator( GDK_KEY_F3 ) );
 	}
 
-	GlobalCommands_insert( "CameraSpeedInc", FreeCaller<CameraSpeed_increase>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "CameraSpeedDec", FreeCaller<CameraSpeed_decrease>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CameraSpeedInc", FreeCaller<void(), CameraSpeed_increase>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CameraSpeedDec", FreeCaller<void(), CameraSpeed_decrease>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_SHIFT_MASK ) );
 
 	GlobalShortcuts_insert( "CameraForward", Accelerator( GDK_KEY_Up ) );
 	GlobalShortcuts_insert( "CameraBack", Accelerator( GDK_KEY_Down ) );

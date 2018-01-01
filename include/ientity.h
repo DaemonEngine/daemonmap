@@ -29,7 +29,7 @@
 
 class EntityClass;
 
-typedef Callback1<const char*> KeyObserver;
+typedef Callback<void(const char*)> KeyObserver;
 
 class EntityKeyValue
 {

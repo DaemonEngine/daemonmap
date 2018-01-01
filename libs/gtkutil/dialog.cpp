@@ -222,7 +222,7 @@ PathEntry PathEntry_new(){
 void PathEntry_setPath( PathEntry& self, const char* path ){
 	gtk_entry_set_text( self.m_entry, path );
 }
-typedef ReferenceCaller1<PathEntry, const char*, PathEntry_setPath> PathEntrySetPathCaller;
+typedef ReferenceCaller<PathEntry, void(const char*), PathEntry_setPath> PathEntrySetPathCaller;
 
 void BrowsedPathEntry_clicked( ui::Widget widget, BrowsedPathEntry* self ){
 	self->m_browse( PathEntrySetPathCaller( self->m_entry ) );

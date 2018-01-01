@@ -236,7 +236,7 @@ surfaces_t m_surfaces;
 
 AABB m_aabb_local;
 public:
-Callback m_lightsChanged;
+Callback<void()> m_lightsChanged;
 
 ~Model(){
 	for ( surfaces_t::iterator i = m_surfaces.begin(); i != m_surfaces.end(); ++i )
@@ -346,7 +346,7 @@ Cullable& get( NullType<Cullable>){
 void lightsChanged(){
 	m_lightList->lightsChanged();
 }
-typedef MemberCaller<ModelInstance, &ModelInstance::lightsChanged> LightsChangedCaller;
+typedef MemberCaller<ModelInstance, void(), &ModelInstance::lightsChanged> LightsChangedCaller;
 
 void constructRemaps(){
 	ModelSkin* skin = NodeTypeCast<ModelSkin>::cast( path().parent() );
@@ -397,9 +397,9 @@ ModelInstance( const scene::Path& path, scene::Instance* parent, Model& model ) 
 ~ModelInstance(){
 	destroyRemaps();
 
-	Instance::setTransformChangedCallback( Callback() );
+	Instance::setTransformChangedCallback( Callback<void()>() );
 
-	m_model.m_lightsChanged = Callback();
+	m_model.m_lightsChanged = Callback<void()>();
 	GlobalShaderCache().detach( *this );
 }
 

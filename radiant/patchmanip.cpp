@@ -600,7 +600,7 @@ void Patch_constructPage( PreferenceGroup& group ){
 	Patch_constructPreferences( page );
 }
 void Patch_registerPreferencesPage(){
-	PreferencesDialog_addDisplayPage( FreeCaller1<PreferenceGroup&, Patch_constructPage>() );
+	PreferencesDialog_addDisplayPage( FreeCaller<void(PreferenceGroup&), Patch_constructPage>() );
 }
 
 
@@ -614,41 +614,41 @@ void PatchPreferences_construct(){
 #include "generic/callback.h"
 
 void Patch_registerCommands(){
-	GlobalCommands_insert( "InvertCurveTextureX", FreeCaller<Patch_FlipTextureX>(), Accelerator( 'I', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "InvertCurveTextureY", FreeCaller<Patch_FlipTextureY>(), Accelerator( 'I', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "NaturalizePatch", FreeCaller<Patch_NaturalTexture>(), Accelerator( 'N', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "PatchCylinder", FreeCaller<Patch_Cylinder>() );
-	GlobalCommands_insert( "PatchDenseCylinder", FreeCaller<Patch_DenseCylinder>() );
-	GlobalCommands_insert( "PatchVeryDenseCylinder", FreeCaller<Patch_VeryDenseCylinder>() );
-	GlobalCommands_insert( "PatchSquareCylinder", FreeCaller<Patch_SquareCylinder>() );
-	GlobalCommands_insert( "PatchXactCylinder", FreeCaller<Patch_XactCylinder>() );
-	GlobalCommands_insert( "PatchXactSphere", FreeCaller<Patch_XactSphere>() );
-	GlobalCommands_insert( "PatchXactCone", FreeCaller<Patch_XactCone>() );
-	GlobalCommands_insert( "PatchEndCap", FreeCaller<Patch_Endcap>() );
-	GlobalCommands_insert( "PatchBevel", FreeCaller<Patch_Bevel>() );
-	GlobalCommands_insert( "PatchSquareBevel", FreeCaller<Patch_SquareBevel>() );
-	GlobalCommands_insert( "PatchSquareEndcap", FreeCaller<Patch_SquareEndcap>() );
-	GlobalCommands_insert( "PatchCone", FreeCaller<Patch_Cone>() );
-	GlobalCommands_insert( "PatchSphere", FreeCaller<Patch_Sphere>() );
-	GlobalCommands_insert( "SimplePatchMesh", FreeCaller<Patch_Plane>(), Accelerator( 'P', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "PatchInsertInsertColumn", FreeCaller<Patch_InsertInsertColumn>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "PatchInsertAddColumn", FreeCaller<Patch_InsertAddColumn>() );
-	GlobalCommands_insert( "PatchInsertInsertRow", FreeCaller<Patch_InsertInsertRow>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "PatchInsertAddRow", FreeCaller<Patch_InsertAddRow>() );
-	GlobalCommands_insert( "PatchDeleteFirstColumn", FreeCaller<Patch_DeleteFirstColumn>() );
-	GlobalCommands_insert( "PatchDeleteLastColumn", FreeCaller<Patch_DeleteLastColumn>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "PatchDeleteFirstRow", FreeCaller<Patch_DeleteFirstRow>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "PatchDeleteLastRow", FreeCaller<Patch_DeleteLastRow>() );
-	GlobalCommands_insert( "InvertCurve", FreeCaller<Patch_Invert>(), Accelerator( 'I', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "RedisperseRows", FreeCaller<Patch_RedisperseRows>(), Accelerator( 'E', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "RedisperseCols", FreeCaller<Patch_RedisperseCols>(), Accelerator( 'E', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "SmoothRows", FreeCaller<Patch_SmoothRows>(), Accelerator( 'W', (GdkModifierType)GDK_CONTROL_MASK ) );
-	GlobalCommands_insert( "SmoothCols", FreeCaller<Patch_SmoothCols>(), Accelerator( 'W', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "MatrixTranspose", FreeCaller<Patch_Transpose>(), Accelerator( 'M', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "CapCurrentCurve", FreeCaller<Patch_Cap>(), Accelerator( 'C', (GdkModifierType)GDK_SHIFT_MASK ) );
-	GlobalCommands_insert( "CycleCapTexturePatch", FreeCaller<Patch_CycleProjection>(), Accelerator( 'N', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
-	GlobalCommands_insert( "MakeOverlayPatch", FreeCaller<Patch_OverlayOn>(), Accelerator( 'Y' ) );
-	GlobalCommands_insert( "ClearPatchOverlays", FreeCaller<Patch_OverlayOff>(), Accelerator( 'L', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "InvertCurveTextureX", FreeCaller<void(), Patch_FlipTextureX>(), Accelerator( 'I', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "InvertCurveTextureY", FreeCaller<void(), Patch_FlipTextureY>(), Accelerator( 'I', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "NaturalizePatch", FreeCaller<void(), Patch_NaturalTexture>(), Accelerator( 'N', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PatchCylinder", FreeCaller<void(), Patch_Cylinder>() );
+	GlobalCommands_insert( "PatchDenseCylinder", FreeCaller<void(), Patch_DenseCylinder>() );
+	GlobalCommands_insert( "PatchVeryDenseCylinder", FreeCaller<void(), Patch_VeryDenseCylinder>() );
+	GlobalCommands_insert( "PatchSquareCylinder", FreeCaller<void(), Patch_SquareCylinder>() );
+	GlobalCommands_insert( "PatchXactCylinder", FreeCaller<void(), Patch_XactCylinder>() );
+	GlobalCommands_insert( "PatchXactSphere", FreeCaller<void(), Patch_XactSphere>() );
+	GlobalCommands_insert( "PatchXactCone", FreeCaller<void(), Patch_XactCone>() );
+	GlobalCommands_insert( "PatchEndCap", FreeCaller<void(), Patch_Endcap>() );
+	GlobalCommands_insert( "PatchBevel", FreeCaller<void(), Patch_Bevel>() );
+	GlobalCommands_insert( "PatchSquareBevel", FreeCaller<void(), Patch_SquareBevel>() );
+	GlobalCommands_insert( "PatchSquareEndcap", FreeCaller<void(), Patch_SquareEndcap>() );
+	GlobalCommands_insert( "PatchCone", FreeCaller<void(), Patch_Cone>() );
+	GlobalCommands_insert( "PatchSphere", FreeCaller<void(), Patch_Sphere>() );
+	GlobalCommands_insert( "SimplePatchMesh", FreeCaller<void(), Patch_Plane>(), Accelerator( 'P', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "PatchInsertInsertColumn", FreeCaller<void(), Patch_InsertInsertColumn>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "PatchInsertAddColumn", FreeCaller<void(), Patch_InsertAddColumn>() );
+	GlobalCommands_insert( "PatchInsertInsertRow", FreeCaller<void(), Patch_InsertInsertRow>(), Accelerator( GDK_KEY_KP_Add, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PatchInsertAddRow", FreeCaller<void(), Patch_InsertAddRow>() );
+	GlobalCommands_insert( "PatchDeleteFirstColumn", FreeCaller<void(), Patch_DeleteFirstColumn>() );
+	GlobalCommands_insert( "PatchDeleteLastColumn", FreeCaller<void(), Patch_DeleteLastColumn>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "PatchDeleteFirstRow", FreeCaller<void(), Patch_DeleteFirstRow>(), Accelerator( GDK_KEY_KP_Subtract, (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "PatchDeleteLastRow", FreeCaller<void(), Patch_DeleteLastRow>() );
+	GlobalCommands_insert( "InvertCurve", FreeCaller<void(), Patch_Invert>(), Accelerator( 'I', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "RedisperseRows", FreeCaller<void(), Patch_RedisperseRows>(), Accelerator( 'E', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "RedisperseCols", FreeCaller<void(), Patch_RedisperseCols>(), Accelerator( 'E', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "SmoothRows", FreeCaller<void(), Patch_SmoothRows>(), Accelerator( 'W', (GdkModifierType)GDK_CONTROL_MASK ) );
+	GlobalCommands_insert( "SmoothCols", FreeCaller<void(), Patch_SmoothCols>(), Accelerator( 'W', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "MatrixTranspose", FreeCaller<void(), Patch_Transpose>(), Accelerator( 'M', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "CapCurrentCurve", FreeCaller<void(), Patch_Cap>(), Accelerator( 'C', (GdkModifierType)GDK_SHIFT_MASK ) );
+	GlobalCommands_insert( "CycleCapTexturePatch", FreeCaller<void(), Patch_CycleProjection>(), Accelerator( 'N', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
+	GlobalCommands_insert( "MakeOverlayPatch", FreeCaller<void(), Patch_OverlayOn>(), Accelerator( 'Y' ) );
+	GlobalCommands_insert( "ClearPatchOverlays", FreeCaller<void(), Patch_OverlayOff>(), Accelerator( 'L', (GdkModifierType)GDK_CONTROL_MASK ) );
 }
 
 void Patch_constructToolbar( ui::Toolbar toolbar ){

@@ -103,10 +103,10 @@ void OnSleep();
 void SetStatusText( CopiedString& status_text, const char* pText );
 void UpdateStatusText();
 void RedrawStatusText();
-typedef MemberCaller<MainFrame, &MainFrame::RedrawStatusText> RedrawStatusTextCaller;
+typedef MemberCaller<MainFrame, void(), &MainFrame::RedrawStatusText> RedrawStatusTextCaller;
 
 void SetGridStatus();
-typedef MemberCaller<MainFrame, &MainFrame::SetGridStatus> SetGridStatusCaller;
+typedef MemberCaller<MainFrame, void(), &MainFrame::SetGridStatus> SetGridStatusCaller;
 
 void SetActiveXY( XYWnd* p );
 XYWnd* ActiveXY(){

@@ -114,7 +114,7 @@ void selectedChanged( const Selectable& selectable ){
 
 	Instance::selectedChanged();
 }
-typedef MemberCaller1<SelectableInstance, const Selectable&, &SelectableInstance::selectedChanged> SelectedChangedCaller;
+typedef MemberCaller<SelectableInstance, void(const Selectable&), &SelectableInstance::selectedChanged> SelectedChangedCaller;
 };
 
 

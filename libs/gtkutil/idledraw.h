@@ -28,7 +28,7 @@
 
 class IdleDraw
 {
-Callback m_draw;
+Callback<void()> m_draw;
 unsigned int m_handler;
 static gboolean draw( gpointer data ){
 	reinterpret_cast<IdleDraw*>( data )->m_draw();
@@ -36,7 +36,7 @@ static gboolean draw( gpointer data ){
 	return FALSE;
 }
 public:
-IdleDraw( const Callback& draw ) : m_draw( draw ), m_handler( 0 ){
+IdleDraw( const Callback<void()>& draw ) : m_draw( draw ), m_handler( 0 ){
 }
 ~IdleDraw(){
 	if ( m_handler != 0 ) {
@@ -48,7 +48,7 @@ void queueDraw(){
 		m_handler = g_idle_add( &draw, this );
 	}
 }
-typedef MemberCaller<IdleDraw, &IdleDraw::queueDraw> QueueDrawCaller;
+typedef MemberCaller<IdleDraw, void(), &IdleDraw::queueDraw> QueueDrawCaller;
 
 void flush(){
 	if ( m_handler != 0 ) {

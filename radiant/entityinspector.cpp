@@ -142,7 +142,7 @@ void release(){
 void apply(){
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), m_check.active() ? "1" : "0" );
 }
-typedef MemberCaller<BooleanAttribute, &BooleanAttribute::apply> ApplyCaller;
+typedef MemberCaller<BooleanAttribute, void(), &BooleanAttribute::apply> ApplyCaller;
 
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
@@ -154,7 +154,7 @@ void update(){
 		toggle_button_set_active_no_signal( m_check, false );
 	}
 }
-typedef MemberCaller<BooleanAttribute, &BooleanAttribute::update> UpdateCaller;
+typedef MemberCaller<BooleanAttribute, void(), &BooleanAttribute::update> UpdateCaller;
 };
 
 
@@ -190,14 +190,14 @@ void apply(){
 	value << m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
-typedef MemberCaller<StringAttribute, &StringAttribute::apply> ApplyCaller;
+typedef MemberCaller<StringAttribute, void(), &StringAttribute::apply> ApplyCaller;
 
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
 	m_entry.text(value.c_str());
 }
-typedef MemberCaller<StringAttribute, &StringAttribute::update> UpdateCaller;
+typedef MemberCaller<StringAttribute, void(), &StringAttribute::update> UpdateCaller;
 };
 
 class ShaderAttribute : public StringAttribute
@@ -232,13 +232,13 @@ void apply(){
 	value << m_entry.m_entry.m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
-typedef MemberCaller<ModelAttribute, &ModelAttribute::apply> ApplyCaller;
+typedef MemberCaller<ModelAttribute, void(), &ModelAttribute::apply> ApplyCaller;
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
 	m_entry.m_entry.m_entry.text(value.c_str());
 }
-typedef MemberCaller<ModelAttribute, &ModelAttribute::update> UpdateCaller;
+typedef MemberCaller<ModelAttribute, void(), &ModelAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
 	const char *filename = misc_model_dialog( m_entry.m_entry.m_frame.window() );
 
@@ -247,7 +247,7 @@ void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
 		apply();
 	}
 }
-typedef MemberCaller1<ModelAttribute, const BrowsedPathEntry::SetPathCallback&, &ModelAttribute::browse> BrowseCaller;
+typedef MemberCaller<ModelAttribute, void(const BrowsedPathEntry::SetPathCallback&), &ModelAttribute::browse> BrowseCaller;
 };
 
 const char* browse_sound( ui::Widget parent ){
@@ -295,13 +295,13 @@ void apply(){
 	value << m_entry.m_entry.m_entry.text();
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), value.c_str() );
 }
-typedef MemberCaller<SoundAttribute, &SoundAttribute::apply> ApplyCaller;
+typedef MemberCaller<SoundAttribute, void(), &SoundAttribute::apply> ApplyCaller;
 void update(){
 	StringOutputStream value( 64 );
 	value << SelectedEntity_getValueForKey( m_key.c_str() );
 	m_entry.m_entry.m_entry.text(value.c_str());
 }
-typedef MemberCaller<SoundAttribute, &SoundAttribute::update> UpdateCaller;
+typedef MemberCaller<SoundAttribute, void(), &SoundAttribute::update> UpdateCaller;
 void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
 	const char *filename = browse_sound( m_entry.m_entry.m_frame.window() );
 
@@ -310,7 +310,7 @@ void browse( const BrowsedPathEntry::SetPathCallback& setPath ){
 		apply();
 	}
 }
-typedef MemberCaller1<SoundAttribute, const BrowsedPathEntry::SetPathCallback&, &SoundAttribute::browse> BrowseCaller;
+typedef MemberCaller<SoundAttribute, void(const BrowsedPathEntry::SetPathCallback&), &SoundAttribute::browse> BrowseCaller;
 };
 
 inline double angle_normalised( double angle ){
@@ -342,7 +342,7 @@ void apply(){
 	angle << angle_normalised( entry_get_float( m_entry ) );
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), angle.c_str() );
 }
-typedef MemberCaller<AngleAttribute, &AngleAttribute::apply> ApplyCaller;
+typedef MemberCaller<AngleAttribute, void(), &AngleAttribute::apply> ApplyCaller;
 
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
@@ -356,7 +356,7 @@ void update(){
 		m_entry.text("0");
 	}
 }
-typedef MemberCaller<AngleAttribute, &AngleAttribute::update> UpdateCaller;
+typedef MemberCaller<AngleAttribute, void(), &AngleAttribute::update> UpdateCaller;
 };
 
 namespace
@@ -403,7 +403,7 @@ void apply(){
 	angle << angle_normalised( entry_get_float( m_entry ) );
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), angle.c_str() );
 }
-typedef MemberCaller<DirectionAttribute, &DirectionAttribute::apply> ApplyCaller;
+typedef MemberCaller<DirectionAttribute, void(), &DirectionAttribute::apply> ApplyCaller;
 
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
@@ -433,7 +433,7 @@ void update(){
 		m_entry.text("0");
 	}
 }
-typedef MemberCaller<DirectionAttribute, &DirectionAttribute::update> UpdateCaller;
+typedef MemberCaller<DirectionAttribute, void(), &DirectionAttribute::update> UpdateCaller;
 
 void applyRadio(){
 	int index = radio_button_get_active( m_radio.m_radio );
@@ -447,7 +447,7 @@ void applyRadio(){
 		apply();
 	}
 }
-typedef MemberCaller<DirectionAttribute, &DirectionAttribute::applyRadio> ApplyRadioCaller;
+typedef MemberCaller<DirectionAttribute, void(), &DirectionAttribute::applyRadio> ApplyRadioCaller;
 };
 
 
@@ -508,7 +508,7 @@ void apply(){
 		   << " " << angle_normalised( entry_get_float( m_angles.m_roll ) );
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), angles.c_str() );
 }
-typedef MemberCaller<AnglesAttribute, &AnglesAttribute::apply> ApplyCaller;
+typedef MemberCaller<AnglesAttribute, void(), &AnglesAttribute::apply> ApplyCaller;
 
 void update(){
 	StringOutputStream angle( 32 );
@@ -538,7 +538,7 @@ void update(){
 		m_angles.m_roll.text("0");
 	}
 }
-typedef MemberCaller<AnglesAttribute, &AnglesAttribute::update> UpdateCaller;
+typedef MemberCaller<AnglesAttribute, void(), &AnglesAttribute::update> UpdateCaller;
 };
 
 class Vector3Entry
@@ -595,7 +595,7 @@ void apply(){
 			<< " " << entry_get_float( m_vector3.m_z );
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), vector3.c_str() );
 }
-typedef MemberCaller<Vector3Attribute, &Vector3Attribute::apply> ApplyCaller;
+typedef MemberCaller<Vector3Attribute, void(), &Vector3Attribute::apply> ApplyCaller;
 
 void update(){
 	StringOutputStream buffer( 32 );
@@ -625,12 +625,12 @@ void update(){
 		m_vector3.m_z.text("0");
 	}
 }
-typedef MemberCaller<Vector3Attribute, &Vector3Attribute::update> UpdateCaller;
+typedef MemberCaller<Vector3Attribute, void(), &Vector3Attribute::update> UpdateCaller;
 };
 
 class NonModalComboBox
 {
-Callback m_changed;
+Callback<void()> m_changed;
 guint m_changedHandler;
 
 static gboolean changed( ui::ComboBox widget, NonModalComboBox* self ){
@@ -639,7 +639,7 @@ static gboolean changed( ui::ComboBox widget, NonModalComboBox* self ){
 }
 
 public:
-NonModalComboBox( const Callback& changed ) : m_changed( changed ), m_changedHandler( 0 ){
+NonModalComboBox( const Callback<void()>& changed ) : m_changed( changed ), m_changedHandler( 0 ){
 }
 void connect( ui::ComboBox combo ){
 	m_changedHandler = combo.connect( "changed", G_CALLBACK( changed ), this );
@@ -684,7 +684,7 @@ ui::Widget getWidget() const {
 void apply(){
 	Scene_EntitySetKeyValue_Selected_Undoable( m_key.c_str(), m_type[gtk_combo_box_get_active( m_combo )].second.c_str() );
 }
-typedef MemberCaller<ListAttribute, &ListAttribute::apply> ApplyCaller;
+typedef MemberCaller<ListAttribute, void(), &ListAttribute::apply> ApplyCaller;
 
 void update(){
 	const char* value = SelectedEntity_getValueForKey( m_key.c_str() );
@@ -697,7 +697,7 @@ void update(){
 		m_nonModal.setActive( m_combo, 0 );
 	}
 }
-typedef MemberCaller<ListAttribute, &ListAttribute::update> UpdateCaller;
+typedef MemberCaller<ListAttribute, void(), &ListAttribute::update> UpdateCaller;
 };
 
 
@@ -1063,7 +1063,7 @@ class EntityInspectorDraw
 {
 IdleDraw m_idleDraw;
 public:
-EntityInspectorDraw() : m_idleDraw( FreeCaller<EntityInspector_updateKeyValues>( ) ){
+EntityInspectorDraw() : m_idleDraw( FreeCaller<void(), EntityInspector_updateKeyValues>( ) ){
 }
 void queueDraw(){
 	m_idleDraw.queueDraw();
@@ -1532,7 +1532,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 	g_entityInspector_windowConstructed = true;
 	EntityClassList_fill();
 
-	typedef FreeCaller1<const Selectable&, EntityInspector_selectionChanged> EntityInspectorSelectionChangedCaller;
+	typedef FreeCaller<void(const Selectable&), EntityInspector_selectionChanged> EntityInspectorSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( EntityInspectorSelectionChangedCaller() );
 	GlobalEntityCreator().setKeyValueChangedFunc( EntityInspector_keyValueChanged );
 

@@ -31,10 +31,10 @@
 #include "pointer.h"
 
 void clicked_closure_callback( ui::Widget widget, gpointer data ){
-	( *reinterpret_cast<Callback*>( data ) )( );
+	( *reinterpret_cast<Callback<void()>*>( data ) )( );
 }
 
-void button_connect_callback( ui::Button button, const Callback& callback ){
+void button_connect_callback( ui::Button button, const Callback<void()>& callback ){
 #if 1
 	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -42,7 +42,7 @@ void button_connect_callback( ui::Button button, const Callback& callback ){
 #endif
 }
 
-void button_connect_callback( ui::ToolButton button, const Callback& callback ){
+void button_connect_callback( ui::ToolButton button, const Callback<void()>& callback ){
 #if 1
 	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -50,7 +50,7 @@ void button_connect_callback( ui::ToolButton button, const Callback& callback ){
 #endif
 }
 
-guint toggle_button_connect_callback( ui::ToggleButton button, const Callback& callback ){
+guint toggle_button_connect_callback( ui::ToggleButton button, const Callback<void()>& callback ){
 #if 1
 	guint handler = g_signal_connect_swapped( G_OBJECT( button ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else
@@ -60,7 +60,7 @@ guint toggle_button_connect_callback( ui::ToggleButton button, const Callback& c
 	return handler;
 }
 
-guint toggle_button_connect_callback( ui::ToggleToolButton button, const Callback& callback ){
+guint toggle_button_connect_callback( ui::ToggleToolButton button, const Callback<void()>& callback ){
 #if 1
 	guint handler = g_signal_connect_swapped( G_OBJECT( button ), "toggled", G_CALLBACK( callback.getThunk() ), callback.getEnvironment() );
 #else

@@ -72,6 +72,23 @@ using get_result_type = typename detail::Fn<get_func<Caller>>::result_type;
 template<class Caller, int N>
 using get_argument = typename detail::Fn<get_func<Caller>>::template get<N>;
 
+namespace detail {
+    template<class Object, class F>
+    struct MemberFunction;
+
+    template<class Object, class R, class... Ts>
+    struct MemberFunction<Object, R(Ts...)> {
+        using type = R(Object::*)(Ts...);
+        using type_const = R(Object::*)(Ts...) const;
+    };
+}
+
+template<class Object, class F>
+using MemberFunction = typename detail::MemberFunction<Object, F>::type;
+
+template<class Object, class F>
+using ConstMemberFunction = typename detail::MemberFunction<Object, F>::type_const;
+
 template<class Object, class F>
 class MemberN;
 
@@ -88,6 +105,9 @@ public:
         }
     };
 };
+
+template<class Object, class F, MemberFunction<Object, F> func>
+using Member = typename MemberN<Object, F>::template instance<func>;
 
 template<class Object, class F>
 class ConstMemberN;
@@ -106,6 +126,9 @@ public:
     };
 };
 
+template<class Object, class F, ConstMemberFunction<Object, F> func>
+using ConstMember = typename ConstMemberN<Object, F>::template instance<func>;
+
 template<class F>
 class FunctionN;
 
@@ -122,6 +145,9 @@ public:
         }
     };
 };
+
+template<class F, F *func>
+using Function = typename FunctionN<F>::template instance<func>;
 
 template<class Caller, class F>
 class CallerShiftFirst;
@@ -183,46 +209,5 @@ public:
 
 template<class Functor>
 using FunctorInvoke = FunctorNInvoke<Functor, get_func<Functor>>;
-
-// todo: inline
-
-template<class Object, class R, R(Object::*member)()>
-using Member = typename MemberN<Object, R()>::template instance<member>;
-
-template<class Object, class R, R(Object::*member)() const>
-using ConstMember = typename ConstMemberN<Object, R()>::template instance<member>;
-
-template<class Object, class A1, class R, R(Object::*member)(A1)>
-using Member1 = typename MemberN<Object, R(A1)>::template instance<member>;
-
-template<class Object, class A1, class R, R(Object::*member)(A1) const>
-using ConstMember1 = typename ConstMemberN<Object, R(A1)>::template instance<member>;
-
-template<class Object, class A1, class A2, class R, R(Object::*member)(A1, A2)>
-using Member2 = typename MemberN<Object, R(A1, A2)>::template instance<member>;
-
-template<class Object, class A1, class A2, class R, R(Object::*member)(A1, A2) const>
-using ConstMember2 = typename ConstMemberN<Object, R(A1, A2)>::template instance<member>;
-
-template<class Object, class A1, class A2, class A3, class R, R(Object::*member)(A1, A2, A3)>
-using Member3 = typename MemberN<Object, R(A1, A2, A3)>::template instance<member>;
-
-template<class Object, class A1, class A2, class A3, class R, R(Object::*member)(A1, A2, A3) const>
-using ConstMember3 = typename ConstMemberN<Object, R(A1, A2, A3)>::template instance<member>;
-
-template<class R, R(*func)()>
-using Function0 = typename FunctionN<R()>::template instance<func>;
-
-template<class A1, class R, R(*func)(A1)>
-using Function1 = typename FunctionN<R(A1)>::template instance<func>;
-
-template<class A1, class A2, class R, R(*func)(A1, A2)>
-using Function2 = typename FunctionN<R(A1, A2)>::template instance<func>;
-
-template<class A1, class A2, class A3, class R, R(*func)(A1, A2, A3)>
-using Function3 = typename FunctionN<R(A1, A2, A3)>::template instance<func>;
-
-template<class A1, class A2, class A3, class A4, class R, R(*func)(A1, A2, A3, A4)>
-using Function4 = typename FunctionN<R(A1, A2, A3, A4)>::template instance<func>;
 
 #endif

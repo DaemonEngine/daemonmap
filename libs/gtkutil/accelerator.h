@@ -80,9 +80,9 @@ TextOutputStreamType& ostream_write( TextOutputStreamType& ostream, const Accele
 	return ostream;
 }
 
-void keydown_accelerators_add( Accelerator accelerator, const Callback& callback );
+void keydown_accelerators_add( Accelerator accelerator, const Callback<void()>& callback );
 void keydown_accelerators_remove( Accelerator accelerator );
-void keyup_accelerators_add( Accelerator accelerator, const Callback& callback );
+void keyup_accelerators_add( Accelerator accelerator, const Callback<void()>& callback );
 void keyup_accelerators_remove( Accelerator accelerator );
 
 void global_accel_connect_window( ui::Window window );
@@ -94,16 +94,16 @@ extern ui::AccelGroup global_accel;
 
 GClosure* global_accel_group_find( Accelerator accelerator );
 
-void global_accel_group_connect( const Accelerator& accelerator, const Callback& callback );
-void global_accel_group_disconnect( const Accelerator& accelerator, const Callback& callback );
+void global_accel_group_connect( const Accelerator& accelerator, const Callback<void()>& callback );
+void global_accel_group_disconnect( const Accelerator& accelerator, const Callback<void()>& callback );
 
 
 class Command
 {
 public:
-Callback m_callback;
+Callback<void()> m_callback;
 const Accelerator& m_accelerator;
-Command( const Callback& callback, const Accelerator& accelerator ) : m_callback( callback ), m_accelerator( accelerator ){
+Command( const Callback<void()>& callback, const Accelerator& accelerator ) : m_callback( callback ), m_accelerator( accelerator ){
 }
 };
 
@@ -112,7 +112,7 @@ class Toggle
 public:
 Command m_command;
 BoolExportCallback m_exportCallback;
-Toggle( const Callback& callback, const Accelerator& accelerator, const BoolExportCallback& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
+Toggle( const Callback<void()>& callback, const Accelerator& accelerator, const BoolExportCallback& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
 }
 };
 
@@ -120,9 +120,9 @@ class KeyEvent
 {
 public:
 const Accelerator& m_accelerator;
-Callback m_keyDown;
-Callback m_keyUp;
-KeyEvent( const Accelerator& accelerator, const Callback& keyDown, const Callback& keyUp ) : m_accelerator( accelerator ), m_keyDown( keyDown ), m_keyUp( keyUp ){
+Callback<void()> m_keyDown;
+Callback<void()> m_keyUp;
+KeyEvent( const Accelerator& accelerator, const Callback<void()>& keyDown, const Callback<void()>& keyUp ) : m_accelerator( accelerator ), m_keyDown( keyDown ), m_keyUp( keyUp ){
 }
 };
 

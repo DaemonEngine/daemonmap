@@ -40,7 +40,7 @@ class ModelSkinKey : public ModuleObserver
 {
 CopiedString m_name;
 ModelSkin* m_skin;
-Callback m_skinChangedCallback;
+Callback<void()> m_skinChangedCallback;
 
 ModelSkinKey( const ModelSkinKey& );
 ModelSkinKey operator=( const ModelSkinKey& );
@@ -55,7 +55,7 @@ void destroy(){
 }
 
 public:
-ModelSkinKey( const Callback& skinChangedCallback ) : m_skinChangedCallback( skinChangedCallback ){
+ModelSkinKey( const Callback<void()>& skinChangedCallback ) : m_skinChangedCallback( skinChangedCallback ){
 	construct();
 }
 ~ModelSkinKey(){
@@ -69,7 +69,7 @@ void skinChanged( const char* value ){
 	parseTextureName( m_name, value );
 	construct();
 }
-typedef MemberCaller1<ModelSkinKey, const char*, &ModelSkinKey::skinChanged> SkinChangedCaller;
+typedef MemberCaller<ModelSkinKey, void(const char*), &ModelSkinKey::skinChanged> SkinChangedCaller;
 
 void realise(){
 	m_skinChangedCallback();
