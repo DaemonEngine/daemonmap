@@ -271,9 +271,9 @@ const char* file_dialog( ui::Window parent, bool open, const char* title, const 
 		const char* file = file_dialog_show( parent, open, title, path, pattern, want_load, want_import, want_save );
 
 		if ( open
-			 || file == 0
+			 || !file
 			 || !file_exists( file )
-			 || parent.alert("The file specified already exists.\nDo you want to replace it?", title, ui::alert_type::NOYES, ui::alert_icon::Question ) == ui::alert_response::YES ) {
+			 || ui::alert(parent, "The file specified already exists.\nDo you want to replace it?", title, ui::alert_type::NOYES, ui::alert_icon::Question ) == ui::alert_response::YES ) {
 			return file;
 		}
 	}

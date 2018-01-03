@@ -491,7 +491,7 @@ static void OnSpinChanged(ui::Adjustment adj, gpointer data ){
 	}
 
 	// update the point-by-point view
-	OnSelchangeComboColRow( ui::root ,0 );
+	OnSelchangeComboColRow( ui::root, 0 );
 }
 
 static gint OnDialogKey( ui::Widget widget, GdkEventKey* event, gpointer data ){

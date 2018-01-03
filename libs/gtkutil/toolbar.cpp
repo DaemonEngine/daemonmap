@@ -57,13 +57,13 @@ ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* descripti
 	return toolbar_append_button( toolbar, description, icon, command.m_callback );
 }
 
-void toggle_button_set_active_callback(ui::ToggleToolButton& button, bool active ){
+void toggle_button_set_active_callback(void *it, bool active ){
+	auto button = ui::ToggleToolButton::from(it);
 	toggle_button_set_active_no_signal( button, active );
 }
-using ToggleButtonSetActiveCaller = ReferenceCaller<ui::ToggleToolButton, void(bool), toggle_button_set_active_callback>;
 
 ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const Toggle& toggle ){
 	auto button = toolbar_append_toggle_button( toolbar, description, icon, toggle.m_command.m_callback );
-	toggle.m_exportCallback( ToggleButtonSetActiveCaller( button ) );
+	toggle.m_exportCallback( PointerCaller<void, void(bool), toggle_button_set_active_callback>( button._handle ) );
 	return button;
 }

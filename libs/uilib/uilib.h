@@ -84,31 +84,6 @@ namespace ui {
 
     void process();
 
-    extern class Widget root;
-
-    enum class alert_type {
-        OK,
-        OKCANCEL,
-        YESNO,
-        YESNOCANCEL,
-        NOYES,
-    };
-
-    enum class alert_icon {
-        Default,
-        Error,
-        Warning,
-        Question,
-        Asterisk,
-    };
-
-    enum class alert_response {
-        OK,
-        CANCEL,
-        YES,
-        NO,
-    };
-
     enum class window_type {
         TOP,
         POPUP
@@ -167,8 +142,8 @@ namespace ui {
         };
     }
 
-    extern struct Null {} null;
-    extern struct New_t {} New;
+    const struct Null {} null = {};
+    const struct New_t {} New = {};
 
     class Object :
             public details::Convertible<Object, _GtkObject *, details::Convert::Explicit>,
@@ -213,9 +188,9 @@ namespace ui {
         using self = name *; \
         using native = T *; \
     protected: \
-        explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
+        explicit name(native h) noexcept : super(reinterpret_cast<super::native>(h)) {} \
     public: \
-        explicit name(Null n) : name((native) nullptr) {} \
+        explicit name(Null n) noexcept : name((native) nullptr) {} \
         explicit name(New_t); \
         static name from(native h) { return name(h); } \
         static name from(void *ptr) { return name((native) ptr); } \
@@ -288,13 +263,6 @@ namespace ui {
     WRAP(Window, Bin, _GtkWindow, (),
          explicit Window(window_type type);
     ,
-         alert_response alert(
-                 std::string text,
-                 std::string title = "NetRadiant",
-                 alert_type type = alert_type::OK,
-                 alert_icon icon = alert_icon::Default
-         );
-
          Window create_dialog_window(
                  const char *title,
                  void func(),
@@ -586,6 +554,41 @@ namespace ui {
     );
 
 #undef WRAP
+
+    // global
+
+    enum class alert_response {
+        OK,
+        CANCEL,
+        YES,
+        NO,
+    };
+
+    enum class alert_type {
+        OK,
+        OKCANCEL,
+        YESNO,
+        YESNOCANCEL,
+        NOYES,
+    };
+
+    enum class alert_icon {
+        Default,
+        Error,
+        Warning,
+        Question,
+        Asterisk,
+    };
+
+    extern class Window root;
+
+    alert_response alert(
+            Window parent,
+            std::string text,
+            std::string title = "NetRadiant",
+            alert_type type = alert_type::OK,
+            alert_icon icon = alert_icon::Default
+    );
 
     // callbacks
 

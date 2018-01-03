@@ -93,7 +93,7 @@ void Map_Snapshot(){
 	{
 		StringOutputStream strMsg( 256 );
 		strMsg << "Snapshot save failed.. unabled to create directory\n" << snapshotsDir.c_str();
-		MainFrame_getWindow().alert( strMsg.c_str() );
+		ui::alert( MainFrame_getWindow(), strMsg.c_str() );
 	}
 }
 /*

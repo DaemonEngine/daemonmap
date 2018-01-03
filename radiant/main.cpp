@@ -304,7 +304,7 @@ bool handleMessage(){
 		ScopedLock lock( m_lock );
 #if GDEF_DEBUG
 		m_buffer << "Break into the debugger?\n";
-		bool handled = ui::root.window().alert( m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error ) == ui::alert_response::NO;
+		bool handled = alert( ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error ) == ui::alert_response::NO;
 		m_buffer.clear();
 		return handled;
 #else
@@ -418,7 +418,7 @@ void create_global_pid(){
 		if ( remove( g_pidFile.c_str() ) == -1 ) {
 			StringOutputStream msg( 256 );
 			msg << "WARNING: Could not delete " << g_pidFile.c_str();
-			ui::root.window().alert( msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+			ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
@@ -459,7 +459,7 @@ void remove_global_pid(){
 	if ( remove( g_pidFile.c_str() ) == -1 ) {
 		StringOutputStream msg( 256 );
 		msg << "WARNING: Could not delete " << g_pidFile.c_str();
-		ui::root.window().alert( msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+		ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
 	}
 }
 
@@ -477,7 +477,7 @@ void create_local_pid(){
 		if ( remove( g_pidGameFile.c_str() ) == -1 ) {
 			StringOutputStream msg;
 			msg << "WARNING: Could not delete " << g_pidGameFile.c_str();
-			ui::root.window().alert( msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+			ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start

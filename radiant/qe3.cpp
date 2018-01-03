@@ -143,7 +143,7 @@ bool ConfirmModified( const char* title ){
 		return true;
 	}
 
-	auto result = MainFrame_getWindow().alert( "The current map has changed since it was last saved.\nDo you want to save the current map before continuing?", title, ui::alert_type::YESNOCANCEL, ui::alert_icon::Question );
+	auto result = ui::alert( MainFrame_getWindow(), "The current map has changed since it was last saved.\nDo you want to save the current map before continuing?", title, ui::alert_type::YESNOCANCEL, ui::alert_icon::Question );
 	if ( result == ui::alert_response::CANCEL ) {
 		return false;
 	}

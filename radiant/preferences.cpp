@@ -475,7 +475,7 @@ CGameDialog g_GamesDialog;
 
 static void OnButtonClean( ui::Widget widget, gpointer data ){
 	// make sure this is what the user wants
-	if ( g_Preferences.GetWidget().alert( "This will close Radiant and clean the corresponding registry entries.\n"
+	if ( ui::alert( g_Preferences.GetWidget(), "This will close Radiant and clean the corresponding registry entries.\n"
 																  "Next time you start Radiant it will be good as new. Do you wish to continue?",
 						 "Reset Registry", ui::alert_type::YESNO, ui::alert_icon::Asterisk ) == ui::alert_response::YES ) {
 		PrefsDlg *dlg = (PrefsDlg*)data;
@@ -913,7 +913,7 @@ void PreferencesDialog_showDialog(){
 			{
 				message << ( *i ) << '\n';
 			}
-			MainFrame_getWindow().alert( message.c_str() );
+			ui::alert( MainFrame_getWindow(), message.c_str() );
 			g_restart_required.clear();
 		}
 	}

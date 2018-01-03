@@ -67,7 +67,7 @@ void Sys_LogFile( bool enable ){
 								 << "This is NetRadiant '" RADIANT_VERSION "' compiled " __DATE__ "\n" RADIANT_ABOUTMSG "\n";
 		}
 		else{
-			ui::root.window().alert( "Failed to create log file, check write permissions in Radiant directory.\n",
+			ui::alert( ui::root, "Failed to create log file, check write permissions in Radiant directory.\n",
 							"Console logging", ui::alert_type::OK, ui::alert_icon::Error );
 		}
 	}

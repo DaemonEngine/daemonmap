@@ -673,7 +673,7 @@ static ui::Window text_editor{ui::null};
 static ui::Widget text_widget{ui::null}; // slave, text widget from the gtk editor
 
 static gint editor_delete( ui::Widget widget, gpointer data ){
-	if ( widget.window().alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
+	if ( ui::alert( widget.window(), "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return TRUE;
 	}
 
@@ -687,7 +687,7 @@ static void editor_save( ui::Widget widget, gpointer data ){
 	gpointer text = g_object_get_data( G_OBJECT( data ), "text" );
 
 	if ( f == 0 ) {
-		ui::Widget::from(data).window().alert( "Error saving file !" );
+		ui::alert( ui::Widget::from(data).window(), "Error saving file !" );
 		return;
 	}
 
@@ -697,7 +697,7 @@ static void editor_save( ui::Widget widget, gpointer data ){
 }
 
 static void editor_close( ui::Widget widget, gpointer data ){
-	if ( text_editor.window().alert( "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
+	if ( ui::alert( text_editor.window(), "Close the shader editor ?", "Radiant", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::NO ) {
 		return;
 	}
 

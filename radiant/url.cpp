@@ -57,6 +57,6 @@ void OpenURL( const char *url ){
 	// let's put a little comment
 	globalOutputStream() << "OpenURL: " << url << "\n";
 	if ( !open_url( url ) ) {
-		MainFrame_getWindow().alert( "Failed to launch browser!" );
+		ui::alert( MainFrame_getWindow(), "Failed to launch browser!" );
 	}
 }

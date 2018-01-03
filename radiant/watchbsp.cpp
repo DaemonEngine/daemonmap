@@ -516,7 +516,7 @@ void CWatchBSP::DoEBeginStep(){
 	if ( SetupListening() == false ) {
 		const char* msg = "Failed to get a listening socket on port 39000.\nTry running with Build monitoring disabled if you can't fix this.\n";
 		globalOutputStream() << msg;
-		MainFrame_getWindow().alert( msg, "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
+		ui::alert( MainFrame_getWindow(), msg, "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
 		return;
 	}
 	// set the timer for timeouts and step cancellation
@@ -533,7 +533,7 @@ void CWatchBSP::DoEBeginStep(){
 			msg << reinterpret_cast<const char*>( g_ptr_array_index( m_pCmd, m_iCurrentStep ) );
 			msg << "\nCheck that the file exists and that you don't run out of system resources.\n";
 			globalOutputStream() << msg.c_str();
-			MainFrame_getWindow().alert( msg.c_str(), "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
+			ui::alert( MainFrame_getWindow(), msg.c_str(), "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
 			return;
 		}
 		// re-initialise the debug window
@@ -613,7 +613,7 @@ void CWatchBSP::RoutineProcessing(){
 	case EBeginStep:
 		// timeout: if we don't get an incoming connection fast enough, go back to idle
 		if ( g_timer_elapsed( m_pTimer, NULL ) > g_WatchBSP_Timeout ) {
-			MainFrame_getWindow().alert(  "The connection timed out, assuming the build process failed\nMake sure you are using a networked version of Q3Map?\nOtherwise you need to disable BSP Monitoring in prefs.", "BSP process monitoring", ui::alert_type::OK );
+			ui::alert( MainFrame_getWindow(), "The connection timed out, assuming the build process failed\nMake sure you are using a networked version of Q3Map?\nOtherwise you need to disable BSP Monitoring in prefs.", "BSP process monitoring", ui::alert_type::OK );
 			EndMonitoringLoop();
 #if 0
 			if ( m_bBSPPlugin ) {
@@ -746,7 +746,7 @@ void CWatchBSP::RoutineProcessing(){
 							StringOutputStream msg;
 							msg << "Failed to execute the following command: " << cmd.c_str() << cmdline.c_str();
 							globalOutputStream() << msg.c_str();
-							MainFrame_getWindow().alert( msg.c_str(), "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
+							ui::alert( MainFrame_getWindow(), msg.c_str(), "Build monitoring", ui::alert_type::OK, ui::alert_icon::Error );
 						}
 					}
 					EndMonitoringLoop();
@@ -774,7 +774,7 @@ void CWatchBSP::DoMonitoringLoop( GPtrArray *pCmd, const char *sBSPName ){
 	if ( m_eState != EIdle ) {
 		globalOutputStream() << "WatchBSP got a monitoring request while not idling...\n";
 		// prompt the user, should we cancel the current process and go ahead?
-		if ( MainFrame_getWindow().alert( "I am already monitoring a Build process.\nDo you want me to override and start a new compilation?",
+		if ( ui::alert( MainFrame_getWindow(), "I am already monitoring a Build process.\nDo you want me to override and start a new compilation?",
 							 "Build process monitoring", ui::alert_type::YESNO ) == ui::alert_response::YES ) {
 			// disconnect and set EIdle state
 			Reset();

@@ -306,7 +306,7 @@ public:
 			StringOutputStream msg;
 			msg << "The command " << name << " is already assigned to the key " << accelerator << ".\n\n"
 				<< "Do you want to unassign " << name << " first?";
-			auto r = widget.window().alert( msg.c_str(), "Key already used", ui::alert_type::YESNOCANCEL );
+			auto r = ui::alert( widget.window(), msg.c_str(), "Key already used", ui::alert_type::YESNOCANCEL );
 			if ( r == ui::alert_response::YES ) {
 				// clear the ACTUAL accelerator too!
 				disconnect_accelerator( name );

@@ -2655,15 +2655,15 @@ void MainFrame::OnSleep(){
 
 
 ui::Window create_splash(){
-	ui::Window window = ui::Window( ui::window_type::TOP );
-	gtk_window_set_decorated( window, FALSE );
-	gtk_window_set_resizable( window, FALSE );
-	gtk_window_set_modal( window, TRUE );
-	gtk_window_set_default_size( window, -1, -1 );
-	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
-	gtk_container_set_border_width( GTK_CONTAINER( window ), 0 );
+	auto window = ui::Window( ui::window_type::TOP );
+	gtk_window_set_decorated(window, false);
+	gtk_window_set_resizable(window, false);
+	gtk_window_set_modal(window, true);
+	gtk_window_set_default_size(window, -1, -1);
+	gtk_window_set_position(window, GTK_WIN_POS_CENTER);
+	gtk_container_set_border_width(window, 0);
 
-	auto image = new_local_image( "splash.png" );
+	auto image = new_local_image("splash.png");
 	image.show();
 	window.add(image);
 

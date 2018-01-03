@@ -1089,7 +1089,7 @@ void EntityClassList_createEntity(){
 	GtkTreeModel* model;
 	GtkTreeIter iter;
 	if ( gtk_tree_selection_get_selected( gtk_tree_view_get_selection( g_entityClassList ), &model, &iter ) == FALSE ) {
-		view.window().alert( "You must have a selected class to create an entity", "info" );
+		ui::alert( view.window(), "You must have a selected class to create an entity", "info" );
 		return;
 	}
 
@@ -1117,14 +1117,14 @@ void EntityInspector_applyKeyValue(){
 
 	// TTimo: if you change the classname to worldspawn you won't merge back in the structural brushes but create a parasite entity
 	if ( !strcmp( key.c_str(), "classname" ) && !strcmp( value.c_str(), "worldspawn" ) ) {
-		g_entityKeyEntry.window().alert( "Cannot change \"classname\" key back to worldspawn.", 0, ui::alert_type::OK );
+		ui::alert( g_entityKeyEntry.window(), "Cannot change \"classname\" key back to worldspawn.", 0, ui::alert_type::OK );
 		return;
 	}
 
 
 	// RR2DO2: we don't want spaces in entity keys
 	if ( strstr( key.c_str(), " " ) ) {
-		g_entityKeyEntry.window().alert( "No spaces are allowed in entity keys.", 0, ui::alert_type::OK );
+		ui::alert( g_entityKeyEntry.window(), "No spaces are allowed in entity keys.", 0, ui::alert_type::OK );
 		return;
 	}
 

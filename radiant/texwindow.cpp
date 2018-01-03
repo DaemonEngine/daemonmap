@@ -259,7 +259,7 @@ CopiedString shader;
 ui::Window m_parent{ui::null};
 ui::GLArea m_gl_widget{ui::null};
 ui::Widget m_texture_scroll{ui::null};
-ui::TreeView m_treeViewTree{ui::null};
+ui::TreeView m_treeViewTree{ui::New};
 ui::TreeView m_treeViewTags{ui::null};
 ui::Frame m_tag_frame{ui::null};
 ui::ListStore m_assigned_store{ui::null};
@@ -1586,7 +1586,6 @@ void TreeView_onRowActivated( ui::TreeView treeview, ui::TreePath path, ui::Tree
 }
 
 void TextureBrowser_createTreeViewTree(){
-	g_TextureBrowser.m_treeViewTree = ui::TreeView(ui::New);
 	gtk_tree_view_set_enable_search(g_TextureBrowser.m_treeViewTree, FALSE );
 
 	gtk_tree_view_set_headers_visible(g_TextureBrowser.m_treeViewTree, FALSE );
@@ -2321,7 +2320,7 @@ void TextureBrowser_renameTag(){
 	}
 	else
 	{
-		g_TextureBrowser.m_parent.alert( "Select a single tag for renaming." );
+		ui::alert( g_TextureBrowser.m_parent, "Select a single tag for renaming." );
 	}
 }
 
@@ -2332,7 +2331,7 @@ void TextureBrowser_deleteTag(){
 	gtk_tree_selection_selected_foreach( selection, GtkTreeSelectionForeachFunc( TextureBrowser_selectionHelper ), &selected );
 
 	if ( g_slist_length( selected ) == 1 ) { // we only delete a single tag
-		auto result = g_TextureBrowser.m_parent.alert( "Are you sure you want to delete the selected tag?", "Delete Tag", ui::alert_type::YESNO, ui::alert_icon::Question );
+		auto result = ui::alert( g_TextureBrowser.m_parent, "Are you sure you want to delete the selected tag?", "Delete Tag", ui::alert_type::YESNO, ui::alert_icon::Question );
 
 		if ( result == ui::alert_response::YES ) {
 			GtkTreeIter iterSelected;
@@ -2361,7 +2360,7 @@ void TextureBrowser_deleteTag(){
 		}
 	}
 	else {
-		g_TextureBrowser.m_parent.alert( "Select a single tag for deletion." );
+		ui::alert( g_TextureBrowser.m_parent, "Select a single tag for deletion." );
 	}
 }
 
@@ -2453,7 +2452,7 @@ void TextureBrowser_showAll(){
 }
 
 void TextureBrowser_showUntagged(){
-	auto result = g_TextureBrowser.m_parent.alert( "WARNING! This function might need a lot of memory and time. Are you sure you want to use it?", "Show Untagged", ui::alert_type::YESNO, ui::alert_icon::Warning );
+	auto result = ui::alert( g_TextureBrowser.m_parent, "WARNING! This function might need a lot of memory and time. Are you sure you want to use it?", "Show Untagged", ui::alert_type::YESNO, ui::alert_icon::Warning );
 
 	if ( result == ui::alert_response::YES ) {
 		g_TextureBrowser.m_found_shaders.clear();
