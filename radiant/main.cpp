@@ -302,16 +302,16 @@ bool handleMessage(){
 	globalErrorStream() << m_buffer.c_str();
 	if ( !m_lock.locked() ) {
 		ScopedLock lock( m_lock );
-#if GDEF_DEBUG
-		m_buffer << "Break into the debugger?\n";
-		bool handled = alert( ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error ) == ui::alert_response::NO;
-		m_buffer.clear();
-		return handled;
-#else
-		m_buffer << "Please report this error to the developers\n";
-		ui::root.window().alert( m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::OK, ui::alert_icon::Error );
-		m_buffer.clear();
-#endif
+        if (GDEF_DEBUG) {
+            m_buffer << "Break into the debugger?\n";
+            bool handled = ui::alert(ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error) == ui::alert_response::NO;
+            m_buffer.clear();
+            return handled;
+        } else {
+            m_buffer << "Please report this error to the developers\n";
+            ui::alert(ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::OK, ui::alert_icon::Error);
+            m_buffer.clear();
+        }
 	}
 	return true;
 }
@@ -368,34 +368,31 @@ bool check_version(){
 	// make something idiot proof and someone will make better idiots, this may be overkill
 	// let's leave it disabled in debug mode in any case
 	// http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=431
-#if !GDEF_DEBUG
-#define CHECK_VERSION
-#endif
-#ifdef CHECK_VERSION
-	// locate and open RADIANT_MAJOR and RADIANT_MINOR
-	bool bVerIsGood = true;
-	{
-		StringOutputStream ver_file_name( 256 );
-		ver_file_name << AppPath_get() << "RADIANT_MAJOR";
-		bVerIsGood = check_version_file( ver_file_name.c_str(), RADIANT_MAJOR_VERSION );
-	}
-	{
-		StringOutputStream ver_file_name( 256 );
-		ver_file_name << AppPath_get() << "RADIANT_MINOR";
-		bVerIsGood = check_version_file( ver_file_name.c_str(), RADIANT_MINOR_VERSION );
-	}
+    if (GDEF_DEBUG) {
+        return true;
+    }
+    // locate and open RADIANT_MAJOR and RADIANT_MINOR
+    bool bVerIsGood = true;
+    {
+        StringOutputStream ver_file_name(256);
+        ver_file_name << AppPath_get() << "RADIANT_MAJOR";
+        bVerIsGood = check_version_file(ver_file_name.c_str(), RADIANT_MAJOR_VERSION);
+    }
+    {
+        StringOutputStream ver_file_name(256);
+        ver_file_name << AppPath_get() << "RADIANT_MINOR";
+        bVerIsGood = check_version_file(ver_file_name.c_str(), RADIANT_MINOR_VERSION);
+    }
 
-	if ( !bVerIsGood ) {
-		StringOutputStream msg( 256 );
-		msg << "This editor binary (" RADIANT_VERSION ") doesn't match what the latest setup has configured in this directory\n"
-				"Make sure you run the right/latest editor binary you installed\n"
-			<< AppPath_get();
-		ui::root.window().alert( msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Default);
-	}
-	return bVerIsGood;
-#else
-	return true;
-#endif
+    if (!bVerIsGood) {
+        StringOutputStream msg(256);
+        msg
+                << "This editor binary (" RADIANT_VERSION ") doesn't match what the latest setup has configured in this directory\n"
+                        "Make sure you run the right/latest editor binary you installed\n"
+                << AppPath_get();
+        ui::alert(ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Default);
+    }
+    return bVerIsGood;
 }
 
 void create_global_pid(){
@@ -422,21 +419,22 @@ void create_global_pid(){
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
-#if !GDEF_DEBUG
-		StringOutputStream msg( 256 );
-		msg << "Radiant failed to start properly the last time it was run.\n"
-			   "The failure may be related to current global preferences.\n"
-			   "Do you want to reset global preferences to defaults?";
+		if (!GDEF_DEBUG) {
+			StringOutputStream msg(256);
+			msg << "Radiant failed to start properly the last time it was run.\n"
+					"The failure may be related to current global preferences.\n"
+					"Do you want to reset global preferences to defaults?";
 
-		if ( ui::root.window().alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::YES ) {
-			g_GamesDialog.Reset();
+			if (ui::alert(ui::root, msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
+				g_GamesDialog.Reset();
+			}
+
+			msg.clear();
+			msg << "Logging console output to " << SettingsPath_get()
+				<< "radiant.log\nRefer to the log if Radiant fails to start again.";
+
+			ui::alert(ui::root, msg.c_str(), "Radiant - Console Log", ui::alert_type::OK);
 		}
-
-		msg.clear();
-		msg << "Logging console output to " << SettingsPath_get() << "radiant.log\nRefer to the log if Radiant fails to start again.";
-
-		ui::root.window().alert( msg.c_str(), "Radiant - Console Log", ui::alert_type::OK );
-#endif
 
 		// set without saving, the class is not in a coherent state yet
 		// just do the value change and call to start logging, CGamesDialog will pickup when relevant
@@ -481,21 +479,22 @@ void create_local_pid(){
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
-#if !GDEF_DEBUG
-		StringOutputStream msg;
-		msg << "Radiant failed to start properly the last time it was run.\n"
-			   "The failure may be caused by current preferences.\n"
-			   "Do you want to reset all preferences to defaults?";
+		if (!GDEF_DEBUG) {
+			StringOutputStream msg;
+			msg << "Radiant failed to start properly the last time it was run.\n"
+					"The failure may be caused by current preferences.\n"
+					"Do you want to reset all preferences to defaults?";
 
-		if ( ui::root.window().alert( msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question ) == ui::alert_response::YES ) {
-			Preferences_Reset();
+			if (ui::alert(ui::root, msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
+				Preferences_Reset();
+			}
+
+			msg.clear();
+			msg << "Logging console output to " << SettingsPath_get()
+				<< "radiant.log\nRefer to the log if Radiant fails to start again.";
+
+			ui::alert(ui::root, msg.c_str(), "Radiant - Console Log", ui::alert_type::OK);
 		}
-
-		msg.clear();
-		msg << "Logging console output to " << SettingsPath_get() << "radiant.log\nRefer to the log if Radiant fails to start again.";
-
-		ui::root.window().alert( msg.c_str(), "Radiant - Console Log", ui::alert_type::OK );
-#endif
 
 		// force console logging on! (will go in prefs too)
 		g_GamesDialog.m_bForceLogConsole = true;
