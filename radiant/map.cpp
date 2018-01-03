@@ -1788,7 +1788,7 @@ const char* getMapsPath(){
 
 const char* getLastFolderPath(){
 	if (g_strLastFolder.empty()) {
-		GlobalPreferenceSystem().registerPreference( "LastFolder", CopiedStringImportStringCaller( g_strLastFolder ), CopiedStringExportStringCaller( g_strLastFolder ) );
+		GlobalPreferenceSystem().registerPreference( "LastFolder", make_property_string( g_strLastFolder ) );
 		if (g_strLastFolder.empty()) {
 			g_strLastFolder = g_qeglobals.m_userGamePath;
 		}
@@ -2166,9 +2166,9 @@ void Map_Construct(){
 	GlobalCommands_insert( "RegionSetBrush", makeCallbackF(RegionBrush) );
 	GlobalCommands_insert( "RegionSetSelection", makeCallbackF(RegionSelected), Accelerator( 'R', (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 
-	GlobalPreferenceSystem().registerPreference( "LastMap", CopiedStringImportStringCaller( g_strLastMap ), CopiedStringExportStringCaller( g_strLastMap ) );
-	GlobalPreferenceSystem().registerPreference( "LoadLastMap", BoolImportStringCaller( g_bLoadLastMap ), BoolExportStringCaller( g_bLoadLastMap ) );
-	GlobalPreferenceSystem().registerPreference( "MapInfoDlg", WindowPositionImportStringCaller( g_posMapInfoWnd ), WindowPositionExportStringCaller( g_posMapInfoWnd ) );
+	GlobalPreferenceSystem().registerPreference( "LastMap", make_property_string( g_strLastMap ) );
+	GlobalPreferenceSystem().registerPreference( "LoadLastMap", make_property_string( g_bLoadLastMap ) );
+	GlobalPreferenceSystem().registerPreference( "MapInfoDlg", make_property<WindowPosition_String>( g_posMapInfoWnd ) );
 
 	PreferencesDialog_addSettingsPreferences( makeCallbackF(Map_constructPreferences) );
 

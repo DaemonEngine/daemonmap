@@ -1026,7 +1026,7 @@ void SaveBuildMenu(){
 #include "stringio.h"
 
 void BuildMenu_Construct(){
-	GlobalPreferenceSystem().registerPreference( "BuildMenu", CopiedStringImportStringCaller( g_buildMenu ), CopiedStringExportStringCaller( g_buildMenu ) );
+	GlobalPreferenceSystem().registerPreference( "BuildMenu", make_property_string( g_buildMenu ) );
 	LoadBuildMenu();
 }
 void BuildMenu_Destroy(){

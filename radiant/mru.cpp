@@ -219,11 +219,11 @@ void MRU_constructMenu( ui::Menu menu ){
 #include "stringio.h"
 
 void MRU_Construct(){
-	GlobalPreferenceSystem().registerPreference( "Count", SizeImportStringCaller( MRU_used ), SizeExportStringCaller( MRU_used ) );
+	GlobalPreferenceSystem().registerPreference( "Count", make_property_string( MRU_used ) );
 
 	for ( std::size_t i = 0; i != MRU_MAX; ++i )
 	{
-		GlobalPreferenceSystem().registerPreference( MRU_keys[i], CopiedStringImportStringCaller( MRU_filenames[i] ), CopiedStringExportStringCaller( MRU_filenames[i] ) );
+		GlobalPreferenceSystem().registerPreference( MRU_keys[i], make_property_string( MRU_filenames[i] ) );
 	}
 
 	MRU_Init();

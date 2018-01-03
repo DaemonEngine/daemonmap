@@ -1202,7 +1202,7 @@ void FlipClipper(){
 
 
 Callback<void()> g_texture_lock_status_changed;
-BoolExportCaller g_texdef_movelock_caller( g_brush_texturelock_enabled );
+ConstReferenceCaller<bool, void(const Callback<void(bool)> &), PropertyImpl<bool>::Export> g_texdef_movelock_caller( g_brush_texturelock_enabled );
 ToggleItem g_texdef_movelock_item( g_texdef_movelock_caller );
 
 void Texdef_ToggleMoveLock(){

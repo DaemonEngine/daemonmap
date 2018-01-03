@@ -194,9 +194,9 @@ void Autosave_registerPreferencesPage(){
 #include "stringio.h"
 
 void Autosave_Construct(){
-	GlobalPreferenceSystem().registerPreference( "Autosave", BoolImportStringCaller( g_AutoSave_Enabled ), BoolExportStringCaller( g_AutoSave_Enabled ) );
-	GlobalPreferenceSystem().registerPreference( "AutosaveMinutes", IntImportStringCaller( m_AutoSave_Frequency ), IntExportStringCaller( m_AutoSave_Frequency ) );
-	GlobalPreferenceSystem().registerPreference( "Snapshots", BoolImportStringCaller( g_SnapShots_Enabled ), BoolExportStringCaller( g_SnapShots_Enabled ) );
+	GlobalPreferenceSystem().registerPreference( "Autosave", make_property_string( g_AutoSave_Enabled ) );
+	GlobalPreferenceSystem().registerPreference( "AutosaveMinutes", make_property_string( m_AutoSave_Frequency ) );
+	GlobalPreferenceSystem().registerPreference( "Snapshots", make_property_string( g_SnapShots_Enabled ) );
 
 	Autosave_registerPreferencesPage();
 }

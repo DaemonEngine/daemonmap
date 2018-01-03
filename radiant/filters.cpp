@@ -127,10 +127,10 @@ ToggleFilterFlag( unsigned int mask ) : m_mask( mask ), m_item( ActiveCaller( *t
 }
 ToggleFilterFlag( const ToggleFilterFlag& other ) : m_mask( other.m_mask ), m_item( ActiveCaller( *this ) ){
 }
-void active( const ImportExportCallback<bool>::Import_t& importCallback ){
+void active( const Callback<void(bool)> &importCallback ){
 	importCallback( ( g_filters_globals.exclude & m_mask ) != 0 );
 }
-typedef MemberCaller<ToggleFilterFlag, void(const ImportExportCallback<bool>::Import_t&), &ToggleFilterFlag::active> ActiveCaller;
+typedef MemberCaller<ToggleFilterFlag, void(const Callback<void(bool)>&), &ToggleFilterFlag::active> ActiveCaller;
 void toggle(){
 	g_filters_globals.exclude ^= m_mask;
 	m_item.update();
@@ -216,7 +216,7 @@ void Filters_constructMenu( ui::Menu menu_in_menu ){
 #include "stringio.h"
 
 void ConstructFilters(){
-	GlobalPreferenceSystem().registerPreference( "SI_Exclude", SizeImportStringCaller( g_filters_globals.exclude ), SizeExportStringCaller( g_filters_globals.exclude ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Exclude", make_property_string( g_filters_globals.exclude ) );
 
 	GlobalCommands_insert( "InvertFilters", makeCallbackF(InvertFilters) );
 	GlobalCommands_insert( "ResetFilters", makeCallbackF(ResetFilters) );

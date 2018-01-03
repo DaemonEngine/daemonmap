@@ -216,18 +216,22 @@ bool Preferences_Save_Safe( PreferenceDictionary& preferences, const char* filen
 }
 
 
+struct LogConsole {
+	static void Export(const Callback<void(bool)> &returnz) {
+		returnz(g_Console_enableLogging);
+	}
 
-void LogConsole_importString( const char* string ){
-	g_Console_enableLogging = string_equal( string, "true" );
-	Sys_LogFile( g_Console_enableLogging );
-}
-typedef FreeCaller<void(const char*), LogConsole_importString> LogConsoleImportStringCaller;
+	static void Import(bool value) {
+		g_Console_enableLogging = value;
+		Sys_LogFile(g_Console_enableLogging);
+	}
+};
 
 
 void RegisterGlobalPreferences( PreferenceSystem& preferences ){
-	preferences.registerPreference( "gamefile", CopiedStringImportStringCaller( g_GamesDialog.m_sGameFile ), CopiedStringExportStringCaller( g_GamesDialog.m_sGameFile ) );
-	preferences.registerPreference( "gamePrompt", BoolImportStringCaller( g_GamesDialog.m_bGamePrompt ), BoolExportStringCaller( g_GamesDialog.m_bGamePrompt ) );
-	preferences.registerPreference( "log console", LogConsoleImportStringCaller(), BoolExportStringCaller( g_Console_enableLogging ) );
+	preferences.registerPreference( "gamefile", make_property_string( g_GamesDialog.m_sGameFile ) );
+	preferences.registerPreference( "gamePrompt", make_property_string( g_GamesDialog.m_bGamePrompt ) );
+	preferences.registerPreference( "log console", make_property_string<LogConsole>() );
 }
 
 
@@ -280,7 +284,7 @@ void CGameDialog::GameFileImport( int value ){
 	m_sGameFile = ( *iGame )->mGameFile;
 }
 
-void CGameDialog::GameFileExport( const ImportExportCallback<int>::Import_t& importCallback ) const {
+void CGameDialog::GameFileExport( const Callback<void(int)> & importCallback ) const {
 	// use m_sGameFile to set value
 	std::list<CGameDescription *>::const_iterator iGame;
 	int i = 0;
@@ -295,13 +299,15 @@ void CGameDialog::GameFileExport( const ImportExportCallback<int>::Import_t& imp
 	importCallback( m_nComboSelect );
 }
 
-void CGameDialog_GameFileImport( CGameDialog& self, int value ){
-	self.GameFileImport( value );
-}
+struct CGameDialog_GameFile {
+	static void Export(const CGameDialog &self, const Callback<void(int)> &returnz) {
+		self.GameFileExport(returnz);
+	}
 
-void CGameDialog_GameFileExport( CGameDialog& self, const ImportExportCallback<int>::Import_t& importCallback ){
-	self.GameFileExport( importCallback );
-}
+	static void Import(CGameDialog &self, int value) {
+		self.GameFileImport(value);
+	}
+};
 
 void CGameDialog::CreateGlobalFrame( PreferencesPage& page ){
 	std::vector<const char*> games;
@@ -313,8 +319,7 @@ void CGameDialog::CreateGlobalFrame( PreferencesPage& page ){
 	page.appendCombo(
 		"Select the game",
 		StringArrayRange( &( *games.begin() ), &( *games.end() ) ),
-		{ReferenceCaller<CGameDialog, void(int), CGameDialog_GameFileImport>( *this ),
-		ReferenceCaller<CGameDialog, void(const ImportExportCallback<int>::Import_t&), CGameDialog_GameFileExport>( *this )}
+		make_property<CGameDialog_GameFile>(*this)
 		);
 	page.appendCheckBox( "Startup", "Show Global Preferences", m_bGamePrompt );
 }
@@ -914,39 +919,36 @@ void PreferencesDialog_showDialog(){
 	}
 }
 
+struct GameName {
+	static void Export(const Callback<void(const char *)> &returnz) {
+		returnz(gamename_get());
+	}
 
+	static void Import(const char *value) {
+		gamename_set(value);
+	}
+};
 
+struct GameMode {
+	static void Export(const Callback<void(const char *)> &returnz) {
+		returnz(gamemode_get());
+	}
 
-
-void GameName_importString( const char* value ){
-	gamename_set( value );
-}
-typedef FreeCaller<void(const char*), GameName_importString> GameNameImportStringCaller;
-void GameName_exportString( const ImportExportCallback<const char *>::Import_t& importer ){
-	importer( gamename_get() );
-}
-typedef FreeCaller<void(const ImportExportCallback<const char *>::Import_t&), GameName_exportString> GameNameExportStringCaller;
-
-void GameMode_importString( const char* value ){
-	gamemode_set( value );
-}
-typedef FreeCaller<void(const char*), GameMode_importString> GameModeImportStringCaller;
-void GameMode_exportString( const ImportExportCallback<const char *>::Import_t& importer ){
-	importer( gamemode_get() );
-}
-typedef FreeCaller<void(const ImportExportCallback<const char *>::Import_t&), GameMode_exportString> GameModeExportStringCaller;
-
+	static void Import(const char *value) {
+		gamemode_set(value);
+	}
+};
 
 void RegisterPreferences( PreferenceSystem& preferences ){
 #if GDEF_OS_WINDOWS
-	preferences.registerPreference( "UseCustomShaderEditor", BoolImportStringCaller( g_TextEditor_useWin32Editor ), BoolExportStringCaller( g_TextEditor_useWin32Editor ) );
+	preferences.registerPreference( "UseCustomShaderEditor", make_property_string( g_TextEditor_useWin32Editor ) );
 #else
-	preferences.registerPreference( "UseCustomShaderEditor", BoolImportStringCaller( g_TextEditor_useCustomEditor ), BoolExportStringCaller( g_TextEditor_useCustomEditor ) );
-	preferences.registerPreference( "CustomShaderEditorCommand", CopiedStringImportStringCaller( g_TextEditor_editorCommand ), CopiedStringExportStringCaller( g_TextEditor_editorCommand ) );
+	preferences.registerPreference( "UseCustomShaderEditor", make_property_string( g_TextEditor_useCustomEditor ) );
+	preferences.registerPreference( "CustomShaderEditorCommand", make_property_string( g_TextEditor_editorCommand ) );
 #endif
 
-	preferences.registerPreference( "GameName", GameNameImportStringCaller(), GameNameExportStringCaller() );
-	preferences.registerPreference( "GameMode", GameModeImportStringCaller(), GameModeExportStringCaller() );
+	preferences.registerPreference( "GameName", make_property<GameName>() );
+	preferences.registerPreference( "GameMode", make_property<GameMode>() );
 }
 
 void Preferences_Init(){

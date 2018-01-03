@@ -23,6 +23,7 @@
 #define INCLUDED_TEXWINDOW_H
 
 #include <uilib/uilib.h>
+#include "property.h"
 #include "math/vector.h"
 #include "generic/callback.h"
 #include "signal/signalfwd.h"
@@ -44,8 +45,8 @@ void TextureBrowser_Construct();
 void TextureBrowser_Destroy();
 
 extern ui::Widget g_page_textures;
-void TextureBrowser_exportTitle( const ImportExportCallback<const char *>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<const char *>::Import_t&), TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
+void TextureBrowser_exportTitle( const Callback<void(const char *)> & importer );
+typedef FreeCaller<void(const Callback<void(const char *)> &), TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
 
 const Vector3& TextureBrowser_getBackgroundColour( TextureBrowser& textureBrowser );
 void TextureBrowser_setBackgroundColour( TextureBrowser& textureBrowser, const Vector3& colour );

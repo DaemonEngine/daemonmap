@@ -42,19 +42,20 @@ bool getTextureLockEnabled(){
 	return g_brush_texturelock_enabled;
 }
 
-void Face_importSnapPlanes( bool value ){
-	Face::m_quantise = value ? quantiseInteger : quantiseFloating;
-}
+struct Face_SnapPlanes {
+	static void Export(const QuantiseFunc &self, const Callback<void(bool)> &returnz) {
+		returnz(self == quantiseInteger);
+	}
 
-void Face_exportSnapPlanes( const ImportExportCallback<bool>::Import_t& importer ){
-	importer( Face::m_quantise == quantiseInteger );
-}
+	static void Import(QuantiseFunc &self, bool value) {
+		self = value ? quantiseInteger : quantiseFloating;
+	}
+};
 
 void Brush_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox(
 		"", "Snap planes to integer grid",
-		{makeCallbackF(Face_importSnapPlanes),
-		 makeCallbackF(Face_exportSnapPlanes)}
+		make_property<Face_SnapPlanes>(Face::m_quantise)
 		);
 	page.appendEntry(
 		"Default texture scale",
@@ -63,7 +64,7 @@ void Brush_constructPreferences( PreferencesPage& page ){
 	if ( g_showAlternativeTextureProjectionOption ) {
 		page.appendCheckBox(
 			"", "Use alternative texture-projection (\"brush primitives\")",
-			mkImportExportCallback(g_useAlternativeTextureProjection)
+			make_property(g_useAlternativeTextureProjection)
 			);
 	}
 	// d1223m
@@ -110,8 +111,7 @@ void Brush_Construct( EBrushType type ){
 
 		GlobalPreferenceSystem().registerPreference(
 			"AlternativeTextureProjection",
-			BoolImportStringCaller( g_useAlternativeTextureProjection.m_latched ),
-			BoolExportStringCaller( g_useAlternativeTextureProjection.m_latched )
+			make_property_string( g_useAlternativeTextureProjection.m_latched )
 			);
 		g_useAlternativeTextureProjection.useLatched();
 
@@ -122,8 +122,8 @@ void Brush_Construct( EBrushType type ){
 		// d1223m
 		GlobalPreferenceSystem().registerPreference(
 			"BrushAlwaysCaulk",
-			BoolImportStringCaller( g_brush_always_caulk ),
-			BoolExportStringCaller( g_brush_always_caulk ) );
+            make_property_string( g_brush_always_caulk )
+        );
 	}
 
 	Brush_registerCommands();
@@ -151,9 +151,9 @@ void Brush_Construct( EBrushType type ){
 		}
 	}
 
-	GlobalPreferenceSystem().registerPreference( "TextureLock", BoolImportStringCaller( g_brush_texturelock_enabled ), BoolExportStringCaller( g_brush_texturelock_enabled ) );
-	GlobalPreferenceSystem().registerPreference( "BrushSnapPlanes", makeBoolStringImportCallback( FreeCaller<void(bool), Face_importSnapPlanes>() ), makeBoolStringExportCallback( FreeCaller<void(const ImportExportCallback<bool>::Import_t&), Face_exportSnapPlanes>() ) );
-	GlobalPreferenceSystem().registerPreference( "TexdefDefaultScale", FloatImportStringCaller( g_texdef_default_scale ), FloatExportStringCaller( g_texdef_default_scale ) );
+	GlobalPreferenceSystem().registerPreference( "TextureLock", make_property_string( g_brush_texturelock_enabled ) );
+	GlobalPreferenceSystem().registerPreference("BrushSnapPlanes", make_property_string<Face_SnapPlanes>(Face::m_quantise));
+	GlobalPreferenceSystem().registerPreference( "TexdefDefaultScale", make_property_string( g_texdef_default_scale ) );
 
 	GridStatus_getTextureLockEnabled = getTextureLockEnabled;
 	g_texture_lock_status_changed = makeCallbackF(GridStatus_onTextureLockEnabledChanged);

@@ -39,6 +39,7 @@ add_library(libs
         fs_path.h
         globaldefs.h
         imagelib.h
+        property.h
         instancelib.h
         maplib.h
         moduleobservers.h

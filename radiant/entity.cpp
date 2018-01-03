@@ -542,22 +542,21 @@ const char* misc_model_dialog( ui::Widget parent ){
 	return 0;
 }
 
-void LightRadiiImport( EntityCreator& self, bool value ){
-	self.setLightRadii( value );
-}
-typedef ReferenceCaller<EntityCreator, void(bool), LightRadiiImport> LightRadiiImportCaller;
+struct LightRadii {
+	static void Export(const EntityCreator &self, const Callback<void(bool)> &returnz) {
+		returnz(self.getLightRadii());
+	}
 
-void LightRadiiExport( EntityCreator& self, const ImportExportCallback<bool>::Import_t& importer ){
-	importer( self.getLightRadii() );
-}
-typedef ReferenceCaller<EntityCreator, void(const ImportExportCallback<bool>::Import_t&), LightRadiiExport> LightRadiiExportCaller;
+	static void Import(EntityCreator &self, bool value) {
+		self.setLightRadii(value);
+	}
+};
 
 void Entity_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox(
-		"Show", "Light Radii",
-		{LightRadiiImportCaller( GlobalEntityCreator() ),
-		LightRadiiExportCaller( GlobalEntityCreator() )}
-		);
+			"Show", "Light Radii",
+			make_property<LightRadii>(GlobalEntityCreator())
+	);
 }
 void Entity_constructPage( PreferenceGroup& group ){
 	PreferencesPage page( group.createPage( "Entities", "Entity Display Preferences" ) );
@@ -591,8 +590,8 @@ void Entity_Construct(){
 	GlobalCommands_insert( "GroupSelection", makeCallbackF(Entity_groupSelected) );
 	GlobalCommands_insert( "UngroupSelection", makeCallbackF(Entity_ungroupSelected) );
 
-	GlobalPreferenceSystem().registerPreference( "SI_Colors5", Vector3ImportStringCaller( g_entity_globals.color_entity ), Vector3ExportStringCaller( g_entity_globals.color_entity ) );
-	GlobalPreferenceSystem().registerPreference( "LastLightIntensity", IntImportStringCaller( g_iLastLightIntensity ), IntExportStringCaller( g_iLastLightIntensity ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors5", make_property_string( g_entity_globals.color_entity ) );
+	GlobalPreferenceSystem().registerPreference( "LastLightIntensity", make_property_string( g_iLastLightIntensity ) );
 
 	Entity_registerPreferencesPage();
 }

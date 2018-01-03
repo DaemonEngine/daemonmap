@@ -162,8 +162,6 @@ NonModalEntry m_valueEntry;
 ui::Entry m_valueEntryWidget{ui::null};
 public:
 WindowPositionTracker m_positionTracker;
-WindowPositionTrackerImportStringCaller m_importPosition;
-WindowPositionTrackerExportStringCaller m_exportPosition;
 
 // Dialog Data
 float m_fitHorizontal;
@@ -190,8 +188,6 @@ SurfaceInspector() :
 	m_rotateEntry( Increment::ApplyCaller( m_rotateIncrement ), Increment::CancelCaller( m_rotateIncrement ) ),
 	m_idleDraw( UpdateCaller( *this ) ),
 	m_valueEntry( ApplyFlagsCaller( *this ), UpdateCaller( *this ) ),
-	m_importPosition( m_positionTracker ),
-	m_exportPosition( m_positionTracker ),
 	m_hshiftIncrement( g_si_globals.shift[0] ),
 	m_vshiftIncrement( g_si_globals.shift[1] ),
 	m_hscaleIncrement( g_si_globals.scale[0] ),
@@ -1415,13 +1411,13 @@ void SurfaceInspector_Construct(){
 
 	FaceTextureClipboard_setDefault();
 
-	GlobalPreferenceSystem().registerPreference( "SurfaceWnd", getSurfaceInspector().m_importPosition, getSurfaceInspector().m_exportPosition );
-	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Scale1", FloatImportStringCaller( g_si_globals.scale[0] ), FloatExportStringCaller( g_si_globals.scale[0] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Scale2", FloatImportStringCaller( g_si_globals.scale[1] ), FloatExportStringCaller( g_si_globals.scale[1] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Shift1", FloatImportStringCaller( g_si_globals.shift[0] ), FloatExportStringCaller( g_si_globals.shift[0] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Shift2", FloatImportStringCaller( g_si_globals.shift[1] ), FloatExportStringCaller( g_si_globals.shift[1] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Rotate", FloatImportStringCaller( g_si_globals.rotate ), FloatExportStringCaller( g_si_globals.rotate ) );
-	GlobalPreferenceSystem().registerPreference( "SnapTToGrid", BoolImportStringCaller( g_si_globals.m_bSnapTToGrid ), BoolExportStringCaller( g_si_globals.m_bSnapTToGrid ) );
+	GlobalPreferenceSystem().registerPreference( "SurfaceWnd", make_property<WindowPositionTracker_String>( getSurfaceInspector().m_positionTracker) );
+	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Scale1", make_property_string( g_si_globals.scale[0] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Scale2", make_property_string( g_si_globals.scale[1] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Shift1", make_property_string( g_si_globals.shift[0] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Shift2", make_property_string( g_si_globals.shift[1] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_SurfaceTexdef_Rotate", make_property_string( g_si_globals.rotate ) );
+	GlobalPreferenceSystem().registerPreference( "SnapTToGrid", make_property_string( g_si_globals.m_bSnapTToGrid ) );
 
 	typedef FreeCaller<void(const Selectable&), SurfaceInspector_SelectionChanged> SurfaceInspectorSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( SurfaceInspectorSelectionChangedCaller() );

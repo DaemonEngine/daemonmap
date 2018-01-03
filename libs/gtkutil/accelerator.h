@@ -26,6 +26,7 @@
 #include <gdk/gdk.h>
 
 #include "generic/callback.h"
+#include "property.h"
 
 // ignore numlock
 #define ALLOWED_MODIFIERS ( ~( GDK_MOD2_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK | GDK_MOD4_MASK | GDK_MOD5_MASK ) )
@@ -111,8 +112,8 @@ class Toggle
 {
 public:
 Command m_command;
-ImportExportCallback<bool>::Export_t m_exportCallback;
-Toggle( const Callback<void()>& callback, const Accelerator& accelerator, const ImportExportCallback<bool>::Export_t& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
+Callback<void(const Callback<void(bool)> &)> m_exportCallback;
+Toggle( const Callback<void()>& callback, const Accelerator& accelerator, const Callback<void(const Callback<void(bool)> &)>& exportCallback ) : m_command( callback, accelerator ), m_exportCallback( exportCallback ){
 }
 };
 

@@ -66,14 +66,13 @@ void window_get_position(ui::Window window, WindowPosition &position);
 
 void window_set_position(ui::Window window, const WindowPosition &position);
 
-void WindowPosition_Parse(WindowPosition &position, const char *value);
+struct WindowPosition_String {
 
-typedef ReferenceCaller<WindowPosition, void(const char *), WindowPosition_Parse> WindowPositionImportStringCaller;
+    static void Export(const WindowPosition &self, const Callback<void(const char *)> &returnz);
 
-void WindowPosition_Write(const WindowPosition &position, const ImportExportCallback<const char *>::Import_t &importCallback);
+    static void Import(WindowPosition &self, const char *value);
 
-typedef ConstReferenceCaller<WindowPosition, void(const ImportExportCallback<const char *>::Import_t &), WindowPosition_Write> WindowPositionExportStringCaller;
-
+};
 
 class WindowPositionTracker {
     WindowPosition m_position;
@@ -97,13 +96,10 @@ public:
 };
 
 
-void WindowPositionTracker_importString(WindowPositionTracker &self, const char *value);
+struct WindowPositionTracker_String {
+    static void Export(const WindowPositionTracker &self, const Callback<void(const char *)> &returnz);
 
-typedef ReferenceCaller<WindowPositionTracker, void(const char *), WindowPositionTracker_importString> WindowPositionTrackerImportStringCaller;
-
-void WindowPositionTracker_exportString(const WindowPositionTracker &self, const ImportExportCallback<const char *>::Import_t &importer);
-
-typedef ConstReferenceCaller<WindowPositionTracker, void(const ImportExportCallback<const char *>::Import_t &), WindowPositionTracker_exportString> WindowPositionTrackerExportStringCaller;
-
+    static void Import(WindowPositionTracker &self, const char *value);
+};
 
 #endif

@@ -183,30 +183,30 @@ void window_set_position(ui::Window window, const WindowPosition &position)
 	gtk_window_set_default_size( window, position.w, position.h );
 }
 
-void WindowPosition_Parse(WindowPosition &position, const char *value)
+void WindowPosition_String::Import(WindowPosition &position, const char *value)
 {
 	if ( sscanf( value, "%d %d %d %d", &position.x, &position.y, &position.w, &position.h ) != 4 ) {
 		position = WindowPosition( c_default_window_pos ); // ensure sane default value for window position
 	}
 }
 
-void WindowPosition_Write(const WindowPosition &position, const ImportExportCallback<const char *>::Import_t &importCallback)
+void WindowPosition_String::Export(const WindowPosition &self, const Callback<void(const char *)> &returnz)
 {
 	char buffer[64];
-	sprintf( buffer, "%d %d %d %d", position.x, position.y, position.w, position.h );
-	importCallback( buffer );
+	sprintf( buffer, "%d %d %d %d", self.x, self.y, self.w, self.h );
+	returnz( buffer );
 }
 
-void WindowPositionTracker_importString(WindowPositionTracker &self, const char *value)
+void WindowPositionTracker_String::Import(WindowPositionTracker &self, const char *value)
 {
 	WindowPosition position;
-	WindowPosition_Parse( position, value );
+	WindowPosition_String::Import( position, value );
 	self.setPosition( position );
 }
 
-void WindowPositionTracker_exportString(const WindowPositionTracker &self, const ImportExportCallback<const char *>::Import_t &importer)
+void WindowPositionTracker_String::Export(const WindowPositionTracker &self, const Callback<void(const char *)> &returnz)
 {
-	WindowPosition_Write( self.getPosition(), importer );
+	WindowPosition_String::Export( self.getPosition(), returnz );
 }
 
 gboolean WindowPositionTracker::configure(ui::Widget widget, GdkEventConfigure *event, WindowPositionTracker *self)

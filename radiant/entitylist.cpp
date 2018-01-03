@@ -375,7 +375,7 @@ void EntityList_Construct(){
 
 	getEntityList().m_positionTracker.setPosition( c_default_window_pos );
 
-	GlobalPreferenceSystem().registerPreference( "EntityInfoDlg", WindowPositionTrackerImportStringCaller( getEntityList().m_positionTracker ), WindowPositionTrackerExportStringCaller( getEntityList().m_positionTracker ) );
+	GlobalPreferenceSystem().registerPreference( "EntityInfoDlg", make_property<WindowPositionTracker_String>( getEntityList().m_positionTracker ) );
 
 	typedef FreeCaller<void(const Selectable&), EntityList_SelectionChanged> EntityListSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( EntityListSelectionChangedCaller() );

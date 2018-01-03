@@ -23,6 +23,7 @@
 #define INCLUDED_GROUPDIALOG_H
 
 #include <uilib/uilib.h>
+#include "property.h"
 #include "generic/callback.h"
 
 void GroupDialog_Construct();
@@ -33,11 +34,11 @@ void GroupDialog_destroyWindow();
 ui::Window GroupDialog_getWindow();
 void GroupDialog_show();
 
-inline void RawStringExport( const char* string, const ImportExportCallback<const char *>::Import_t& importer ){
+inline void RawStringExport( const char* string, const Callback<void(const char *)> &importer ){
 	importer( string );
 }
-typedef ConstPointerCaller<char, void(const ImportExportCallback<const char *>::Import_t&), RawStringExport> RawStringExportCaller;
-ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const ImportExportCallback<const char *>::Export_t& title );
+typedef ConstPointerCaller<char, void(const Callback<void(const char *)> &), RawStringExport> RawStringExportCaller;
+ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const Callback<void(const Callback<void(const char *)> &)>& title );
 
 void GroupDialog_showPage( ui::Widget page );
 void GroupDialog_updatePageTitle( ui::Widget page );

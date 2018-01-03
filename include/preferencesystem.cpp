@@ -76,13 +76,13 @@ void importString( const char* value ){
 	m_observer.onChanged();
 }
 typedef MemberCaller<StringPreference, void(const char*), &StringPreference::importString> ImportStringCaller;
-void exportString( ImportExportCallback<const char *>::Import_t& importer ){
+void exportString( Callback<void(const char *)>& importer ){
 	importer( m_string.c_str() );
 }
-typedef MemberCaller<StringPreference, void(ImportExportCallback<const char *>::Import_t&), &StringPreference::exportString> ExportStringCaller;
+typedef MemberCaller<StringPreference, void(Callback<void(const char *)>&), &StringPreference::exportString> ExportStringCaller;
 };
 
-inline void int_export( int i, ImportExportCallback<const char *>::Import_t& importer ){
+inline void int_export( int i, Callback<void(const char *)>& importer ){
 	char buffer[16];
 	sprintf( buffer, "%d", i );
 	importer( buffer );
@@ -114,10 +114,10 @@ void importString( const char* value ){
 	m_observer.onChanged();
 }
 typedef MemberCaller<IntPreference, void(const char*), &IntPreference::importString> ImportStringCaller;
-void exportString( ImportExportCallback<const char *>::Import_t& importer ){
+void exportString( Callback<void(const char *)>& importer ){
 	int_export( m_int, importer );
 }
-typedef MemberCaller<IntPreference, void(ImportExportCallback<const char *>::Import_t&), &IntPreference::exportString> ExportStringCaller;
+typedef MemberCaller<IntPreference, void(Callback<void(const char *)>&), &IntPreference::exportString> ExportStringCaller;
 };
 
 class IntPreferenceImporter

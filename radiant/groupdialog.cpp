@@ -71,7 +71,7 @@ namespace
 GroupDlg g_GroupDlg;
 
 std::size_t g_current_page;
-std::vector<ImportExportCallback<const char *>::Export_t> g_pages;
+std::vector<Callback<void(const Callback<void(const char *)> &)>> g_pages;
 }
 
 void GroupDialog_updatePageTitle( ui::Window window, std::size_t pageIndex ){
@@ -123,7 +123,7 @@ void GroupDlg::Create( ui::Window parent ){
 }
 
 
-ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const ImportExportCallback<const char *>::Export_t& title ){
+ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const Callback<void(const Callback<void(const char *)> &)>& title ){
 	ui::Widget w = ui::Label( tabLabel );
 	w.show();
 	ui::Widget page = ui::Widget(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gtk_notebook_insert_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), widget, w, -1 ) ));
@@ -195,7 +195,7 @@ void GroupDialog_updatePageTitle( ui::Widget page ){
 #include "preferencesystem.h"
 
 void GroupDialog_Construct(){
-	GlobalPreferenceSystem().registerPreference( "EntityWnd", WindowPositionTrackerImportStringCaller( g_GroupDlg.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_GroupDlg.m_position_tracker ) );
+	GlobalPreferenceSystem().registerPreference( "EntityWnd", make_property<WindowPositionTracker_String>( g_GroupDlg.m_position_tracker ) );
 
 	GlobalCommands_insert( "ViewEntityInfo", makeCallbackF(GroupDialog_ToggleShow), Accelerator( 'N' ) );
 }

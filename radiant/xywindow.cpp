@@ -2587,97 +2587,97 @@ void ShowNamesToggle(){
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowNamesToggle> ShowNamesToggleCaller;
-void ShowNamesExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowNamesExport( const Callback<void(bool)> & importer ){
 	importer( GlobalEntityCreator().getShowNames() );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowNamesExport> ShowNamesExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowNamesExport> ShowNamesExportCaller;
 
 void ShowAnglesToggle(){
 	GlobalEntityCreator().setShowAngles( !GlobalEntityCreator().getShowAngles() );
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowAnglesToggle> ShowAnglesToggleCaller;
-void ShowAnglesExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowAnglesExport( const Callback<void(bool)> & importer ){
 	importer( GlobalEntityCreator().getShowAngles() );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowAnglesExport> ShowAnglesExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowAnglesExport> ShowAnglesExportCaller;
 
 void ShowBlocksToggle(){
 	g_xywindow_globals_private.show_blocks ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowBlocksToggle> ShowBlocksToggleCaller;
-void ShowBlocksExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowBlocksExport( const Callback<void(bool)> & importer ){
 	importer( g_xywindow_globals_private.show_blocks );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowBlocksExport> ShowBlocksExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowBlocksExport> ShowBlocksExportCaller;
 
 void ShowCoordinatesToggle(){
 	g_xywindow_globals_private.show_coordinates ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowCoordinatesToggle> ShowCoordinatesToggleCaller;
-void ShowCoordinatesExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowCoordinatesExport( const Callback<void(bool)> & importer ){
 	importer( g_xywindow_globals_private.show_coordinates );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowCoordinatesExport> ShowCoordinatesExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowCoordinatesExport> ShowCoordinatesExportCaller;
 
 void ShowOutlineToggle(){
 	g_xywindow_globals_private.show_outline ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowOutlineToggle> ShowOutlineToggleCaller;
-void ShowOutlineExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowOutlineExport( const Callback<void(bool)> & importer ){
 	importer( g_xywindow_globals_private.show_outline );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowOutlineExport> ShowOutlineExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowOutlineExport> ShowOutlineExportCaller;
 
 void ShowAxesToggle(){
 	g_xywindow_globals_private.show_axis ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowAxesToggle> ShowAxesToggleCaller;
-void ShowAxesExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowAxesExport( const Callback<void(bool)> & importer ){
 	importer( g_xywindow_globals_private.show_axis );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowAxesExport> ShowAxesExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowAxesExport> ShowAxesExportCaller;
 
 void ShowWorkzoneToggle(){
 	g_xywindow_globals_private.d_show_work ^= 1;
 	XY_UpdateAllWindows();
 }
 typedef FreeCaller<void(), ShowWorkzoneToggle> ShowWorkzoneToggleCaller;
-void ShowWorkzoneExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowWorkzoneExport( const Callback<void(bool)> & importer ){
 	importer( g_xywindow_globals_private.d_show_work );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowWorkzoneExport> ShowWorkzoneExportCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), ShowWorkzoneExport> ShowWorkzoneExportCaller;
 
 ShowNamesExportCaller g_show_names_caller;
-ImportExportCallback<bool>::Export_t g_show_names_callback( g_show_names_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_names_callback( g_show_names_caller );
 ToggleItem g_show_names( g_show_names_callback );
 
 ShowAnglesExportCaller g_show_angles_caller;
-ImportExportCallback<bool>::Export_t g_show_angles_callback( g_show_angles_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_angles_callback( g_show_angles_caller );
 ToggleItem g_show_angles( g_show_angles_callback );
 
 ShowBlocksExportCaller g_show_blocks_caller;
-ImportExportCallback<bool>::Export_t g_show_blocks_callback( g_show_blocks_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_blocks_callback( g_show_blocks_caller );
 ToggleItem g_show_blocks( g_show_blocks_callback );
 
 ShowCoordinatesExportCaller g_show_coordinates_caller;
-ImportExportCallback<bool>::Export_t g_show_coordinates_callback( g_show_coordinates_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_coordinates_callback( g_show_coordinates_caller );
 ToggleItem g_show_coordinates( g_show_coordinates_callback );
 
 ShowOutlineExportCaller g_show_outline_caller;
-ImportExportCallback<bool>::Export_t g_show_outline_callback( g_show_outline_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_outline_callback( g_show_outline_caller );
 ToggleItem g_show_outline( g_show_outline_callback );
 
 ShowAxesExportCaller g_show_axes_caller;
-ImportExportCallback<bool>::Export_t g_show_axes_callback( g_show_axes_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_axes_callback( g_show_axes_caller );
 ToggleItem g_show_axes( g_show_axes_callback );
 
 ShowWorkzoneExportCaller g_show_workzone_caller;
-ImportExportCallback<bool>::Export_t g_show_workzone_callback( g_show_workzone_caller );
+Callback<void(const Callback<void(bool)> &)> g_show_workzone_callback( g_show_workzone_caller );
 ToggleItem g_show_workzone( g_show_workzone_callback );
 
 void XYShow_registerCommands(){
@@ -2727,16 +2727,15 @@ void Clipper_registerPreferencesPage(){
 #include "stringio.h"
 
 
+struct ToggleShown_Bool {
+	static void Export(const ToggleShown &self, const Callback<void(bool)> &returnz) {
+		returnz(self.active());
+	}
 
-
-void ToggleShown_importBool( ToggleShown& self, bool value ){
-	self.set( value );
-}
-typedef ReferenceCaller<ToggleShown, void(bool), ToggleShown_importBool> ToggleShownImportBoolCaller;
-void ToggleShown_exportBool( const ToggleShown& self, const ImportExportCallback<bool>::Import_t& importer ){
-	importer( self.active() );
-}
-typedef ConstReferenceCaller<ToggleShown, void(const ImportExportCallback<bool>::Import_t&), ToggleShown_exportBool> ToggleShownExportBoolCaller;
+	static void Import(ToggleShown &self, bool value) {
+		self.set(value);
+	}
+};
 
 
 void XYWindow_Construct(){
@@ -2756,32 +2755,32 @@ void XYWindow_Construct(){
 	GlobalCommands_insert( "Zoom100", makeCallbackF(XY_Zoom100) );
 	GlobalCommands_insert( "CenterXYView", makeCallbackF(XY_Focus), Accelerator( GDK_KEY_Tab, (GdkModifierType)( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) ) );
 
-	GlobalPreferenceSystem().registerPreference( "ClipCaulk", BoolImportStringCaller( g_clip_useCaulk ), BoolExportStringCaller( g_clip_useCaulk ) );
+	GlobalPreferenceSystem().registerPreference( "ClipCaulk", make_property_string( g_clip_useCaulk ) );
 
-	GlobalPreferenceSystem().registerPreference( "NewRightClick", BoolImportStringCaller( g_xywindow_globals.m_bRightClick ), BoolExportStringCaller( g_xywindow_globals.m_bRightClick ) );
-	GlobalPreferenceSystem().registerPreference( "ChaseMouse", BoolImportStringCaller( g_xywindow_globals_private.m_bChaseMouse ), BoolExportStringCaller( g_xywindow_globals_private.m_bChaseMouse ) );
-	GlobalPreferenceSystem().registerPreference( "SizePainting", BoolImportStringCaller( g_xywindow_globals_private.m_bSizePaint ), BoolExportStringCaller( g_xywindow_globals_private.m_bSizePaint ) );
-	GlobalPreferenceSystem().registerPreference( "NoStipple", BoolImportStringCaller( g_xywindow_globals.m_bNoStipple ), BoolExportStringCaller( g_xywindow_globals.m_bNoStipple ) );
-	GlobalPreferenceSystem().registerPreference( "SI_ShowCoords", BoolImportStringCaller( g_xywindow_globals_private.show_coordinates ), BoolExportStringCaller( g_xywindow_globals_private.show_coordinates ) );
-	GlobalPreferenceSystem().registerPreference( "SI_ShowOutlines", BoolImportStringCaller( g_xywindow_globals_private.show_outline ), BoolExportStringCaller( g_xywindow_globals_private.show_outline ) );
-	GlobalPreferenceSystem().registerPreference( "SI_ShowAxis", BoolImportStringCaller( g_xywindow_globals_private.show_axis ), BoolExportStringCaller( g_xywindow_globals_private.show_axis ) );
-	GlobalPreferenceSystem().registerPreference( "CamXYUpdate", BoolImportStringCaller( g_xywindow_globals_private.m_bCamXYUpdate ), BoolExportStringCaller( g_xywindow_globals_private.m_bCamXYUpdate ) );
-	GlobalPreferenceSystem().registerPreference( "ShowWorkzone", BoolImportStringCaller( g_xywindow_globals_private.d_show_work ), BoolExportStringCaller( g_xywindow_globals_private.d_show_work ) );
+	GlobalPreferenceSystem().registerPreference( "NewRightClick", make_property_string( g_xywindow_globals.m_bRightClick ) );
+	GlobalPreferenceSystem().registerPreference( "ChaseMouse", make_property_string( g_xywindow_globals_private.m_bChaseMouse ) );
+	GlobalPreferenceSystem().registerPreference( "SizePainting", make_property_string( g_xywindow_globals_private.m_bSizePaint ) );
+	GlobalPreferenceSystem().registerPreference( "NoStipple", make_property_string( g_xywindow_globals.m_bNoStipple ) );
+	GlobalPreferenceSystem().registerPreference( "SI_ShowCoords", make_property_string( g_xywindow_globals_private.show_coordinates ) );
+	GlobalPreferenceSystem().registerPreference( "SI_ShowOutlines", make_property_string( g_xywindow_globals_private.show_outline ) );
+	GlobalPreferenceSystem().registerPreference( "SI_ShowAxis", make_property_string( g_xywindow_globals_private.show_axis ) );
+	GlobalPreferenceSystem().registerPreference( "CamXYUpdate", make_property_string( g_xywindow_globals_private.m_bCamXYUpdate ) );
+	GlobalPreferenceSystem().registerPreference( "ShowWorkzone", make_property_string( g_xywindow_globals_private.d_show_work ) );
 
-	GlobalPreferenceSystem().registerPreference( "SI_AxisColors0", Vector3ImportStringCaller( g_xywindow_globals.AxisColorX ), Vector3ExportStringCaller( g_xywindow_globals.AxisColorX ) );
-	GlobalPreferenceSystem().registerPreference( "SI_AxisColors1", Vector3ImportStringCaller( g_xywindow_globals.AxisColorY ), Vector3ExportStringCaller( g_xywindow_globals.AxisColorY ) );
-	GlobalPreferenceSystem().registerPreference( "SI_AxisColors2", Vector3ImportStringCaller( g_xywindow_globals.AxisColorZ ), Vector3ExportStringCaller( g_xywindow_globals.AxisColorZ ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors1", Vector3ImportStringCaller( g_xywindow_globals.color_gridback ), Vector3ExportStringCaller( g_xywindow_globals.color_gridback ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors2", Vector3ImportStringCaller( g_xywindow_globals.color_gridminor ), Vector3ExportStringCaller( g_xywindow_globals.color_gridminor ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors3", Vector3ImportStringCaller( g_xywindow_globals.color_gridmajor ), Vector3ExportStringCaller( g_xywindow_globals.color_gridmajor ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors6", Vector3ImportStringCaller( g_xywindow_globals.color_gridblock ), Vector3ExportStringCaller( g_xywindow_globals.color_gridblock ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors7", Vector3ImportStringCaller( g_xywindow_globals.color_gridtext ), Vector3ExportStringCaller( g_xywindow_globals.color_gridtext ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors8", Vector3ImportStringCaller( g_xywindow_globals.color_brushes ), Vector3ExportStringCaller( g_xywindow_globals.color_brushes ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors14", Vector3ImportStringCaller( g_xywindow_globals.color_gridmajor_alt ), Vector3ExportStringCaller( g_xywindow_globals.color_gridmajor_alt ) );
+	GlobalPreferenceSystem().registerPreference( "SI_AxisColors0", make_property_string( g_xywindow_globals.AxisColorX ) );
+	GlobalPreferenceSystem().registerPreference( "SI_AxisColors1", make_property_string( g_xywindow_globals.AxisColorY ) );
+	GlobalPreferenceSystem().registerPreference( "SI_AxisColors2", make_property_string( g_xywindow_globals.AxisColorZ ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors1", make_property_string( g_xywindow_globals.color_gridback ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors2", make_property_string( g_xywindow_globals.color_gridminor ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors3", make_property_string( g_xywindow_globals.color_gridmajor ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors6", make_property_string( g_xywindow_globals.color_gridblock ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors7", make_property_string( g_xywindow_globals.color_gridtext ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors8", make_property_string( g_xywindow_globals.color_brushes ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors14", make_property_string( g_xywindow_globals.color_gridmajor_alt ) );
 
 
-	GlobalPreferenceSystem().registerPreference( "XZVIS", makeBoolStringImportCallback( ToggleShownImportBoolCaller( g_xz_front_shown ) ), makeBoolStringExportCallback( ToggleShownExportBoolCaller( g_xz_front_shown ) ) );
-	GlobalPreferenceSystem().registerPreference( "YZVIS", makeBoolStringImportCallback( ToggleShownImportBoolCaller( g_yz_side_shown ) ), makeBoolStringExportCallback( ToggleShownExportBoolCaller( g_yz_side_shown ) ) );
+	GlobalPreferenceSystem().registerPreference( "XZVIS", make_property_string<ToggleShown_Bool>( g_xz_front_shown ) );
+	GlobalPreferenceSystem().registerPreference( "YZVIS", make_property_string<ToggleShown_Bool>( g_yz_side_shown ) );
 
 	Orthographic_registerPreferencesPage();
 	Clipper_registerPreferencesPage();

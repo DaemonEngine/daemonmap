@@ -86,8 +86,8 @@ void MultiMon_Construct(){
 		g_multimon_globals.m_bStartOnPrimMon = true;
 	}
 
-	GlobalPreferenceSystem().registerPreference( "StartOnPrimMon", BoolImportStringCaller( g_multimon_globals.m_bStartOnPrimMon ), BoolExportStringCaller( g_multimon_globals.m_bStartOnPrimMon ) );
-	GlobalPreferenceSystem().registerPreference( "NoSysMenuPopups", BoolImportStringCaller( g_Multimon_enableSysMenuPopups.m_latched ), BoolExportStringCaller( g_Multimon_enableSysMenuPopups.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "StartOnPrimMon", make_property_string( g_multimon_globals.m_bStartOnPrimMon ) );
+	GlobalPreferenceSystem().registerPreference( "NoSysMenuPopups", make_property_string( g_Multimon_enableSysMenuPopups.m_latched ) );
 
 	g_Multimon_enableSysMenuPopups.useLatched();
 

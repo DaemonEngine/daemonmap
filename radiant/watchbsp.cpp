@@ -201,10 +201,10 @@ void BuildMonitor_Construct(){
 
 	g_WatchBSP_Enabled = !string_equal( g_pGameDescription->getKeyValue( "no_bsp_monitor" ), "1" );
 
-	GlobalPreferenceSystem().registerPreference( "WatchBSP", BoolImportStringCaller( g_WatchBSP_Enabled ), BoolExportStringCaller( g_WatchBSP_Enabled ) );
-	GlobalPreferenceSystem().registerPreference( "RunQuake2Run", BoolImportStringCaller( g_WatchBSP_RunQuake ), BoolExportStringCaller( g_WatchBSP_RunQuake ) );
-	GlobalPreferenceSystem().registerPreference( "LeakStop", BoolImportStringCaller( g_WatchBSP_LeakStop ), BoolExportStringCaller( g_WatchBSP_LeakStop ) );
-	GlobalPreferenceSystem().registerPreference( "SleepMode", BoolImportStringCaller( g_WatchBSP_DoSleep ), BoolExportStringCaller( g_WatchBSP_DoSleep ) );
+	GlobalPreferenceSystem().registerPreference( "WatchBSP", make_property_string( g_WatchBSP_Enabled ) );
+	GlobalPreferenceSystem().registerPreference( "RunQuake2Run", make_property_string( g_WatchBSP_RunQuake ) );
+	GlobalPreferenceSystem().registerPreference( "LeakStop", make_property_string( g_WatchBSP_LeakStop ) );
+	GlobalPreferenceSystem().registerPreference( "SleepMode", make_property_string( g_WatchBSP_DoSleep ) );
 
 	Build_registerPreferencesPage();
 }

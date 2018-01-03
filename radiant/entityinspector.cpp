@@ -1574,8 +1574,8 @@ EntityInspector g_EntityInspector;
 void EntityInspector_construct(){
 	GlobalEntityClassManager().attach( g_EntityInspector );
 
-	GlobalPreferenceSystem().registerPreference( "EntitySplit1", IntImportStringCaller( g_entitysplit1_position ), IntExportStringCaller( g_entitysplit1_position ) );
-	GlobalPreferenceSystem().registerPreference( "EntitySplit2", IntImportStringCaller( g_entitysplit2_position ), IntExportStringCaller( g_entitysplit2_position ) );
+	GlobalPreferenceSystem().registerPreference( "EntitySplit1", make_property_string( g_entitysplit1_position ) );
+	GlobalPreferenceSystem().registerPreference( "EntitySplit2", make_property_string( g_entitysplit2_position ) );
 
 }
 

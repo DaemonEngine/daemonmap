@@ -33,17 +33,16 @@ class PreferenceDictionary : public PreferenceSystem
 {
 class PreferenceEntry
 {
-ImportExportCallback<const char *>::Import_t m_importer;
-ImportExportCallback<const char *>::Export_t m_exporter;
+Property<const char *> m_cb;
 public:
-PreferenceEntry( const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter )
-	: m_importer( importer ), m_exporter( exporter ){
+PreferenceEntry( const Property<const char *>& cb )
+	: m_cb( cb ){
 }
 void importString( const char* string ){
-	m_importer( string );
+	m_cb.set( string );
 }
-void exportString( const ImportExportCallback<const char *>::Import_t& importer ){
-	m_exporter( importer );
+void exportString( const Callback<void(const char *)> & importer ){
+	m_cb.get( importer );
 }
 };
 
@@ -66,11 +65,11 @@ iterator find( const char* name ){
 	return m_preferences.find( name );
 }
 
-void registerPreference( const char* name, const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter ){
-	m_preferences.insert( PreferenceEntries::value_type( name, PreferenceEntry( importer, exporter ) ) );
+void registerPreference( const char* name, const Property<const char *>& cb ){
+	m_preferences.insert( PreferenceEntries::value_type( name, PreferenceEntry( cb ) ) );
 	PreferenceCache::iterator i = m_cache.find( name );
 	if ( i != m_cache.end() ) {
-		importer( ( *i ).second.c_str() );
+		cb.set( i->second.c_str() );
 		m_cache.erase( i );
 	}
 }

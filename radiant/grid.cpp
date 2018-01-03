@@ -134,10 +134,10 @@ void set(){
 	setGridPower( m_id );
 }
 typedef MemberCaller<GridMenuItem, void(), &GridMenuItem::set> SetCaller;
-void active( const ImportExportCallback<bool>::Import_t& importCallback ){
+void active( const Callback<void(bool)> &importCallback ){
 	importCallback( g_grid_power == m_id );
 }
-typedef MemberCaller<GridMenuItem, void(const ImportExportCallback<bool>::Import_t&), &GridMenuItem::active> ExportCaller;
+typedef MemberCaller<GridMenuItem, void(const Callback<void(bool)>&), &GridMenuItem::active> ExportCaller;
 };
 
 GridMenuItem g_gridMenu0125( GRIDPOWER_0125 );
@@ -254,7 +254,7 @@ void Grid_construct(){
 
 	g_grid_default = GridDefault_forGridPower( GRIDPOWER_8 );
 
-	GlobalPreferenceSystem().registerPreference( "GridDefault", IntImportStringCaller( g_grid_default ), IntExportStringCaller( g_grid_default ) );
+	GlobalPreferenceSystem().registerPreference( "GridDefault", make_property_string( g_grid_default ) );
 
 	g_grid_power = GridPower_forGridDefault( g_grid_default );
 	g_gridsize = GridSize_forGridPower( g_grid_power );

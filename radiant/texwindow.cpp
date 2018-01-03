@@ -226,26 +226,26 @@ enum StartupShaders
 	STARTUPSHADERS_COMMON,
 };
 
-void TextureBrowser_hideUnusedExport( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_hideUnusedExport> TextureBrowserHideUnusedExport;
+void TextureBrowser_hideUnusedExport( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_hideUnusedExport> TextureBrowserHideUnusedExport;
 
-void TextureBrowser_showShadersExport( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_showShadersExport> TextureBrowserShowShadersExport;
+void TextureBrowser_showShadersExport( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_showShadersExport> TextureBrowserShowShadersExport;
 
-void TextureBrowser_showShaderlistOnly( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_showShaderlistOnly> TextureBrowserShowShaderlistOnlyExport;
+void TextureBrowser_showShaderlistOnly( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_showShaderlistOnly> TextureBrowserShowShaderlistOnlyExport;
 
-void TextureBrowser_fixedSize( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_fixedSize> TextureBrowserFixedSizeExport;
+void TextureBrowser_fixedSize( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_fixedSize> TextureBrowserFixedSizeExport;
 
-void TextureBrowser_filterMissing( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_filterMissing> TextureBrowserFilterMissingExport;
+void TextureBrowser_filterMissing( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_filterMissing> TextureBrowserFilterMissingExport;
 
-void TextureBrowser_filterFallback( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_filterFallback> TextureBrowserFilterFallbackExport;
+void TextureBrowser_filterFallback( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_filterFallback> TextureBrowserFilterFallbackExport;
 
-void TextureBrowser_enableAlpha( const ImportExportCallback<bool>::Import_t& importer );
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_enableAlpha> TextureBrowserEnableAlphaExport;
+void TextureBrowser_enableAlpha( const Callback<void(bool)> & importer );
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_enableAlpha> TextureBrowserEnableAlphaExport;
 
 class TextureBrowser
 {
@@ -671,14 +671,19 @@ void TextureBrowser_activeShadersChanged( TextureBrowser& textureBrowser ){
 	g_activeShadersChangedCallbacks();
 }
 
-void TextureBrowser_importShowScrollbar( TextureBrowser& textureBrowser, bool value ){
-	textureBrowser.m_showTextureScrollbar = value;
-	if ( textureBrowser.m_texture_scroll != 0 ) {
-		textureBrowser.m_texture_scroll.visible(textureBrowser.m_showTextureScrollbar);
-		TextureBrowser_updateScroll( textureBrowser );
+struct TextureBrowser_ShowScrollbar {
+	static void Export(const TextureBrowser &self, const Callback<void(bool)> &returnz) {
+		returnz(self.m_showTextureScrollbar);
 	}
-}
-typedef ReferenceCaller<TextureBrowser, void(bool), TextureBrowser_importShowScrollbar> TextureBrowserImportShowScrollbarCaller;
+
+	static void Import(TextureBrowser &self, bool value) {
+		self.m_showTextureScrollbar = value;
+		if (self.m_texture_scroll) {
+			self.m_texture_scroll.visible(self.m_showTextureScrollbar);
+			TextureBrowser_updateScroll(self);
+		}
+	}
+};
 
 
 /*
@@ -863,40 +868,40 @@ void TextureBrowser_ShowTagSearchResult( TextureBrowser& textureBrowser, const c
 
 bool TextureBrowser_hideUnused();
 
-void TextureBrowser_hideUnusedExport( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_hideUnusedExport( const Callback<void(bool)> & importer ){
 	importer( TextureBrowser_hideUnused() );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_hideUnusedExport> TextureBrowserHideUnusedExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_hideUnusedExport> TextureBrowserHideUnusedExport;
 
-void TextureBrowser_showShadersExport( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_showShadersExport( const Callback<void(bool)> & importer ){
 	importer( GlobalTextureBrowser().m_showShaders );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_showShadersExport> TextureBrowserShowShadersExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_showShadersExport> TextureBrowserShowShadersExport;
 
-void TextureBrowser_showShaderlistOnly( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_showShaderlistOnly( const Callback<void(bool)> & importer ){
 	importer( g_TextureBrowser_shaderlistOnly );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_showShaderlistOnly> TextureBrowserShowShaderlistOnlyExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_showShaderlistOnly> TextureBrowserShowShaderlistOnlyExport;
 
-void TextureBrowser_fixedSize( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_fixedSize( const Callback<void(bool)> & importer ){
 	importer( g_TextureBrowser_fixedSize );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_fixedSize> TextureBrowser_FixedSizeExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_fixedSize> TextureBrowser_FixedSizeExport;
 
-void TextureBrowser_filterMissing( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_filterMissing( const Callback<void(bool)> & importer ){
 	importer( g_TextureBrowser_filterMissing );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_filterMissing> TextureBrowser_filterMissingExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_filterMissing> TextureBrowser_filterMissingExport;
 
-void TextureBrowser_filterFallback( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_filterFallback( const Callback<void(bool)> & importer ){
 	importer( g_TextureBrowser_filterFallback );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_filterFallback> TextureBrowser_filterFallbackExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_filterFallback> TextureBrowser_filterFallbackExport;
 
-void TextureBrowser_enableAlpha( const ImportExportCallback<bool>::Import_t& importer ){
+void TextureBrowser_enableAlpha( const Callback<void(bool)> & importer ){
 	importer( g_TextureBrowser_enableAlpha );
 }
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TextureBrowser_enableAlpha> TextureBrowser_enableAlphaExport;
+typedef FreeCaller<void(const Callback<void(bool)> &), TextureBrowser_enableAlpha> TextureBrowser_enableAlphaExport;
 
 void TextureBrowser_SetHideUnused( TextureBrowser& textureBrowser, bool hideUnused ){
 	if ( hideUnused ) {
@@ -2500,7 +2505,7 @@ void TextureBrowser_EnableAlpha(){
 	TextureBrowser_activeShadersChanged( GlobalTextureBrowser() );
 }
 
-void TextureBrowser_exportTitle( const ImportExportCallback<const char *>::Import_t& importer ){
+void TextureBrowser_exportTitle( const Callback<void(const char *)> & importer ){
 	StringOutputStream buffer( 64 );
 	buffer << "Textures: ";
 	if ( !string_empty( g_TextureBrowser_currentDirectory.c_str() ) ) {
@@ -2513,72 +2518,70 @@ void TextureBrowser_exportTitle( const ImportExportCallback<const char *>::Impor
 	importer( buffer.c_str() );
 }
 
-
-void TextureScaleImport( TextureBrowser& textureBrowser, int value ){
-	switch ( value )
-	{
-	case 0:
-		TextureBrowser_setScale( textureBrowser, 10 );
-		break;
-	case 1:
-		TextureBrowser_setScale( textureBrowser, 25 );
-		break;
-	case 2:
-		TextureBrowser_setScale( textureBrowser, 50 );
-		break;
-	case 3:
-		TextureBrowser_setScale( textureBrowser, 100 );
-		break;
-	case 4:
-		TextureBrowser_setScale( textureBrowser, 200 );
-		break;
+struct TextureScale {
+	static void Export(const TextureBrowser &self, const Callback<void(int)> &returnz) {
+		switch (self.m_textureScale) {
+			case 10:
+				returnz(0);
+				break;
+			case 25:
+				returnz(1);
+				break;
+			case 50:
+				returnz(2);
+				break;
+			case 100:
+				returnz(3);
+				break;
+			case 200:
+				returnz(4);
+				break;
+		}
 	}
-}
-typedef ReferenceCaller<TextureBrowser, void(int), TextureScaleImport> TextureScaleImportCaller;
 
-void TextureScaleExport( TextureBrowser& textureBrowser, const ImportExportCallback<int>::Import_t& importer ){
-	switch ( textureBrowser.m_textureScale )
-	{
-	case 10:
-		importer( 0 );
-		break;
-	case 25:
-		importer( 1 );
-		break;
-	case 50:
-		importer( 2 );
-		break;
-	case 100:
-		importer( 3 );
-		break;
-	case 200:
-		importer( 4 );
-		break;
+	static void Import(TextureBrowser &self, int value) {
+		switch (value) {
+			case 0:
+				TextureBrowser_setScale(self, 10);
+				break;
+			case 1:
+				TextureBrowser_setScale(self, 25);
+				break;
+			case 2:
+				TextureBrowser_setScale(self, 50);
+				break;
+			case 3:
+				TextureBrowser_setScale(self, 100);
+				break;
+			case 4:
+				TextureBrowser_setScale(self, 200);
+				break;
+		}
 	}
-}
-typedef ReferenceCaller<TextureBrowser, void(const ImportExportCallback<int>::Import_t&), TextureScaleExport> TextureScaleExportCaller;
+};
 
+struct UniformTextureSize {
+	static void Export(const TextureBrowser &self, const Callback<void(int)> &returnz) {
+		returnz(g_TextureBrowser.m_uniformTextureSize);
+	}
 
-void UniformTextureSizeImport( TextureBrowser& textureBrowser, int value ){
-
-	if ( value > 16 )
-		TextureBrowser_setUniformSize( textureBrowser, value );
-}
-typedef ReferenceCaller<TextureBrowser, void(int), UniformTextureSizeImport> UniformTextureSizeImportCaller;
+	static void Import(TextureBrowser &self, int value) {
+		if (value > 16)
+			TextureBrowser_setUniformSize(self, value);
+	}
+};
 
 void TextureBrowser_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox(
 		"", "Texture scrollbar",
-		{TextureBrowserImportShowScrollbarCaller( GlobalTextureBrowser() ),
-		BoolExportCaller( GlobalTextureBrowser().m_showTextureScrollbar )}
+		make_property<TextureBrowser_ShowScrollbar>(GlobalTextureBrowser())
 		);
 	{
 		const char* texture_scale[] = { "10%", "25%", "50%", "100%", "200%" };
 		page.appendCombo(
 			"Texture Thumbnail Scale",
 			STRING_ARRAY_RANGE( texture_scale ),
-			{ImportExportCallback<int>::Import_t( TextureScaleImportCaller( GlobalTextureBrowser() ) ),
-			ImportExportCallback<int>::Export_t( TextureScaleExportCaller( GlobalTextureBrowser() ) )}
+			make_property<TextureScale>(GlobalTextureBrowser())
 			);
 	}
 	page.appendSpinner(
@@ -2605,9 +2608,6 @@ void TextureBrowser_registerPreferencesPage(){
 #include "preferencesystem.h"
 #include "stringio.h"
 
-typedef ReferenceCaller<TextureBrowser, void(std::size_t), TextureBrowser_setScale> TextureBrowserSetScaleCaller;
-
-
 
 void TextureClipboard_textureSelected( const char* shader );
 
@@ -2630,25 +2630,17 @@ void TextureBrowser_Construct(){
 	GlobalToggles_insert( "FilterFallback", makeCallbackF(TextureBrowser_FilterFallback), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_hidenotex_item ) );
 	GlobalToggles_insert( "EnableAlpha", makeCallbackF(TextureBrowser_EnableAlpha), ToggleItem::AddCallbackCaller( g_TextureBrowser.m_enablealpha_item ) );
 
-	GlobalPreferenceSystem().registerPreference( "TextureScale",
-												 makeSizeStringImportCallback( TextureBrowserSetScaleCaller( g_TextureBrowser ) ),
-												 SizeExportStringCaller( g_TextureBrowser.m_textureScale )
-												 );
-	GlobalPreferenceSystem().registerPreference( "UniformTextureSize",
-												 makeIntStringImportCallback(UniformTextureSizeImportCaller(g_TextureBrowser)),
-												 IntExportStringCaller(g_TextureBrowser.m_uniformTextureSize) );
-	GlobalPreferenceSystem().registerPreference( "TextureScrollbar",
-												 makeBoolStringImportCallback( TextureBrowserImportShowScrollbarCaller( g_TextureBrowser ) ),
-												 BoolExportStringCaller( GlobalTextureBrowser().m_showTextureScrollbar )
-												 );
-	GlobalPreferenceSystem().registerPreference( "ShowShaders", BoolImportStringCaller( GlobalTextureBrowser().m_showShaders ), BoolExportStringCaller( GlobalTextureBrowser().m_showShaders ) );
-	GlobalPreferenceSystem().registerPreference( "ShowShaderlistOnly", BoolImportStringCaller( g_TextureBrowser_shaderlistOnly ), BoolExportStringCaller( g_TextureBrowser_shaderlistOnly ) );
-	GlobalPreferenceSystem().registerPreference( "FixedSize", BoolImportStringCaller( g_TextureBrowser_fixedSize ), BoolExportStringCaller( g_TextureBrowser_fixedSize ) );
-	GlobalPreferenceSystem().registerPreference( "FilterMissing", BoolImportStringCaller( g_TextureBrowser_filterMissing ), BoolExportStringCaller( g_TextureBrowser_filterMissing ) );
-	GlobalPreferenceSystem().registerPreference( "EnableAlpha", BoolImportStringCaller( g_TextureBrowser_enableAlpha ), BoolExportStringCaller( g_TextureBrowser_enableAlpha ) );
-	GlobalPreferenceSystem().registerPreference( "LoadShaders", IntImportStringCaller( reinterpret_cast<int&>( GlobalTextureBrowser().m_startupShaders ) ), IntExportStringCaller( reinterpret_cast<int&>( GlobalTextureBrowser().m_startupShaders ) ) );
-	GlobalPreferenceSystem().registerPreference( "WheelMouseInc", SizeImportStringCaller( GlobalTextureBrowser().m_mouseWheelScrollIncrement ), SizeExportStringCaller( GlobalTextureBrowser().m_mouseWheelScrollIncrement ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors0", Vector3ImportStringCaller( GlobalTextureBrowser().color_textureback ), Vector3ExportStringCaller( GlobalTextureBrowser().color_textureback ) );
+	GlobalPreferenceSystem().registerPreference( "TextureScale", make_property_string<TextureScale>(g_TextureBrowser) );
+	GlobalPreferenceSystem().registerPreference( "UniformTextureSize", make_property_string<UniformTextureSize>(g_TextureBrowser) );
+	GlobalPreferenceSystem().registerPreference( "TextureScrollbar", make_property_string<TextureBrowser_ShowScrollbar>(GlobalTextureBrowser()));
+	GlobalPreferenceSystem().registerPreference( "ShowShaders", make_property_string( GlobalTextureBrowser().m_showShaders ) );
+	GlobalPreferenceSystem().registerPreference( "ShowShaderlistOnly", make_property_string( g_TextureBrowser_shaderlistOnly ) );
+	GlobalPreferenceSystem().registerPreference( "FixedSize", make_property_string( g_TextureBrowser_fixedSize ) );
+	GlobalPreferenceSystem().registerPreference( "FilterMissing", make_property_string( g_TextureBrowser_filterMissing ) );
+	GlobalPreferenceSystem().registerPreference( "EnableAlpha", make_property_string( g_TextureBrowser_enableAlpha ) );
+	GlobalPreferenceSystem().registerPreference( "LoadShaders", make_property_string( reinterpret_cast<int&>( GlobalTextureBrowser().m_startupShaders ) ) );
+	GlobalPreferenceSystem().registerPreference( "WheelMouseInc", make_property_string( GlobalTextureBrowser().m_mouseWheelScrollIncrement ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors0", make_property_string( GlobalTextureBrowser().color_textureback ) );
 
 	g_TextureBrowser.shader = texdef_name_default();
 

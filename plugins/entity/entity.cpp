@@ -229,7 +229,7 @@ void connectEntities( const scene::Path& path, const scene::Path& targetPath, in
 void setLightRadii( bool lightRadii ){
 	g_lightRadii = lightRadii;
 }
-bool getLightRadii(){
+bool getLightRadii() const {
 	return g_lightRadii;
 }
 void setShowNames( bool showNames ){
@@ -330,10 +330,10 @@ void Entity_Construct( EGameType gameType ){
 		Static<KeyIsName>::instance().m_nameKey = "targetname";
 	}
 
-	GlobalPreferenceSystem().registerPreference( "SI_ShowNames", BoolImportStringCaller( g_showNames ), BoolExportStringCaller( g_showNames ) );
-	GlobalPreferenceSystem().registerPreference( "SI_ShowAngles", BoolImportStringCaller( g_showAngles ), BoolExportStringCaller( g_showAngles ) );
-	GlobalPreferenceSystem().registerPreference( "NewLightStyle", BoolImportStringCaller( g_newLightDraw ), BoolExportStringCaller( g_newLightDraw ) );
-	GlobalPreferenceSystem().registerPreference( "LightRadiuses", BoolImportStringCaller( g_lightRadii ), BoolExportStringCaller( g_lightRadii ) );
+	GlobalPreferenceSystem().registerPreference( "SI_ShowNames", make_property_string( g_showNames ) );
+	GlobalPreferenceSystem().registerPreference( "SI_ShowAngles", make_property_string( g_showAngles ) );
+	GlobalPreferenceSystem().registerPreference( "NewLightStyle", make_property_string( g_newLightDraw ) );
+	GlobalPreferenceSystem().registerPreference( "LightRadiuses", make_property_string( g_lightRadii ) );
 
 	Entity_InitFilters();
 	LightType lightType = LIGHTTYPE_DEFAULT;

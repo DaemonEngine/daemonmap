@@ -1039,36 +1039,35 @@ void CamWnd_Move_Discrete_Disable( CamWnd& camwnd ){
 	command_disconnect_accelerator( "CameraAngleDown" );
 }
 
-void CamWnd_Move_Discrete_Import( CamWnd& camwnd, bool value ){
-	if ( g_camwindow_globals_private.m_bCamDiscrete ) {
-		CamWnd_Move_Discrete_Disable( camwnd );
-	}
-	else
-	{
-		CamWnd_Move_Disable( camwnd );
+struct CamWnd_Move_Discrete {
+	static void Export(const Callback<void(bool)> &returnz) {
+		returnz(g_camwindow_globals_private.m_bCamDiscrete);
 	}
 
-	g_camwindow_globals_private.m_bCamDiscrete = value;
+	static void Import(bool value) {
+		if (g_camwnd) {
+			Import_(*g_camwnd, value);
+		} else {
+			g_camwindow_globals_private.m_bCamDiscrete = value;
+		}
+	}
 
-	if ( g_camwindow_globals_private.m_bCamDiscrete ) {
-		CamWnd_Move_Discrete_Enable( camwnd );
-	}
-	else
-	{
-		CamWnd_Move_Enable( camwnd );
-	}
-}
+	static void Import_(CamWnd &camwnd, bool value) {
+		if (g_camwindow_globals_private.m_bCamDiscrete) {
+			CamWnd_Move_Discrete_Disable(camwnd);
+		} else {
+			CamWnd_Move_Disable(camwnd);
+		}
 
-void CamWnd_Move_Discrete_Import( bool value ){
-	if ( g_camwnd != 0 ) {
-		CamWnd_Move_Discrete_Import( *g_camwnd, value );
-	}
-	else
-	{
 		g_camwindow_globals_private.m_bCamDiscrete = value;
-	}
-}
 
+		if (g_camwindow_globals_private.m_bCamDiscrete) {
+			CamWnd_Move_Discrete_Enable(camwnd);
+		} else {
+			CamWnd_Move_Enable(camwnd);
+		}
+	}
+};
 
 
 void CamWnd_Add_Handlers_Move( CamWnd& camwnd ){
@@ -1392,12 +1391,12 @@ void ShowStatsToggle(){
 	g_camwindow_globals_private.m_showStats ^= 1;
 }
 
-void ShowStatsExport( const ImportExportCallback<bool>::Import_t& importer ){
+void ShowStatsExport( const Callback<void(bool)> &importer ){
 	importer( g_camwindow_globals_private.m_showStats );
 }
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ShowStatsExport> g_show_stats_caller;
-ImportExportCallback<bool>::Export_t g_show_stats_callback( g_show_stats_caller );
+FreeCaller<void(const Callback<void(bool)>&), ShowStatsExport> g_show_stats_caller;
+Callback<void(const Callback<void(bool)> &)> g_show_stats_callback( g_show_stats_caller );
 ToggleItem g_show_stats( g_show_stats_callback );
 
 void CamWnd::Cam_Draw(){
@@ -1640,7 +1639,7 @@ bool Camera_GetFarClip(){
 	return g_camwindow_globals_private.m_bCubicClipping;
 }
 
-BoolExportCaller g_getfarclip_caller( g_camwindow_globals_private.m_bCubicClipping );
+ConstReferenceCaller<bool, void(const Callback<void(bool)> &), PropertyImpl<bool>::Export> g_getfarclip_caller( g_camwindow_globals_private.m_bCubicClipping );
 ToggleItem g_getfarclip_item( g_getfarclip_caller );
 
 void Camera_SetFarClip( bool value ){
@@ -1650,6 +1649,16 @@ void Camera_SetFarClip( bool value ){
 	Camera_updateProjection( camwnd.getCamera() );
 	CamWnd_Update( camwnd );
 }
+
+struct Camera_FarClip {
+	static void Export(const Callback<void(bool)> &returnz) {
+		returnz(g_camwindow_globals_private.m_bCubicClipping);
+	}
+
+	static void Import(bool value) {
+		Camera_SetFarClip(value);
+	}
+};
 
 void Camera_ToggleFarClip(){
 	Camera_SetFarClip( !Camera_GetFarClip() );
@@ -1745,46 +1754,43 @@ void GlobalCamera_LookThroughCamera(){
 	CamWnd_LookThroughCamera( *g_camwnd );
 }
 
-
-void RenderModeImport( int value ){
-	switch ( value )
-	{
-	case 0:
-		CamWnd_SetMode( cd_wire );
-		break;
-	case 1:
-		CamWnd_SetMode( cd_solid );
-		break;
-	case 2:
-		CamWnd_SetMode( cd_texture );
-		break;
-	case 3:
-		CamWnd_SetMode( cd_lighting );
-		break;
-	default:
-		CamWnd_SetMode( cd_texture );
+struct RenderMode {
+	static void Export(const Callback<void(int)> &returnz) {
+		switch (CamWnd_GetMode()) {
+			case cd_wire:
+				returnz(0);
+				break;
+			case cd_solid:
+				returnz(1);
+				break;
+			case cd_texture:
+				returnz(2);
+				break;
+			case cd_lighting:
+				returnz(3);
+				break;
+		}
 	}
-}
-typedef FreeCaller<void(int), RenderModeImport> RenderModeImportCaller;
 
-void RenderModeExport( const ImportExportCallback<int>::Import_t& importer ){
-	switch ( CamWnd_GetMode() )
-	{
-	case cd_wire:
-		importer( 0 );
-		break;
-	case cd_solid:
-		importer( 1 );
-		break;
-	case cd_texture:
-		importer( 2 );
-		break;
-	case cd_lighting:
-		importer( 3 );
-		break;
+	static void Import(int value) {
+		switch (value) {
+			case 0:
+				CamWnd_SetMode(cd_wire);
+				break;
+			case 1:
+				CamWnd_SetMode(cd_solid);
+				break;
+			case 2:
+				CamWnd_SetMode(cd_texture);
+				break;
+			case 3:
+				CamWnd_SetMode(cd_lighting);
+				break;
+			default:
+				CamWnd_SetMode(cd_texture);
+		}
 	}
-}
-typedef FreeCaller<void(const ImportExportCallback<int>::Import_t&), RenderModeExport> RenderModeExportCaller;
+};
 
 void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendSlider( "Movement Speed", g_camwindow_globals_private.m_nMoveSpeed, TRUE, 0, 0, 100, MIN_CAM_SPEED, MAX_CAM_SPEED, 1, 10 );
@@ -1793,13 +1799,11 @@ void Camera_constructPreferences( PreferencesPage& page ){
 	page.appendCheckBox( "", "Invert mouse vertical axis", g_camwindow_globals_private.m_bCamInverseMouse );
 	page.appendCheckBox(
 		"", "Discrete movement",
-		{FreeCaller<void(bool), CamWnd_Move_Discrete_Import>(),
-		BoolExportCaller( g_camwindow_globals_private.m_bCamDiscrete )}
+		make_property<CamWnd_Move_Discrete>()
 		);
 	page.appendCheckBox(
 		"", "Enable far-clip plane",
-		{FreeCaller<void(bool), Camera_SetFarClip>(),
-		BoolExportCaller( g_camwindow_globals_private.m_bCubicClipping )}
+		make_property<Camera_FarClip>()
 		);
 
 	if ( g_pGameDescription->mGameType == "doom3" ) {
@@ -1808,8 +1812,7 @@ void Camera_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Render Mode",
 			STRING_ARRAY_RANGE( render_mode ),
-			{ImportExportCallback<int>::Import_t( RenderModeImportCaller() ),
-			ImportExportCallback<int>::Export_t( RenderModeExportCaller() )}
+			make_property<RenderMode>()
 			);
 	}
 	else
@@ -1819,8 +1822,7 @@ void Camera_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Render Mode",
 			STRING_ARRAY_RANGE( render_mode ),
-			{ImportExportCallback<int>::Import_t( RenderModeImportCaller() ),
-			ImportExportCallback<int>::Export_t( RenderModeExportCaller() )}
+			make_property<RenderMode>()
 			);
 	}
 
@@ -1843,8 +1845,6 @@ void Camera_registerPreferencesPage(){
 #include "preferencesystem.h"
 #include "stringio.h"
 #include "dialog.h"
-
-typedef FreeCaller<void(bool), CamWnd_Move_Discrete_Import> CamWndMoveDiscreteImportCaller;
 
 void CameraSpeed_increase(){
 	if ( g_camwindow_globals_private.m_nMoveSpeed <= ( MAX_CAM_SPEED - CAM_SPEED_STEP - 10 ) ) {
@@ -1905,18 +1905,18 @@ void CamWnd_Construct(){
 
 	GlobalToggles_insert( "ShowStats", makeCallbackF(ShowStatsToggle), ToggleItem::AddCallbackCaller( g_show_stats ) );
 
-	GlobalPreferenceSystem().registerPreference( "ShowStats", BoolImportStringCaller( g_camwindow_globals_private.m_showStats ), BoolExportStringCaller( g_camwindow_globals_private.m_showStats ) );
-	GlobalPreferenceSystem().registerPreference( "MoveSpeed", IntImportStringCaller( g_camwindow_globals_private.m_nMoveSpeed ), IntExportStringCaller( g_camwindow_globals_private.m_nMoveSpeed ) );
-	GlobalPreferenceSystem().registerPreference( "CamLinkSpeed", BoolImportStringCaller( g_camwindow_globals_private.m_bCamLinkSpeed ), BoolExportStringCaller( g_camwindow_globals_private.m_bCamLinkSpeed ) );
-	GlobalPreferenceSystem().registerPreference( "AngleSpeed", IntImportStringCaller( g_camwindow_globals_private.m_nAngleSpeed ), IntExportStringCaller( g_camwindow_globals_private.m_nAngleSpeed ) );
-	GlobalPreferenceSystem().registerPreference( "CamInverseMouse", BoolImportStringCaller( g_camwindow_globals_private.m_bCamInverseMouse ), BoolExportStringCaller( g_camwindow_globals_private.m_bCamInverseMouse ) );
-	GlobalPreferenceSystem().registerPreference( "CamDiscrete", makeBoolStringImportCallback( CamWndMoveDiscreteImportCaller() ), BoolExportStringCaller( g_camwindow_globals_private.m_bCamDiscrete ) );
-	GlobalPreferenceSystem().registerPreference( "CubicClipping", BoolImportStringCaller( g_camwindow_globals_private.m_bCubicClipping ), BoolExportStringCaller( g_camwindow_globals_private.m_bCubicClipping ) );
-	GlobalPreferenceSystem().registerPreference( "CubicScale", IntImportStringCaller( g_camwindow_globals.m_nCubicScale ), IntExportStringCaller( g_camwindow_globals.m_nCubicScale ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors4", Vector3ImportStringCaller( g_camwindow_globals.color_cameraback ), Vector3ExportStringCaller( g_camwindow_globals.color_cameraback ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Colors12", Vector3ImportStringCaller( g_camwindow_globals.color_selbrushes3d ), Vector3ExportStringCaller( g_camwindow_globals.color_selbrushes3d ) );
-	GlobalPreferenceSystem().registerPreference( "CameraRenderMode", makeIntStringImportCallback( RenderModeImportCaller() ), makeIntStringExportCallback( RenderModeExportCaller() ) );
-	GlobalPreferenceSystem().registerPreference( "StrafeMode", IntImportStringCaller( g_camwindow_globals_private.m_nStrafeMode ), IntExportStringCaller( g_camwindow_globals_private.m_nStrafeMode ) );
+	GlobalPreferenceSystem().registerPreference( "ShowStats", make_property_string( g_camwindow_globals_private.m_showStats ) );
+	GlobalPreferenceSystem().registerPreference( "MoveSpeed", make_property_string( g_camwindow_globals_private.m_nMoveSpeed ) );
+	GlobalPreferenceSystem().registerPreference( "CamLinkSpeed", make_property_string( g_camwindow_globals_private.m_bCamLinkSpeed ) );
+	GlobalPreferenceSystem().registerPreference( "AngleSpeed", make_property_string( g_camwindow_globals_private.m_nAngleSpeed ) );
+	GlobalPreferenceSystem().registerPreference( "CamInverseMouse", make_property_string( g_camwindow_globals_private.m_bCamInverseMouse ) );
+	GlobalPreferenceSystem().registerPreference( "CamDiscrete", make_property_string<CamWnd_Move_Discrete>());
+	GlobalPreferenceSystem().registerPreference( "CubicClipping", make_property_string( g_camwindow_globals_private.m_bCubicClipping ) );
+	GlobalPreferenceSystem().registerPreference( "CubicScale", make_property_string( g_camwindow_globals.m_nCubicScale ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors4", make_property_string( g_camwindow_globals.color_cameraback ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Colors12", make_property_string( g_camwindow_globals.color_selbrushes3d ) );
+	GlobalPreferenceSystem().registerPreference( "CameraRenderMode", make_property_string<RenderMode>() );
+	GlobalPreferenceSystem().registerPreference( "StrafeMode", make_property_string( g_camwindow_globals_private.m_nStrafeMode ) );
 
 	CamWnd_constructStatic();
 

@@ -24,15 +24,30 @@
 
 #include "generic/constant.h"
 #include "generic/callback.h"
+#include "property.h"
 
-class PreferenceSystem
-{
+class PreferenceSystem {
 public:
-INTEGER_CONSTANT( Version, 1 );
-STRING_CONSTANT( Name, "preferences" );
+	INTEGER_CONSTANT(Version, 1);
+	STRING_CONSTANT(Name, "preferences");
 
-virtual void registerPreference( const char* name, const ImportExportCallback<const char *>::Import_t& importer, const ImportExportCallback<const char *>::Export_t& exporter ) = 0;
+	virtual void registerPreference(const char *name, const Property<const char *> &cb) = 0;
 };
+
+template<class Self>
+Property<const char *> make_property_string(Self &it) {
+	return make_property<PropertyAdaptor<Self, const char *>>(it);
+}
+
+template<class I, class Self>
+Property<const char *> make_property_string(Self &it) {
+	return make_property_chain<PropertyImpl<detail::propertyimpl_other<I>, const char *>, I>(it);
+}
+
+template<class I>
+Property<const char *> make_property_string() {
+	return make_property_chain<PropertyImpl<detail::propertyimpl_other_free<I>, const char *>, I>();
+}
 
 #include "modulesystem.h"
 

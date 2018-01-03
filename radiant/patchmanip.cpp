@@ -607,7 +607,7 @@ void Patch_registerPreferencesPage(){
 #include "preferencesystem.h"
 
 void PatchPreferences_construct(){
-	GlobalPreferenceSystem().registerPreference( "Subdivisions", IntImportStringCaller( g_PatchSubdivideThreshold ), IntExportStringCaller( g_PatchSubdivideThreshold ) );
+	GlobalPreferenceSystem().registerPreference( "Subdivisions", make_property_string( g_PatchSubdivideThreshold ) );
 }
 
 

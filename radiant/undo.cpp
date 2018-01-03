@@ -377,29 +377,29 @@ void trackersRedo() const {
 
 void UndoLevels_importString( RadiantUndoSystem& undo, const char* value ){
 	int levels;
-	Int_importString( levels, value );
+	PropertyImpl<int, const char *>::Import( levels, value );
 	undo.setLevels( levels );
 }
 typedef ReferenceCaller<RadiantUndoSystem, void(const char*), UndoLevels_importString> UndoLevelsImportStringCaller;
-void UndoLevels_exportString( const RadiantUndoSystem& undo, const ImportExportCallback<const char *>::Import_t& importer ){
-	Int_exportString( static_cast<int>( undo.getLevels() ), importer );
+void UndoLevels_exportString( const RadiantUndoSystem& undo, const Callback<void(const char *)> & importer ){
+	PropertyImpl<int, const char *>::Export( static_cast<int>( undo.getLevels() ), importer );
 }
-typedef ConstReferenceCaller<RadiantUndoSystem, void(const ImportExportCallback<const char *>::Import_t&), UndoLevels_exportString> UndoLevelsExportStringCaller;
+typedef ConstReferenceCaller<RadiantUndoSystem, void(const Callback<void(const char *)> &), UndoLevels_exportString> UndoLevelsExportStringCaller;
 
 #include "generic/callback.h"
 
-void UndoLevelsImport( RadiantUndoSystem& self, int value ){
-	self.setLevels( value );
-}
-typedef ReferenceCaller<RadiantUndoSystem, void(int), UndoLevelsImport> UndoLevelsImportCaller;
-void UndoLevelsExport( const RadiantUndoSystem& self, const ImportExportCallback<int>::Import_t& importCallback ){
-	importCallback( static_cast<int>( self.getLevels() ) );
-}
-typedef ConstReferenceCaller<RadiantUndoSystem, void(const ImportExportCallback<int>::Import_t&), UndoLevelsExport> UndoLevelsExportCaller;
+struct UndoLevels {
+    static void Export(const RadiantUndoSystem &self, const Callback<void(int)> &returnz) {
+        returnz(static_cast<int>(self.getLevels()));
+    }
 
+    static void Import(RadiantUndoSystem &self, int value) {
+        self.setLevels(value);
+    }
+};
 
 void Undo_constructPreferences( RadiantUndoSystem& undo, PreferencesPage& page ){
-	page.appendSpinner( "Undo Queue Size", 64, 0, 1024, {ImportExportCallback<int>::Import_t( UndoLevelsImportCaller( undo ) ), ImportExportCallback<int>::Export_t( UndoLevelsExportCaller( undo ) )} );
+    page.appendSpinner("Undo Queue Size", 64, 0, 1024, make_property<UndoLevels>(undo));
 }
 void Undo_constructPage( RadiantUndoSystem& undo, PreferenceGroup& group ){
 	PreferencesPage page( group.createPage( "Undo", "Undo Queue Settings" ) );
@@ -421,7 +421,7 @@ typedef UndoSystem Type;
 STRING_CONSTANT( Name, "*" );
 
 UndoSystemAPI(){
-	GlobalPreferenceSystem().registerPreference( "UndoLevels", makeIntStringImportCallback( UndoLevelsImportCaller( m_undosystem ) ), makeIntStringExportCallback( UndoLevelsExportCaller( m_undosystem ) ) );
+    GlobalPreferenceSystem().registerPreference("UndoLevels", make_property_string<UndoLevels>(m_undosystem));
 
 	Undo_registerPreferencesPage( m_undosystem );
 }

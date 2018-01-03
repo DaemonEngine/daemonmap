@@ -69,64 +69,91 @@ namespace detail {
 
 namespace detail {
 
-	template<typename Type>
-	inline void *convertToOpaque(Type *t) {
-		return t;
-	}
+	template<class Type>
+	struct ConvertFromOpaque {
+	};
 
-	template<typename Type>
-	inline void *convertToOpaque(const Type *t) {
-		return const_cast<Type *>( t );
-	}
+	// reference
 
-	template<typename Type>
-	inline void *convertToOpaque(Type &t) {
+	template<class T>
+	inline const void *convertToOpaque(const T &t) {
 		return &t;
 	}
 
-	template<typename Type>
-	inline void *convertToOpaque(const Type &t) {
-		return const_cast<Type *>( &t );
+	template<class T>
+	struct ConvertFromOpaque<const T &> {
+		static T const &apply(void *p) {
+			return *static_cast<const T *>(p);
+		}
+	};
+
+	template<class T>
+	inline void *convertToOpaque(T &t) {
+		return &t;
 	}
 
-
-	template<typename Type>
-	class ConvertFromOpaque {
-	};
-
-	template<typename Type>
-	class ConvertFromOpaque<Type &> {
-	public:
-		static Type &apply(void *p) {
-			return *static_cast<Type *>( p );
+	template<class T>
+	struct ConvertFromOpaque<T &> {
+		static T &apply(void *p) {
+			return *static_cast<T *>( p );
 		}
 	};
 
-	template<typename Type>
-	class ConvertFromOpaque<const Type &> {
-	public:
-		static const Type &apply(void *p) {
-			return *static_cast<Type *>( p );
+	// pointer
+
+	template<class T>
+	inline const void *convertToOpaque(const T *t) {
+		return t;
+	}
+
+	template<class T>
+	struct ConvertFromOpaque<const T *> {
+		static const T *apply(void *p) {
+			return static_cast<const T *>(p);
 		}
 	};
 
+	template<class T>
+	inline void *convertToOpaque(T *t) {
+		return t;
+	}
 
-	template<typename Type>
-	class ConvertFromOpaque<Type *> {
-	public:
-		static Type *apply(void *p) {
-			// illegal cast
-			return reinterpret_cast<Type *>( p );
+	template<class T>
+	struct ConvertFromOpaque<T *> {
+		static T *apply(void *p) {
+			return static_cast<T *>(p);
 		}
 	};
 
-	template<typename Type>
-	class ConvertFromOpaque<const Type *> {
-	public:
-		static const Type *apply(void *p) {
-			return static_cast<Type *>( p );
+	// function pointer
+
+	template<class R, class... Ts>
+	inline const void *convertToOpaque(R(*const &t)(Ts...)) {
+		return &t;
+	}
+
+	template<class R, class... Ts>
+	struct ConvertFromOpaque<R(*const &)(Ts...)> {
+		using Type = R(*)(Ts...);
+
+		static Type const &apply(void *p) {
+			return *static_cast<Type *>(p);
 		}
 	};
+
+    template<class R, class... Ts>
+    inline void *convertToOpaque(R(*&t)(Ts...)) {
+        return &t;
+    }
+
+    template<class R, class... Ts>
+    struct ConvertFromOpaque<R(*&)(Ts...)> {
+        using Type = R(*)(Ts...);
+
+        static Type &apply(void *p) {
+            return *static_cast<Type *>(p);
+        }
+    };
 
 	template<class Caller, class F>
 	class BindFirstOpaqueN;
@@ -147,11 +174,15 @@ namespace detail {
 		}
 
 		static R thunk(void *environment, Ts... args) {
-			return Caller::call(detail::ConvertFromOpaque<FirstBound>::apply(environment), args...);
+			return thunk_(detail::ConvertFromOpaque<FirstBound>::apply(environment), args...);
+		}
+
+		static R thunk_(FirstBound environment, Ts... args) {
+			return Caller::call(environment, args...);
 		}
 
 		void *getEnvironment() const {
-			return detail::convertToOpaque(firstBound);
+			return const_cast<void *>(detail::convertToOpaque(firstBound));
 		}
 	};
 
@@ -291,15 +322,16 @@ namespace detail {
 		}
 	};
 
-	template <class F>
-	struct freecallwrapper;
+	template<class F>
+	struct FreeCallerWrapper;
 
-	template <class R, class... Ts>
-	struct freecallwrapper<R(Ts...)> {
-		using func = R(R(Ts...), Ts...);
-		static R call(R(*f)(Ts...), Ts... args) {
+	template<class R, class... Ts>
+	struct FreeCallerWrapper<R(Ts...)> {
+		using func = R(void *, Ts...);
+
+		static R call(void *f, Ts... args) {
 			// ideally, we'd get the implementation of the function type directly. Instead, it's passed in
-			return f(args...);
+			return reinterpret_cast<R(*)(Ts...)>(f)(args...);
 		}
 	};
 }
@@ -308,18 +340,10 @@ namespace detail {
 template<class F, F *func>
 using FreeCaller = detail::FreeCaller<Function<F, func>, F>;
 
-template<class F>
-inline Callback<F> makeCallbackF(F *func) {
-	// illegal cast
-	return Callback<F>(reinterpret_cast<void *>(func), BindFirstOpaque<detail::freecallwrapper<F>>::thunk);
+template<class R, class... Ts>
+inline Callback<R(Ts...)> makeCallbackF(R(*func)(Ts...)) {
+    void *pVoid = reinterpret_cast<void *>(func);
+    return BindFirstOpaque<detail::FreeCallerWrapper<R(Ts...)>>(pVoid);
 }
-
-template <class T>
-struct ImportExportCallback {
-	using Import_t = Callback<void(T)>;
-	Import_t Import;
-	using Export_t = Callback<void(const Callback<void(T)> &)>;
-    Export_t Export;
-};
 
 #endif

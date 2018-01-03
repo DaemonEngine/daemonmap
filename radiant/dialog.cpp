@@ -107,164 +107,141 @@ DialogSpinnerRow DialogSpinnerRow_new( const char* name, double value, double lo
 }
 
 
-template<
-		typename Type_,
-		typename Other_ = Type_,
-		class T = impexp<Type_, Other_>
->
-class ImportExport {
-public:
-	using Type = Type_;
-	using Other = Other_;
-
-	using ImportCaller = ReferenceCaller<Type, void(Other), T::Import>;
-	using ExportCaller = ReferenceCaller<Type, void(const Callback<void(Other)> &), T::Export>;
-};
-
-
-using BoolImportExport = ImportExport<bool>;
-
 struct BoolToggle {
-	static void Import(GtkToggleButton &widget, bool value) {
-		gtk_toggle_button_set_active(&widget, value);
+	static void Export(const GtkToggleButton &self, const Callback<void(bool)> &returnz) {
+		returnz(gtk_toggle_button_get_active(const_cast<GtkToggleButton *>(&self)) != FALSE);
 	}
 
-	static void Export(GtkToggleButton &widget, const ImportExportCallback<bool>::Import_t &importCallback) {
-		importCallback(gtk_toggle_button_get_active(&widget) != FALSE);
+	static void Import(GtkToggleButton &self, bool value) {
+		gtk_toggle_button_set_active(&self, value);
 	}
 };
 
-using BoolToggleImportExport = ImportExport<GtkToggleButton, bool, BoolToggle>;
-
-using IntImportExport = ImportExport<int>;
+using BoolToggleImportExport = PropertyAdaptor<GtkToggleButton, bool, BoolToggle>;
 
 struct IntEntry {
-	static void Import(GtkEntry &widget, int value) {
-		entry_set_int(ui::Entry(&widget), value);
+	static void Export(const GtkEntry &self, const Callback<void(int)> &returnz) {
+		returnz(atoi(gtk_entry_get_text(const_cast<GtkEntry *>(&self))));
 	}
 
-	static void Export(GtkEntry &widget, const ImportExportCallback<int>::Import_t &importCallback) {
-		importCallback(atoi(gtk_entry_get_text(&widget)));
+	static void Import(GtkEntry &self, int value) {
+		entry_set_int(ui::Entry(&self), value);
 	}
 };
 
-using IntEntryImportExport = ImportExport<GtkEntry, int, IntEntry>;
+using IntEntryImportExport = PropertyAdaptor<GtkEntry, int, IntEntry>;
 
 struct IntRadio {
-	static void Import(GtkRadioButton &widget, int index) {
-		radio_button_set_active(ui::RadioButton(&widget), index);
+	static void Export(const GtkRadioButton &self, const Callback<void(int)> &returnz) {
+		returnz(radio_button_get_active(ui::RadioButton(const_cast<GtkRadioButton *>(&self))));
 	}
 
-	static void Export(GtkRadioButton &widget, const ImportExportCallback<int>::Import_t &importCallback) {
-		importCallback(radio_button_get_active(ui::RadioButton(&widget)));
+	static void Import(GtkRadioButton &self, int value) {
+		radio_button_set_active(ui::RadioButton(&self), value);
 	}
 };
 
-using IntRadioImportExport = ImportExport<GtkRadioButton, int, IntRadio>;
+using IntRadioImportExport = PropertyAdaptor<GtkRadioButton, int, IntRadio>;
 
 struct IntCombo {
-	static void Import(GtkComboBox &widget, int value) {
-		gtk_combo_box_set_active(&widget, value);
+	static void Export(const GtkComboBox &self, const Callback<void(int)> &returnz) {
+		returnz(gtk_combo_box_get_active(const_cast<GtkComboBox *>(&self)));
 	}
 
-	static void Export(GtkComboBox &widget, const ImportExportCallback<int>::Import_t &importCallback) {
-		importCallback(gtk_combo_box_get_active(&widget));
+	static void Import(GtkComboBox &self, int value) {
+		gtk_combo_box_set_active(&self, value);
 	}
 };
 
-using IntComboImportExport = ImportExport<GtkComboBox, int, IntCombo>;
+using IntComboImportExport = PropertyAdaptor<GtkComboBox, int, IntCombo>;
 
 struct IntAdjustment {
-	static void Import(GtkAdjustment &widget, int value) {
-		gtk_adjustment_set_value(&widget, value);
+	static void Export(const GtkAdjustment &self, const Callback<void(int)> &returnz) {
+		returnz((int) gtk_adjustment_get_value(const_cast<GtkAdjustment *>(&self)));
 	}
 
-	static void Export(GtkAdjustment &widget, const ImportExportCallback<int>::Import_t &importCallback) {
-		importCallback((int) gtk_adjustment_get_value(&widget));
+	static void Import(GtkAdjustment &self, int value) {
+		gtk_adjustment_set_value(&self, value);
 	}
 };
 
-using IntAdjustmentImportExport = ImportExport<GtkAdjustment, int, IntAdjustment>;
+using IntAdjustmentImportExport = PropertyAdaptor<GtkAdjustment, int, IntAdjustment>;
 
 struct IntSpinner {
-	static void Import(GtkSpinButton &widget, int value) {
-		gtk_spin_button_set_value(&widget, value);
+	static void Export(const GtkSpinButton &self, const Callback<void(int)> &returnz) {
+		returnz(gtk_spin_button_get_value_as_int(const_cast<GtkSpinButton *>(&self)));
 	}
 
-	static void Export(GtkSpinButton &widget, const ImportExportCallback<int>::Import_t &importCallback) {
-		importCallback(gtk_spin_button_get_value_as_int(&widget));
+	static void Import(GtkSpinButton &self, int value) {
+		gtk_spin_button_set_value(&self, value);
 	}
 };
 
-using IntSpinnerImportExport = ImportExport<GtkSpinButton, int, IntSpinner>;
+using IntSpinnerImportExport = PropertyAdaptor<GtkSpinButton, int, IntSpinner>;
 
-using StringImportExport = ImportExport<CopiedString, const char *>;
+using StringImportExport = PropertyAdaptor<CopiedString, const char *>;
 
 struct TextEntry {
-	static void Import(GtkEntry &widget, const char *text) {
-		ui::Entry(&widget).text(text);
+	static void Export(const GtkEntry &self, const Callback<void(const char *)> &returnz) {
+		returnz(gtk_entry_get_text(const_cast<GtkEntry *>(&self)));
 	}
 
-	static void Export(GtkEntry &widget, const ImportExportCallback<const char *>::Import_t &importCallback) {
-		importCallback(gtk_entry_get_text(&widget));
+	static void Import(GtkEntry &self, const char *value) {
+		ui::Entry(&self).text(value);
 	}
 };
 
-using TextEntryImportExport = ImportExport<GtkEntry, const char *, TextEntry>;
-
-using SizeImportExport = ImportExport<std::size_t>;
+using TextEntryImportExport = PropertyAdaptor<GtkEntry, const char *, TextEntry>;
 
 struct SizeEntry {
-	static void Import(GtkEntry &widget, std::size_t value) {
-		entry_set_int(ui::Entry(&widget), int(value));
-	}
-
-	static void Export(GtkEntry &widget, const ImportExportCallback<std::size_t>::Import_t &importCallback) {
-		int value = atoi(gtk_entry_get_text(&widget));
+	static void Export(const GtkEntry &self, const Callback<void(std::size_t)> &returnz) {
+		int value = atoi(gtk_entry_get_text(const_cast<GtkEntry *>(&self)));
 		if (value < 0) {
 			value = 0;
 		}
-		importCallback(value);
+		returnz(value);
+	}
+
+	static void Import(GtkEntry &self, std::size_t value) {
+		entry_set_int(ui::Entry(&self), int(value));
 	}
 };
 
-using SizeEntryImportExport = ImportExport<GtkEntry, std::size_t, SizeEntry>;
-
-using FloatImportExport = ImportExport<float>;
+using SizeEntryImportExport = PropertyAdaptor<GtkEntry, std::size_t, SizeEntry>;
 
 struct FloatEntry {
-	static void Import(GtkEntry &widget, float value) {
-		entry_set_float(ui::Entry(&widget), value);
+	static void Export(const GtkEntry &self, const Callback<void(float)> &returnz) {
+		returnz((float) atof(gtk_entry_get_text(const_cast<GtkEntry *>(&self))));
 	}
 
-	static void Export(GtkEntry &widget, const ImportExportCallback<float>::Import_t &importCallback) {
-		importCallback((float) atof(gtk_entry_get_text(&widget)));
+	static void Import(GtkEntry &self, float value) {
+		entry_set_float(ui::Entry(&self), value);
 	}
 };
 
-using FloatEntryImportExport = ImportExport<GtkEntry, float, FloatEntry>;
+using FloatEntryImportExport = PropertyAdaptor<GtkEntry, float, FloatEntry>;
 
 struct FloatSpinner {
-	static void Import(GtkSpinButton &widget, float value) {
-		gtk_spin_button_set_value(&widget, value);
+	static void Export(const GtkSpinButton &self, const Callback<void(float)> &returnz) {
+		returnz(float(gtk_spin_button_get_value(const_cast<GtkSpinButton *>(&self))));
 	}
 
-	static void Export(GtkSpinButton &widget, const ImportExportCallback<float>::Import_t &importCallback) {
-		importCallback(float(gtk_spin_button_get_value(&widget)));
+	static void Import(GtkSpinButton &self, float value) {
+		gtk_spin_button_set_value(&self, value);
 	}
 };
 
-using FloatSpinnerImportExport = ImportExport<GtkSpinButton, float, FloatSpinner>;
+using FloatSpinnerImportExport = PropertyAdaptor<GtkSpinButton, float, FloatSpinner>;
 
 
 
 template<typename T>
 class CallbackDialogData : public DLG_DATA {
-	ImportExportCallback<T> m_cbWidget;
-	ImportExportCallback<T> m_cbViewer;
+	Property<T> m_cbWidget;
+	Property<T> m_cbViewer;
 
 public:
-	CallbackDialogData(const ImportExportCallback<T> &cbWidget, const ImportExportCallback<T> &cbViewer)
+	CallbackDialogData(const Property<T> &cbWidget, const Property<T> &cbViewer)
 			: m_cbWidget(cbWidget), m_cbViewer(cbViewer) {
 	}
 
@@ -273,11 +250,11 @@ public:
 	}
 
 	void importData() const {
-		m_cbViewer.Export(m_cbWidget.Import);
+		m_cbViewer.get(m_cbWidget.set);
 	}
 
 	void exportData() const {
-		m_cbWidget.Export(m_cbViewer.Import);
+		m_cbWidget.get(m_cbViewer.set);
 	}
 };
 
@@ -285,10 +262,8 @@ template<typename Widget, typename Viewer>
 void AddData(DialogDataList &data, typename Widget::Type &widget, typename Viewer::Type &viewer) {
 	data.push_back(
 			new CallbackDialogData<typename Widget::Other>(
-					{typename Widget::ImportCaller(widget),
-					 typename Widget::ExportCaller(widget)},
-					{typename Viewer::ImportCaller(viewer),
-					 typename Viewer::ExportCaller(viewer)}
+					make_property<Widget>(widget),
+					make_property<Viewer>(viewer)
 			)
 	);
 }
@@ -297,12 +272,11 @@ template<typename Widget>
 void AddCustomData(
 		DialogDataList &data,
 		typename Widget::Type &widget,
-		ImportExportCallback<typename Widget::Other> const &cbViewer
+		Property<typename Widget::Other> const &cbViewer
 ) {
 	data.push_back(
 			new CallbackDialogData<typename Widget::Other>(
-					{typename Widget::ImportCaller(widget),
-					 typename Widget::ExportCaller(widget)},
+					make_property<Widget>(widget),
 					cbViewer
 			)
 	);
@@ -356,76 +330,76 @@ void Dialog::Destroy(){
 }
 
 
-void Dialog::AddBoolToggleData( GtkToggleButton& widget, ImportExportCallback<bool> const &cb ){
+void Dialog::AddBoolToggleData( GtkToggleButton& widget, Property<bool> const &cb ){
 	AddCustomData<BoolToggleImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddIntRadioData( GtkRadioButton& widget, ImportExportCallback<int> const &cb ){
+void Dialog::AddIntRadioData( GtkRadioButton& widget, Property<int> const &cb ){
 	AddCustomData<IntRadioImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddTextEntryData( GtkEntry& widget, ImportExportCallback<const char *> const &cb ){
+void Dialog::AddTextEntryData( GtkEntry& widget, Property<const char *> const &cb ){
 	AddCustomData<TextEntryImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddIntEntryData( GtkEntry& widget, ImportExportCallback<int> const &cb ){
+void Dialog::AddIntEntryData( GtkEntry& widget, Property<int> const &cb ){
 	AddCustomData<IntEntryImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddSizeEntryData( GtkEntry& widget, ImportExportCallback<std::size_t> const &cb ){
+void Dialog::AddSizeEntryData( GtkEntry& widget, Property<std::size_t> const &cb ){
 	AddCustomData<SizeEntryImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddFloatEntryData( GtkEntry& widget, ImportExportCallback<float> const &cb ){
+void Dialog::AddFloatEntryData( GtkEntry& widget, Property<float> const &cb ){
 	AddCustomData<FloatEntryImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddFloatSpinnerData( GtkSpinButton& widget, ImportExportCallback<float> const &cb ){
+void Dialog::AddFloatSpinnerData( GtkSpinButton& widget, Property<float> const &cb ){
 	AddCustomData<FloatSpinnerImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddIntSpinnerData( GtkSpinButton& widget, ImportExportCallback<int> const &cb ){
+void Dialog::AddIntSpinnerData( GtkSpinButton& widget, Property<int> const &cb ){
 	AddCustomData<IntSpinnerImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddIntAdjustmentData( GtkAdjustment& widget, ImportExportCallback<int> const &cb ){
+void Dialog::AddIntAdjustmentData( GtkAdjustment& widget, Property<int> const &cb ){
 	AddCustomData<IntAdjustmentImportExport>( m_data, widget, cb );
 }
 
-void Dialog::AddIntComboData( GtkComboBox& widget, ImportExportCallback<int> const &cb ){
+void Dialog::AddIntComboData( GtkComboBox& widget, Property<int> const &cb ){
 	AddCustomData<IntComboImportExport>( m_data, widget, cb );
 }
 
 
 void Dialog::AddDialogData( GtkToggleButton& widget, bool& data ){
-	AddData<BoolToggleImportExport, BoolImportExport>( m_data, widget, data );
+	AddData<BoolToggleImportExport, PropertyAdaptor<bool>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkRadioButton& widget, int& data ){
-	AddData<IntRadioImportExport, IntImportExport>( m_data, widget, data );
+	AddData<IntRadioImportExport, PropertyAdaptor<int>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkEntry& widget, CopiedString& data ){
 	AddData<TextEntryImportExport, StringImportExport>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkEntry& widget, int& data ){
-	AddData<IntEntryImportExport, IntImportExport>( m_data, widget, data );
+	AddData<IntEntryImportExport, PropertyAdaptor<int>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkEntry& widget, std::size_t& data ){
-	AddData<SizeEntryImportExport, SizeImportExport>( m_data, widget, data );
+	AddData<SizeEntryImportExport, PropertyAdaptor<std::size_t>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkEntry& widget, float& data ){
-	AddData<FloatEntryImportExport, FloatImportExport>( m_data, widget, data );
+	AddData<FloatEntryImportExport, PropertyAdaptor<float>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkSpinButton& widget, float& data ){
-	AddData<FloatSpinnerImportExport, FloatImportExport>( m_data, widget, data );
+	AddData<FloatSpinnerImportExport, PropertyAdaptor<float>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkSpinButton& widget, int& data ){
-	AddData<IntSpinnerImportExport, IntImportExport>( m_data, widget, data );
+	AddData<IntSpinnerImportExport, PropertyAdaptor<int>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkAdjustment& widget, int& data ){
-	AddData<IntAdjustmentImportExport, IntImportExport>( m_data, widget, data );
+	AddData<IntAdjustmentImportExport, PropertyAdaptor<int>>( m_data, widget, data );
 }
 void Dialog::AddDialogData( GtkComboBox& widget, int& data ){
-	AddData<IntComboImportExport, IntImportExport>( m_data, widget, data );
+	AddData<IntComboImportExport, PropertyAdaptor<int>>( m_data, widget, data );
 }
 
 void Dialog::exportData(){
@@ -466,7 +440,7 @@ EMessageBoxReturn Dialog::DoModal(){
 }
 
 
-ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, ImportExportCallback<bool> const &cb ){
+ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, Property<bool> const &cb ){
 	auto check = ui::CheckButton( flag );
 	check.show();
 	AddBoolToggleData( *GTK_TOGGLE_BUTTON( check ), cb );
@@ -476,10 +450,10 @@ ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char
 }
 
 ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, bool& data ){
-	return addCheckBox(vbox, name, flag, mkImportExportCallback(data));
+	return addCheckBox(vbox, name, flag, make_property(data));
 }
 
-void Dialog::addCombo( ui::VBox vbox, const char* name, StringArrayRange values, ImportExportCallback<int> const &cb ){
+void Dialog::addCombo( ui::VBox vbox, const char* name, StringArrayRange values, Property<int> const &cb ){
 	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();
 	{
@@ -501,7 +475,7 @@ void Dialog::addCombo( ui::VBox vbox, const char* name, StringArrayRange values,
 }
 
 void Dialog::addCombo( ui::VBox vbox, const char* name, int& data, StringArrayRange values ){
-	addCombo(vbox, name, values, mkImportExportCallback(data));
+	addCombo(vbox, name, values, make_property(data));
 }
 
 void Dialog::addSlider( ui::VBox vbox, const char* name, int& data, gboolean draw_value, const char* low, const char* high, double value, double lower, double upper, double step_increment, double page_increment ){
@@ -525,7 +499,7 @@ void Dialog::addSlider( ui::VBox vbox, const char* name, int& data, gboolean dra
 
 	// adjustment
 	auto adj = ui::Adjustment( value, lower, upper, step_increment, page_increment, 0 );
-	AddIntAdjustmentData(*GTK_ADJUSTMENT(adj), mkImportExportCallback(data));
+	AddIntAdjustmentData(*GTK_ADJUSTMENT(adj), make_property(data));
 
 	// scale
 	auto alignment = ui::Alignment( 0.0, 0.5, 1.0, 0.0 );
@@ -543,7 +517,7 @@ void Dialog::addSlider( ui::VBox vbox, const char* name, int& data, gboolean dra
 	DialogVBox_packRow( vbox, row );
 }
 
-void Dialog::addRadio( ui::VBox vbox, const char* name, StringArrayRange names, ImportExportCallback<int> const &cb ){
+void Dialog::addRadio( ui::VBox vbox, const char* name, StringArrayRange names, Property<int> const &cb ){
 	auto alignment = ui::Alignment( 0.0, 0.5, 0.0, 0.0 );
 	alignment.show();;
 	{
@@ -557,10 +531,10 @@ void Dialog::addRadio( ui::VBox vbox, const char* name, StringArrayRange names, 
 }
 
 void Dialog::addRadio( ui::VBox vbox, const char* name, int& data, StringArrayRange names ){
-	addRadio(vbox, name, names, mkImportExportCallback(data));
+	addRadio(vbox, name, names, make_property(data));
 }
 
-void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange icons, ImportExportCallback<int> const &cb ){
+void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange icons, Property<int> const &cb ){
     auto table = ui::Table(2, icons.last - icons.first, FALSE);
     table.show();
 
@@ -589,31 +563,31 @@ void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange ic
 }
 
 void Dialog::addRadioIcons( ui::VBox vbox, const char* name, int& data, StringArrayRange icons ){
-	addRadioIcons(vbox, name, icons, mkImportExportCallback(data));
+	addRadioIcons(vbox, name, icons, make_property(data));
 }
 
-ui::Widget Dialog::addIntEntry( ui::VBox vbox, const char* name, ImportExportCallback<int> const &cb ){
+ui::Widget Dialog::addIntEntry( ui::VBox vbox, const char* name, Property<int> const &cb ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddIntEntryData( *GTK_ENTRY(row.m_entry), cb );
 	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addSizeEntry( ui::VBox vbox, const char* name, ImportExportCallback<std::size_t> const &cb ){
+ui::Widget Dialog::addSizeEntry( ui::VBox vbox, const char* name, Property<std::size_t> const &cb ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddSizeEntryData( *GTK_ENTRY(row.m_entry), cb );
 	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addFloatEntry( ui::VBox vbox, const char* name, ImportExportCallback<float> const &cb ){
+ui::Widget Dialog::addFloatEntry( ui::VBox vbox, const char* name, Property<float> const &cb ){
 	DialogEntryRow row( DialogEntryRow_new( name ) );
 	AddFloatEntryData( *GTK_ENTRY(row.m_entry), cb );
 	DialogVBox_packRow( vbox, row.m_row );
 	return row.m_row;
 }
 
-ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, bool browse_directory, ImportExportCallback<const char *> const &cb ){
+ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, bool browse_directory, Property<const char *> const &cb ){
 	PathEntry pathEntry = PathEntry_new();
 	pathEntry.m_button.connect( "clicked", G_CALLBACK( browse_directory ? button_clicked_entry_browse_directory : button_clicked_entry_browse_file ), pathEntry.m_entry );
 
@@ -626,10 +600,10 @@ ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, bool browse_di
 }
 
 ui::Widget Dialog::addPathEntry( ui::VBox vbox, const char* name, CopiedString& data, bool browse_directory ){
-    return addPathEntry(vbox, name, browse_directory, mkImportExportCallback<CopiedString, const char *>(data));
+    return addPathEntry(vbox, name, browse_directory, make_property<CopiedString, const char *>(data));
 }
 
-ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, ImportExportCallback<int> const &cb ){
+ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, Property<int> const &cb ){
 	DialogSpinnerRow row( DialogSpinnerRow_new( name, value, lower, upper, 1 ) );
 	AddIntSpinnerData( *GTK_SPIN_BUTTON(row.m_spin), cb );
 	DialogVBox_packRow( vbox, row.m_row );
@@ -637,10 +611,10 @@ ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value
 }
 
 ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, int& data, double value, double lower, double upper ){
-	return addSpinner(vbox, name, value, lower, upper, mkImportExportCallback(data));
+	return addSpinner(vbox, name, value, lower, upper, make_property(data));
 }
 
-ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, ImportExportCallback<float> const &cb ){
+ui::SpinButton Dialog::addSpinner( ui::VBox vbox, const char* name, double value, double lower, double upper, Property<float> const &cb ){
 	DialogSpinnerRow row( DialogSpinnerRow_new( name, value, lower, upper, 10 ) );
 	AddFloatSpinnerData( *GTK_SPIN_BUTTON(row.m_spin), cb );
 	DialogVBox_packRow( vbox, row.m_row );

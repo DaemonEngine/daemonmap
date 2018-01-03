@@ -414,16 +414,18 @@ const char* GameToolsPath_get(){
 	return g_strGameToolsPath.c_str();
 }
 
-void EnginePathImport( CopiedString& self, const char* value ){
-	setEnginePath( value );
-}
-typedef ReferenceCaller<CopiedString, void(const char*), EnginePathImport> EnginePathImportCaller;
+struct EnginePath {
+	static void Export(const CopiedString &self, const Callback<void(const char *)> &returnz) {
+		returnz(self.c_str());
+	}
+
+	static void Import(CopiedString &self, const char *value) {
+		setEnginePath(value);
+	}
+};
 
 void Paths_constructPreferences( PreferencesPage& page ){
-	page.appendPathEntry( "Engine Path", true,
-						  {ImportExportCallback<const char *>::Import_t( EnginePathImportCaller( g_strEnginePath ) ),
-						   ImportExportCallback<const char *>::Export_t( StringExportCaller( g_strEnginePath ) )}
-						  );
+	page.appendPathEntry( "Engine Path", true, make_property<EnginePath>(g_strEnginePath) );
 }
 void Paths_constructPage( PreferenceGroup& group ){
 	PreferencesPage page( group.createPage( "Paths", "Path Settings" ) );
@@ -999,24 +1001,24 @@ template<bool( *BoolFunction ) ( )>
 class BoolFunctionExport
 {
 public:
-static void apply( const ImportExportCallback<bool>::Import_t& importCallback ){
+static void apply( const Callback<void(bool)> & importCallback ){
 	importCallback( BoolFunction() );
 }
 };
 
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<EdgeMode>::apply> EdgeModeApplyCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), &BoolFunctionExport<EdgeMode>::apply> EdgeModeApplyCaller;
 EdgeModeApplyCaller g_edgeMode_button_caller;
-ImportExportCallback<bool>::Export_t g_edgeMode_button_callback( g_edgeMode_button_caller );
+Callback<void(const Callback<void(bool)> &)> g_edgeMode_button_callback( g_edgeMode_button_caller );
 ToggleItem g_edgeMode_button( g_edgeMode_button_callback );
 
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<VertexMode>::apply> VertexModeApplyCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), &BoolFunctionExport<VertexMode>::apply> VertexModeApplyCaller;
 VertexModeApplyCaller g_vertexMode_button_caller;
-ImportExportCallback<bool>::Export_t g_vertexMode_button_callback( g_vertexMode_button_caller );
+Callback<void(const Callback<void(bool)> &)> g_vertexMode_button_callback( g_vertexMode_button_caller );
 ToggleItem g_vertexMode_button( g_vertexMode_button_callback );
 
-typedef FreeCaller<void(const ImportExportCallback<bool>::Import_t&), &BoolFunctionExport<FaceMode>::apply> FaceModeApplyCaller;
+typedef FreeCaller<void(const Callback<void(bool)> &), &BoolFunctionExport<FaceMode>::apply> FaceModeApplyCaller;
 FaceModeApplyCaller g_faceMode_button_caller;
-ImportExportCallback<bool>::Export_t g_faceMode_button_callback( g_faceMode_button_caller );
+Callback<void(const Callback<void(bool)> &)> g_faceMode_button_callback( g_faceMode_button_caller );
 ToggleItem g_faceMode_button( g_faceMode_button_callback );
 
 void ComponentModeChanged(){
@@ -1290,44 +1292,44 @@ void Selection_NudgeRight(){
 }
 
 
-void TranslateToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
+void TranslateToolExport( const Callback<void(bool)> & importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eTranslate );
 }
 
-void RotateToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
+void RotateToolExport( const Callback<void(bool)> & importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eRotate );
 }
 
-void ScaleToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
+void ScaleToolExport( const Callback<void(bool)> & importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eScale );
 }
 
-void DragToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
+void DragToolExport( const Callback<void(bool)> & importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eDrag );
 }
 
-void ClipperToolExport( const ImportExportCallback<bool>::Import_t& importCallback ){
+void ClipperToolExport( const Callback<void(bool)> & importCallback ){
 	importCallback( GlobalSelectionSystem().ManipulatorMode() == SelectionSystem::eClip );
 }
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), TranslateToolExport> g_translatemode_button_caller;
-ImportExportCallback<bool>::Export_t g_translatemode_button_callback( g_translatemode_button_caller );
+FreeCaller<void(const Callback<void(bool)> &), TranslateToolExport> g_translatemode_button_caller;
+Callback<void(const Callback<void(bool)> &)> g_translatemode_button_callback( g_translatemode_button_caller );
 ToggleItem g_translatemode_button( g_translatemode_button_callback );
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), RotateToolExport> g_rotatemode_button_caller;
-ImportExportCallback<bool>::Export_t g_rotatemode_button_callback( g_rotatemode_button_caller );
+FreeCaller<void(const Callback<void(bool)> &), RotateToolExport> g_rotatemode_button_caller;
+Callback<void(const Callback<void(bool)> &)> g_rotatemode_button_callback( g_rotatemode_button_caller );
 ToggleItem g_rotatemode_button( g_rotatemode_button_callback );
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ScaleToolExport> g_scalemode_button_caller;
-ImportExportCallback<bool>::Export_t g_scalemode_button_callback( g_scalemode_button_caller );
+FreeCaller<void(const Callback<void(bool)> &), ScaleToolExport> g_scalemode_button_caller;
+Callback<void(const Callback<void(bool)> &)> g_scalemode_button_callback( g_scalemode_button_caller );
 ToggleItem g_scalemode_button( g_scalemode_button_callback );
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), DragToolExport> g_dragmode_button_caller;
-ImportExportCallback<bool>::Export_t g_dragmode_button_callback( g_dragmode_button_caller );
+FreeCaller<void(const Callback<void(bool)> &), DragToolExport> g_dragmode_button_caller;
+Callback<void(const Callback<void(bool)> &)> g_dragmode_button_callback( g_dragmode_button_caller );
 ToggleItem g_dragmode_button( g_dragmode_button_callback );
 
-FreeCaller<void(const ImportExportCallback<bool>::Import_t&), ClipperToolExport> g_clipper_button_caller;
-ImportExportCallback<bool>::Export_t g_clipper_button_callback( g_clipper_button_caller );
+FreeCaller<void(const Callback<void(bool)> &), ClipperToolExport> g_clipper_button_caller;
+Callback<void(const Callback<void(bool)> &)> g_clipper_button_callback( g_clipper_button_caller );
 ToggleItem g_clipper_button( g_clipper_button_callback );
 
 void ToolChanged(){
@@ -3126,22 +3128,22 @@ void Layout_constructPreferences( PreferencesPage& page ){
 		page.appendRadioIcons(
 			"Window Layout",
 			STRING_ARRAY_RANGE( layouts ),
-			mkImportExportCallback( g_Layout_viewStyle )
+			make_property( g_Layout_viewStyle )
 			);
 	}
 	page.appendCheckBox(
 		"", "Detachable Menus",
-		mkImportExportCallback( g_Layout_enableDetachableMenus )
+		make_property( g_Layout_enableDetachableMenus )
 		);
 	if ( !string_empty( g_pGameDescription->getKeyValue( "no_patch" ) ) ) {
 		page.appendCheckBox(
 			"", "Patch Toolbar",
-			mkImportExportCallback( g_Layout_enablePatchToolbar )
+			make_property( g_Layout_enablePatchToolbar )
 			);
 	}
 	page.appendCheckBox(
 		"", "Plugin Toolbar",
-		mkImportExportCallback( g_Layout_enablePluginToolbar )
+		make_property( g_Layout_enablePluginToolbar )
 		);
 }
 
@@ -3279,25 +3281,25 @@ void MainFrame_Construct(){
 	typedef FreeCaller<void(const Selectable&), ComponentMode_SelectionChanged> ComponentModeSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( ComponentModeSelectionChangedCaller() );
 
-	GlobalPreferenceSystem().registerPreference( "DetachableMenus", BoolImportStringCaller( g_Layout_enableDetachableMenus.m_latched ), BoolExportStringCaller( g_Layout_enableDetachableMenus.m_latched ) );
-	GlobalPreferenceSystem().registerPreference( "PatchToolBar", BoolImportStringCaller( g_Layout_enablePatchToolbar.m_latched ), BoolExportStringCaller( g_Layout_enablePatchToolbar.m_latched ) );
-	GlobalPreferenceSystem().registerPreference( "PluginToolBar", BoolImportStringCaller( g_Layout_enablePluginToolbar.m_latched ), BoolExportStringCaller( g_Layout_enablePluginToolbar.m_latched ) );
-	GlobalPreferenceSystem().registerPreference( "QE4StyleWindows", IntImportStringCaller( g_Layout_viewStyle.m_latched ), IntExportStringCaller( g_Layout_viewStyle.m_latched ) );
-	GlobalPreferenceSystem().registerPreference( "XYHeight", IntImportStringCaller( g_layout_globals.nXYHeight ), IntExportStringCaller( g_layout_globals.nXYHeight ) );
-	GlobalPreferenceSystem().registerPreference( "XYWidth", IntImportStringCaller( g_layout_globals.nXYWidth ), IntExportStringCaller( g_layout_globals.nXYWidth ) );
-	GlobalPreferenceSystem().registerPreference( "CamWidth", IntImportStringCaller( g_layout_globals.nCamWidth ), IntExportStringCaller( g_layout_globals.nCamWidth ) );
-	GlobalPreferenceSystem().registerPreference( "CamHeight", IntImportStringCaller( g_layout_globals.nCamHeight ), IntExportStringCaller( g_layout_globals.nCamHeight ) );
+	GlobalPreferenceSystem().registerPreference( "DetachableMenus", make_property_string( g_Layout_enableDetachableMenus.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "PatchToolBar", make_property_string( g_Layout_enablePatchToolbar.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "PluginToolBar", make_property_string( g_Layout_enablePluginToolbar.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "QE4StyleWindows", make_property_string( g_Layout_viewStyle.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "XYHeight", make_property_string( g_layout_globals.nXYHeight ) );
+	GlobalPreferenceSystem().registerPreference( "XYWidth", make_property_string( g_layout_globals.nXYWidth ) );
+	GlobalPreferenceSystem().registerPreference( "CamWidth", make_property_string( g_layout_globals.nCamWidth ) );
+	GlobalPreferenceSystem().registerPreference( "CamHeight", make_property_string( g_layout_globals.nCamHeight ) );
 
-	GlobalPreferenceSystem().registerPreference( "State", IntImportStringCaller( g_layout_globals.nState ), IntExportStringCaller( g_layout_globals.nState ) );
-	GlobalPreferenceSystem().registerPreference( "PositionX", IntImportStringCaller( g_layout_globals.m_position.x ), IntExportStringCaller( g_layout_globals.m_position.x ) );
-	GlobalPreferenceSystem().registerPreference( "PositionY", IntImportStringCaller( g_layout_globals.m_position.y ), IntExportStringCaller( g_layout_globals.m_position.y ) );
-	GlobalPreferenceSystem().registerPreference( "Width", IntImportStringCaller( g_layout_globals.m_position.w ), IntExportStringCaller( g_layout_globals.m_position.w ) );
-	GlobalPreferenceSystem().registerPreference( "Height", IntImportStringCaller( g_layout_globals.m_position.h ), IntExportStringCaller( g_layout_globals.m_position.h ) );
+	GlobalPreferenceSystem().registerPreference( "State", make_property_string( g_layout_globals.nState ) );
+	GlobalPreferenceSystem().registerPreference( "PositionX", make_property_string( g_layout_globals.m_position.x ) );
+	GlobalPreferenceSystem().registerPreference( "PositionY", make_property_string( g_layout_globals.m_position.y ) );
+	GlobalPreferenceSystem().registerPreference( "Width", make_property_string( g_layout_globals.m_position.w ) );
+	GlobalPreferenceSystem().registerPreference( "Height", make_property_string( g_layout_globals.m_position.h ) );
 
-	GlobalPreferenceSystem().registerPreference( "CamWnd", WindowPositionTrackerImportStringCaller( g_posCamWnd ), WindowPositionTrackerExportStringCaller( g_posCamWnd ) );
-	GlobalPreferenceSystem().registerPreference( "XYWnd", WindowPositionTrackerImportStringCaller( g_posXYWnd ), WindowPositionTrackerExportStringCaller( g_posXYWnd ) );
-	GlobalPreferenceSystem().registerPreference( "YZWnd", WindowPositionTrackerImportStringCaller( g_posYZWnd ), WindowPositionTrackerExportStringCaller( g_posYZWnd ) );
-	GlobalPreferenceSystem().registerPreference( "XZWnd", WindowPositionTrackerImportStringCaller( g_posXZWnd ), WindowPositionTrackerExportStringCaller( g_posXZWnd ) );
+	GlobalPreferenceSystem().registerPreference( "CamWnd", make_property<WindowPositionTracker_String>(g_posCamWnd) );
+	GlobalPreferenceSystem().registerPreference( "XYWnd", make_property<WindowPositionTracker_String>(g_posXYWnd) );
+	GlobalPreferenceSystem().registerPreference( "YZWnd", make_property<WindowPositionTracker_String>(g_posYZWnd) );
+	GlobalPreferenceSystem().registerPreference( "XZWnd", make_property<WindowPositionTracker_String>(g_posXZWnd) );
 
 	{
 		const char* ENGINEPATH_ATTRIBUTE =
@@ -3316,7 +3318,7 @@ void MainFrame_Construct(){
 		g_strEnginePath = path.c_str();
 	}
 
-	GlobalPreferenceSystem().registerPreference( "EnginePath", CopiedStringImportStringCaller( g_strEnginePath ), CopiedStringExportStringCaller( g_strEnginePath ) );
+	GlobalPreferenceSystem().registerPreference( "EnginePath", make_property_string( g_strEnginePath ) );
 
 	g_Layout_viewStyle.useLatched();
 	g_Layout_enableDetachableMenus.useLatched();
@@ -3346,7 +3348,7 @@ void MainFrame_Destroy(){
 
 
 void GLWindow_Construct(){
-	GlobalPreferenceSystem().registerPreference( "MouseButtons", IntImportStringCaller( g_glwindow_globals.m_nMouseType ), IntExportStringCaller( g_glwindow_globals.m_nMouseType ) );
+	GlobalPreferenceSystem().registerPreference( "MouseButtons", make_property_string( g_glwindow_globals.m_nMouseType ) );
 }
 
 void GLWindow_Destroy(){

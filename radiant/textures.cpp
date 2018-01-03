@@ -621,99 +621,106 @@ void Textures_UpdateTextureCompressionFormat(){
 	Textures_setTextureComponents( texture_components );
 }
 
-void TextureCompressionImport( TextureCompressionFormat& self, int value ){
-	if ( !g_texture_globals.m_bOpenGLCompressionSupported
-		 && g_texture_globals.m_bS3CompressionSupported
-		 && value >= 1 ) {
-		++value;
-	}
-	switch ( value )
-	{
-	case 0:
-		self = TEXTURECOMPRESSION_NONE;
-		break;
-	case 1:
-		self = TEXTURECOMPRESSION_RGBA;
-		break;
-	case 2:
-		self = TEXTURECOMPRESSION_RGBA_S3TC_DXT1;
-		break;
-	case 3:
-		self = TEXTURECOMPRESSION_RGBA_S3TC_DXT3;
-		break;
-	case 4:
-		self = TEXTURECOMPRESSION_RGBA_S3TC_DXT5;
-		break;
-	}
-	Textures_UpdateTextureCompressionFormat();
-}
-typedef ReferenceCaller<TextureCompressionFormat, void(int), TextureCompressionImport> TextureCompressionImportCaller;
+struct TextureCompression {
+    static void Export(const TextureCompressionFormat &self, const Callback<void(int)> &returnz) {
+        returnz(self);
+    }
 
-void TextureGammaImport( float& self, float value ){
-	if ( self != value ) {
-		Textures_Unrealise();
-		self = value;
-		Textures_Realise();
-	}
-}
-typedef ReferenceCaller<float, void(float), TextureGammaImport> TextureGammaImportCaller;
+    static void Import(TextureCompressionFormat &self, int value) {
+        if (!g_texture_globals.m_bOpenGLCompressionSupported
+            && g_texture_globals.m_bS3CompressionSupported
+            && value >= 1) {
+            ++value;
+        }
+        switch (value) {
+            case 0:
+                self = TEXTURECOMPRESSION_NONE;
+                break;
+            case 1:
+                self = TEXTURECOMPRESSION_RGBA;
+                break;
+            case 2:
+                self = TEXTURECOMPRESSION_RGBA_S3TC_DXT1;
+                break;
+            case 3:
+                self = TEXTURECOMPRESSION_RGBA_S3TC_DXT3;
+                break;
+            case 4:
+                self = TEXTURECOMPRESSION_RGBA_S3TC_DXT5;
+                break;
+        }
+        Textures_UpdateTextureCompressionFormat();
+    }
+};
 
-void TextureModeImport( ETexturesMode& self, int value ){
-	switch ( value )
-	{
-	case 0:
-		Textures_SetMode( eTextures_NEAREST );
-		break;
-	case 1:
-		Textures_SetMode( eTextures_NEAREST_MIPMAP_NEAREST );
-		break;
-	case 2:
-		Textures_SetMode( eTextures_LINEAR );
-		break;
-	case 3:
-		Textures_SetMode( eTextures_NEAREST_MIPMAP_LINEAR );
-		break;
-	case 4:
-		Textures_SetMode( eTextures_LINEAR_MIPMAP_NEAREST );
-		break;
-	case 5:
-		Textures_SetMode( eTextures_LINEAR_MIPMAP_LINEAR );
-		break;
-	case 6:
-		Textures_SetMode( eTextures_MAX_ANISOTROPY );
+struct TextureGamma {
+	static void Export(const float &self, const Callback<void(float)> &returnz) {
+		returnz(self);
 	}
-}
-typedef ReferenceCaller<ETexturesMode, void(int), TextureModeImport> TextureModeImportCaller;
 
-void TextureModeExport( ETexturesMode& self, const ImportExportCallback<int>::Import_t& importer ){
-	switch ( self )
-	{
-	case eTextures_NEAREST:
-		importer( 0 );
-		break;
-	case eTextures_NEAREST_MIPMAP_NEAREST:
-		importer( 1 );
-		break;
-	case eTextures_LINEAR:
-		importer( 2 );
-		break;
-	case eTextures_NEAREST_MIPMAP_LINEAR:
-		importer( 3 );
-		break;
-	case eTextures_LINEAR_MIPMAP_NEAREST:
-		importer( 4 );
-		break;
-	case eTextures_LINEAR_MIPMAP_LINEAR:
-		importer( 5 );
-		break;
-	case eTextures_MAX_ANISOTROPY:
-		importer( 6 );
-		break;
-	default:
-		importer( 4 );
+	static void Import(float &self, float value) {
+		if (value != self) {
+			Textures_Unrealise();
+			self = value;
+			Textures_Realise();
+		}
 	}
-}
-typedef ReferenceCaller<ETexturesMode, void(const ImportExportCallback<int>::Import_t&), TextureModeExport> TextureModeExportCaller;
+};
+
+struct TextureMode {
+    static void Export(const ETexturesMode &self, const Callback<void(int)> &returnz) {
+        switch (self) {
+            case eTextures_NEAREST:
+                returnz(0);
+                break;
+            case eTextures_NEAREST_MIPMAP_NEAREST:
+                returnz(1);
+                break;
+            case eTextures_LINEAR:
+                returnz(2);
+                break;
+            case eTextures_NEAREST_MIPMAP_LINEAR:
+                returnz(3);
+                break;
+            case eTextures_LINEAR_MIPMAP_NEAREST:
+                returnz(4);
+                break;
+            case eTextures_LINEAR_MIPMAP_LINEAR:
+                returnz(5);
+                break;
+            case eTextures_MAX_ANISOTROPY:
+                returnz(6);
+                break;
+            default:
+                returnz(4);
+        }
+    }
+
+    static void Import(ETexturesMode &self, int value) {
+        switch (value) {
+            case 0:
+                Textures_SetMode(eTextures_NEAREST);
+                break;
+            case 1:
+                Textures_SetMode(eTextures_NEAREST_MIPMAP_NEAREST);
+                break;
+            case 2:
+                Textures_SetMode(eTextures_LINEAR);
+                break;
+            case 3:
+                Textures_SetMode(eTextures_NEAREST_MIPMAP_LINEAR);
+                break;
+            case 4:
+                Textures_SetMode(eTextures_LINEAR_MIPMAP_NEAREST);
+                break;
+            case 5:
+                Textures_SetMode(eTextures_LINEAR_MIPMAP_LINEAR);
+                break;
+            case 6:
+                Textures_SetMode(eTextures_MAX_ANISOTROPY);
+        }
+    }
+};
 
 void Textures_constructPreferences( PreferencesPage& page ){
 	{
@@ -721,7 +728,7 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		page.appendRadio(
 			"Texture Quality",
 			STRING_ARRAY_RANGE( percentages ),
-			mkImportExportCallback( g_Textures_textureQuality )
+			make_property( g_Textures_textureQuality )
 			);
 	}
 	page.appendSpinner(
@@ -729,16 +736,14 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		1.0,
 		0.0,
 		1.0,
-		{ImportExportCallback<float>::Import_t( TextureGammaImportCaller( g_texture_globals.fGamma ) ),
-		ImportExportCallback<float>::Export_t( FloatExportCaller( g_texture_globals.fGamma ) )}
+		make_property<TextureGamma>(g_texture_globals.fGamma)
 		);
 	{
 		const char* texture_mode[] = { "Nearest", "Nearest Mipmap", "Linear", "Bilinear", "Bilinear Mipmap", "Trilinear", "Anisotropy" };
 		page.appendCombo(
 			"Texture Render Mode",
 			STRING_ARRAY_RANGE( texture_mode ),
-			{ImportExportCallback<int>::Import_t( TextureModeImportCaller( g_texture_mode ) ),
-			ImportExportCallback<int>::Export_t( TextureModeExportCaller( g_texture_mode ) )}
+            make_property<TextureMode>(g_texture_mode)
 			);
 	}
 	{
@@ -758,8 +763,7 @@ void Textures_constructPreferences( PreferencesPage& page ){
 		page.appendCombo(
 			"Hardware Texture Compression",
 			compression,
-			{TextureCompressionImportCaller( g_texture_globals.m_nTextureCompressionFormat ),
-			IntExportCaller( reinterpret_cast<int&>( g_texture_globals.m_nTextureCompressionFormat ) )}
+            make_property<TextureCompression>(g_texture_globals.m_nTextureCompressionFormat)
 			);
 	}
 }
@@ -771,20 +775,24 @@ void Textures_registerPreferencesPage(){
 	PreferencesDialog_addDisplayPage( makeCallbackF(Textures_constructPage) );
 }
 
-void TextureCompression_importString( const char* string ){
-	g_texture_globals.m_nTextureCompressionFormat = static_cast<TextureCompressionFormat>( atoi( string ) );
-	Textures_UpdateTextureCompressionFormat();
-}
-typedef FreeCaller<void(const char*), TextureCompression_importString> TextureCompressionImportStringCaller;
+struct TextureCompressionPreference {
+	static void Export(const Callback<void(int)> &returnz) {
+		returnz(g_texture_globals.m_nTextureCompressionFormat);
+	}
 
+	static void Import(int value) {
+		g_texture_globals.m_nTextureCompressionFormat = static_cast<TextureCompressionFormat>( value );
+		Textures_UpdateTextureCompressionFormat();
+	}
+};
 
 void Textures_Construct(){
 	g_texturesmap = new TexturesMap;
 
-	GlobalPreferenceSystem().registerPreference( "TextureCompressionFormat", TextureCompressionImportStringCaller(), IntExportStringCaller( reinterpret_cast<int&>( g_texture_globals.m_nTextureCompressionFormat ) ) );
-	GlobalPreferenceSystem().registerPreference( "TextureFiltering", IntImportStringCaller( reinterpret_cast<int&>( g_texture_mode ) ), IntExportStringCaller( reinterpret_cast<int&>( g_texture_mode ) ) );
-	GlobalPreferenceSystem().registerPreference( "TextureQuality", IntImportStringCaller( g_Textures_textureQuality.m_latched ), IntExportStringCaller( g_Textures_textureQuality.m_latched ) );
-	GlobalPreferenceSystem().registerPreference( "SI_Gamma", FloatImportStringCaller( g_texture_globals.fGamma ), FloatExportStringCaller( g_texture_globals.fGamma ) );
+	GlobalPreferenceSystem().registerPreference( "TextureCompressionFormat", make_property_string<TextureCompressionPreference>() );
+	GlobalPreferenceSystem().registerPreference( "TextureFiltering", make_property_string( reinterpret_cast<int&>( g_texture_mode ) ) );
+	GlobalPreferenceSystem().registerPreference( "TextureQuality", make_property_string( g_Textures_textureQuality.m_latched ) );
+	GlobalPreferenceSystem().registerPreference( "SI_Gamma", make_property_string( g_texture_globals.fGamma ) );
 
 	g_Textures_textureQuality.useLatched();
 

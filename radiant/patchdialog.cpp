@@ -1035,12 +1035,12 @@ void PatchInspector_SelectionChanged( const Selectable& selectable ){
 void PatchInspector_Construct(){
 	GlobalCommands_insert( "PatchInspector", makeCallbackF(PatchInspector_toggleShown), Accelerator( 'S', (GdkModifierType)GDK_SHIFT_MASK ) );
 
-	GlobalPreferenceSystem().registerPreference( "PatchWnd", WindowPositionTrackerImportStringCaller( g_PatchInspector.m_position_tracker ), WindowPositionTrackerExportStringCaller( g_PatchInspector.m_position_tracker ) );
-	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale1", FloatImportStringCaller( g_pi_globals.scale[0] ), FloatExportStringCaller( g_pi_globals.scale[0] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale2", FloatImportStringCaller( g_pi_globals.scale[1] ), FloatExportStringCaller( g_pi_globals.scale[1] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Shift1", FloatImportStringCaller( g_pi_globals.shift[0] ), FloatExportStringCaller( g_pi_globals.shift[0] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Shift2", FloatImportStringCaller( g_pi_globals.shift[1] ), FloatExportStringCaller( g_pi_globals.shift[1] ) );
-	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Rotate", FloatImportStringCaller( g_pi_globals.rotate ), FloatExportStringCaller( g_pi_globals.rotate ) );
+	GlobalPreferenceSystem().registerPreference( "PatchWnd", make_property<WindowPositionTracker_String>( g_PatchInspector.m_position_tracker ) );
+	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale1", make_property_string( g_pi_globals.scale[0] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Scale2", make_property_string( g_pi_globals.scale[1] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Shift1", make_property_string( g_pi_globals.shift[0] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Shift2", make_property_string( g_pi_globals.shift[1] ) );
+	GlobalPreferenceSystem().registerPreference( "SI_PatchTexdef_Rotate", make_property_string( g_pi_globals.rotate ) );
 
 	typedef FreeCaller<void(const Selectable&), PatchInspector_SelectionChanged> PatchInspectorSelectionChangedCaller;
 	GlobalSelectionSystem().addSelectionChangeCallback( PatchInspectorSelectionChangedCaller() );
