@@ -34,7 +34,7 @@ float position;
 int size;
 };
 
-gboolean hpaned_allocate( GtkWidget* widget, GtkAllocation* allocation, PanedState* paned ){
+gboolean hpaned_allocate(ui::Widget widget, GtkAllocation* allocation, PanedState* paned ){
 	if ( paned->size != allocation->width ) {
 		paned->size = allocation->width;
 		gtk_paned_set_position( GTK_PANED( widget ), static_cast<int>( paned->size * paned->position ) );
@@ -42,7 +42,7 @@ gboolean hpaned_allocate( GtkWidget* widget, GtkAllocation* allocation, PanedSta
 	return FALSE;
 }
 
-gboolean vpaned_allocate( GtkWidget* widget, GtkAllocation* allocation, PanedState* paned ){
+gboolean vpaned_allocate(ui::Widget widget, GtkAllocation* allocation, PanedState* paned ){
 	if ( paned->size != allocation->height ) {
 		paned->size = allocation->height;
 		gtk_paned_set_position( GTK_PANED( widget ), static_cast<int>( paned->size * paned->position ) );
@@ -50,7 +50,7 @@ gboolean vpaned_allocate( GtkWidget* widget, GtkAllocation* allocation, PanedSta
 	return FALSE;
 }
 
-gboolean paned_position( GtkWidget* widget, gpointer dummy, PanedState* paned ){
+gboolean paned_position(ui::Widget widget, gpointer dummy, PanedState* paned ){
 	if ( paned->size != -1 ) {
 		paned->position = gtk_paned_get_position( GTK_PANED( widget ) ) / static_cast<float>( paned->size );
 	}

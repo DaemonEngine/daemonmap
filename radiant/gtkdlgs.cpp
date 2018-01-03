@@ -353,13 +353,13 @@ void DoProjectSettings(){
 
 void DoSides( int type, int axis ){
 	ModalDialog dialog;
-	GtkEntry* sides_entry;
 
 	auto window = MainFrame_getWindow().create_dialog_window("Arbitrary sides", G_CALLBACK(dialog_delete_callback ), &dialog );
 
 	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
 
+	auto sides_entry = ui::Entry(ui::New);
 	{
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
@@ -369,10 +369,9 @@ void DoSides( int type, int axis ){
 			hbox.pack_start( label, FALSE, FALSE, 0 );
 		}
 		{
-			auto entry = ui::Entry(ui::New);
+			auto entry = sides_entry;
 			entry.show();
 			hbox.pack_start( entry, FALSE, FALSE, 0 );
-			sides_entry = entry;
 			gtk_widget_grab_focus( entry  );
 		}
 		{
@@ -883,7 +882,6 @@ EMessageBoxReturn DoLightIntensityDlg( int *intensity ){
 
 EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 	ModalDialog dialog;
-	GtkEntry* textentry;
 	ModalDialogButton ok_button( dialog, eIDOK );
 	ModalDialogButton cancel_button( dialog, eIDCANCEL );
 
@@ -892,6 +890,7 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 	auto accel_group = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel_group );
 
+	auto textentry = ui::Entry(ui::New);
 	{
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
@@ -905,13 +904,11 @@ EMessageBoxReturn DoShaderTagDlg( CopiedString* tag, const char* title ){
 				vbox.pack_start( label, FALSE, FALSE, 0 );
 			}
 			{
-				auto entry = ui::Entry(ui::New);
+				auto entry = textentry;
 				entry.show();
 				vbox.pack_start( entry, TRUE, TRUE, 0 );
 
 				gtk_widget_grab_focus( entry  );
-
-				textentry = entry;
 			}
 		}
 		{

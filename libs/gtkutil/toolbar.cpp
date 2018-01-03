@@ -38,14 +38,14 @@ void toolbar_append( ui::Toolbar toolbar, ui::ToolItem button, const char* descr
 }
 
 ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* description, const char* icon, const Callback<void()>& callback ){
-	auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_tool_button_new(new_local_image(icon), nullptr)));
+	auto button = ui::ToolButton::from(gtk_tool_button_new(new_local_image(icon), nullptr));
 	button_connect_callback(button, callback);
 	toolbar_append(toolbar, button, description);
 	return button;
 }
 
 ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const Callback<void()>& callback ){
-	auto button = ui::ToggleToolButton(GTK_TOGGLE_TOOL_BUTTON(gtk_toggle_tool_button_new()));
+	auto button = ui::ToggleToolButton::from(gtk_toggle_tool_button_new());
 	toggle_button_connect_callback(button, callback);
 	gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(button), new_local_image(icon));
 	gtk_tool_button_set_label(GTK_TOOL_BUTTON(button), description);
@@ -57,14 +57,13 @@ ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* descripti
 	return toolbar_append_button( toolbar, description, icon, command.m_callback );
 }
 
-void toggle_button_set_active_callback( GtkToggleToolButton& button, bool active ){
-	toggle_button_set_active_no_signal( ui::ToggleToolButton(&button), active );
+void toggle_button_set_active_callback(ui::ToggleToolButton& button, bool active ){
+	toggle_button_set_active_no_signal( button, active );
 }
-using ToggleButtonSetActiveCaller = ReferenceCaller<GtkToggleToolButton, void(bool), toggle_button_set_active_callback>;
+using ToggleButtonSetActiveCaller = ReferenceCaller<ui::ToggleToolButton, void(bool), toggle_button_set_active_callback>;
 
 ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const Toggle& toggle ){
 	auto button = toolbar_append_toggle_button( toolbar, description, icon, toggle.m_command.m_callback );
-	GtkToggleToolButton *button_ = button;
-	toggle.m_exportCallback( ToggleButtonSetActiveCaller( *button_ ) );
+	toggle.m_exportCallback( ToggleButtonSetActiveCaller( button ) );
 	return button;
 }

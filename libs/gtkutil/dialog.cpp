@@ -183,7 +183,7 @@ RadioHBox RadioHBox_new( StringArrayRange names ){
 	auto radio = ui::RadioButton(ui::null);
 	for ( StringArrayRange::Iterator i = names.first; i != names.last; ++i )
 	{
-		radio = ui::RadioButton(GTK_RADIO_BUTTON( gtk_radio_button_new_with_label( group, *i ) ));
+		radio = ui::RadioButton::from( gtk_radio_button_new_with_label( group, *i ) );
 		radio.show();
 		hbox.pack_start( radio, FALSE, FALSE, 0 );
 

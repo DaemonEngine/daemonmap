@@ -96,7 +96,7 @@ gboolean NonModalSpinner::escape(ui::SpinButton spin, GdkEventKey *event, NonMod
 
 void NonModalSpinner::connect(ui::SpinButton spin)
 {
-    auto adj = ui::Adjustment(gtk_spin_button_get_adjustment(spin));
+    auto adj = ui::Adjustment::from(gtk_spin_button_get_adjustment(spin));
     guint handler = adj.connect("value_changed", G_CALLBACK(changed), this);
     g_object_set_data(G_OBJECT(spin), "handler", gint_to_pointer(handler));
     spin.connect("key_press_event", G_CALLBACK(enter), this);
@@ -107,6 +107,6 @@ void NonModalRadio::connect(ui::RadioButton radio)
 {
     GSList *group = gtk_radio_button_get_group(radio);
     for (; group != 0; group = g_slist_next(group)) {
-        toggle_button_connect_callback(ui::ToggleButton(GTK_TOGGLE_BUTTON(group->data)), m_changed);
+        toggle_button_connect_callback(ui::ToggleButton::from(group->data), m_changed);
     }
 }

@@ -660,7 +660,7 @@ const ListAttributeType& m_type;
 public:
 ListAttribute( const char* key, const ListAttributeType& type ) :
 	m_key( key ),
-	m_combo( 0 ),
+	m_combo( ui::null ),
 	m_nonModal( ApplyCaller( *this ) ),
 	m_type( type ){
 	auto combo = ui::ComboBoxText(ui::New);
@@ -858,12 +858,12 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 	{
 		for ( int i = 0; i < g_spawnflag_count; ++i )
 		{
-			auto widget = ui::CheckButton(g_entitySpawnflagsCheck[i]);
-			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget))));
+			auto widget = ui::CheckButton::from(g_entitySpawnflagsCheck[i]);
+			auto label = ui::Label::from(gtk_bin_get_child(GTK_BIN(widget)));
 			label.text(" ");
 			widget.hide();
 			widget.ref();
-			ui::Container(GTK_CONTAINER(g_spawnflagsTable)).remove(widget);
+			g_spawnflagsTable.remove(widget);
 		}
 	}
 
@@ -872,7 +872,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 	{
 		for (unsigned int i = 0; (int) i < g_spawnflag_count; ++i)
 		{
-			auto widget = ui::CheckButton(g_entitySpawnflagsCheck[i] );
+			auto widget = ui::CheckButton::from(g_entitySpawnflagsCheck[i] );
 			widget.show();
 
 			StringOutputStream str( 16 );
@@ -881,7 +881,7 @@ void SurfaceFlags_setEntityClass( EntityClass* eclass ){
 			g_spawnflagsTable.attach(widget, {i % 4, i % 4 + 1, i / 4, i / 4 + 1}, {GTK_FILL, GTK_FILL});
 			widget.unref();
 
-			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(widget)) ));
+			auto label = ui::Label::from(gtk_bin_get_child(GTK_BIN(widget)) );
 			label.text(str.c_str());
 		}
 	}
@@ -987,14 +987,14 @@ void EntityInspector_updateSpawnflags(){
 		{
 			int v = !!( f & ( 1 << spawn_table[i] ) );
 
-			toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] )), v );
+			toggle_button_set_active_no_signal( ui::ToggleButton::from( g_entitySpawnflagsCheck[i] ), v );
 		}
 	}
 	{
 		// take care of the remaining ones
 		for ( int i = g_spawnflag_count; i < MAX_FLAGS; ++i )
 		{
-			toggle_button_set_active_no_signal( ui::ToggleButton(GTK_TOGGLE_BUTTON( g_entitySpawnflagsCheck[i] )), FALSE );
+			toggle_button_set_active_no_signal( ui::ToggleButton::from( g_entitySpawnflagsCheck[i] ), FALSE );
 		}
 	}
 }
@@ -1314,9 +1314,9 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 				gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 				{
-					ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
+					ui::ListStore store = ui::ListStore::from(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_POINTER ));
 
-					auto view = ui::TreeView( ui::TreeModel(store ));
+					auto view = ui::TreeView( ui::TreeModel::from( store._handle ));
 					gtk_tree_view_set_enable_search(view, FALSE );
 					gtk_tree_view_set_headers_visible( view, FALSE );
 					view.connect( "button_press_event", G_CALLBACK( EntityClassList_button_press ), 0 );
@@ -1329,7 +1329,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					}
 
 					{
-						auto selection = ui::TreeSelection(gtk_tree_view_get_selection( view ));
+						auto selection = ui::TreeSelection::from(gtk_tree_view_get_selection( view ));
 						selection.connect( "changed", G_CALLBACK( EntityClassList_selection_changed ), 0 );
 					}
 
@@ -1398,9 +1398,9 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 					gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 					{
-						ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
+						ui::ListStore store = ui::ListStore::from(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
-						auto view = ui::TreeView(ui::TreeModel(store ));
+						auto view = ui::TreeView(ui::TreeModel::from(store._handle));
 						gtk_tree_view_set_enable_search(view, FALSE );
 						gtk_tree_view_set_headers_visible(view, FALSE );
 
@@ -1417,7 +1417,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 						}
 
 						{
-							auto selection = ui::TreeSelection(gtk_tree_view_get_selection(view ));
+							auto selection = ui::TreeSelection::from(gtk_tree_view_get_selection(view));
 							selection.connect( "changed", G_CALLBACK( EntityProperties_selection_changed ), 0 );
 						}
 
@@ -1497,7 +1497,7 @@ ui::Widget EntityInspector_constructWindow( ui::Window toplevel ){
 				scr.show();
 				gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scr ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
 
-				auto viewport = ui::Container(GTK_CONTAINER(gtk_viewport_new( 0, 0 )));
+				auto viewport = ui::Container::from(gtk_viewport_new( 0, 0 ));
 				viewport.show();
 				gtk_viewport_set_shadow_type( GTK_VIEWPORT( viewport ), GTK_SHADOW_NONE );
 

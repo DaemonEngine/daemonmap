@@ -57,13 +57,13 @@ ui::Image new_plugin_image( const char* filename ){
 
 void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, const char* tooltip, IToolbarButton::EType type, GCallback handler, gpointer data ){
 	if (type == IToolbarButton::eSpace) {
-		auto it = ui::ToolItem(gtk_separator_tool_item_new());
+		auto it = ui::ToolItem::from(gtk_separator_tool_item_new());
 		it.show();
 		toolbar.add(it);
 		return;
 	}
 	if (type == IToolbarButton::eButton) {
-		auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_tool_button_new(new_plugin_image(icon), text)));
+		auto button = ui::ToolButton::from(gtk_tool_button_new(new_plugin_image(icon), text));
 		gtk_widget_set_tooltip_text(button, tooltip);
 		gtk_widget_show_all(button);
 		button.connect("clicked", G_CALLBACK(handler), data);
@@ -71,7 +71,7 @@ void toolbar_insert( ui::Toolbar toolbar, const char* icon, const char* text, co
 		return;
 	}
 	if (type == IToolbarButton::eToggleButton) {
-		auto button = ui::ToolButton(GTK_TOOL_BUTTON(gtk_toggle_tool_button_new()));
+		auto button = ui::ToolButton::from(gtk_toggle_tool_button_new());
 		gtk_tool_button_set_icon_widget(button, new_plugin_image(icon));
 		gtk_tool_button_set_label(button, text);
 		gtk_widget_set_tooltip_text(button, tooltip);
@@ -120,7 +120,7 @@ void PluginToolbar_clear(){
 
 ui::Toolbar create_plugin_toolbar(){
 
-	auto toolbar = ui::Toolbar(GTK_TOOLBAR( gtk_toolbar_new() ));
+	auto toolbar = ui::Toolbar::from( gtk_toolbar_new() );
 	gtk_orientable_set_orientation( GTK_ORIENTABLE(toolbar), GTK_ORIENTATION_HORIZONTAL );
 	gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS );
 	toolbar.show();

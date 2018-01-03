@@ -51,7 +51,7 @@ dlg_texReset_t dlgTexReset;
 
 void Update_TextureReseter();
 
-static void dialog_button_callback_texreset_update( GtkWidget *widget, gpointer data ){
+static void dialog_button_callback_texreset_update(ui::Widget widget, gpointer data ){
 	Update_TextureReseter();
 }
 
@@ -97,11 +97,11 @@ static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer
 	return TRUE;
 }
 
-static void dialog_button_callback_settex( GtkWidget *widget, gpointer data ){
+static void dialog_button_callback_settex(ui::Widget widget, gpointer data ){
 	TwinWidget* tw = (TwinWidget*)data;
 
-	GtkEntry* entry = GTK_ENTRY( tw->one );
-	auto* combo = GTK_BIN(tw->two);
+    auto entry = ui::Entry::from( tw->one );
+	auto combo = tw->two;
 
 	const gchar *tex = gtk_entry_get_text(GTK_ENTRY (gtk_bin_get_child(combo)));
 	gtk_entry_set_text( entry, tex );
@@ -227,7 +227,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	gtk_label_set_justify( GTK_LABEL( w ), GTK_JUSTIFY_LEFT );
 	w.show();
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 2 );
 	w.show();
 
@@ -332,15 +332,15 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 	// ---- vbox ----
 
 
-	auto radio1 = ui::Widget(gtk_radio_button_new_with_label( NULL, "Use Whole Map" ));
+	auto radio1 = ui::Widget::from(gtk_radio_button_new_with_label( NULL, "Use Whole Map" ));
 	vbox.pack_start( radio1, FALSE, FALSE, 2 );
 	radio1.show();
 
-	auto radio2 = ui::Widget(gtk_radio_button_new_with_label( gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio1)), "Use Selected Brushes" ));
+	auto radio2 = ui::Widget::from(gtk_radio_button_new_with_label( gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio1)), "Use Selected Brushes" ));
 	vbox.pack_start( radio2, FALSE, FALSE, 2 );
 	radio2.show();
 
-	auto hsep = ui::Widget(gtk_hseparator_new());
+	auto hsep = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( hsep, FALSE, FALSE, 2 );
 	hsep.show();
 
@@ -444,7 +444,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 	// ---- hbox2 ----
 
     auto text1 = ui::Entry( 256 );
-	gtk_entry_set_text( (GtkEntry*)text1, "3" );
+	gtk_entry_set_text( text1, "3" );
 	hbox2.pack_start( text1, FALSE, FALSE, 2 );
 	text1.show();
 
@@ -462,7 +462,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 	// ---- hbox2 ----
 
     auto text2 = ui::Entry( 256 );
-	gtk_entry_set_text( (GtkEntry*)text2, "8" );
+	gtk_entry_set_text( text2, "8" );
 	hbox2.pack_start( text2, FALSE, FALSE, 2 );
 	text2.show();
 
@@ -543,12 +543,12 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 			rs->bInverse = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(check2) ) ? true : false;
 			rs->bAlignTop = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(check3) ) ? true : false;
 
-			if ( !ValidateTextIntRange( gtk_entry_get_text( (GtkEntry*)text1 ), 3, 32, "Number Of Sides", &rs->nSides ) ) {
+			if ( !ValidateTextIntRange( gtk_entry_get_text( text1 ), 3, 32, "Number Of Sides", &rs->nSides ) ) {
 				dialogError = TRUE;
 			}
 
 			if ( rs->bUseBorder ) {
-				if ( !ValidateTextIntRange( gtk_entry_get_text( (GtkEntry*)text2 ), 8, 256, "Border Width", &rs->nBorderWidth ) ) {
+				if ( !ValidateTextIntRange( gtk_entry_get_text( text2 ), 8, 256, "Border Width", &rs->nBorderWidth ) ) {
 					dialogError = TRUE;
 				}
 			}
@@ -599,7 +599,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	hbox.pack_start( w, FALSE, FALSE, 0 ); // not entirely sure on all the parameters / what they do ...
 	w.show();
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
@@ -640,25 +640,25 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	// djbob: actually it looks very nice :), slightly better than the way i did it
 	// edit: actually it doesn't work :P, you must pass the last radio item each time, ugh
 
-    auto radioNorth = ui::Widget(gtk_radio_button_new_with_label( NULL, "North" ));
+    auto radioNorth = ui::Widget::from(gtk_radio_button_new_with_label( NULL, "North" ));
 	hbox.pack_start( radioNorth, FALSE, FALSE, 3 );
 	radioNorth.show();
 
 	radioDirection = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioNorth ) );
 
-    auto radioSouth = ui::Widget(gtk_radio_button_new_with_label( radioDirection, "South" ));
+    auto radioSouth = ui::Widget::from(gtk_radio_button_new_with_label( radioDirection, "South" ));
 	hbox.pack_start( radioSouth, FALSE, FALSE, 2 );
 	radioSouth.show();
 
 	radioDirection = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioSouth ) );
 
-    auto radioEast = ui::Widget(gtk_radio_button_new_with_label( radioDirection, "East" ));
+    auto radioEast = ui::Widget::from(gtk_radio_button_new_with_label( radioDirection, "East" ));
 	hbox.pack_start( radioEast, FALSE, FALSE, 1 );
 	radioEast.show();
 
 	radioDirection = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioEast ) );
 
-    auto radioWest = ui::Widget(gtk_radio_button_new_with_label( radioDirection, "West" ));
+    auto radioWest = ui::Widget::from(gtk_radio_button_new_with_label( radioDirection, "West" ));
 	hbox.pack_start( radioWest, FALSE, FALSE, 0 );
 	radioWest.show();
 
@@ -678,19 +678,19 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 	hbox.show();
 
-    auto radioOldStyle = ui::Widget(gtk_radio_button_new_with_label( NULL, "Original" ));
+    auto radioOldStyle = ui::Widget::from(gtk_radio_button_new_with_label( NULL, "Original" ));
 	hbox.pack_start( radioOldStyle, FALSE, FALSE, 0 );
 	radioOldStyle.show();
 
 	radioStyle = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioOldStyle ) );
 
-    auto radioBobStyle = ui::Widget(gtk_radio_button_new_with_label( radioStyle, "Bob's Style" ));
+    auto radioBobStyle = ui::Widget::from(gtk_radio_button_new_with_label( radioStyle, "Bob's Style" ));
 	hbox.pack_start( radioBobStyle, FALSE, FALSE, 0 );
 	radioBobStyle.show();
 
 	radioStyle = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioBobStyle ) );
 
-    auto radioCornerStyle = ui::Widget(gtk_radio_button_new_with_label( radioStyle, "Corner Style" ));
+    auto radioCornerStyle = ui::Widget::from(gtk_radio_button_new_with_label( radioStyle, "Corner Style" ));
 	hbox.pack_start( radioCornerStyle, FALSE, FALSE, 0 );
 	radioCornerStyle.show();
 
@@ -735,7 +735,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 	w.show();
 
 	// -------------------------- //
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
@@ -774,8 +774,8 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 		if ( ret == eIDOK ) {
 			rs->bUseDetail = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(checkUseDetail) ) ? true : false;
 
-			strcpy( rs->riserTexture, gtk_entry_get_text( (GtkEntry*)textRiserTex ) );
-			strcpy( rs->mainTexture, gtk_entry_get_text( (GtkEntry*)textMainTex ) );
+			strcpy( rs->riserTexture, gtk_entry_get_text( textRiserTex ) );
+			strcpy( rs->mainTexture, gtk_entry_get_text( textMainTex ) );
 
 			if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(radioNorth) ) ) {
 				rs->direction = MOVE_NORTH;
@@ -790,7 +790,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 				rs->direction = MOVE_WEST;
 			}
 
-			if ( !ValidateTextInt( gtk_entry_get_text( (GtkEntry*)textStairHeight ), "Stair Height", &rs->stairHeight ) ) {
+			if ( !ValidateTextInt( gtk_entry_get_text( textStairHeight ), "Stair Height", &rs->stairHeight ) ) {
 				dialogError = TRUE;
 			}
 
@@ -836,8 +836,8 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	gtk_widget_realize( window );
 
 	char buffer[256];
-	ui::ListStore listMainTextures = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
-	ui::ListStore listTrimTextures = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+	auto listMainTextures = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
+	auto listTrimTextures = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex.txt" ), listMainTextures );
 	LoadGList( GetFilename( buffer, "plugins/bt/door-tex-trim.txt" ), listTrimTextures );
 
@@ -915,7 +915,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 
 	// djbob: lists added
 
-	auto comboMain = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(listMainTextures)));
+	auto comboMain = ui::ComboBox::from(gtk_combo_box_new_with_model_and_entry(listMainTextures));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	hbox.pack_start( comboMain, FALSE, FALSE, 0 );
 	comboMain.show();
@@ -934,7 +934,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	vbox.pack_start( hbox, FALSE, FALSE, 0 );
 	hbox.show();
 
-	auto comboTrim = ui::ComboBox(GTK_COMBO_BOX(gtk_combo_box_new_with_model_and_entry(listTrimTextures)));
+	auto comboTrim = ui::ComboBox::from(gtk_combo_box_new_with_model_and_entry(listTrimTextures));
 	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(comboMain), 0);
 	hbox.pack_start( comboTrim, FALSE, FALSE, 0 );
 	comboTrim.show();
@@ -958,19 +958,19 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 	w.show();
 
 	// argh more radio buttons!
-    auto radioNS = ui::Widget(gtk_radio_button_new_with_label( NULL, "North - South" ));
+    auto radioNS = ui::Widget::from(gtk_radio_button_new_with_label( NULL, "North - South" ));
 	hbox.pack_start( radioNS, FALSE, FALSE, 0 );
 	radioNS.show();
 
 	radioOrientation = gtk_radio_button_get_group( GTK_RADIO_BUTTON( radioNS ) );
 
-    auto radioEW = ui::Widget(gtk_radio_button_new_with_label( radioOrientation, "East - West" ));
+    auto radioEW = ui::Widget::from(gtk_radio_button_new_with_label( radioOrientation, "East - West" ));
 	hbox.pack_start( radioEW, FALSE, FALSE, 0 );
 	radioEW.show();
 
 	// ----------------- //
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
@@ -1111,7 +1111,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ---- /hbox ----
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
@@ -1128,7 +1128,7 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
 
 	// ----------------- //
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
@@ -1832,7 +1832,7 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 	hbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 
-	w = ui::Widget(gtk_hseparator_new());
+	w = ui::Widget::from(gtk_hseparator_new());
 	vbox.pack_start( w, FALSE, FALSE, 0 );
 	w.show();
 

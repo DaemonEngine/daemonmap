@@ -120,8 +120,8 @@ void MRU_AddFile( const char *str ){
 		MRU_SetText( i, MRU_GetText( i - 1 ) );
 
 	MRU_SetText( 0, str );
-	gtk_widget_set_sensitive( ui::MenuItem(MRU_items[0]) , TRUE );
-	ui::MenuItem(MRU_items[MRU_used - 1] ).show();
+	gtk_widget_set_sensitive( ui::MenuItem::from(MRU_items[0]) , TRUE );
+	ui::MenuItem::from(MRU_items[MRU_used - 1] ).show();
 }
 
 void MRU_Init(){
@@ -135,8 +135,8 @@ void MRU_AddWidget( ui::MenuItem widget, std::size_t pos ){
 		MRU_items[pos] = widget;
 		if ( pos < MRU_used ) {
 			MRU_updateWidget( pos, MRU_GetText( pos ) );
-			gtk_widget_set_sensitive( ui::MenuItem(MRU_items[0]) , TRUE );
-			ui::MenuItem(MRU_items[pos]).show();
+			gtk_widget_set_sensitive( ui::MenuItem::from(MRU_items[0]) , TRUE );
+			ui::MenuItem::from(MRU_items[pos]).show();
 		}
 	}
 }
@@ -159,13 +159,13 @@ void MRU_Activate( std::size_t index ){
 			MRU_SetText( i, MRU_GetText( i + 1 ) );
 
 		if ( MRU_used == 0 ) {
-			auto label = ui::Label(GTK_LABEL(gtk_bin_get_child(GTK_BIN(MRU_items[0] )) ));
+			auto label = ui::Label::from(gtk_bin_get_child(GTK_BIN(MRU_items[0] )) );
 			label.text("Recent Files");
-			gtk_widget_set_sensitive( ui::MenuItem(MRU_items[0]), FALSE );
+			gtk_widget_set_sensitive( ui::MenuItem::from(MRU_items[0]), FALSE );
 		}
 		else
 		{
-			ui::MenuItem(MRU_items[MRU_used]).hide();
+			ui::MenuItem::from(MRU_items[MRU_used]).hide();
 		}
 	}
 }

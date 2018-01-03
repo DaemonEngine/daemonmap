@@ -186,8 +186,8 @@ bool global_accel_enabled(){
 }
 
 
-GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback<void()>& callback );
-void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerator );
+GClosure* accel_group_add_accelerator(ui::AccelGroup group, Accelerator accelerator, const Callback<void()>& callback );
+void accel_group_remove_accelerator(ui::AccelGroup group, Accelerator accelerator );
 
 AcceleratorMap g_queuedAcceleratorsAdd;
 AcceleratorSet g_queuedAcceleratorsRemove;
@@ -284,21 +284,21 @@ struct PressedButtons
 	}
 };
 
-gboolean PressedButtons_button_press( GtkWidget* widget, GdkEventButton* event, PressedButtons* pressed ){
+gboolean PressedButtons_button_press(ui::Widget widget, GdkEventButton* event, PressedButtons* pressed ){
 	if ( event->type == GDK_BUTTON_PRESS ) {
 		return Buttons_press( pressed->buttons, event->button, event->state );
 	}
 	return FALSE;
 }
 
-gboolean PressedButtons_button_release( GtkWidget* widget, GdkEventButton* event, PressedButtons* pressed ){
+gboolean PressedButtons_button_release(ui::Widget widget, GdkEventButton* event, PressedButtons* pressed ){
 	if ( event->type == GDK_BUTTON_RELEASE ) {
 		return Buttons_release( pressed->buttons, event->button, event->state );
 	}
 	return FALSE;
 }
 
-gboolean PressedButtons_focus_out( GtkWidget* widget, GdkEventFocus* event, PressedButtons* pressed ){
+gboolean PressedButtons_focus_out(ui::Widget widget, GdkEventFocus* event, PressedButtons* pressed ){
 	Buttons_releaseAll( pressed->buttons );
 	return FALSE;
 }
@@ -350,22 +350,22 @@ void Keys_releaseAll( PressedKeys::Keys& keys, guint state ){
 	keys.clear();
 }
 
-gboolean PressedKeys_key_press( GtkWidget* widget, GdkEventKey* event, PressedKeys* pressedKeys ){
+gboolean PressedKeys_key_press(ui::Widget widget, GdkEventKey* event, PressedKeys* pressedKeys ){
 	//globalOutputStream() << "pressed: " << event->keyval << "\n";
 	return event->state == 0 && Keys_press( pressedKeys->keys, event->keyval );
 }
 
-gboolean PressedKeys_key_release( GtkWidget* widget, GdkEventKey* event, PressedKeys* pressedKeys ){
+gboolean PressedKeys_key_release(ui::Widget widget, GdkEventKey* event, PressedKeys* pressedKeys ){
 	//globalOutputStream() << "released: " << event->keyval << "\n";
 	return Keys_release( pressedKeys->keys, event->keyval );
 }
 
-gboolean PressedKeys_focus_in( GtkWidget* widget, GdkEventFocus* event, PressedKeys* pressedKeys ){
+gboolean PressedKeys_focus_in(ui::Widget widget, GdkEventFocus* event, PressedKeys* pressedKeys ){
 	++pressedKeys->refcount;
 	return FALSE;
 }
 
-gboolean PressedKeys_focus_out( GtkWidget* widget, GdkEventFocus* event, PressedKeys* pressedKeys ){
+gboolean PressedKeys_focus_out(ui::Widget widget, GdkEventFocus* event, PressedKeys* pressedKeys ){
 	if ( --pressedKeys->refcount == 0 ) {
 		Keys_releaseAll( pressedKeys->keys, 0 );
 	}
@@ -438,12 +438,12 @@ void keyup_accelerators_remove( Accelerator accelerator ){
 }
 
 
-gboolean accel_closure_callback( GtkAccelGroup* group, GtkWidget* widget, guint key, GdkModifierType modifiers, gpointer data ){
+gboolean accel_closure_callback(ui::AccelGroup group, ui::Widget widget, guint key, GdkModifierType modifiers, gpointer data ){
 	( *reinterpret_cast<Callback<void()>*>( data ) )( );
 	return TRUE;
 }
 
-GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator accelerator, const Callback<void()>& callback ){
+GClosure* accel_group_add_accelerator(ui::AccelGroup group, Accelerator accelerator, const Callback<void()>& callback ){
 	if ( accelerator.key != 0 && gtk_accelerator_valid( accelerator.key, accelerator.modifiers ) ) {
 		//globalOutputStream() << "global_accel_connect: " << makeQuoted(accelerator) << "\n";
 		GClosure* closure = create_cclosure( G_CALLBACK( accel_closure_callback ), callback );
@@ -457,7 +457,7 @@ GClosure* accel_group_add_accelerator( GtkAccelGroup* group, Accelerator acceler
 	}
 }
 
-void accel_group_remove_accelerator( GtkAccelGroup* group, Accelerator accelerator ){
+void accel_group_remove_accelerator(ui::AccelGroup group, Accelerator accelerator ){
 	if ( accelerator.key != 0 && gtk_accelerator_valid( accelerator.key, accelerator.modifiers ) ) {
 		//globalOutputStream() << "global_accel_disconnect: " << makeQuoted(accelerator) << "\n";
 		gtk_accel_group_disconnect_key( group, accelerator.key, accelerator.modifiers );

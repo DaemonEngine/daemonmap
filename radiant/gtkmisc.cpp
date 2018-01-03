@@ -106,8 +106,8 @@ bool color_dialog( ui::Window parent, Vector3& color, const char* title ){
 	dlg.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), &dialog );
 	GtkWidget *ok_button, *cancel_button;
 	g_object_get(G_OBJECT(dlg), "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
-	ui::Widget(ok_button).connect( "clicked", G_CALLBACK( dialog_button_ok ), &dialog );
-	ui::Widget(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_cancel ), &dialog );
+	ui::Widget::from(ok_button).connect( "clicked", G_CALLBACK( dialog_button_ok ), &dialog );
+	ui::Widget::from(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_cancel ), &dialog );
 
 	if ( parent ) {
 		gtk_window_set_transient_for( dlg, parent );

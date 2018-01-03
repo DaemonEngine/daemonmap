@@ -39,7 +39,7 @@ namespace ui {
     Widget root{ui::null};
 
 #define IMPL(T, F) template<> _IMPL(T, F)
-#define _IMPL(T, F) struct verify<T *> { using self = T; static self test(self it) { return self(F(it)); } }
+#define _IMPL(T, F) struct verify<T *> { using self = T; static self test(self it) { return self::from(F(it)); } }
 
     template<class T>
     struct verify;
@@ -196,7 +196,7 @@ namespace ui {
             delete data;
         };
         auto func = [](_GtkWidget *widget, GdkEventKey *event, user_data *args) -> bool {
-            return args->f(Widget(widget), event, args->extra);
+            return args->f(Widget::from(widget), event, args->extra);
         };
         auto clos = g_cclosure_new(G_CALLBACK(+func), pass, reinterpret_cast<GClosureNotify>(+dtor));
         return g_signal_connect_closure(G_OBJECT(this), "key-press-event", clos, false);
@@ -447,6 +447,16 @@ namespace ui {
     {}
 
     // Custom
+
+#if GTK_TARGET == 3
+
+    IMPL(GLArea, (void *));
+
+#elif GTK_TARGET == 2
+
+    IMPL(GLArea, GTK_DRAWING_AREA);
+
+#endif
 
     guint IGLArea::on_render(GCallback pFunction, void *data)
     {

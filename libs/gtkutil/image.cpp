@@ -53,18 +53,18 @@ GdkPixbuf* pixbuf_new_from_file_with_mask( const char* filename ){
 ui::Image image_new_from_file_with_mask( const char* filename ){
 	GdkPixbuf* rgba = pixbuf_new_from_file_with_mask( filename );
 	if ( rgba == 0 ) {
-		return ui::Image(0);
+		return ui::Image(ui::null);
 	}
 	else
 	{
-		auto image = ui::Image(GTK_IMAGE( gtk_image_new_from_pixbuf( rgba ) ));
+		auto image = ui::Image::from( gtk_image_new_from_pixbuf( rgba ) );
 		g_object_unref( rgba );
 		return image;
 	}
 }
 
 ui::Image image_new_missing(){
-	return ui::Image(GTK_IMAGE( gtk_image_new_from_stock( GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_SMALL_TOOLBAR ) ));
+	return ui::Image::from( gtk_image_new_from_stock( GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_SMALL_TOOLBAR ) );
 }
 
 ui::Image new_image( const char* filename ){

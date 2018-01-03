@@ -27,14 +27,14 @@ template<class StringList>
 void EntryCompletion<StringList>::connect(ui::Entry entry)
 {
     if (!m_store) {
-        m_store = ui::ListStore(gtk_list_store_new(1, G_TYPE_STRING));
+        m_store = ui::ListStore::from(gtk_list_store_new(1, G_TYPE_STRING));
 
         fill();
 
         StringList().connect(IdleDraw::QueueDrawCaller(m_idleUpdate));
     }
 
-    auto completion = ui::EntryCompletion(gtk_entry_completion_new());
+    auto completion = ui::EntryCompletion::from(gtk_entry_completion_new());
     gtk_entry_set_completion(entry, completion);
     gtk_entry_completion_set_model(completion, m_store);
     gtk_entry_completion_set_text_column(completion, 0);

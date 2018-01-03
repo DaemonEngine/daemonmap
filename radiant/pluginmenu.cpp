@@ -65,7 +65,7 @@ void PlugInMenu_Add( ui::Menu plugin_menu, IPlugIn* pPlugIn ){
 
 			if ( menuText != 0 && strlen( menuText ) > 0 ) {
 				if ( !strcmp( menuText, "-" ) ) {
-					item = ui::Widget(gtk_menu_item_new());
+					item = ui::Widget::from(gtk_menu_item_new());
 					gtk_widget_set_sensitive( item, FALSE );
 				}
 				else if ( !strcmp( menuText, ">" ) ) {
@@ -157,7 +157,7 @@ void PluginsMenu_clear(){
 ui::MenuItem create_plugins_menu(){
 	// Plugins menu
 	auto plugins_menu_item = new_sub_menu_item_with_mnemonic( "_Plugins" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( plugins_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( plugins_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}

@@ -298,9 +298,9 @@ ui::Window CDbgDlg::BuildDialog(){
 	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scr ), GTK_SHADOW_IN );
 
 	{
-		ui::ListStore store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+		ui::ListStore store = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-		auto view = ui::TreeView(ui::TreeModel(store ));
+		auto view = ui::TreeView(ui::TreeModel::from(store._handle));
 		gtk_tree_view_set_headers_visible(view, FALSE );
 
 		{
@@ -310,7 +310,7 @@ ui::Window CDbgDlg::BuildDialog(){
 		}
 
 		{
-			auto selection = ui::TreeSelection(gtk_tree_view_get_selection(view ));
+			auto selection = ui::TreeSelection::from(gtk_tree_view_get_selection(view ));
 			gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 			selection.connect( "changed", G_CALLBACK( feedback_selection_changed ), NULL );
 		}

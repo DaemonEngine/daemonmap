@@ -51,8 +51,8 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 	// collapse mode
 	collapsemode mode = COLLAPSE_NONE;
 
-	GtkWidget* radio = lookup_widget( button , "r_collapse" );
-	ASSERT_NOTNULL( radio );
+	auto radio = lookup_widget( button , "r_collapse" );
+	ASSERT_TRUE( radio );
 
 	if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( radio ) ) ) {
 		mode = COLLAPSE_ALL;
@@ -60,22 +60,22 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 	else
 	{
 		radio = lookup_widget( button , "r_collapsebymaterial" );
-		ASSERT_NOTNULL( radio );
+		ASSERT_TRUE( radio );
 		if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( radio ) ) ) {
 			mode = COLLAPSE_BY_MATERIAL;
 		}
 		else
 		{
 			radio = lookup_widget( button , "r_nocollapse" );
-			ASSERT_NOTNULL( radio );
+			ASSERT_TRUE( radio );
 			ASSERT_TRUE( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( radio ) ) );
 			mode = COLLAPSE_NONE;
 		}
 	}
 
 	// export materials?
-	GtkWidget* toggle = lookup_widget( button , "t_exportmaterials" );
-	ASSERT_NOTNULL( toggle );
+	auto toggle = lookup_widget( button , "t_exportmaterials" );
+	ASSERT_TRUE( toggle );
 
 	bool exportmat = FALSE;
 
@@ -85,7 +85,7 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 
 	// limit material names?
 	toggle = lookup_widget( button , "t_limitmatnames" );
-	ASSERT_NOTNULL( toggle );
+	ASSERT_TRUE( toggle );
 
 	bool limitMatNames = FALSE;
 
@@ -95,7 +95,7 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 
 	// create objects instead of groups?
 	toggle = lookup_widget( button , "t_objects" );
-	ASSERT_NOTNULL( toggle );
+	ASSERT_TRUE( toggle );
 
 	bool objects = FALSE;
 
@@ -108,8 +108,8 @@ void OnExportClicked( ui::Button button, gpointer user_data ){
 }
 
 void OnAddMaterial( ui::Button button, gpointer user_data ){
-	GtkEntry* edit = GTK_ENTRY( lookup_widget( button , "ed_materialname" ) );
-	ASSERT_NOTNULL( edit );
+    auto edit = ui::Entry::from( lookup_widget( button , "ed_materialname" ) );
+	ASSERT_TRUE( edit );
 
 	const gchar* name = gtk_entry_get_text( edit );
 	if ( g_utf8_strlen( name, -1 ) > 0 ) {
@@ -120,9 +120,9 @@ void OnAddMaterial( ui::Button button, gpointer user_data ){
 }
 
 void OnRemoveMaterial( ui::Button button, gpointer user_data ){
-	GtkTreeView* view = ui::TreeView::from(lookup_widget(button, "t_materialist"));
+	ui::TreeView view = ui::TreeView::from(lookup_widget(button, "t_materialist"));
 	ui::ListStore list = ui::ListStore::from( gtk_tree_view_get_model( view ) );
-	GtkTreeSelection* sel = gtk_tree_view_get_selection( view );
+	auto sel = ui::TreeSelection::from(gtk_tree_view_get_selection( view ));
 
 	GtkTreeIter iter;
 	if ( gtk_tree_selection_get_selected( sel, 0, &iter ) ) {
@@ -131,8 +131,8 @@ void OnRemoveMaterial( ui::Button button, gpointer user_data ){
 }
 
 void OnExportMatClicked( ui::Button button, gpointer user_data ){
-	GtkWidget* toggleLimit = lookup_widget( button , "t_limitmatnames" );
-	GtkWidget* toggleObject = lookup_widget( button , "t_objects" );
+	ui::Widget toggleLimit = lookup_widget( button , "t_limitmatnames" );
+	ui::Widget toggleObject = lookup_widget( button , "t_objects" );
 
 	if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ) ) ) {
 		gtk_widget_set_sensitive( toggleLimit , TRUE );

@@ -264,13 +264,13 @@ void AddDataCustom(DialogDataList &self, typename Widget::Type widget, Property<
     struct Wrapper {
         static void Export(const native &self, const Callback<void(T)> &returnz) {
 			native *p = &const_cast<native &>(self);
-			auto widget = Self(p);
+			auto widget = Self::from(p);
 			Widget::Get::thunk_(widget, returnz);
         }
 
         static void Import(native &self, T value) {
 			native *p = &self;
-			auto widget = Self(p);
+			auto widget = Self::from(p);
 			Widget::Set::thunk_(widget, value);
         }
     };
@@ -288,7 +288,7 @@ void AddData(DialogDataList &self, typename Widget::Type widget, D &data) {
 // =============================================================================
 // Dialog class
 
-Dialog::Dialog() : m_window( 0 ), m_parent( 0 ){
+Dialog::Dialog() : m_window( ui::null ), m_parent( ui::null ){
 }
 
 Dialog::~Dialog(){
@@ -553,7 +553,7 @@ void Dialog::addRadioIcons( ui::VBox vbox, const char* name, StringArrayRange ic
 		image.show();
         table.attach(image, {pos, pos + 1, 0, 1}, {0, 0});
 
-		radio = ui::RadioButton(GTK_RADIO_BUTTON(gtk_radio_button_new( group )));
+		radio = ui::RadioButton::from(gtk_radio_button_new( group ));
 		radio.show();
         table.attach(radio, {pos, pos + 1, 1, 2}, {0, 0});
 

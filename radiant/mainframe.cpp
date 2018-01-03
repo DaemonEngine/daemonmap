@@ -889,7 +889,7 @@ ColoursMenu g_ColoursMenu;
 
 ui::MenuItem create_colours_menu(){
 	auto colours_menu_item = new_sub_menu_item_with_mnemonic( "Colors" );
-	auto menu_in_menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( colours_menu_item ) ));
+	auto menu_in_menu = ui::Menu::from( gtk_menu_item_get_submenu( colours_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu_in_menu );
 	}
@@ -1782,7 +1782,7 @@ LatchedValue<bool> g_Layout_enablePluginToolbar( true, "Plugin Toolbar" );
 ui::MenuItem create_file_menu(){
 	// File menu
 	auto file_menu_item = new_sub_menu_item_with_mnemonic( "_File" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( file_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( file_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -1822,7 +1822,7 @@ ui::MenuItem create_file_menu(){
 ui::MenuItem create_edit_menu(){
 	// Edit menu
 	auto edit_menu_item = new_sub_menu_item_with_mnemonic( "_Edit" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( edit_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( edit_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -1879,7 +1879,7 @@ ui::Widget g_toggle_entitylist_item{ui::null};
 ui::MenuItem create_view_menu( MainFrame::EViewStyle style ){
 	// View menu
 	auto view_menu_item = new_sub_menu_item_with_mnemonic( "Vie_w" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( view_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( view_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -1993,7 +1993,7 @@ ui::MenuItem create_view_menu( MainFrame::EViewStyle style ){
 ui::MenuItem create_selection_menu(){
 	// Selection menu
 	auto selection_menu_item = new_sub_menu_item_with_mnemonic( "M_odify" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( selection_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( selection_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2048,7 +2048,7 @@ ui::MenuItem create_selection_menu(){
 ui::MenuItem create_bsp_menu(){
 	// BSP menu
 	auto bsp_menu_item = new_sub_menu_item_with_mnemonic( "_Build" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( bsp_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( bsp_menu_item ) );
 
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
@@ -2068,7 +2068,7 @@ ui::MenuItem create_bsp_menu(){
 ui::MenuItem create_grid_menu(){
 	// Grid menu
 	auto grid_menu_item = new_sub_menu_item_with_mnemonic( "_Grid" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( grid_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( grid_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2081,7 +2081,7 @@ ui::MenuItem create_grid_menu(){
 ui::MenuItem create_misc_menu(){
 	// Misc menu
 	auto misc_menu_item = new_sub_menu_item_with_mnemonic( "M_isc" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( misc_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( misc_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2102,7 +2102,7 @@ ui::MenuItem create_misc_menu(){
 ui::MenuItem create_entity_menu(){
 	// Brush menu
 	auto entity_menu_item = new_sub_menu_item_with_mnemonic( "E_ntity" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( entity_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( entity_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2115,7 +2115,7 @@ ui::MenuItem create_entity_menu(){
 ui::MenuItem create_brush_menu(){
 	// Brush menu
 	auto brush_menu_item = new_sub_menu_item_with_mnemonic( "B_rush" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( brush_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( brush_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2128,7 +2128,7 @@ ui::MenuItem create_brush_menu(){
 ui::MenuItem create_patch_menu(){
 	// Curve menu
 	auto patch_menu_item = new_sub_menu_item_with_mnemonic( "_Curve" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( patch_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( patch_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2141,7 +2141,7 @@ ui::MenuItem create_patch_menu(){
 ui::MenuItem create_help_menu(){
 	// Help menu
 	auto help_menu_item = new_sub_menu_item_with_mnemonic( "_Help" );
-	auto menu = ui::Menu(GTK_MENU( gtk_menu_item_get_submenu( help_menu_item ) ));
+	auto menu = ui::Menu::from( gtk_menu_item_get_submenu( help_menu_item ) );
 	if ( g_Layout_enableDetachableMenus.m_value ) {
 		menu_tearoff( menu );
 	}
@@ -2160,7 +2160,7 @@ ui::MenuItem create_help_menu(){
 }
 
 ui::MenuBar create_main_menu( MainFrame::EViewStyle style ){
-	auto menu_bar = ui::MenuBar(GTK_MENU_BAR( gtk_menu_bar_new() ));
+	auto menu_bar = ui::MenuBar::from( gtk_menu_bar_new() );
 	menu_bar.show();
 
 	menu_bar.add(create_file_menu());
@@ -2307,14 +2307,14 @@ void Manipulators_constructToolbar( ui::Toolbar toolbar ){
 }
 
 ui::Toolbar create_main_toolbar( MainFrame::EViewStyle style ){
-	auto toolbar = ui::Toolbar(GTK_TOOLBAR( gtk_toolbar_new() ));
+	auto toolbar = ui::Toolbar::from( gtk_toolbar_new() );
 	gtk_orientable_set_orientation( GTK_ORIENTABLE(toolbar), GTK_ORIENTATION_HORIZONTAL );
 	gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS );
 
 	toolbar.show();
 
 	auto space = [&]() {
-		auto btn = ui::ToolItem(gtk_separator_tool_item_new());
+		auto btn = ui::ToolItem::from(gtk_separator_tool_item_new());
 		btn.show();
 		toolbar.add(btn);
 	};

@@ -38,8 +38,8 @@ typedef Vector3 Colour3;
 
 class ListAttributeType
 {
-typedef std::pair<CopiedString, CopiedString> ListItem;
-typedef std::vector<ListItem> ListItems;
+using ListItem = std::pair<CopiedString, CopiedString>;
+using ListItems = std::vector<ListItem>;
 ListItems m_items;
 public:
 

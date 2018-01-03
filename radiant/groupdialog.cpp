@@ -87,7 +87,7 @@ static gboolean switch_page( GtkNotebook *notebook, gpointer page, guint page_nu
 	return FALSE;
 }
 
-GroupDlg::GroupDlg() : m_window( 0 ){
+GroupDlg::GroupDlg() : m_window( ui::null ){
 	m_position_tracker.setPosition( c_default_window_pos );
 }
 
@@ -112,7 +112,7 @@ void GroupDlg::Create( ui::Window parent ){
 	m_position_tracker.connect( window );
 
 	{
-		ui::Widget notebook = ui::Widget(gtk_notebook_new());
+		ui::Widget notebook = ui::Widget::from(gtk_notebook_new());
 		notebook.show();
 		window.add(notebook);
 		gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), GTK_POS_BOTTOM );
@@ -126,7 +126,7 @@ void GroupDlg::Create( ui::Window parent ){
 ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const Callback<void(const Callback<void(const char *)> &)>& title ){
 	ui::Widget w = ui::Label( tabLabel );
 	w.show();
-	ui::Widget page = ui::Widget(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gtk_notebook_insert_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), widget, w, -1 ) ));
+	auto page = ui::Widget::from(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gtk_notebook_insert_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), widget, w, -1 ) ));
 	g_pages.push_back( title );
 
 	return page;
@@ -161,7 +161,7 @@ void GroupDialog_show(){
 }
 
 ui::Widget GroupDialog_getPage(){
-	return ui::Widget(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) ));
+	return ui::Widget::from(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) ));
 }
 
 void GroupDialog_setPage( ui::Widget page ){

@@ -122,7 +122,7 @@ float& m_f;
 public:
 ui::SpinButton m_spin;
 ui::Entry m_entry;
-Increment( float& f ) : m_f( f ), m_spin( 0 ), m_entry( ui::null ){
+Increment( float& f ) : m_f( f ), m_spin( ui::null ), m_entry( ui::null ){
 }
 void cancel(){
 	entry_set_float( m_entry, m_f );
@@ -933,7 +933,7 @@ ui::Window SurfaceInspector::BuildDialog(){
 						}
 
 						// not allowed to modify detail flag using Surface Inspector
-						gtk_widget_set_sensitive( ui::CheckButton(m_contentFlags[BRUSH_DETAIL_FLAG]), FALSE );
+						gtk_widget_set_sensitive( ui::CheckButton::from(m_contentFlags[BRUSH_DETAIL_FLAG]), FALSE );
 					}
 				}
 			}
@@ -1098,12 +1098,12 @@ void SurfaceInspector::Update(){
 
 		for ( GtkCheckButton** p = m_surfaceFlags; p != m_surfaceFlags + 32; ++p )
 		{
-			toggle_button_set_active_no_signal( ui::CheckButton( *p ), flags.m_surfaceFlags & ( 1 << ( p - m_surfaceFlags ) ) );
+			toggle_button_set_active_no_signal( ui::CheckButton::from( *p ), flags.m_surfaceFlags & ( 1 << ( p - m_surfaceFlags ) ) );
 		}
 
 		for ( GtkCheckButton** p = m_contentFlags; p != m_contentFlags + 32; ++p )
 		{
-			toggle_button_set_active_no_signal( ui::CheckButton( *p ), flags.m_contentFlags & ( 1 << ( p - m_contentFlags ) ) );
+			toggle_button_set_active_no_signal( ui::CheckButton::from( *p ), flags.m_contentFlags & ( 1 << ( p - m_contentFlags ) ) );
 		}
 	}
 }

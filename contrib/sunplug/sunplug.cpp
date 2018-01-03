@@ -73,7 +73,7 @@ char* itoa( int value, char* result, int base ){
 #endif
 
 typedef struct _mapcoord_setting_packet {
-	GtkSpinButton *spinner1, *spinner2, *spinner3, *spinner4;
+    ui::SpinButton spinner1{ui::null}, spinner2{ui::null}, spinner3{ui::null}, spinner4{ui::null};
 	Entity* worldspawn;
 } mapcoord_setting_packet;
 
@@ -114,7 +114,7 @@ Entity* Scene_FindEntityByClass( const char* name ){
 // ** GTK callback functions **
 //  **************************
 
-static gboolean delete_event( GtkWidget *widget, GdkEvent *event, gpointer data ){
+static gboolean delete_event(ui::Widget widget, GdkEvent *event, gpointer data ){
 	/* If you return FALSE in the "delete_event" signal handler,
 	 * GTK will emit the "destroy" signal. Returning TRUE means
 	 * you don't want the window to be destroyed.
@@ -135,7 +135,7 @@ static void close_window( ui::Widget widget, gpointer data ){
 }
 
 // callback function to assign the optimal mapcoords to the spinboxes
-static void input_optimal( GtkWidget *widget, gpointer data ){
+static void input_optimal(ui::Widget widget, gpointer data ){
 	gtk_spin_button_set_value( msp.spinner1, minX );
 	gtk_spin_button_set_value( msp.spinner2, maxY );
 	gtk_spin_button_set_value( msp.spinner3, maxX );
@@ -143,7 +143,7 @@ static void input_optimal( GtkWidget *widget, gpointer data ){
 }
 
 // Spinner return value function
-gint grab_int_value( GtkSpinButton *a_spinner, gpointer user_data ) {
+gint grab_int_value(ui::SpinButton a_spinner, gpointer user_data ) {
 	return gtk_spin_button_get_value_as_int( a_spinner );
 }
 
@@ -372,7 +372,7 @@ void MapCoordinator(){
 		button.connect( "clicked", G_CALLBACK( input_optimal ), NULL ); // connect button with callback function
 		vbox.pack_start( button, FALSE, FALSE, 2 ); // insert button into vbox
 
-		vbox.pack_start( ui::Widget(gtk_hseparator_new()), FALSE, FALSE, 2 ); // insert separator into vbox
+		vbox.pack_start( ui::Widget::from(gtk_hseparator_new()), FALSE, FALSE, 2 ); // insert separator into vbox
 
 		auto table = ui::Table( 4, 3, TRUE ); // create table
         gtk_table_set_row_spacings(table, 8); // set row spacings

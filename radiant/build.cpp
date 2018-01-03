@@ -657,7 +657,7 @@ ProjectList( Project& project ) : m_project( project ), m_changed( false ){
 }
 };
 
-gboolean project_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ProjectList* projectList ){
+gboolean project_cell_edited(ui::CellRendererText cell, gchar* path_string, gchar* new_text, ProjectList* projectList ){
 	Project& project = projectList->m_project;
 
 	auto path = ui::TreePath( path_string );
@@ -699,7 +699,7 @@ gboolean project_key_press( ui::TreeView widget, GdkEventKey* event, ProjectList
 	Project& project = projectList->m_project;
 
 	if ( event->keyval == GDK_KEY_Delete ) {
-		auto selection = ui::TreeSelection(gtk_tree_view_get_selection(widget));
+		auto selection = ui::TreeSelection::from(gtk_tree_view_get_selection(widget));
 		GtkTreeIter iter;
 		GtkTreeModel* model;
 		if ( gtk_tree_selection_get_selected( selection, &model, &iter ) ) {
@@ -757,7 +757,7 @@ gboolean project_selection_changed( ui::TreeSelection selection, ui::ListStore s
 	return FALSE;
 }
 
-gboolean commands_cell_edited( GtkCellRendererText* cell, gchar* path_string, gchar* new_text, ui::ListStore store ){
+gboolean commands_cell_edited(ui::CellRendererText cell, gchar* path_string, gchar* new_text, ui::ListStore store ){
 	if ( g_current_build == 0 ) {
 		return FALSE;
 	}
@@ -838,8 +838,8 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				vbox.pack_start( button, FALSE, FALSE, 0 );
 			}
 		}
-		auto buildViewStore = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
-		auto buildView = ui::TreeView( ui::TreeModel( buildViewStore ));
+		auto buildViewStore = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
+		auto buildView = ui::TreeView( ui::TreeModel::from( buildViewStore._handle ));
 		{
 			auto frame = create_dialog_frame( "Build menu" );
             table1.attach(frame, {0, 1, 0, 1});
@@ -881,9 +881,9 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 				frame.add(scr);
 
 				{
-					auto store = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+					auto store = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
 
-					auto view = ui::TreeView(ui::TreeModel( store ));
+					auto view = ui::TreeView(ui::TreeModel::from( store._handle ));
 					gtk_tree_view_set_headers_visible(view, FALSE );
 
 					auto renderer = ui::CellRendererText(ui::New);
@@ -904,7 +904,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 
 					view.connect( "key_press_event", G_CALLBACK( commands_key_press ), store );
 
-					auto sel = ui::TreeSelection(gtk_tree_view_get_selection(buildView ));
+					auto sel = ui::TreeSelection::from(gtk_tree_view_get_selection(buildView ));
 					sel.connect( "changed", G_CALLBACK( project_selection_changed ), store );
 				}
 			}

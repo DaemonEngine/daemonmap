@@ -105,9 +105,9 @@ void radio_button_print_state( ui::RadioButton button ){
 	globalOutputStream() << "\n";
 }
 
-GtkToggleButton* radio_button_get_nth( ui::RadioButton radio, int index ){
+ui::ToggleButton radio_button_get_nth( ui::RadioButton radio, int index ){
 	GSList *group = gtk_radio_button_get_group( radio );
-	return GTK_TOGGLE_BUTTON( g_slist_nth_data( group, g_slist_length( group ) - index - 1 ) );
+	return ui::ToggleButton::from( g_slist_nth_data( group, g_slist_length( group ) - index - 1 ) );
 }
 
 void radio_button_set_active( ui::RadioButton radio, int index ){

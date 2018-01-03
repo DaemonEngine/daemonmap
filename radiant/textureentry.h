@@ -35,7 +35,7 @@ class EntryCompletion {
     ui::ListStore m_store;
     IdleDraw m_idleUpdate;
 public:
-    EntryCompletion() : m_store(0), m_idleUpdate(UpdateCaller(*this))
+    EntryCompletion() : m_store(ui::null), m_idleUpdate(UpdateCaller(*this))
     {
     }
 

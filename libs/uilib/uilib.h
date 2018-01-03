@@ -212,9 +212,12 @@ namespace ui {
     public: \
         using self = name *; \
         using native = T *; \
+    protected: \
         explicit name(native h) : super(reinterpret_cast<super::native>(h)) {} \
+    public: \
         explicit name(Null n) : name((native) nullptr) {} \
         explicit name(New_t); \
+        static name from(native h) { return name(h); } \
         static name from(void *ptr) { return name((native) ptr); } \
         ctors \
     }; \
@@ -613,7 +616,7 @@ namespace ui {
         GtkCallback cb = [](_GtkWidget *widget, void *data) -> void {
             using Function = typename std::decay<Lambda>::type;
             Function *f = static_cast<Function *>(data);
-            (*f)(Widget(widget));
+            (*f)(Widget::from(widget));
         };
         gtk_container_foreach(this, cb, &lambda);
     }

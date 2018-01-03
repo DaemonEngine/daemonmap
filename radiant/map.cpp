@@ -833,9 +833,9 @@ void DoMapInfo(){
 			vbox.pack_start( scr, TRUE, TRUE, 0 );
 
 			{
-				ui::ListStore store = ui::ListStore(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
+				auto store = ui::ListStore::from(gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING ));
 
-				auto view = ui::TreeView(ui::TreeModel(store ));
+				auto view = ui::TreeView(ui::TreeModel::from(store._handle));
 				gtk_tree_view_set_headers_clickable(view, TRUE );
 
 				{

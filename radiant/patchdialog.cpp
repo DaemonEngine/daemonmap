@@ -151,7 +151,7 @@ public:
 ui::CheckButton m_enabled;
 ui::Entry m_horizontal;
 ui::Entry m_vertical;
-Subdivisions() : m_enabled( (GtkCheckButton *) 0 ), m_horizontal( ui::null ), m_vertical( ui::null ){
+Subdivisions() : m_enabled( ui::null ), m_horizontal( ui::null ), m_vertical( ui::null ){
 }
 void update(){
 	PatchFixedSubdivisions subdivisions;
@@ -406,7 +406,7 @@ static void OnBtnPatchAutoCap( ui::Widget widget, gpointer data ){
 	Patch_AutoCapTexture();
 }
 
-static void OnSpinChanged( GtkAdjustment *adj, gpointer data ){
+static void OnSpinChanged(ui::Adjustment adj, gpointer data ){
 	texdef_t td;
 
 	td.rotate = 0;
@@ -673,7 +673,7 @@ ui::Window PatchInspector::BuildDialog(){
                                 table.attach(label, {0, 1, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 							}
 							{
-								auto check = ui::CheckButton(GTK_CHECK_BUTTON( gtk_check_button_new() ));
+								auto check = ui::CheckButton::from( gtk_check_button_new() );
 								check.show();
                                 table.attach(check, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 								m_subdivisions.m_enabled = check;

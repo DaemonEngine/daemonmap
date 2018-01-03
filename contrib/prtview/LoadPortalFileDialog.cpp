@@ -51,14 +51,13 @@ static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer
 	return TRUE;
 }
 
-static void change_clicked( GtkWidget *widget, gpointer data ){
-	GtkWidget* file_sel;
+static void change_clicked(ui::Widget widget, gpointer data ){
 	char* filename = NULL;
 
-	file_sel = gtk_file_chooser_dialog_new ( "Locate portal (.prt) file", nullptr, GTK_FILE_CHOOSER_ACTION_OPEN,
+	auto file_sel = ui::Widget::from(gtk_file_chooser_dialog_new ( "Locate portal (.prt) file", nullptr, GTK_FILE_CHOOSER_ACTION_OPEN,
 											 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 											 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-											 nullptr);
+											 nullptr));
 
 	gtk_file_chooser_set_filename( GTK_FILE_CHOOSER(file_sel), portals.fn );
 

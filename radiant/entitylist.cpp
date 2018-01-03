@@ -67,7 +67,7 @@ bool m_selection_disabled;
 EntityList() :
 	m_dirty( EntityList::eDefault ),
 	m_idleDraw( RedrawEntityListCaller() ),
-	m_window( 0 ),
+	m_window( ui::null ),
 	m_selection_disabled( false ){
 }
 
@@ -107,7 +107,7 @@ inline void gtk_tree_model_get_pointer( ui::TreeModel model, GtkTreeIter* iter, 
 
 
 
-void entitylist_treeviewcolumn_celldatafunc( ui::TreeViewColumn column, GtkCellRenderer* renderer, ui::TreeModel model, GtkTreeIter* iter, gpointer data ){
+void entitylist_treeviewcolumn_celldatafunc( ui::TreeViewColumn column, ui::CellRenderer renderer, ui::TreeModel model, GtkTreeIter* iter, gpointer data ){
 	scene::Node* node;
 	gtk_tree_model_get_pointer( model, iter, 0, &node );
 	scene::Instance* instance;
@@ -177,7 +177,7 @@ void EntityList_DisconnectSignals( ui::TreeView view ){
 
 
 gboolean treemodel_update_selection( ui::TreeModel model, ui::TreePath path, GtkTreeIter* iter, gpointer data ){
-	auto view = reinterpret_cast<GtkTreeView*>( data );
+	auto view = ui::TreeView::from( data );
 
 	scene::Instance* instance;
 	gtk_tree_model_get_pointer( model, iter, 1, &instance );

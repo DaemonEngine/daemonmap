@@ -161,7 +161,7 @@ void connect_accelerator( const char *name ){
 struct command_list_dialog_t : public ModalDialog
 {
 	command_list_dialog_t()
-		: m_close_button( *this, eIDCANCEL ), m_list( NULL ), m_command_iter(), m_model( NULL ), m_waiting_for_key( false ){
+		: m_close_button( *this, eIDCANCEL ), m_list( ui::null ), m_command_iter(), m_model( ui::null ), m_waiting_for_key( false ){
 	}
 	ModalDialogButton m_close_button;
 
@@ -220,7 +220,7 @@ void accelerator_edit_button_clicked( ui::Button btn, gpointer dialogptr ){
 		return;
 	}
 	dialog.m_command_iter = iter;
-	dialog.m_model = ui::TreeModel(model);
+	dialog.m_model = ui::TreeModel::from(model);
 
 	// 2. disallow changing the row
 	//gtk_widget_set_sensitive(dialog.m_list, false);
@@ -403,9 +403,9 @@ void DoCommandListDlg(){
 		hbox.pack_start( scr, TRUE, TRUE, 0 );
 
 		{
-			ui::ListStore store = ui::ListStore(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
+			auto store = ui::ListStore::from(gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT ));
 
-			auto view = ui::TreeView(ui::TreeModel(store));
+			auto view = ui::TreeView(ui::TreeModel::from(store._handle));
 			dialog.m_list = view;
 
 			gtk_tree_view_set_enable_search(view, false ); // annoying

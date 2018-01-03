@@ -80,7 +80,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Window parentWindow, const char* text, con
 	auto iconBox = create_dialog_hbox( 16, 0 );
 	hboxDummy.pack_start( iconBox, FALSE, FALSE, 0 );
 
-	auto image = ui::Image(GTK_IMAGE( gtk_image_new_from_stock( messagebox_stock_icon( icon ), GTK_ICON_SIZE_DIALOG ) ));
+	auto image = ui::Image::from( gtk_image_new_from_stock( messagebox_stock_icon( icon ), GTK_ICON_SIZE_DIALOG ) );
 	image.show();
 	iconBox.pack_start( image, FALSE, FALSE, 0 );
 

@@ -206,7 +206,7 @@ void value_changed( gdouble value ){
 		m_handler = g_idle_add( deferred_value_changed, this );
 	}
 }
-static void adjustment_value_changed( GtkAdjustment *adjustment, DeferredAdjustment* self ){
+static void adjustment_value_changed(ui::Adjustment adjustment, DeferredAdjustment* self ){
 	self->value_changed( gtk_adjustment_get_value(adjustment) );
 }
 };
@@ -347,7 +347,7 @@ int getTextureHeight( qtexture_t* tex ){
 }
 
 TextureBrowser() :
-	m_texture_scroll( 0 ),
+	m_texture_scroll( ui::null ),
 	m_hideunused_item( TextureBrowserHideUnusedExport() ),
 	m_hidenotex_item( TextureBrowserFilterFallbackExport() ),
 	m_showshaders_item( TextureBrowserShowShadersExport() ),
@@ -1421,7 +1421,7 @@ void TextureBrowser_scrollChanged( void* data, gdouble value ){
 	TextureBrowser_setOriginY( *reinterpret_cast<TextureBrowser*>( data ), -(int)value );
 }
 
-static void TextureBrowser_verticalScroll( GtkAdjustment *adjustment, TextureBrowser* textureBrowser ){
+static void TextureBrowser_verticalScroll(ui::Adjustment adjustment, TextureBrowser* textureBrowser ){
 	textureBrowser->m_scrollAdjustment.value_changed( gtk_adjustment_get_value(adjustment) );
 }
 
@@ -1542,7 +1542,7 @@ TextureGroups TextureGroups_constructTreeView(){
 
 void TextureBrowser_constructTreeStore(){
 	TextureGroups groups = TextureGroups_constructTreeView();
-	auto store = ui::TreeStore(gtk_tree_store_new( 1, G_TYPE_STRING ));
+	auto store = ui::TreeStore::from(gtk_tree_store_new( 1, G_TYPE_STRING ));
 	TextureGroups_constructTreeModel( groups, store );
 
 	gtk_tree_view_set_model(g_TextureBrowser.m_treeViewTree, store);
@@ -1552,7 +1552,7 @@ void TextureBrowser_constructTreeStore(){
 
 void TextureBrowser_constructTreeStoreTags(){
 	TextureGroups groups;
-	auto store = ui::TreeStore(gtk_tree_store_new( 1, G_TYPE_STRING ));
+	auto store = ui::TreeStore::from(gtk_tree_store_new( 1, G_TYPE_STRING ));
     auto model = g_TextureBrowser.m_all_tags_list;
 
 	gtk_tree_view_set_model(g_TextureBrowser.m_treeViewTags, model );
@@ -1560,7 +1560,7 @@ void TextureBrowser_constructTreeStoreTags(){
 	g_object_unref( G_OBJECT( store ) );
 }
 
-void TreeView_onRowActivated( ui::TreeView treeview, GtkTreePath* path, ui::TreeViewColumn col, gpointer userdata ){
+void TreeView_onRowActivated( ui::TreeView treeview, ui::TreePath path, ui::TreeViewColumn col, gpointer userdata ){
 	GtkTreeIter iter;
 
     auto model = gtk_tree_view_get_model(treeview );
@@ -1734,7 +1734,7 @@ ui::MenuItem TextureBrowser_constructTagsMenu( ui::Menu menu ){
 	return textures_menu_item;
 }
 
-gboolean TextureBrowser_tagMoveHelper( ui::TreeModel model, ui::TreePath path, GtkTreeIter* iter, GSList** selected ){
+gboolean TextureBrowser_tagMoveHelper( ui::TreeModel model, ui::TreePath path, GtkTreeIter iter, GSList** selected ){
 	g_assert( selected != NULL );
 
     auto rowref = gtk_tree_row_reference_new( model, path );
@@ -1922,7 +1922,7 @@ void TextureBrowser_toggleSearchButton(){
 }
 
 void TextureBrowser_constructTagNotebook(){
-	g_TextureBrowser.m_tag_notebook = ui::Widget(gtk_notebook_new());
+	g_TextureBrowser.m_tag_notebook = ui::Widget::from(gtk_notebook_new());
 	ui::Widget labelTags = ui::Label( "Tags" );
 	ui::Widget labelTextures = ui::Label( "Textures" );
 
@@ -1935,7 +1935,7 @@ void TextureBrowser_constructTagNotebook(){
 }
 
 void TextureBrowser_constructSearchButton(){
-	ui::Widget image = ui::Widget(gtk_image_new_from_stock( GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR ));
+	auto image = ui::Widget::from(gtk_image_new_from_stock( GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR ));
 	g_TextureBrowser.m_search_button = ui::Button(ui::New);
 	g_TextureBrowser.m_search_button.connect( "clicked", G_CALLBACK( TextureBrowser_searchTags ), NULL );
 	gtk_widget_set_tooltip_text(g_TextureBrowser.m_search_button, "Search with selected tags");
@@ -2011,7 +2011,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	ui::Widget menu_bar{ui::null};
 
 	{ // menu bar
-		menu_bar = ui::Widget(gtk_menu_bar_new());
+		menu_bar = ui::Widget::from(gtk_menu_bar_new());
 		auto menu_view = ui::Menu(ui::New);
 		auto view_item = TextureBrowser_constructViewMenu( menu_view );
 		gtk_menu_item_set_submenu( GTK_MENU_ITEM( view_item ), menu_view );
@@ -2040,12 +2040,12 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		g_TextureBrowser.m_treeViewTree.show();
 	}
 	{ // gl_widget scrollbar
-		ui::Widget w = ui::Widget(gtk_vscrollbar_new( ui::Adjustment( 0,0,0,1,1,0 ) ));
+		auto w = ui::Widget::from(gtk_vscrollbar_new( ui::Adjustment( 0,0,0,1,1,0 ) ));
 		table.attach(w, {2, 3, 1, 2}, {GTK_SHRINK, GTK_FILL});
 		w.show();
 		g_TextureBrowser.m_texture_scroll = w;
 
-		auto vadjustment = ui::Adjustment(gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) ));
+		auto vadjustment = ui::Adjustment::from(gtk_range_get_adjustment( GTK_RANGE( g_TextureBrowser.m_texture_scroll ) ));
 		vadjustment.connect( "value_changed", G_CALLBACK( TextureBrowser_verticalScroll ), &g_TextureBrowser );
 
 		g_TextureBrowser.m_texture_scroll.visible(g_TextureBrowser.m_showTextureScrollbar);
@@ -2072,7 +2072,7 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	// tag stuff
 	if ( g_TextureBrowser.m_tags ) {
 		{ // fill tag GtkListStore
-			g_TextureBrowser.m_all_tags_list = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
+			g_TextureBrowser.m_all_tags_list = ui::ListStore::from(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
             auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_all_tags_list );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
@@ -2126,14 +2126,14 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_container_set_border_width( GTK_CONTAINER( scrolled_win ), 0 );
 			gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-			g_TextureBrowser.m_assigned_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
+			g_TextureBrowser.m_assigned_store = ui::ListStore::from(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
 
             auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_assigned_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
 			auto renderer = ui::CellRendererText(ui::New);
 
-			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel(g_TextureBrowser.m_assigned_store ));
+			g_TextureBrowser.m_assigned_tree = ui::TreeView(ui::TreeModel::from(g_TextureBrowser.m_assigned_store._handle));
 			g_TextureBrowser.m_assigned_store.unref();
 			g_TextureBrowser.m_assigned_tree.connect( "row-activated", (GCallback) TextureBrowser_removeTags, NULL );
 			gtk_tree_view_set_headers_visible(g_TextureBrowser.m_assigned_tree, FALSE );
@@ -2155,13 +2155,13 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 			gtk_container_set_border_width( GTK_CONTAINER( scrolled_win ), 0 );
 			gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_win ), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-			g_TextureBrowser.m_available_store = ui::ListStore(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
+			g_TextureBrowser.m_available_store = ui::ListStore::from(gtk_list_store_new( N_COLUMNS, G_TYPE_STRING ));
             auto sortable = GTK_TREE_SORTABLE( g_TextureBrowser.m_available_store );
 			gtk_tree_sortable_set_sort_column_id( sortable, TAG_COLUMN, GTK_SORT_ASCENDING );
 
 			auto renderer = ui::CellRendererText(ui::New);
 
-			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel(g_TextureBrowser.m_available_store ));
+			g_TextureBrowser.m_available_tree = ui::TreeView(ui::TreeModel::from(g_TextureBrowser.m_available_store._handle));
 			g_TextureBrowser.m_available_store.unref();
 			g_TextureBrowser.m_available_tree.connect( "row-activated", (GCallback) TextureBrowser_assignTags, NULL );
 			gtk_tree_view_set_headers_visible(g_TextureBrowser.m_available_tree, FALSE );
@@ -2181,8 +2181,8 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		{ // tag arrow buttons
 			auto m_btn_left = ui::Button(ui::New);
 			auto m_btn_right = ui::Button(ui::New);
-			auto m_arrow_left = ui::Widget(gtk_arrow_new( GTK_ARROW_LEFT, GTK_SHADOW_OUT ));
-			auto m_arrow_right = ui::Widget(gtk_arrow_new( GTK_ARROW_RIGHT, GTK_SHADOW_OUT ));
+			auto m_arrow_left = ui::Widget::from(gtk_arrow_new( GTK_ARROW_LEFT, GTK_SHADOW_OUT ));
+			auto m_arrow_right = ui::Widget::from(gtk_arrow_new( GTK_ARROW_RIGHT, GTK_SHADOW_OUT ));
 			m_btn_left.add(m_arrow_left);
 			m_btn_right.add(m_arrow_right);
 

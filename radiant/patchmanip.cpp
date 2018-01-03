@@ -750,14 +750,13 @@ void Patch_constructMenu( ui::Menu menu ){
 
 void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, int defcols, int maxrows, int maxcols ){
 	ModalDialog dialog;
-	GtkComboBox* width;
-	GtkComboBox* height;
 
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Patch density", G_CALLBACK(dialog_delete_callback ), &dialog );
 
 	auto accel = ui::AccelGroup(ui::New);
 	window.add_accel_group( accel );
-
+	auto width = ui::ComboBoxText(ui::New);
+	auto height = ui::ComboBoxText(ui::New);
 	{
 		auto hbox = create_dialog_hbox( 4, 4 );
 		window.add(hbox);
@@ -778,7 +777,7 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 			}
 
 			{
-				auto combo = ui::ComboBoxText(ui::New);
+				auto combo = width;
 #define D_ITEM( x ) if ( x >= mincols && ( !maxcols || x <= maxcols ) ) gtk_combo_box_text_append_text( combo, #x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
@@ -798,11 +797,9 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 #undef D_ITEM
 				combo.show();
                 table.attach(combo, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
-
-				width = combo;
 			}
 			{
-				auto combo = ui::ComboBoxText(ui::New);
+				auto combo = height;
 #define D_ITEM( x ) if ( x >= minrows && ( !maxrows || x <= maxrows ) ) gtk_combo_box_text_append_text( combo, #x )
 				D_ITEM( 3 );
 				D_ITEM( 5 );
@@ -822,8 +819,6 @@ void DoNewPatchDlg( EPatchPrefab prefab, int minrows, int mincols, int defrows, 
 #undef D_ITEM
 				combo.show();
                 table.attach(combo, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
-
-				height = combo;
 			}
 		}
 
@@ -921,7 +916,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 
 				GSList* group = 0;
 				{
-					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Bevel" ));
+					ui::Widget button = ui::Widget::from(gtk_radio_button_new_with_label( group, "Bevel" ));
 					button.show();
                     table.attach(button, {1, 2, 0, 1}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
@@ -929,7 +924,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 					bevel = button;
 				}
 				{
-					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Endcap" ));
+					ui::Widget button = ui::Widget::from(gtk_radio_button_new_with_label( group, "Endcap" ));
 					button.show();
                     table.attach(button, {1, 2, 1, 2}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
@@ -937,7 +932,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 					endcap = button;
 				}
 				{
-					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Bevel" ));
+					ui::Widget button = ui::Widget::from(gtk_radio_button_new_with_label( group, "Inverted Bevel" ));
 					button.show();
                     table.attach(button, {1, 2, 2, 3}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
@@ -945,7 +940,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 					ibevel = button;
 				}
 				{
-					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Inverted Endcap" ));
+					ui::Widget button = ui::Widget::from(gtk_radio_button_new_with_label( group, "Inverted Endcap" ));
 					button.show();
                     table.attach(button, {1, 2, 3, 4}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );
@@ -953,7 +948,7 @@ EMessageBoxReturn DoCapDlg( ECapDialog* type ){
 					iendcap = button;
 				}
 				{
-					ui::Widget button = ui::Widget(gtk_radio_button_new_with_label( group, "Cylinder" ));
+					ui::Widget button = ui::Widget::from(gtk_radio_button_new_with_label( group, "Cylinder" ));
 					button.show();
                     table.attach(button, {1, 2, 4, 5}, {GTK_FILL | GTK_EXPAND, 0});
 					group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ) );

@@ -32,7 +32,7 @@
  * This is useful for popping up 'are you sure you want to quit?'
  * type dialogs.
  */
-static gboolean delete_event( GtkWidget *widget, GdkEvent *event, gpointer data ){
+static gboolean delete_event(ui::Widget widget, GdkEvent *event, gpointer data ){
 	return FALSE;
 }
 

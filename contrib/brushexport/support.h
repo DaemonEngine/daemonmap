@@ -18,5 +18,5 @@
  * or alternatively any widget in the component, and the name of the widget
  * you want returned.
  */
-ui::Widget lookup_widget( GtkWidget       *widget,
+ui::Widget lookup_widget(ui::Widget       widget,
 						   const gchar     *widget_name );

@@ -276,7 +276,7 @@ bool glwidget_enable_gl(ui::GLArea self, ui::Widget root, gpointer data)
 
 ui::GLArea glwidget_new(bool zbuffer)
 {
-    auto self = ui::GLArea(GTK_DRAWING_AREA(gtk_drawing_area_new()));
+    auto self = ui::GLArea::from(gtk_drawing_area_new());
 
     g_object_set_data(G_OBJECT(self), "zbuffer", gint_to_pointer(zbuffer));
 

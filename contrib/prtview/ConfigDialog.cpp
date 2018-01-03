@@ -57,7 +57,7 @@ static int DoColor( PackedColour *c ){
 	clr.blue = (guint16) (GetGValue(*c) * (65535 / 255));
 	clr.green = (guint16) (GetBValue(*c) * (65535 / 255));
 
-	auto dlg = ui::Widget(gtk_color_selection_dialog_new( "Choose Color" ));
+	auto dlg = ui::Widget::from(gtk_color_selection_dialog_new( "Choose Color" ));
 	gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG(dlg)) ), &clr );
 	dlg.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	dlg.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
@@ -65,8 +65,8 @@ static int DoColor( PackedColour *c ){
 	GtkWidget *ok_button, *cancel_button;
 	g_object_get(dlg, "ok-button", &ok_button, "cancel-button", &cancel_button, nullptr);
 
-	ui::Widget(ok_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
-	ui::Widget(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
+	ui::Widget::from(ok_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDOK ) );
+	ui::Widget::from(cancel_button).connect( "clicked", G_CALLBACK( dialog_button_callback ), GINT_TO_POINTER( IDCANCEL ) );
 	g_object_set_data( G_OBJECT( dlg ), "loop", &loop );
 	g_object_set_data( G_OBJECT( dlg ), "ret", &ret );
 
@@ -88,7 +88,7 @@ static int DoColor( PackedColour *c ){
 	return ret;
 }
 
-static void Set2DText( GtkWidget* label ){
+static void Set2DText(ui::Widget label ){
 	char s[40];
 
 	sprintf( s, "Line Width = %6.3f", portals.width_2d * 0.5f );
@@ -96,7 +96,7 @@ static void Set2DText( GtkWidget* label ){
 	gtk_label_set_text( GTK_LABEL( label ), s );
 }
 
-static void Set3DText( GtkWidget* label ){
+static void Set3DText(ui::Widget label ){
 	char s[40];
 
 	sprintf( s, "Line Width = %6.3f", portals.width_3d * 0.5f );
@@ -104,7 +104,7 @@ static void Set3DText( GtkWidget* label ){
 	gtk_label_set_text( GTK_LABEL( label ), s );
 }
 
-static void Set3DTransText( GtkWidget* label ){
+static void Set3DTransText(ui::Widget label ){
 	char s[40];
 
 	sprintf( s, "Polygon transparency = %d%%", (int)portals.trans_3d );
@@ -112,7 +112,7 @@ static void Set3DTransText( GtkWidget* label ){
 	gtk_label_set_text( GTK_LABEL( label ), s );
 }
 
-static void SetClipText( GtkWidget* label ){
+static void SetClipText(ui::Widget label ){
 	char s[40];
 
 	sprintf( s, "Cubic clip range = %d", (int)portals.clip_range * 64 );
@@ -120,7 +120,7 @@ static void SetClipText( GtkWidget* label ){
 	gtk_label_set_text( GTK_LABEL( label ), s );
 }
 
-static void OnScroll2d( GtkAdjustment *adj, gpointer data ){
+static void OnScroll2d(ui::Adjustment adj, gpointer data ){
 	portals.width_2d = static_cast<float>( gtk_adjustment_get_value(adj) );
 	Set2DText( ui::Widget::from(data) );
 
@@ -128,28 +128,28 @@ static void OnScroll2d( GtkAdjustment *adj, gpointer data ){
 	SceneChangeNotify();
 }
 
-static void OnScroll3d( GtkAdjustment *adj, gpointer data ){
+static void OnScroll3d(ui::Adjustment adj, gpointer data ){
 	portals.width_3d = static_cast<float>( gtk_adjustment_get_value(adj) );
 	Set3DText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
 
-static void OnScrollTrans( GtkAdjustment *adj, gpointer data ){
+static void OnScrollTrans(ui::Adjustment adj, gpointer data ){
 	portals.trans_3d = static_cast<float>( gtk_adjustment_get_value(adj) );
 	Set3DTransText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
 
-static void OnScrollClip( GtkAdjustment *adj, gpointer data ){
+static void OnScrollClip(ui::Adjustment adj, gpointer data ){
 	portals.clip_range = static_cast<float>( gtk_adjustment_get_value(adj) );
 	SetClipText( ui::Widget::from( data ) );
 
 	SceneChangeNotify();
 }
 
-static void OnAntiAlias2d( GtkWidget *widget, gpointer data ){
+static void OnAntiAlias2d(ui::Widget widget, gpointer data ){
 	portals.aa_2d = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	Portals_shadersChanged();
@@ -157,13 +157,13 @@ static void OnAntiAlias2d( GtkWidget *widget, gpointer data ){
 	SceneChangeNotify();
 }
 
-static void OnConfig2d( GtkWidget *widget, gpointer data ){
+static void OnConfig2d(ui::Widget widget, gpointer data ){
 	portals.show_2d = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	SceneChangeNotify();
 }
 
-static void OnColor2d( GtkWidget *widget, gpointer data ){
+static void OnColor2d(ui::Widget widget, gpointer data ){
 	if ( DoColor( &portals.color_2d ) == IDOK ) {
 		Portals_shadersChanged();
 
@@ -171,21 +171,21 @@ static void OnColor2d( GtkWidget *widget, gpointer data ){
 	}
 }
 
-static void OnConfig3d( GtkWidget *widget, gpointer data ){
+static void OnConfig3d(ui::Widget widget, gpointer data ){
 	portals.show_3d = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	SceneChangeNotify();
 }
 
 
-static void OnAntiAlias3d( GtkWidget *widget, gpointer data ){
+static void OnAntiAlias3d(ui::Widget widget, gpointer data ){
 	portals.aa_3d = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	Portals_shadersChanged();
 	SceneChangeNotify();
 }
 
-static void OnColor3d( GtkWidget *widget, gpointer data ){
+static void OnColor3d(ui::Widget widget, gpointer data ){
 	if ( DoColor( &portals.color_3d ) == IDOK ) {
 		Portals_shadersChanged();
 
@@ -193,7 +193,7 @@ static void OnColor3d( GtkWidget *widget, gpointer data ){
 	}
 }
 
-static void OnColorFog( GtkWidget *widget, gpointer data ){
+static void OnColorFog(ui::Widget widget, gpointer data ){
 	if ( DoColor( &portals.color_fog ) == IDOK ) {
 		Portals_shadersChanged();
 
@@ -201,33 +201,33 @@ static void OnColorFog( GtkWidget *widget, gpointer data ){
 	}
 }
 
-static void OnFog( GtkWidget *widget, gpointer data ){
+static void OnFog(ui::Widget widget, gpointer data ){
 	portals.fog = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	Portals_shadersChanged();
 	SceneChangeNotify();
 }
 
-static void OnSelchangeZbuffer( GtkWidget *widget, gpointer data ){
+static void OnSelchangeZbuffer(ui::Widget widget, gpointer data ){
 	portals.zbuffer = gpointer_to_int( data );
 
 	Portals_shadersChanged();
 	SceneChangeNotify();
 }
 
-static void OnPoly( GtkWidget *widget, gpointer data ){
+static void OnPoly(ui::Widget widget, gpointer data ){
 	portals.polygons = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) );
 
 	SceneChangeNotify();
 }
 
-static void OnLines( GtkWidget *widget, gpointer data ){
+static void OnLines(ui::Widget widget, gpointer data ){
 	portals.lines = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) );
 
 	SceneChangeNotify();
 }
 
-static void OnClip( GtkWidget *widget, gpointer data ){
+static void OnClip(ui::Widget widget, gpointer data ){
 	portals.clip = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ? true : false;
 
 	SceneChangeNotify();

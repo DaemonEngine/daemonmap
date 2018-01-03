@@ -13,8 +13,7 @@
 	g_object_set_data( G_OBJECT( component ), name, (void *) widget )
 
 // created by glade
-GtkWidget*
-create_w_plugplug2( void ){
+ui::Widget create_w_plugplug2( void ){
 	GSList *r_collapse_group = NULL;
 
 	auto w_plugplug2 = ui::Window( ui::window_type::TOP );
@@ -40,7 +39,7 @@ create_w_plugplug2( void ){
 	vbox4.show();
 	hbox2.pack_start( vbox4, TRUE, FALSE, 0 );
 
-	auto r_collapse = ui::Widget(gtk_radio_button_new_with_mnemonic( NULL, "Collapse mesh" ));
+	auto r_collapse = ui::Widget::from(gtk_radio_button_new_with_mnemonic( NULL, "Collapse mesh" ));
 	gtk_widget_set_name( r_collapse, "r_collapse" );
 	gtk_widget_set_tooltip_text(r_collapse, "Collapse all brushes into a single group");
 	r_collapse.show();
@@ -48,7 +47,7 @@ create_w_plugplug2( void ){
 	gtk_radio_button_set_group( GTK_RADIO_BUTTON( r_collapse ), r_collapse_group );
 	r_collapse_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( r_collapse ) );
 
-	auto r_collapsebymaterial = ui::Widget(gtk_radio_button_new_with_mnemonic( NULL, "Collapse by material" ));
+	auto r_collapsebymaterial = ui::Widget::from(gtk_radio_button_new_with_mnemonic( NULL, "Collapse by material" ));
 	gtk_widget_set_name( r_collapsebymaterial, "r_collapsebymaterial" );
 	gtk_widget_set_tooltip_text(r_collapsebymaterial, "Collapse into groups by material");
 	r_collapsebymaterial.show();
@@ -56,7 +55,7 @@ create_w_plugplug2( void ){
 	gtk_radio_button_set_group( GTK_RADIO_BUTTON( r_collapsebymaterial ), r_collapse_group );
 	r_collapse_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( r_collapsebymaterial ) );
 
-	auto r_nocollapse = ui::Widget(gtk_radio_button_new_with_mnemonic( NULL, "Don't collapse" ));
+	auto r_nocollapse = ui::Widget::from(gtk_radio_button_new_with_mnemonic( NULL, "Don't collapse" ));
 	gtk_widget_set_name( r_nocollapse, "r_nocollapse" );
 	gtk_widget_set_tooltip_text(r_nocollapse, "Every brush is stored in its own group");
 	r_nocollapse.show();
@@ -69,13 +68,13 @@ create_w_plugplug2( void ){
 	vbox3.show();
 	hbox2.pack_start( vbox3, FALSE, FALSE, 0 );
 
-	auto b_export = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-save" )));
+	auto b_export = ui::Button::from(gtk_button_new_from_stock( "gtk-save" ));
 	gtk_widget_set_name( b_export, "b_export" );
 	b_export.show();
 	vbox3.pack_start( b_export, TRUE, FALSE, 0 );
 	gtk_container_set_border_width( GTK_CONTAINER( b_export ), 5 );
 
-	auto b_close = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-cancel" )));
+	auto b_close = ui::Button::from(gtk_button_new_from_stock( "gtk-cancel" ));
 	gtk_widget_set_name( b_close, "b_close" );
 	b_close.show();
 	vbox3.pack_start( b_close, TRUE, FALSE, 0 );
@@ -116,27 +115,27 @@ create_w_plugplug2( void ){
 	hbox1.show();
 	vbox2.pack_start( hbox1, FALSE, FALSE, 0 );
 
-	auto b_addmaterial = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-add" )));
+	auto b_addmaterial = ui::Button::from(gtk_button_new_from_stock( "gtk-add" ));
 	gtk_widget_set_name( b_addmaterial, "b_addmaterial" );
 	b_addmaterial.show();
 	hbox1.pack_start( b_addmaterial, FALSE, FALSE, 0 );
 
-	auto b_removematerial = ui::Button(GTK_BUTTON(gtk_button_new_from_stock( "gtk-remove" )));
+	auto b_removematerial = ui::Button::from(gtk_button_new_from_stock( "gtk-remove" ));
 	gtk_widget_set_name( b_removematerial, "b_removematerial" );
 	b_removematerial.show();
 	hbox1.pack_start( b_removematerial, FALSE, FALSE, 0 );
 
-	auto t_limitmatnames = ui::Widget(gtk_check_button_new_with_mnemonic( "Use short material names (max. 20 chars)" ));
+	auto t_limitmatnames = ui::Widget::from(gtk_check_button_new_with_mnemonic( "Use short material names (max. 20 chars)" ));
 	gtk_widget_set_name( t_limitmatnames, "t_limitmatnames" );
 	t_limitmatnames.show();
 	vbox2.pack_end( t_limitmatnames, FALSE, FALSE, 0 );
 
-	auto t_objects = ui::Widget(gtk_check_button_new_with_mnemonic( "Create (o)bjects instead of (g)roups" ));
+	auto t_objects = ui::Widget::from(gtk_check_button_new_with_mnemonic( "Create (o)bjects instead of (g)roups" ));
 	gtk_widget_set_name( t_objects, "t_objects" );
 	t_objects.show();
 	vbox2.pack_end(t_objects, FALSE, FALSE, 0);
 
-	auto t_exportmaterials = ui::CheckButton(GTK_CHECK_BUTTON(gtk_check_button_new_with_mnemonic( "Create material information (.mtl file)" )));
+	auto t_exportmaterials = ui::CheckButton::from(gtk_check_button_new_with_mnemonic( "Create material information (.mtl file)" ));
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( t_exportmaterials ), true );
 	gtk_widget_set_name( t_exportmaterials, "t_exportmaterials" );
 	t_exportmaterials.show();
@@ -178,16 +177,16 @@ create_w_plugplug2( void ){
 }
 
 // global main window, is 0 when not created
-GtkWidget* g_brushexp_window = 0;
+ui::Widget g_brushexp_window{ui::null};
 
 // spawn plugin window (and make sure it got destroyed first or never created)
 void CreateWindow( void ){
 	ASSERT_TRUE( !g_brushexp_window );
 
-	GtkWidget* wnd = create_w_plugplug2();
+	ui::Widget wnd = create_w_plugplug2();
 
 	// column & renderer
-	GtkTreeViewColumn* col = gtk_tree_view_column_new();
+    auto col = ui::TreeViewColumn::from(gtk_tree_view_column_new());
 	gtk_tree_view_column_set_title( col, "materials" );
 	auto view = ui::TreeView::from(lookup_widget(wnd, "t_materialist"));
 	gtk_tree_view_append_column(view, col );
@@ -195,7 +194,7 @@ void CreateWindow( void ){
 	gtk_tree_view_insert_column_with_attributes(view, -1, "", renderer, "text", 0, NULL );
 
 	// list store
-	ui::ListStore ignorelist = ui::ListStore(gtk_list_store_new( 1, G_TYPE_STRING ));
+	auto ignorelist = ui::ListStore::from(gtk_list_store_new( 1, G_TYPE_STRING ));
 	gtk_tree_view_set_model(view, ignorelist );
     ignorelist.unref();
 
@@ -203,12 +202,12 @@ void CreateWindow( void ){
 	g_brushexp_window = wnd;
 }
 
-void DestroyWindow( void ){
-	ASSERT_NOTNULL( g_brushexp_window );
+void DestroyWindow(){
+	ASSERT_TRUE( g_brushexp_window );
 	ui::Widget(g_brushexp_window).destroy();
-	g_brushexp_window = 0;
+	g_brushexp_window = ui::Widget(ui::null);
 }
 
-bool IsWindowOpen( void ){
-	return g_brushexp_window != 0;
+bool IsWindowOpen(){
+	return g_brushexp_window;
 }

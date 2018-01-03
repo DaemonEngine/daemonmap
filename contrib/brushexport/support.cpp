@@ -4,20 +4,20 @@
 #include "support.h"
 
 ui::Widget
-lookup_widget( GtkWidget       *widget,
+lookup_widget(ui::Widget       widget,
 			   const gchar     *widget_name ){
-	GtkWidget *parent, *found_widget;
+    ui::Widget parent{ui::null};
 
 	for (;; )
 	{
 		if ( GTK_IS_MENU( widget ) ) {
-			parent = gtk_menu_get_attach_widget( GTK_MENU( widget ) );
+			parent = ui::Widget::from(gtk_menu_get_attach_widget( GTK_MENU( widget ) ));
 		}
 		else{
-			parent = gtk_widget_get_parent(widget);
+			parent = ui::Widget::from(gtk_widget_get_parent(widget));
 		}
 		if ( !parent ) {
-			parent = (GtkWidget*) g_object_get_data( G_OBJECT( widget ), "GladeParentKey" );
+			parent = ui::Widget::from(g_object_get_data( G_OBJECT( widget ), "GladeParentKey" ));
 		}
 		if ( parent == NULL ) {
 			break;
@@ -25,10 +25,9 @@ lookup_widget( GtkWidget       *widget,
 		widget = parent;
 	}
 
-	found_widget = (GtkWidget*) g_object_get_data( G_OBJECT( widget ),
-												   widget_name );
+	auto found_widget = ui::Widget::from(g_object_get_data( G_OBJECT( widget ), widget_name ));
 	if ( !found_widget ) {
 		g_warning( "Widget not found: %s", widget_name );
 	}
-	return ui::Widget(found_widget);
+	return found_widget;
 }

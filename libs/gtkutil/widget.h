@@ -70,7 +70,7 @@ public:
     ToggleItem m_item;
 
     ToggleShown(bool shown)
-            : m_shownDeferred(shown), m_widget(0), m_item(ActiveCaller(*this))
+            : m_shownDeferred(shown), m_widget(ui::null), m_item(ActiveCaller(*this))
     {
     }
 
