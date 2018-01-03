@@ -164,7 +164,7 @@ ui::Window FindTextureDialog::BuildDialog(){
     table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
 	entry.connect( "focus_in_event",
 					  G_CALLBACK( find_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY(entry), m_strFind );
+	AddDialogData( entry, m_strFind );
 	GlobalTextureEntryCompletion::instance().connect( entry );
 
 	entry = ui::Entry(ui::New);
@@ -172,13 +172,13 @@ ui::Window FindTextureDialog::BuildDialog(){
     table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
 	entry.connect( "focus_in_event",
 					  G_CALLBACK( replace_focus_in ), 0 );
-	AddDialogData( *GTK_ENTRY(entry), m_strReplace );
+	AddDialogData( entry, m_strReplace );
 	GlobalTextureEntryCompletion::instance().connect( entry );
 
 	auto check = ui::CheckButton( "Within selected brushes only" );
 	check.show();
 	vbox.pack_start( check, TRUE, TRUE, 0 );
-	AddDialogData( *GTK_TOGGLE_BUTTON(check), m_bSelectedOnly );
+	AddDialogData( check, m_bSelectedOnly );
 
 	vbox = ui::VBox( FALSE, 5 );
 	vbox.show();

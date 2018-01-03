@@ -855,14 +855,14 @@ ui::Window SurfaceInspector::BuildDialog(){
 					spin.show();
 					table.attach(spin, {2, 3, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
                     spin.dimensions(60, -1);
-					AddDialogData( *GTK_SPIN_BUTTON( spin ), m_fitHorizontal );
+					AddDialogData( spin, m_fitHorizontal );
 				}
 				{
 					auto spin = ui::SpinButton( ui::Adjustment( 1, 0, 1 << 16, 1, 10, 0 ), 0, 6 );
 					spin.show();
 					table.attach(spin, {3, 4, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
                     spin.dimensions(60, -1);
-					AddDialogData( *GTK_SPIN_BUTTON( spin ), m_fitVertical );
+					AddDialogData( spin, m_fitVertical );
 				}
 			}
 		}

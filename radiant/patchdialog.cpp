@@ -561,7 +561,7 @@ ui::Window PatchInspector::BuildDialog(){
 							{
 								auto combo = ui::ComboBoxText(ui::New);
 								combo.connect( "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
-								AddDialogData( *GTK_COMBO_BOX(combo), m_nRow );
+								AddDialogData( combo, m_nRow );
 
 								combo.show();
                                 table.attach(combo, {0, 1, 1, 2}, {(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0)}, {0, 0});
@@ -572,7 +572,7 @@ ui::Window PatchInspector::BuildDialog(){
 							{
 								auto combo = ui::ComboBoxText(ui::New);
 								combo.connect( "changed", G_CALLBACK( OnSelchangeComboColRow ), this );
-								AddDialogData( *GTK_COMBO_BOX(combo), m_nCol );
+								AddDialogData( combo, m_nCol );
 
 								combo.show();
                                 table.attach(combo, {1, 2, 1, 2}, {(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0)}, {0, 0});
@@ -614,7 +614,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {1, 2, 0, 1}, {GTK_EXPAND | GTK_FILL, 0});
-							AddDialogData( *GTK_ENTRY(entry), m_fX );
+							AddDialogData( entry, m_fX );
 
 							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
@@ -622,7 +622,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {1, 2, 1, 2}, {GTK_EXPAND | GTK_FILL, 0});
-							AddDialogData( *GTK_ENTRY(entry), m_fY );
+							AddDialogData( entry, m_fY );
 
 							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
@@ -630,7 +630,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {1, 2, 2, 3}, {GTK_EXPAND | GTK_FILL, 0});
-							AddDialogData( *GTK_ENTRY(entry), m_fZ );
+							AddDialogData( entry, m_fZ );
 
 							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
@@ -638,7 +638,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {1, 2, 3, 4}, {GTK_EXPAND | GTK_FILL, 0});
-							AddDialogData( *GTK_ENTRY(entry), m_fS );
+							AddDialogData( entry, m_fS );
 
 							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
@@ -646,7 +646,7 @@ ui::Window PatchInspector::BuildDialog(){
 							auto entry = ui::Entry(ui::New);
 							entry.show();
                             table.attach(entry, {1, 2, 4, 5}, {GTK_EXPAND | GTK_FILL, 0});
-							AddDialogData( *GTK_ENTRY(entry), m_fT );
+							AddDialogData( entry, m_fT );
 
 							entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 						}
@@ -729,7 +729,7 @@ ui::Window PatchInspector::BuildDialog(){
 						//  gtk_editable_set_editable (GTK_ENTRY (entry), false);
 						entry.show();
 						vbox2.pack_start( entry, TRUE, TRUE, 0 );
-						AddDialogData( *GTK_ENTRY(entry), m_strName );
+						AddDialogData( entry, m_strName );
 
 						entry.connect( "key_press_event", G_CALLBACK( OnDialogKey ), 0 );
 					}

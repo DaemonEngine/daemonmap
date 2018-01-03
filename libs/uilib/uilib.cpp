@@ -46,13 +46,20 @@ namespace ui {
 
     template<class T> _IMPL(T,);
 
-#define this (verify<self>::test(*static_cast<self>(this)))
+    template<class T>
+    using pointer_remove_const = std::add_pointer<
+            typename std::remove_const<
+                    typename std::remove_pointer<T>::type
+            >::type
+    >;
+
+#define this (verify<self>::test(*static_cast<self>(const_cast<pointer_remove_const<decltype(this)>::type>(this))))
 
     IMPL(Editable, GTK_EDITABLE);
 
     void IEditable::editable(bool value)
     {
-        gtk_editable_set_editable(GTK_EDITABLE(this), value);
+        gtk_editable_set_editable(this, value);
     }
 
     IMPL(TreeModel, GTK_TREE_MODEL);
@@ -221,9 +228,14 @@ namespace ui {
 
     IMPL(ToggleButton, GTK_TOGGLE_BUTTON);
 
-    bool IToggleButton::active()
+    bool IToggleButton::active() const
     {
-        return gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(this)) != 0;
+        return gtk_toggle_button_get_active(this) != 0;
+    }
+
+    void IToggleButton::active(bool value)
+    {
+        gtk_toggle_button_set_active(this, value);
     }
 
     IMPL(CheckButton, GTK_CHECK_BUTTON);

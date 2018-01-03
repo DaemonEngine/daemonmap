@@ -338,7 +338,8 @@ namespace ui {
 
     WRAP(ToggleButton, Button, _GtkToggleButton, (),
     ,
-         bool active();
+         bool active() const;
+         void active(bool value);
     );
 
     WRAP(CheckButton, ToggleButton, _GtkCheckButton, (),
