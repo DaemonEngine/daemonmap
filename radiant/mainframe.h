@@ -205,6 +205,13 @@ void EnginePath_verify();
 const char* EnginePath_get();
 const char* QERApp_GetGamePath();
 
+extern bool g_disableEnginePath;
+extern bool g_disableHomePath;
+
+const int g_pakPathCount = 5;
+extern CopiedString g_strPakPath[g_pakPathCount];
+const char* PakPath_get( int num );
+
 extern CopiedString g_strAppPath;
 const char* AppPath_get();
 
