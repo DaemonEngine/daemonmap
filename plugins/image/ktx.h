@@ -23,8 +23,9 @@
 #define INCLUDED_KTX_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadKTX( ArchiveFile& file );
+Image *LoadKTX(ArchiveFile &file);
 
 #endif

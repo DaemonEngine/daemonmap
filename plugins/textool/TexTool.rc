@@ -27,11 +27,15 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDD_DIALOG2 DIALOGEX 0, 0, 290, 206
-STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-EXSTYLE WS_EX_TOOLWINDOW
-FONT 8, "MS Sans Serif"
+STYLE WS_POPUP
+| WS_CAPTION | WS_SYSMENU |
+WS_THICKFRAME
+        EXSTYLE
+WS_EX_TOOLWINDOW
+        FONT
+8, "MS Sans Serif"
 BEGIN
-END
+        END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -40,7 +44,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO DISCARDABLE
 BEGIN
     IDD_DIALOG2, DIALOG
     BEGIN
@@ -70,16 +74,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDR_DROP_MENU MENU DISCARDABLE 
+IDR_DROP_MENU
+MENU DISCARDABLE
 BEGIN
-    POPUP "Drop"
-    BEGIN
-        MENUITEM "Validate (RETURN)",           ID_DROP_VALIDATE
-        MENUITEM "Zoom in (INSERT)",            ID_DROP_ZOOMIN
-        MENUITEM "Zoom out (SUPPR)",            ID_DROP_ZOOMOUT
-        MENUITEM "Cancel (ESC)",                ID_DROP_CANCEL
-    END
+        POPUP
+"Drop"
+BEGIN
+        MENUITEM
+"Validate (RETURN)",           ID_DROP_VALIDATE
+MENUITEM "Zoom in (INSERT)",            ID_DROP_ZOOMIN
+MENUITEM "Zoom out (SUPPR)",            ID_DROP_ZOOMOUT
+MENUITEM "Cancel (ESC)",                ID_DROP_CANCEL
 END
+        END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

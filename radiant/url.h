@@ -22,6 +22,6 @@
 #if !defined( INCLUDED_URL_H )
 #define INCLUDED_URL_H
 
-void OpenURL( const char *url );
+void OpenURL(const char *url);
 
 #endif

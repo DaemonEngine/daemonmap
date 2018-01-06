@@ -26,55 +26,62 @@
 #include <uilib/uilib.h>
 #include "math/vector.h"
 
-class rectangle_t
-{
+class rectangle_t {
 public:
-rectangle_t()
-	: x( 0 ), y( 0 ), w( 0 ), h( 0 )
-{}
-rectangle_t( float _x, float _y, float _w, float _h )
-	: x( _x ), y( _y ), w( _w ), h( _h )
-{}
-float x;
-float y;
-float w;
-float h;
+    rectangle_t()
+            : x(0), y(0), w(0), h(0)
+    {}
+
+    rectangle_t(float _x, float _y, float _w, float _h)
+            : x(_x), y(_y), w(_w), h(_h)
+    {}
+
+    float x;
+    float y;
+    float w;
+    float h;
 };
 
-struct Coord2D
-{
-	float x, y;
-	Coord2D( float _x, float _y )
-		: x( _x ), y( _y ){
-	}
+struct Coord2D {
+    float x, y;
+
+    Coord2D(float _x, float _y)
+            : x(_x), y(_y)
+    {
+    }
 };
 
-inline Coord2D coord2d_device2screen( const Coord2D& coord, unsigned int width, unsigned int height ){
-	return Coord2D( ( ( coord.x + 1.0f ) * 0.5f ) * width, ( ( coord.y + 1.0f ) * 0.5f ) * height );
-}
-
-inline rectangle_t rectangle_from_area( const float min[2], const float max[2], unsigned int width, unsigned int height ){
-	Coord2D botleft( coord2d_device2screen( Coord2D( min[0], min[1] ), width, height ) );
-	Coord2D topright( coord2d_device2screen( Coord2D( max[0], max[1] ), width, height ) );
-	return rectangle_t( botleft.x, botleft.y, topright.x - botleft.x, topright.y - botleft.y );
-}
-
-class XORRectangle
+inline Coord2D coord2d_device2screen(const Coord2D &coord, unsigned int width, unsigned int height)
 {
+    return Coord2D(((coord.x + 1.0f) * 0.5f) * width, ((coord.y + 1.0f) * 0.5f) * height);
+}
 
-rectangle_t m_rectangle;
+inline rectangle_t rectangle_from_area(const float min[2], const float max[2], unsigned int width, unsigned int height)
+{
+    Coord2D botleft(coord2d_device2screen(Coord2D(min[0], min[1]), width, height));
+    Coord2D topright(coord2d_device2screen(Coord2D(max[0], max[1]), width, height));
+    return rectangle_t(botleft.x, botleft.y, topright.x - botleft.x, topright.y - botleft.y);
+}
 
-ui::GLArea m_widget;
-cairo_t *cr;
+class XORRectangle {
 
-bool initialised() const;
-void lazy_init();
-void draw() const;
+    rectangle_t m_rectangle;
+
+    ui::GLArea m_widget;
+    cairo_t *cr;
+
+    bool initialised() const;
+
+    void lazy_init();
+
+    void draw() const;
 
 public:
-XORRectangle( ui::GLArea widget );
-~XORRectangle();
-void set( rectangle_t rectangle );
+    XORRectangle(ui::GLArea widget);
+
+    ~XORRectangle();
+
+    void set(rectangle_t rectangle);
 };
 
 

@@ -24,6 +24,6 @@
 #if !defined( INCLUDED_FILTERS_H )
 #define INCLUDED_FILTERS_H
 
-void Filters_constructMenu( ui::Menu menu_in_menu );
+void Filters_constructMenu(ui::Menu menu_in_menu);
 
 #endif

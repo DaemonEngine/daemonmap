@@ -38,39 +38,39 @@
 #define TYP_SOUND       67
 #define TYP_MIPTEX      68
 
-typedef struct
-{
-	char identification[4];     // should be WAD2 or 2DAW
-	int numlumps;
-	int infotableofs;
+typedef struct {
+    char identification[4];     // should be WAD2 or 2DAW
+    int numlumps;
+    int infotableofs;
 } wadinfo_t;
 
-typedef struct
-{
-	int filepos;
-	int disksize;
-	int size;                           // uncompressed
-	char type;
-	char compression;
-	char pad1, pad2;
-	char name[16];                      // must be null terminated
+typedef struct {
+    int filepos;
+    int disksize;
+    int size;                           // uncompressed
+    char type;
+    char compression;
+    char pad1, pad2;
+    char name[16];                      // must be null terminated
 } lumpinfo_t;
 
-inline void istream_read_wadinfo( InputStream& istream, wadinfo_t& wadinfo ){
-	istream.read( reinterpret_cast<InputStream::byte_type*>( wadinfo.identification ), 4 );
-	wadinfo.numlumps = istream_read_int32_le( istream );
-	wadinfo.infotableofs = istream_read_int32_le( istream );
+inline void istream_read_wadinfo(InputStream &istream, wadinfo_t &wadinfo)
+{
+    istream.read(reinterpret_cast<InputStream::byte_type *>( wadinfo.identification ), 4);
+    wadinfo.numlumps = istream_read_int32_le(istream);
+    wadinfo.infotableofs = istream_read_int32_le(istream);
 }
 
-inline void istream_read_lumpinfo( InputStream& istream, lumpinfo_t& lumpinfo ){
-	lumpinfo.filepos = istream_read_int32_le( istream );
-	lumpinfo.disksize = istream_read_int32_le( istream );
-	lumpinfo.size = istream_read_int32_le( istream );
-	lumpinfo.type = istream_read_byte( istream );
-	lumpinfo.compression = istream_read_byte( istream );
-	lumpinfo.pad1 = istream_read_byte( istream );
-	lumpinfo.pad2 = istream_read_byte( istream );
-	istream.read( reinterpret_cast<InputStream::byte_type*>( lumpinfo.name ), 16 );
+inline void istream_read_lumpinfo(InputStream &istream, lumpinfo_t &lumpinfo)
+{
+    lumpinfo.filepos = istream_read_int32_le(istream);
+    lumpinfo.disksize = istream_read_int32_le(istream);
+    lumpinfo.size = istream_read_int32_le(istream);
+    lumpinfo.type = istream_read_byte(istream);
+    lumpinfo.compression = istream_read_byte(istream);
+    lumpinfo.pad1 = istream_read_byte(istream);
+    lumpinfo.pad2 = istream_read_byte(istream);
+    istream.read(reinterpret_cast<InputStream::byte_type *>( lumpinfo.name ), 16);
 }
 
 #endif

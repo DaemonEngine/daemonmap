@@ -25,19 +25,22 @@
 #define INCLUDED_PATCHDIALOG_H
 
 void PatchInspector_Construct();
+
 void PatchInspector_Destroy();
 
-void PatchInspector_constructWindow( ui::Window main_window );
+void PatchInspector_constructWindow(ui::Window main_window);
+
 void PatchInspector_destroyWindow();
 
-namespace scene
-{
-class Graph;
+namespace scene {
+    class Graph;
 }
 
-void Scene_PatchTranslateTexture_Selected( scene::Graph& graph, float s, float t );
-void Scene_PatchRotateTexture_Selected( scene::Graph& graph, float angle );
-void Scene_PatchScaleTexture_Selected( scene::Graph& graph, float s, float t );
+void Scene_PatchTranslateTexture_Selected(scene::Graph &graph, float s, float t);
+
+void Scene_PatchRotateTexture_Selected(scene::Graph &graph, float angle);
+
+void Scene_PatchScaleTexture_Selected(scene::Graph &graph, float s, float t);
 
 
 #endif

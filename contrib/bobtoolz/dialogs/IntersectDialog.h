@@ -27,23 +27,22 @@
 //
 
 const int BRUSH_OPT_WHOLE_MAP = 0;
-const int BRUSH_OPT_SELECTED  = 1;
+const int BRUSH_OPT_SELECTED = 1;
 
 /////////////////////////////////////////////////////////////////////////////
 // CIntersectDialog dialog
 
-class CIntersectDialog : public CDialog
-{
+class CIntersectDialog : public CDialog {
 // Construction
 public:
-CIntersectDialog( CWnd* pParent = NULL );     // standard constructor
+    CIntersectDialog(CWnd *pParent = NULL);     // standard constructor
 
 // Dialog Data
 //{{AFX_DATA(CIntersectDialog)
-enum { IDD = IDD_INTERSECT_DIALOG };
-int m_nBrushOptions;
-BOOL m_bUseDetail;
-BOOL m_bDuplicateOnly;
+    enum { IDD = IDD_INTERSECT_DIALOG };
+    int m_nBrushOptions;
+    BOOL m_bUseDetail;
+    BOOL m_bDuplicateOnly;
 //}}AFX_DATA
 
 
@@ -51,7 +50,7 @@ BOOL m_bDuplicateOnly;
 // ClassWizard generated virtual function overrides
 //{{AFX_VIRTUAL(CIntersectDialog)
 protected:
-virtual void DoDataExchange( CDataExchange* pDX );      // DDX/DDV support
+    virtual void DoDataExchange(CDataExchange *pDX);      // DDX/DDV support
 //}}AFX_VIRTUAL
 
 // Implementation
@@ -61,7 +60,7 @@ protected:
 //{{AFX_MSG(CIntersectDialog)
 // NOTE: the ClassWizard will add member functions here
 //}}AFX_MSG
-DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

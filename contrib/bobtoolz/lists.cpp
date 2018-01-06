@@ -26,58 +26,56 @@
 
 #include "misc.h"
 
-bool LoadExclusionList( char* filename, std::list<Str>* exclusionList ){
-	FILE* eFile = fopen( filename, "r" );
-	if ( eFile ) {
-		char buffer[256];
-		int cnt = 0;
-		while ( !feof( eFile ) )
-		{
-			memset( buffer, 0, 256 );
-			fscanf( eFile, "%s\n", buffer );
+bool LoadExclusionList(char *filename, std::list<Str> *exclusionList)
+{
+    FILE *eFile = fopen(filename, "r");
+    if (eFile) {
+        char buffer[256];
+        int cnt = 0;
+        while (!feof(eFile)) {
+            memset(buffer, 0, 256);
+            fscanf(eFile, "%s\n", buffer);
 
-			if ( strlen( buffer ) > 0 ) {
-				exclusionList->push_back( buffer );
-			}
-			else{
-				cnt++;
-			}
-		}
+            if (strlen(buffer) > 0) {
+                exclusionList->push_back(buffer);
+            } else {
+                cnt++;
+            }
+        }
 
-		fclose( eFile );
+        fclose(eFile);
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	globalErrorStream() << "Failed To Load Exclusion List: " << filename << "\n";
-	return FALSE;
+    globalErrorStream() << "Failed To Load Exclusion List: " << filename << "\n";
+    return FALSE;
 }
 
-bool LoadGList( char* filename, ui::ListStore loadlist ){
-	FILE* eFile = fopen( filename, "r" );
-	if ( eFile ) {
-		char buffer[256];
-		int cnt = 0;
-		while ( !feof( eFile ) )
-		{
-			memset( buffer, 0, 256 );
-			fscanf( eFile, "%s\n", buffer );
+bool LoadGList(char *filename, ui::ListStore loadlist)
+{
+    FILE *eFile = fopen(filename, "r");
+    if (eFile) {
+        char buffer[256];
+        int cnt = 0;
+        while (!feof(eFile)) {
+            memset(buffer, 0, 256);
+            fscanf(eFile, "%s\n", buffer);
 
-			if ( strlen( buffer ) > 0 ) {
-				char* buffer2 = new char[strlen( buffer ) + 1];
-				strcpy( buffer2, buffer );
-				loadlist.append(0, buffer2);
-			}
-			else{
-				cnt++;
-			}
-		}
+            if (strlen(buffer) > 0) {
+                char *buffer2 = new char[strlen(buffer) + 1];
+                strcpy(buffer2, buffer);
+                loadlist.append(0, buffer2);
+            } else {
+                cnt++;
+            }
+        }
 
-		fclose( eFile );
+        fclose(eFile);
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	globalErrorStream() << "Failed To Load GList: " << filename << "\n";
-	return FALSE;
+    globalErrorStream() << "Failed To Load GList: " << filename << "\n";
+    return FALSE;
 }

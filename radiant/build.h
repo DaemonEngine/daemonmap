@@ -23,22 +23,25 @@
 #if !defined( INCLUDED_BUILD_H )
 #define INCLUDED_BUILD_H
 
-void build_set_variable( const char* name, const char* value );
+void build_set_variable(const char *name, const char *value);
+
 void build_clear_variables();
 
-class CommandListener
-{
+class CommandListener {
 public:
-virtual void execute( const char* command ) = 0;
+    virtual void execute(const char *command) = 0;
 };
-void build_run( const char* name, CommandListener& listener );
+
+void build_run(const char *name, CommandListener &listener);
 
 void DoBuildMenu();
 
 void BuildMenu_Construct();
+
 void BuildMenu_Destroy();
 
-void Build_constructMenu( ui::Menu menu );
+void Build_constructMenu(ui::Menu menu);
+
 extern ui::Menu g_bsp_menu;
 
 

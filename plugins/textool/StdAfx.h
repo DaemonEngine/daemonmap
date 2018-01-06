@@ -33,9 +33,9 @@
 // Necessary for proper boolean type declaration
 #include "qertypes.h"
 
-typedef void* HMODULE;
-typedef void* LPVOID;
-typedef char* LPCSTR;
+typedef void *HMODULE;
+typedef void *LPVOID;
+typedef char *LPCSTR;
 
 #define MB_OK                       0x00000000L
 #define MB_OKCANCEL                 0x00000001L
@@ -70,19 +70,18 @@ typedef char* LPCSTR;
 #define IDYES               6
 #define IDNO                7
 
-typedef struct tagRECT
-{
-	long left;
-	long top;
-	long right;
-	long bottom;
+typedef struct tagRECT {
+    long left;
+    long top;
+    long right;
+    long bottom;
 } RECT, *PRECT, *LPRECT;
 
 #endif // __linux__
 
 // plugin
 // FIXME TTimo: drop this
-extern "C" void Sys_Printf( char *text, ... );
+extern "C" void Sys_Printf(char *text, ...);
 
 #include "synapse.h"
 #include "iplugin.h"
@@ -97,36 +96,51 @@ extern "C" void Sys_Printf( char *text, ... );
 // the implementation of a IWindowListener interface to use with the native UI
 // TODO: move in it's own set of files?
 // NOTE: I'm not too sure about the bool flags being any use.. they are supposed to tell if we handle the event or not
-class CWindowListener : public IWindowListener
-{
-int refCount;
+class CWindowListener : public IWindowListener {
+    int refCount;
 public:
 // Increment the number of references to this object
-void IncRef() { refCount++; }
+    void IncRef()
+    { refCount++; }
+
 // Decrement the reference count
-void DecRef() {
-	if ( --refCount <= 0 ) {
-		delete this;
-	}
-}
+    void DecRef()
+    {
+        if (--refCount <= 0) {
+            delete this;
+        }
+    }
+
 // IWindowListener ---------------------------------------
-bool OnLButtonDown( guint32 nFlags, double x, double y );
-bool OnMButtonDown( guint32 nFlags, double x, double y ) { return false; }
-bool OnRButtonDown( guint32 nFlags, double x, double y );
-bool OnLButtonUp( guint32 nFlags, double x, double y );
-bool OnMButtonUp( guint32 nFlags, double x, double y ) { return false; }
-bool OnRButtonUp( guint32 nFlags, double x, double y );
-bool OnMouseMove( guint32 nFlags, double x, double y );
-bool OnKeyPressed( char *s );
-bool Paint();
-void Close();
+    bool OnLButtonDown(guint32 nFlags, double x, double y);
+
+    bool OnMButtonDown(guint32 nFlags, double x, double y)
+    { return false; }
+
+    bool OnRButtonDown(guint32 nFlags, double x, double y);
+
+    bool OnLButtonUp(guint32 nFlags, double x, double y);
+
+    bool OnMButtonUp(guint32 nFlags, double x, double y)
+    { return false; }
+
+    bool OnRButtonUp(guint32 nFlags, double x, double y);
+
+    bool OnMouseMove(guint32 nFlags, double x, double y);
+
+    bool OnKeyPressed(char *s);
+
+    bool Paint();
+
+    void Close();
 };
 
 #include "2DView.h"
-typedef struct
-{
-	float data[MAX_POINTS_ON_WINDING][2];
+
+typedef struct {
+    float data[MAX_POINTS_ON_WINDING][2];
 } CtrlPts_t;
+
 #include "ControlPointsManager.h"
 
 extern OpenGLBinding g_QglTable;
@@ -142,17 +156,21 @@ extern _QERFaceData g_CancelFaceData;
 
 // call to validate the current changes into the editor
 extern void Textool_Validate();
+
 extern void Textool_Cancel();
 
-class CSynapseClientTexTool : public CSynapseClient
-{
+class CSynapseClientTexTool : public CSynapseClient {
 public:
 // CSynapseClient API
-bool RequestAPI( APIDescriptor_t *pAPI );
-const char* GetInfo();
+    bool RequestAPI(APIDescriptor_t *pAPI);
 
-CSynapseClientTexTool() { }
-virtual ~CSynapseClientTexTool() { }
+    const char *GetInfo();
+
+    CSynapseClientTexTool()
+    {}
+
+    virtual ~CSynapseClientTexTool()
+    {}
 };
 
 extern IWindow *g_pToolWnd;

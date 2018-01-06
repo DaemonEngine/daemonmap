@@ -23,9 +23,11 @@
 #define INCLUDED_WAL_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadWal( ArchiveFile& file );
-Image* LoadM8( ArchiveFile& file );
+Image *LoadWal(ArchiveFile &file);
+
+Image *LoadM8(ArchiveFile &file);
 
 #endif

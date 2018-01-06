@@ -29,12 +29,15 @@
 #define INCLUDED_POINTS_H
 
 void Pointfile_Clear();
-void Pointfile_Delete( void );
+
+void Pointfile_Delete(void);
 
 void Pointfile_Construct();
+
 void Pointfile_Destroy();
 
 class ISAXHandler;
-extern ISAXHandler& g_pointfile;
+
+extern ISAXHandler &g_pointfile;
 
 #endif

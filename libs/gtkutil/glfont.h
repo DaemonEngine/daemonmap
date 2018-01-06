@@ -24,18 +24,22 @@
 
 typedef unsigned int GLuint;
 
-class GLFont
-{
+class GLFont {
 public:
-virtual int getPixelHeight() const = 0;
-virtual int getPixelAscent() const = 0;
-virtual int getPixelDescent() const = 0;
-virtual void printString( const char *s ) = 0;
-virtual ~GLFont(){
-}
+    virtual int getPixelHeight() const = 0;
+
+    virtual int getPixelAscent() const = 0;
+
+    virtual int getPixelDescent() const = 0;
+
+    virtual void printString(const char *s) = 0;
+
+    virtual ~GLFont()
+    {
+    }
 };
 
-GLFont *glfont_create( const char* font_string );
+GLFont *glfont_create(const char *font_string);
 // release with delete
 
 #endif

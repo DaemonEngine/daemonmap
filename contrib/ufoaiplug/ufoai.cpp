@@ -44,121 +44,117 @@
 #include "ieclass.h"
 
 class UFOAIPluginDependencies :
-	public GlobalRadiantModuleRef,  // basic class for all other module refs
-	public GlobalUndoModuleRef,     // used to say radiant that something has changed and to undo that
-	public GlobalSceneGraphModuleRef, // necessary to handle data in the mapfile (change, retrieve data)
-	public GlobalEntityModuleRef,   // to access and modify the entities
-	public GlobalEntityClassManagerModuleRef
-{
+        public GlobalRadiantModuleRef,  // basic class for all other module refs
+        public GlobalUndoModuleRef,     // used to say radiant that something has changed and to undo that
+        public GlobalSceneGraphModuleRef, // necessary to handle data in the mapfile (change, retrieve data)
+        public GlobalEntityModuleRef,   // to access and modify the entities
+        public GlobalEntityClassManagerModuleRef {
 public:
-UFOAIPluginDependencies( void ) :
-	GlobalEntityModuleRef( GlobalRadiant().getRequiredGameDescriptionKeyValue( "entities" ) ),
-	GlobalEntityClassManagerModuleRef( GlobalRadiant().getRequiredGameDescriptionKeyValue( "entityclass" ) ){
-}
+    UFOAIPluginDependencies(void) :
+            GlobalEntityModuleRef(GlobalRadiant().getRequiredGameDescriptionKeyValue("entities")),
+            GlobalEntityClassManagerModuleRef(GlobalRadiant().getRequiredGameDescriptionKeyValue("entityclass"))
+    {
+    }
 };
 
-namespace UFOAI
-{
-	ui::Window g_mainwnd{ui::null};
+namespace UFOAI {
+    ui::Window g_mainwnd{ui::null};
 
-const char* init( void* hApp, void* pMainWidget ){
-	g_mainwnd = ui::Window::from(pMainWidget);
-	return "Initializing GTKRadiant UFOAI plugin";
-}
-const char* getName(){
-	return "UFO:AI";
-}
-const char* getCommandList(){
-	/*GlobalRadiant().getGameName()*/
-	return "About;-;Worldspawn reset;Worldspawn;Perform check;-;Level 1;Level 2;Level 3;Level 4;Level 5;Level 6;Level 7;Level 8;-;StepOn;ActorClip;WeaponClip;Nodraw";
-}
-const char* getCommandTitleList(){
-	return "";
-}
-void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
-	char const *message = NULL;
-	if ( string_equal( command, "About" ) ) {
-		char const *version_string = "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__
-			"\nRadiant version: " RADIANT_VERSION
-			"\nPlugin version: " PLUGIN_VERSION
-			"\nAuthor: Martin Gerhardy (tlh2000/mattn)\n";
-		GlobalRadiant().m_pfnMessageBox( g_mainwnd,
-										 version_string, "About",
-										 eMB_OK, eMB_ICONDEFAULT );
-	}
-	else if ( string_equal( command, "Level 1" ) ) {
-		filter_level( CONTENTS_LEVEL1 );
-	}
-	else if ( string_equal( command, "Level 2" ) ) {
-		filter_level( CONTENTS_LEVEL2 );
-	}
-	else if ( string_equal( command, "Level 3" ) ) {
-		filter_level( CONTENTS_LEVEL3 );
-	}
-	else if ( string_equal( command, "Worldspawn" ) ) {
-		assign_default_values_to_worldspawn( false, &message );
-	}
-	else if ( string_equal( command, "Worldspawn reset" ) ) {
-		assign_default_values_to_worldspawn( true, &message );
-	}
-	else if ( string_equal( command, "Perform check" ) ) {
-		check_map_values( &message );
-	}
-	else if ( string_equal( command, "Level 4" ) ) {
-		filter_level( CONTENTS_LEVEL4 );
-	}
-	else if ( string_equal( command, "Level 5" ) ) {
-		filter_level( CONTENTS_LEVEL5 );
-	}
-	else if ( string_equal( command, "Level 6" ) ) {
-		filter_level( CONTENTS_LEVEL6 );
-	}
-	else if ( string_equal( command, "Level 7" ) ) {
-		filter_level( CONTENTS_LEVEL7 );
-	}
-	else if ( string_equal( command, "Level 8" ) ) {
-		filter_level( CONTENTS_LEVEL8 );
-	}
-	else if ( string_equal( command, "StepOn" ) ) {
-		filter_stepon();
-	}
-	else if ( string_equal( command, "ActorClip" ) ) {
-		filter_actorclip();
-	}
-	else if ( string_equal( command, "WeaponClip" ) ) {
-		filter_weaponclip();
-	}
-	else if ( string_equal( command, "NoDraw" ) ) {
-		filter_nodraw();
-	}
+    const char *init(void *hApp, void *pMainWidget)
+    {
+        g_mainwnd = ui::Window::from(pMainWidget);
+        return "Initializing GTKRadiant UFOAI plugin";
+    }
 
-	if ( message != NULL ) {
-		GlobalRadiant().m_pfnMessageBox( g_mainwnd,
-										 message, "Note",
-										 eMB_OK, eMB_ICONDEFAULT );
-	}
-	SceneChangeNotify();
-}
+    const char *getName()
+    {
+        return "UFO:AI";
+    }
+
+    const char *getCommandList()
+    {
+        /*GlobalRadiant().getGameName()*/
+        return "About;-;Worldspawn reset;Worldspawn;Perform check;-;Level 1;Level 2;Level 3;Level 4;Level 5;Level 6;Level 7;Level 8;-;StepOn;ActorClip;WeaponClip;Nodraw";
+    }
+
+    const char *getCommandTitleList()
+    {
+        return "";
+    }
+
+    void dispatch(const char *command, float *vMin, float *vMax, bool bSingleBrush)
+    {
+        char const *message = NULL;
+        if (string_equal(command, "About")) {
+            char const *version_string = "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__
+                    "\nRadiant version: " RADIANT_VERSION
+                    "\nPlugin version: " PLUGIN_VERSION
+                    "\nAuthor: Martin Gerhardy (tlh2000/mattn)\n";
+            GlobalRadiant().m_pfnMessageBox(g_mainwnd,
+                                            version_string, "About",
+                                            eMB_OK, eMB_ICONDEFAULT);
+        } else if (string_equal(command, "Level 1")) {
+            filter_level(CONTENTS_LEVEL1);
+        } else if (string_equal(command, "Level 2")) {
+            filter_level(CONTENTS_LEVEL2);
+        } else if (string_equal(command, "Level 3")) {
+            filter_level(CONTENTS_LEVEL3);
+        } else if (string_equal(command, "Worldspawn")) {
+            assign_default_values_to_worldspawn(false, &message);
+        } else if (string_equal(command, "Worldspawn reset")) {
+            assign_default_values_to_worldspawn(true, &message);
+        } else if (string_equal(command, "Perform check")) {
+            check_map_values(&message);
+        } else if (string_equal(command, "Level 4")) {
+            filter_level(CONTENTS_LEVEL4);
+        } else if (string_equal(command, "Level 5")) {
+            filter_level(CONTENTS_LEVEL5);
+        } else if (string_equal(command, "Level 6")) {
+            filter_level(CONTENTS_LEVEL6);
+        } else if (string_equal(command, "Level 7")) {
+            filter_level(CONTENTS_LEVEL7);
+        } else if (string_equal(command, "Level 8")) {
+            filter_level(CONTENTS_LEVEL8);
+        } else if (string_equal(command, "StepOn")) {
+            filter_stepon();
+        } else if (string_equal(command, "ActorClip")) {
+            filter_actorclip();
+        } else if (string_equal(command, "WeaponClip")) {
+            filter_weaponclip();
+        } else if (string_equal(command, "NoDraw")) {
+            filter_nodraw();
+        }
+
+        if (message != NULL) {
+            GlobalRadiant().m_pfnMessageBox(g_mainwnd,
+                                            message, "Note",
+                                            eMB_OK, eMB_ICONDEFAULT);
+        }
+        SceneChangeNotify();
+    }
 } // namespace
 
 
-class UFOAIModule : public TypeSystemRef
-{
-_QERPluginTable m_plugin;
+class UFOAIModule : public TypeSystemRef {
+    _QERPluginTable m_plugin;
 public:
-typedef _QERPluginTable Type;
-STRING_CONSTANT( Name, "UFO:AI" );
+    typedef _QERPluginTable Type;
 
-UFOAIModule(){
-	m_plugin.m_pfnQERPlug_Init = &UFOAI::init;
-	m_plugin.m_pfnQERPlug_GetName = &UFOAI::getName;
-	m_plugin.m_pfnQERPlug_GetCommandList = &UFOAI::getCommandList;
-	m_plugin.m_pfnQERPlug_GetCommandTitleList = &UFOAI::getCommandTitleList;
-	m_plugin.m_pfnQERPlug_Dispatch = &UFOAI::dispatch;
-}
-_QERPluginTable* getTable(){
-	return &m_plugin;
-}
+    STRING_CONSTANT(Name, "UFO:AI");
+
+    UFOAIModule()
+    {
+        m_plugin.m_pfnQERPlug_Init = &UFOAI::init;
+        m_plugin.m_pfnQERPlug_GetName = &UFOAI::getName;
+        m_plugin.m_pfnQERPlug_GetCommandList = &UFOAI::getCommandList;
+        m_plugin.m_pfnQERPlug_GetCommandTitleList = &UFOAI::getCommandTitleList;
+        m_plugin.m_pfnQERPlug_Dispatch = &UFOAI::dispatch;
+    }
+
+    _QERPluginTable *getTable()
+    {
+        return &m_plugin;
+    }
 };
 
 typedef SingletonModule<UFOAIModule, UFOAIPluginDependencies> SingletonUFOAIModule;
@@ -166,34 +162,35 @@ typedef SingletonModule<UFOAIModule, UFOAIPluginDependencies> SingletonUFOAIModu
 SingletonUFOAIModule g_UFOAIModule;
 
 
-class UFOAIToolbarDependencies : public ModuleRef<_QERPluginTable>
-{
+class UFOAIToolbarDependencies : public ModuleRef<_QERPluginTable> {
 public:
-UFOAIToolbarDependencies() : ModuleRef<_QERPluginTable>( "UFO:AI" ){
-}
+    UFOAIToolbarDependencies() : ModuleRef<_QERPluginTable>("UFO:AI")
+    {
+    }
 };
 
-class UFOAIToolbarModule : public TypeSystemRef
-{
-_QERPlugToolbarTable m_table;
+class UFOAIToolbarModule : public TypeSystemRef {
+    _QERPlugToolbarTable m_table;
 public:
-typedef _QERPlugToolbarTable Type;
-STRING_CONSTANT( Name, "UFO:AI" );
+    typedef _QERPlugToolbarTable Type;
 
-UFOAIToolbarModule(){
-	if ( !strcmp( GlobalRadiant().getGameDescriptionKeyValue( "name" ), "UFO:Alien Invasion" ) ) {
-		m_table.m_pfnToolbarButtonCount = ToolbarButtonCount;
-		m_table.m_pfnGetToolbarButton = GetToolbarButton;
-	}
-	else
-	{
-		m_table.m_pfnToolbarButtonCount = ToolbarNoButtons;
-		m_table.m_pfnGetToolbarButton = GetToolbarNoButton;
-	}
-}
-_QERPlugToolbarTable* getTable(){
-	return &m_table;
-}
+    STRING_CONSTANT(Name, "UFO:AI");
+
+    UFOAIToolbarModule()
+    {
+        if (!strcmp(GlobalRadiant().getGameDescriptionKeyValue("name"), "UFO:Alien Invasion")) {
+            m_table.m_pfnToolbarButtonCount = ToolbarButtonCount;
+            m_table.m_pfnGetToolbarButton = GetToolbarButton;
+        } else {
+            m_table.m_pfnToolbarButtonCount = ToolbarNoButtons;
+            m_table.m_pfnGetToolbarButton = GetToolbarNoButton;
+        }
+    }
+
+    _QERPlugToolbarTable *getTable()
+    {
+        return &m_table;
+    }
 };
 
 typedef SingletonModule<UFOAIToolbarModule, UFOAIToolbarDependencies> SingletonUFOAIToolbarModule;
@@ -201,9 +198,10 @@ typedef SingletonModule<UFOAIToolbarModule, UFOAIToolbarDependencies> SingletonU
 SingletonUFOAIToolbarModule g_UFOAIToolbarModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
-	initialiseModule( server );
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
+{
+    initialiseModule(server);
 
-	g_UFOAIModule.selfRegister();
-	g_UFOAIToolbarModule.selfRegister();
+    g_UFOAIModule.selfRegister();
+    g_UFOAIToolbarModule.selfRegister();
 }

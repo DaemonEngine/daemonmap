@@ -27,60 +27,66 @@
 #include "camera.h"
 #include "globaldefs.h"
 
-void Sys_ERROR( char* text, ... ){
-	va_list argptr;
-	char buf[32768];
+void Sys_ERROR(char *text, ...)
+{
+    va_list argptr;
+    char buf[32768];
 
-	va_start( argptr,text );
-	vsprintf( buf, text,argptr );
-	va_end( argptr );
+    va_start(argptr, text);
+    vsprintf(buf, text, argptr);
+    va_end(argptr);
 
-	Sys_Printf( "Camera::ERROR->%s", buf );
+    Sys_Printf("Camera::ERROR->%s", buf);
 }
 
-char* UnixToDosPath( char* path ){
+char *UnixToDosPath(char *path)
+{
 #if !GDEF_OS_WINDOWS
-	return path;
+    return path;
 #else
-	for ( char* p = path; *p; p++ )
-	{
-		if ( *p == '/' ) {
-			*p = '\\';
-		}
-	}
-	return path;
+    for ( char* p = path; *p; p++ )
+    {
+        if ( *p == '/' ) {
+            *p = '\\';
+        }
+    }
+    return path;
 #endif
 }
 
-void ExtractFilePath( const char *path, char *dest ){
-	const char *src;
+void ExtractFilePath(const char *path, char *dest)
+{
+    const char *src;
 
-	src = path + strlen( path ) - 1;
+    src = path + strlen(path) - 1;
 
 //
 // back up until a \ or the start
 //
-	while ( src != path && *( src - 1 ) != '/' && *( src - 1 ) != '\\' )
-		src--;
+    while (src != path && *(src - 1) != '/' && *(src - 1) != '\\') {
+        src--;
+    }
 
-	memcpy( dest, path, src - path );
-	dest[src - path] = 0;
+    memcpy(dest, path, src - path);
+    dest[src - path] = 0;
 }
 
-const char* ExtractFilename( const char* path ){
-	char* p = strrchr( path, '/' );
-	if ( !p ) {
-		p = strrchr( path, '\\' );
+const char *ExtractFilename(const char *path)
+{
+    char *p = strrchr(path, '/');
+    if (!p) {
+        p = strrchr(path, '\\');
 
-		if ( !p ) {
-			return path;
-		}
-	}
-	return ++p;
+        if (!p) {
+            return path;
+        }
+    }
+    return ++p;
 }
 
-int Q_stricmp( const char *s1, const char *s2 ) {
-	return string_equal_nocase( s1, s2 );
+int Q_stricmp(const char *s1, const char *s2)
+{
+    return string_equal_nocase(s1, s2);
 }
 
 /*
@@ -88,69 +94,78 @@ int Q_stricmp( const char *s1, const char *s2 ) {
    FileExists
    ==============
  */
-bool FileExists( const char *filename ){
-	FILE    *f;
+bool FileExists(const char *filename)
+{
+    FILE *f;
 
-	f = fopen( filename, "r" );
-	if ( !f ) {
-		return false;
-	}
-	fclose( f );
-	return true;
+    f = fopen(filename, "r");
+    if (!f) {
+        return false;
+    }
+    fclose(f);
+    return true;
 }
 
 //
 // command buffer
 // empty wrappers, don't really use them here
 //
-void Cbuf_AddText( const char *text ) {};
-void Cbuf_Execute( void ) {};
+void Cbuf_AddText(const char *text)
+{};
+
+void Cbuf_Execute(void)
+{};
 
 //
 // Common
 //
 
-void CDECL Com_Error( int level, const char *error, ... ){
-	va_list argptr;
-	char buf[32768];
+void CDECL Com_Error(int level, const char *error, ...)
+{
+    va_list argptr;
+    char buf[32768];
 
-	va_start( argptr,error );
-	vsprintf( buf, error,argptr );
-	va_end( argptr );
+    va_start(argptr, error);
+    vsprintf(buf, error, argptr);
+    va_end(argptr);
 
-	Sys_Printf( "Camera::ERROR->%s", buf );
+    Sys_Printf("Camera::ERROR->%s", buf);
 }
 
-void CDECL Com_Printf( const char* msg, ... ){
-	va_list argptr;
-	char buf[32768];
+void CDECL Com_Printf(const char *msg, ...)
+{
+    va_list argptr;
+    char buf[32768];
 
-	va_start( argptr,msg );
-	vsprintf( buf, msg,argptr );
-	va_end( argptr );
+    va_start(argptr, msg);
+    vsprintf(buf, msg, argptr);
+    va_end(argptr);
 
-	Sys_Printf( "Camera::%s", buf );
+    Sys_Printf("Camera::%s", buf);
 }
 
-void CDECL Com_DPrintf( const char* msg, ... ){
+void CDECL Com_DPrintf(const char *msg, ...)
+{
 #if GDEF_DEBUG
-	va_list argptr;
-	char buf[32768];
+    va_list argptr;
+    char buf[32768];
 
-	va_start( argptr,msg );
-	vsprintf( buf, msg,argptr );
-	va_end( argptr );
+    va_start( argptr,msg );
+    vsprintf( buf, msg,argptr );
+    va_end( argptr );
 
-	Sys_Printf( "Camera::%s", buf );
+    Sys_Printf( "Camera::%s", buf );
 #endif
 }
 
-void *Com_Allocate( int bytes ) {
-	return( malloc( bytes ) );
+void *Com_Allocate(int bytes)
+{
+    return (malloc(bytes));
 }
 
-void Com_Dealloc( void *ptr ) {
-	free( ptr );
+void Com_Dealloc(void *ptr)
+{
+    free(ptr);
 }
 
 //
@@ -158,81 +173,87 @@ void Com_Dealloc( void *ptr ) {
 //
 
 #if GDEF_COMPILER_MSVC
-	#pragma warning(disable : 4311)
-	#pragma warning(disable : 4312)
+#pragma warning(disable : 4311)
+#pragma warning(disable : 4312)
 #endif
 
-int FS_Read( void *buffer, int len, fileHandle_t f ) {
-	return fread( buffer, len, 1, (FILE *)f );
+int FS_Read(void *buffer, int len, fileHandle_t f)
+{
+    return fread(buffer, len, 1, (FILE *) f);
 }
 
-int FS_Write( const void *buffer, int len, fileHandle_t h ) {
-	return fwrite( buffer, len, 1, (FILE *)h );
+int FS_Write(const void *buffer, int len, fileHandle_t h)
+{
+    return fwrite(buffer, len, 1, (FILE *) h);
 }
 
-int FS_ReadFile( const char *qpath, void **buffer ) {
-	fileHandle_t h;
-	byte*         buf;
-	int len;
+int FS_ReadFile(const char *qpath, void **buffer)
+{
+    fileHandle_t h;
+    byte *buf;
+    int len;
 
-	buf = NULL;
+    buf = NULL;
 
-	len = FS_FOpenFileRead( qpath, &h, qfalse );
+    len = FS_FOpenFileRead(qpath, &h, qfalse);
 
-	if ( h == 0 ) {
-		if ( buffer ) {
-			*buffer = NULL;
-		}
+    if (h == 0) {
+        if (buffer) {
+            *buffer = NULL;
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
-	buf = (byte *)Com_Allocate( len + 1 );
+    buf = (byte *) Com_Allocate(len + 1);
 
-	*buffer = buf;
+    *buffer = buf;
 
-	FS_Read( buf, len, h );
+    FS_Read(buf, len, h);
 
-	buf[len] = 0;
-	FS_FCloseFile( h );
+    buf[len] = 0;
+    FS_FCloseFile(h);
 
-	return len;
+    return len;
 }
 
-void FS_FreeFile( void *buffer ) {
-	Com_Dealloc( buffer );
+void FS_FreeFile(void *buffer)
+{
+    Com_Dealloc(buffer);
 }
 
-int FS_FOpenFileRead( const char *filename, fileHandle_t *file, bool uniqueFILE ) {
-	FILE  *fh;
-	long len;
+int FS_FOpenFileRead(const char *filename, fileHandle_t *file, bool uniqueFILE)
+{
+    FILE *fh;
+    long len;
 
-	fh = fopen( filename, "rb" );
-	*file = *(fileHandle_t *)&fh;
+    fh = fopen(filename, "rb");
+    *file = *(fileHandle_t *) &fh;
 
-	if ( file ) {
-		fseek( fh, 0, SEEK_END );
-		len = ftell( fh );
-		rewind( fh );
-		return len;
-	}
-	else{
-		return -1;
-	}
+    if (file) {
+        fseek(fh, 0, SEEK_END);
+        len = ftell(fh);
+        rewind(fh);
+        return len;
+    } else {
+        return -1;
+    }
 }
 
-fileHandle_t FS_FOpenFileWrite( const char *filename ) {
-	FILE          *fh;
-	fileHandle_t f;
+fileHandle_t FS_FOpenFileWrite(const char *filename)
+{
+    FILE *fh;
+    fileHandle_t f;
 
-	memset( &f, 0, sizeof( f ) );
+    memset(&f, 0, sizeof(f));
 
-	fh = fopen( filename, "wb" );
+    fh = fopen(filename, "wb");
 
-	f = (fileHandle_t)fh;
-	return f;
+    f = (fileHandle_t) fh;
+    return f;
 }
 
-void FS_FCloseFile( fileHandle_t f ) {
-	fclose( (FILE *)f );
+void FS_FCloseFile(fileHandle_t f)
+{
+    fclose((FILE *) f);
 }

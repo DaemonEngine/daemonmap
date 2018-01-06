@@ -27,22 +27,33 @@
 #include "generic/callback.h"
 
 void GroupDialog_Construct();
+
 void GroupDialog_Destroy();
 
-void GroupDialog_constructWindow( ui::Window main_window );
+void GroupDialog_constructWindow(ui::Window main_window);
+
 void GroupDialog_destroyWindow();
+
 ui::Window GroupDialog_getWindow();
+
 void GroupDialog_show();
 
-inline void RawStringExport( const char* string, const Callback<void(const char *)> &importer ){
-	importer( string );
+inline void RawStringExport(const char *string, const Callback<void(const char *)> &importer)
+{
+    importer(string);
 }
-typedef ConstPointerCaller<char, void(const Callback<void(const char *)> &), RawStringExport> RawStringExportCaller;
-ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const Callback<void(const Callback<void(const char *)> &)>& title );
 
-void GroupDialog_showPage( ui::Widget page );
-void GroupDialog_updatePageTitle( ui::Widget page );
+typedef ConstPointerCaller<char, void(const Callback<void(const char *)> &), RawStringExport> RawStringExportCaller;
+
+ui::Widget GroupDialog_addPage(const char *tabLabel, ui::Widget widget,
+                               const Callback<void(const Callback<void(const char *)> &)> &title);
+
+void GroupDialog_showPage(ui::Widget page);
+
+void GroupDialog_updatePageTitle(ui::Widget page);
+
 bool GroupDialog_isShown();
+
 ui::Widget GroupDialog_getPage();
 
 #endif

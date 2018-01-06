@@ -32,35 +32,42 @@
 
 class DPlane;
 
-class DWinding
-{
+class DWinding {
 public:
-DWinding();
-virtual ~DWinding();
+    DWinding();
 
-void AllocWinding( int points );
+    virtual ~DWinding();
 
-bool ChopWinding( DPlane* chopPlane );
-bool ChopWindingInPlace( DPlane* chopPlane, vec_t ON_EPSILON );
-void ClipWindingEpsilon( DPlane* chopPlane, vec_t epsilon, DWinding** front, DWinding** back );
+    void AllocWinding(int points);
 
-void CheckWinding();
-void WindingCentre( vec3_t centre );
-void WindingBounds( vec3_t mins, vec3_t maxs );
-void RemoveColinearPoints();
+    bool ChopWinding(DPlane *chopPlane);
 
-DWinding* ReverseWinding();
-DWinding* CopyWinding();
-DPlane* WindingPlane();
+    bool ChopWindingInPlace(DPlane *chopPlane, vec_t ON_EPSILON);
 
-int WindingOnPlaneSide( vec3_t normal, vec_t dist );
+    void ClipWindingEpsilon(DPlane *chopPlane, vec_t epsilon, DWinding **front, DWinding **back);
 
-vec_t WindingArea();
+    void CheckWinding();
+
+    void WindingCentre(vec3_t centre);
+
+    void WindingBounds(vec3_t mins, vec3_t maxs);
+
+    void RemoveColinearPoints();
+
+    DWinding *ReverseWinding();
+
+    DWinding *CopyWinding();
+
+    DPlane *WindingPlane();
+
+    int WindingOnPlaneSide(vec3_t normal, vec_t dist);
+
+    vec_t WindingArea();
 
 //	members
-int numpoints;
-vec3_t* p;
-vec3_t clr;
+    int numpoints;
+    vec3_t *p;
+    vec3_t clr;
 };
 
 const int MAX_POINTS_ON_WINDING = 64;

@@ -28,22 +28,26 @@
 // CBrushCheckDialog dialog
 
 
-CBrushCheckDialog::CBrushCheckDialog( CWnd* pParent /*=NULL*/ )
-	: CDialog( CBrushCheckDialog::IDD, pParent ){
-	//{{AFX_DATA_INIT(CBrushCheckDialog)
-	//}}AFX_DATA_INIT
+CBrushCheckDialog::CBrushCheckDialog(CWnd *pParent /*=NULL*/ )
+        : CDialog(CBrushCheckDialog::IDD, pParent)
+{
+    //{{AFX_DATA_INIT(CBrushCheckDialog)
+    //}}AFX_DATA_INIT
 }
 
 
-void CBrushCheckDialog::DoDataExchange( CDataExchange* pDX ){
-	CDialog::DoDataExchange( pDX );
-	//{{AFX_DATA_MAP(CBrushCheckDialog)
-	DDX_Control( pDX, IDC_PROGRESS1, m_prog1 );
-	//}}AFX_DATA_MAP
+void CBrushCheckDialog::DoDataExchange(CDataExchange *pDX)
+{
+    CDialog::DoDataExchange(pDX);
+    //{{AFX_DATA_MAP(CBrushCheckDialog)
+    DDX_Control(pDX, IDC_PROGRESS1, m_prog1);
+    //}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CBrushCheckDialog, CDialog )
+BEGIN_MESSAGE_MAP( CBrushCheckDialog, CDialog
+)
+
 //{{AFX_MSG_MAP(CBrushCheckDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP

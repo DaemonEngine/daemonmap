@@ -22,16 +22,18 @@
 #if !defined ( INCLUDED_NULLMODEL_H )
 #define INCLUDED_NULLMODEL_H
 
-namespace scene
-{
-class Node;
+namespace scene {
+    class Node;
 }
 
 #include "generic/referencecounted.h"
+
 typedef SmartReference<scene::Node, IncRefDecRefCounter<scene::Node> > NodeSmartReference;
+
 NodeSmartReference NewNullModel();
 
 void NullModel_construct();
+
 void NullModel_destroy();
 
 #endif

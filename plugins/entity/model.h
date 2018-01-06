@@ -29,81 +29,98 @@
 #include "os/path.h"
 #include "moduleobserver.h"
 
-class EModel : public ModuleObserver
-{
-ResourceReference m_resource;
-scene::Traversable& m_traverse;
-scene::Node* m_node;
-Callback<void()> m_modelChanged;
+class EModel : public ModuleObserver {
+    ResourceReference m_resource;
+    scene::Traversable &m_traverse;
+    scene::Node *m_node;
+    Callback<void()> m_modelChanged;
 
 public:
-EModel( scene::Traversable& traversable, const Callback<void()>& modelChanged )
-	: m_resource( "" ), m_traverse( traversable ), m_node( 0 ), m_modelChanged( modelChanged ){
-	m_resource.attach( *this );
-}
-~EModel(){
-	m_resource.detach( *this );
-}
+    EModel(scene::Traversable &traversable, const Callback<void()> &modelChanged)
+            : m_resource(""), m_traverse(traversable), m_node(0), m_modelChanged(modelChanged)
+    {
+        m_resource.attach(*this);
+    }
 
-void realise(){
-	m_resource.get()->load();
-	m_node = m_resource.get()->getNode();
-	if ( m_node != 0 ) {
-		m_traverse.insert( *m_node );
-	}
-}
-void unrealise(){
-	if ( m_node != 0 ) {
-		m_traverse.erase( *m_node );
-	}
-}
+    ~EModel()
+    {
+        m_resource.detach(*this);
+    }
 
-void modelChanged( const char* value ){
-	StringOutputStream cleaned( string_length( value ) );
-	cleaned << PathCleaned( value );
-	m_resource.detach( *this );
-	m_resource.setName( cleaned.c_str() );
-	m_resource.attach( *this );
-	m_modelChanged();
-}
-typedef MemberCaller<EModel, void(const char*), &EModel::modelChanged> ModelChangedCaller;
+    void realise()
+    {
+        m_resource.get()->load();
+        m_node = m_resource.get()->getNode();
+        if (m_node != 0) {
+            m_traverse.insert(*m_node);
+        }
+    }
 
-const char* getName() const {
-	return m_resource.getName();
-}
-scene::Node* getNode() const {
-	return m_node;
-}
+    void unrealise()
+    {
+        if (m_node != 0) {
+            m_traverse.erase(*m_node);
+        }
+    }
+
+    void modelChanged(const char *value)
+    {
+        StringOutputStream cleaned(string_length(value));
+        cleaned << PathCleaned(value);
+        m_resource.detach(*this);
+        m_resource.setName(cleaned.c_str());
+        m_resource.attach(*this);
+        m_modelChanged();
+    }
+
+    typedef MemberCaller<EModel, void(const char *), &EModel::modelChanged> ModelChangedCaller;
+
+    const char *getName() const
+    {
+        return m_resource.getName();
+    }
+
+    scene::Node *getNode() const
+    {
+        return m_node;
+    }
 };
 
-class SingletonModel
-{
-TraversableNode m_traverse;
-EModel m_model;
+class SingletonModel {
+    TraversableNode m_traverse;
+    EModel m_model;
 public:
-SingletonModel()
-	: m_model( m_traverse, Callback<void()>() ){
-}
+    SingletonModel()
+            : m_model(m_traverse, Callback<void()>())
+    {
+    }
 
-void attach( scene::Traversable::Observer* observer ){
-	m_traverse.attach( observer );
-}
-void detach( scene::Traversable::Observer* observer ){
-	m_traverse.detach( observer );
-}
+    void attach(scene::Traversable::Observer *observer)
+    {
+        m_traverse.attach(observer);
+    }
 
-scene::Traversable& getTraversable(){
-	return m_traverse;
-}
+    void detach(scene::Traversable::Observer *observer)
+    {
+        m_traverse.detach(observer);
+    }
 
-void modelChanged( const char* value ){
-	m_model.modelChanged( value );
-}
-typedef MemberCaller<SingletonModel, void(const char*), &SingletonModel::modelChanged> ModelChangedCaller;
+    scene::Traversable &getTraversable()
+    {
+        return m_traverse;
+    }
 
-scene::Node* getNode() const {
-	return m_model.getNode();
-}
+    void modelChanged(const char *value)
+    {
+        m_model.modelChanged(value);
+    }
+
+    typedef MemberCaller<SingletonModel, void(const char *), &SingletonModel::modelChanged> ModelChangedCaller;
+
+    scene::Node *getNode() const
+    {
+        return m_model.getNode();
+    }
 };
 
 #endif

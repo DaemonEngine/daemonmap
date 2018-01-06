@@ -33,28 +33,39 @@
 
 #include <uilib/uilib.h>
 
-void command_connect_accelerator( const char* commandName );
-void command_disconnect_accelerator( const char* commandName );
-void toggle_add_accelerator( const char* commandName );
-void toggle_remove_accelerator( const char* name );
+void command_connect_accelerator(const char *commandName);
+
+void command_disconnect_accelerator(const char *commandName);
+
+void toggle_add_accelerator(const char *commandName);
+
+void toggle_remove_accelerator(const char *name);
 
 // this also sets up the shortcut using command_connect_accelerator
-ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char *mnemonic, const char* commandName );
+ui::MenuItem create_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const char *commandName);
+
 // this also sets up the shortcut using command_connect_accelerator
-ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const char* commandName );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const char *commandName);
 
 
 // this DOES NOT set up the shortcut using command_connect_accelerator
-ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* description, const char* icon, const char* commandName );
+ui::ToolButton
+toolbar_append_button(ui::Toolbar toolbar, const char *description, const char *icon, const char *commandName);
+
 // this DOES NOT set up the shortcut using command_connect_accelerator
-ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const char* commandName );
+ui::ToggleToolButton
+toolbar_append_toggle_button(ui::Toolbar toolbar, const char *description, const char *icon, const char *commandName);
 
 
-template<typename Element> class BasicVector3;
+template<typename Element>
+class BasicVector3;
+
 typedef BasicVector3<float> Vector3;
-bool color_dialog( ui::Window parent, Vector3& color, const char* title = "Choose Color" );
 
-void button_clicked_entry_browse_file( ui::Widget widget, ui::Entry entry );
-void button_clicked_entry_browse_directory( ui::Widget widget, ui::Entry entry );
+bool color_dialog(ui::Window parent, Vector3 &color, const char *title = "Choose Color");
+
+void button_clicked_entry_browse_file(ui::Widget widget, ui::Entry entry);
+
+void button_clicked_entry_browse_directory(ui::Widget widget, ui::Entry entry);
 
 #endif

@@ -24,6 +24,6 @@
 #if !defined( INCLUDED_HELP_H )
 #define INCLUDED_HELP_H
 
-void create_game_help_menu( ui::Menu menu );
+void create_game_help_menu(ui::Menu menu);
 
 #endif

@@ -32,8 +32,9 @@
 #define INCLUDED_JPEG_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadJPG( ArchiveFile& file );
+Image *LoadJPG(ArchiveFile &file);
 
 #endif

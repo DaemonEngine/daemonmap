@@ -30,72 +30,89 @@
 #include "mathlib.h"
 
 class DListener;
+
 class Shader;
 
-const int BOUNDS_ALL  = 0;
+const int BOUNDS_ALL = 0;
 const int BOUNDS_APEX = 1;
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-class DBobView : public Renderable, public OpenGLRenderable, public Entity::Observer
-{
-Shader* m_shader_line;
-Shader* m_shader_box;
+class DBobView : public Renderable, public OpenGLRenderable, public Entity::Observer {
+    Shader *m_shader_line;
+    Shader *m_shader_box;
 public:
-DBobView();
-virtual ~DBobView();
+    DBobView();
+
+    virtual ~DBobView();
 
 protected:
-vec3_t* path;
+    vec3_t *path;
 public:
-bool m_bShowExtra;
-int boundingShow;
-DListener* eyes;
-float fVarGravity;
-float fMultiplier;
-int nPathCount;
+    bool m_bShowExtra;
+    int boundingShow;
+    DListener *eyes;
+    float fVarGravity;
+    float fMultiplier;
+    int nPathCount;
 
-Entity* trigger;
-Entity* target;
+    Entity *trigger;
+    Entity *target;
 
-bool UpdatePath();
-char entTarget[256];
-char entTrigger[256];
-void Begin( const char*, const char*, float, int, float, bool, bool );
-bool CalculateTrajectory( vec3_t, vec3_t, float, int, float );
+    bool UpdatePath();
 
-void SetPath( vec3_t* pPath );
+    char entTarget[256];
+    char entTrigger[256];
 
-void render( RenderStateFlags state ) const;
-void renderSolid( Renderer& renderer, const VolumeTest& volume ) const;
-void renderWireframe( Renderer& renderer, const VolumeTest& volume ) const;
+    void Begin(const char *, const char *, float, int, float, bool, bool);
 
-void constructShaders();
-void destroyShaders();
+    bool CalculateTrajectory(vec3_t, vec3_t, float, int, float);
 
-void valueChanged( const char* value ){
-	UpdatePath();
-}
-typedef MemberCaller<DBobView, void(const char*), &DBobView::valueChanged> ValueChangedCaller;
-void insert( const char* key, EntityKeyValue& value ){
-	value.attach( ValueChangedCaller( *this ) );
-}
-void erase( const char* key, EntityKeyValue& value ){
-	value.detach( ValueChangedCaller( *this ) );
-}
-void clear(){
-	if ( trigger != 0 ) {
-		trigger->detach( *this );
-		target->detach( *this );
-		trigger = 0;
-		target = 0;
-	}
-}
+    void SetPath(vec3_t *pPath);
+
+    void render(RenderStateFlags state) const;
+
+    void renderSolid(Renderer &renderer, const VolumeTest &volume) const;
+
+    void renderWireframe(Renderer &renderer, const VolumeTest &volume) const;
+
+    void constructShaders();
+
+    void destroyShaders();
+
+    void valueChanged(const char *value)
+    {
+        UpdatePath();
+    }
+
+    typedef MemberCaller<DBobView, void(const char *), &DBobView::valueChanged> ValueChangedCaller;
+
+    void insert(const char *key, EntityKeyValue &value)
+    {
+        value.attach(ValueChangedCaller(*this));
+    }
+
+    void erase(const char *key, EntityKeyValue &value)
+    {
+        value.detach(ValueChangedCaller(*this));
+    }
+
+    void clear()
+    {
+        if (trigger != 0) {
+            trigger->detach(*this);
+            target->detach(*this);
+            trigger = 0;
+            target = 0;
+        }
+    }
 };
 
 class Entity;
-void DBobView_setEntity( Entity& entity, float multiplier, int points, float varGravity, bool bNoUpdate, bool bShowExtra );
+
+void
+DBobView_setEntity(Entity &entity, float multiplier, int points, float varGravity, bool bNoUpdate, bool bShowExtra);
 
 #endif // !defined(AFX_BOBVIEW_H__6E36062A_EF0B_11D4_ACF7_004095A18133__INCLUDED_)

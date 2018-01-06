@@ -29,57 +29,73 @@
 #include "modulesystem/singletonmodule.h"
 #include "typesystem.h"
 
-namespace Sample
-{
-const char* init( void* hApp, void* pMainWidget ){
-	return "";
-}
-const char* getName(){
-	return "Sample Plugin";
-}
-const char* getCommandList(){
-	return "About;Do Something";
-}
-const char* getCommandTitleList(){
-	return "";
-}
-void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
-	if ( string_equal( command, "About" ) ) {
-		globalOutputStream() << "Sample Demo Plugin\n";
-	}
-	if ( string_equal( command, "Do Something" ) ) {
-		globalOutputStream() << "Sample Command\n";
-	}
-}
+namespace Sample {
+    const char *init(void *hApp, void *pMainWidget)
+    {
+        return "";
+    }
+
+    const char *getName()
+    {
+        return "Sample Plugin";
+    }
+
+    const char *getCommandList()
+    {
+        return "About;Do Something";
+    }
+
+    const char *getCommandTitleList()
+    {
+        return "";
+    }
+
+    void dispatch(const char *command, float *vMin, float *vMax, bool bSingleBrush)
+    {
+        if (string_equal(command, "About")) {
+            globalOutputStream() << "Sample Demo Plugin\n";
+        }
+        if (string_equal(command, "Do Something")) {
+            globalOutputStream() << "Sample Command\n";
+        }
+    }
 
 } // namespace
 
-class SamplePluginModule : public TypeSystemRef
-{
-_QERPluginTable m_plugin;
+class SamplePluginModule : public TypeSystemRef {
+    _QERPluginTable m_plugin;
 public:
-typedef _QERPluginTable Type;
-STRING_CONSTANT( Name, "sample" );
+    typedef _QERPluginTable Type;
+    STRING_CONSTANT( Name,
+    "sample" );
 
-SamplePluginModule(){
-	m_plugin.m_pfnQERPlug_Init = &Sample::init;
-	m_plugin.m_pfnQERPlug_GetName = &Sample::getName;
-	m_plugin.m_pfnQERPlug_GetCommandList = &Sample::getCommandList;
-	m_plugin.m_pfnQERPlug_GetCommandTitleList = &Sample::getCommandTitleList;
-	m_plugin.m_pfnQERPlug_Dispatch = &Sample::dispatch;
-}
-_QERPluginTable* getTable(){
-	return &m_plugin;
-}
+    SamplePluginModule()
+    {
+        m_plugin.m_pfnQERPlug_Init = &Sample::init;
+        m_plugin.m_pfnQERPlug_GetName = &Sample::getName;
+        m_plugin.m_pfnQERPlug_GetCommandList = &Sample::getCommandList;
+        m_plugin.m_pfnQERPlug_GetCommandTitleList = &Sample::getCommandTitleList;
+        m_plugin.m_pfnQERPlug_Dispatch = &Sample::dispatch;
+    }
+
+    _QERPluginTable *getTable()
+    {
+        return &m_plugin;
+    }
 };
 
-typedef SingletonModule<SamplePluginModule> SingletonSamplePluginModule;
+typedef SingletonModule <SamplePluginModule> SingletonSamplePluginModule;
 
 SingletonSamplePluginModule g_SamplePluginModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
-	initialiseModule( server );
+extern "C" void RADIANT_DLLEXPORT
+Radiant_RegisterModules( ModuleServer
+& server ){
+initialiseModule( server );
 
-	g_SamplePluginModule.selfRegister();
+g_SamplePluginModule.
+
+selfRegister();
+
 }

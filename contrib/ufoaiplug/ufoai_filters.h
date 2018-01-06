@@ -19,11 +19,15 @@
 #if !defined( INCLUDED_FILTERS_H )
 #define INCLUDED_FILTERS_H
 
-void filter_level( int flag );
-void filter_stepon( void );
-void filter_actorclip( void );
-void filter_weaponclip( void );
-void filter_nodraw( void );
+void filter_level(int flag);
+
+void filter_stepon(void);
+
+void filter_actorclip(void);
+
+void filter_weaponclip(void);
+
+void filter_nodraw(void);
 
 const int SURF_NODRAW = 0x80;
 

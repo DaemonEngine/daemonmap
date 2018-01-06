@@ -23,8 +23,9 @@
 #define INCLUDED_TGA_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadTGA( ArchiveFile& file );
+Image *LoadTGA(ArchiveFile &file);
 
 #endif

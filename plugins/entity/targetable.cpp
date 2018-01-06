@@ -23,15 +23,16 @@
 
 typedef std::map<CopiedString, targetables_t> targetnames_t;
 
-const char* g_targetable_nameKey = "targetname";
+const char *g_targetable_nameKey = "targetname";
 
 targetnames_t g_targetnames;
 
-targetables_t* getTargetables( const char* targetname ){
-	if ( targetname[0] == '\0' ) {
-		return 0;
-	}
-	return &g_targetnames[targetname];
+targetables_t *getTargetables(const char *targetname)
+{
+    if (targetname[0] == '\0') {
+        return 0;
+    }
+    return &g_targetnames[targetname];
 }
 
-Shader* RenderableTargetingEntity::m_state;
+Shader *RenderableTargetingEntity::m_state;

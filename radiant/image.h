@@ -23,6 +23,7 @@
 #define INCLUDED_IMAGE_H
 
 class Image;
-Image* QERApp_LoadImage( void* environment, const char* name );
+
+Image *QERApp_LoadImage(void *environment, const char *name);
 
 #endif

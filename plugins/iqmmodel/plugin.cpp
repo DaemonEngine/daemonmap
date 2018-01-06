@@ -38,50 +38,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "iqm.h"
 
 
-class IQMModelLoader : public ModelLoader
-{
+class IQMModelLoader : public ModelLoader {
 public:
-  scene::Node& loadModel(ArchiveFile& file)
-  {
-    return loadIQMModel(file);
-  }
+    scene::Node &loadModel(ArchiveFile &file)
+    {
+        return loadIQMModel(file);
+    }
 };
 
 class ModelDependencies :
-  public GlobalFileSystemModuleRef,
-  public GlobalOpenGLModuleRef,
-  public GlobalUndoModuleRef,
-  public GlobalSceneGraphModuleRef,
-  public GlobalShaderCacheModuleRef,
-  public GlobalSelectionModuleRef,
-  public GlobalFiletypesModuleRef
-{
+        public GlobalFileSystemModuleRef,
+        public GlobalOpenGLModuleRef,
+        public GlobalUndoModuleRef,
+        public GlobalSceneGraphModuleRef,
+        public GlobalShaderCacheModuleRef,
+        public GlobalSelectionModuleRef,
+        public GlobalFiletypesModuleRef {
 };
 
-class ModelIQMAPI : public TypeSystemRef
-{
-  IQMModelLoader m_modeliqm;
+class ModelIQMAPI : public TypeSystemRef {
+    IQMModelLoader m_modeliqm;
 public:
-  typedef ModelLoader Type;
-  STRING_CONSTANT(Name, "iqm");
+    typedef ModelLoader Type;
 
-  ModelIQMAPI()
-  {
-    GlobalFiletypesModule::getTable().addType(Type::Name(), Name(), filetype_t("iqm models", "*.iqm"));
-  }
-  ModelLoader* getTable()
-  {
-    return &m_modeliqm;
-  }
+    STRING_CONSTANT(Name, "iqm");
+
+    ModelIQMAPI()
+    {
+        GlobalFiletypesModule::getTable().addType(Type::Name(), Name(), filetype_t("iqm models", "*.iqm"));
+    }
+
+    ModelLoader *getTable()
+    {
+        return &m_modeliqm;
+    }
 };
 
 typedef SingletonModule<ModelIQMAPI, ModelDependencies> ModelIQMModule;
 
 ModelIQMModule g_ModelIQMModule;
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer& server)
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
 {
-  initialiseModule(server);
+    initialiseModule(server);
 
-  g_ModelIQMModule.selfRegister();
+    g_ModelIQMModule.selfRegister();
 }

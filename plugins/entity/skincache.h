@@ -23,6 +23,7 @@
 #define INCLUDED_SKINCACHE_H
 
 class ModuleServer;
-void Doom3ModelSkinCacheModule_selfRegister( ModuleServer& server );
+
+void Doom3ModelSkinCacheModule_selfRegister(ModuleServer &server);
 
 #endif

@@ -26,17 +26,21 @@
 #include "signal/signalfwd.h"
 
 float GetSnapGridSize();
+
 float GetGridSize();
+
 int Grid_getPower();
 
-void AddGridChangeCallback( const SignalHandler& handler );
+void AddGridChangeCallback(const SignalHandler &handler);
 
 void Grid_registerCommands();
-void Grid_constructMenu( ui::Menu menu );
+
+void Grid_constructMenu(ui::Menu menu);
 
 void Grid_registerShortcuts();
 
 void Grid_construct();
+
 void Grid_destroy();
 
 #endif

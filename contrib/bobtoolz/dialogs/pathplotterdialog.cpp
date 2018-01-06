@@ -28,49 +28,57 @@
 // CPathPlotterDialog dialog
 
 
-CPathPlotterDialog::CPathPlotterDialog( CWnd* pParent /*=NULL*/ )
-	: CDialog( CPathPlotterDialog::IDD, pParent ){
-	//{{AFX_DATA_INIT(CPathPlotterDialog)
-	m_fGravity = -800.0f;
-	m_fMultiplier = 3.0f;
-	m_bNoUpdate = FALSE;
-	m_nPoints = 25;
-	m_bShowExtra = FALSE;
-	//}}AFX_DATA_INIT
+CPathPlotterDialog::CPathPlotterDialog(CWnd *pParent /*=NULL*/ )
+        : CDialog(CPathPlotterDialog::IDD, pParent)
+{
+    //{{AFX_DATA_INIT(CPathPlotterDialog)
+    m_fGravity = -800.0f;
+    m_fMultiplier = 3.0f;
+    m_bNoUpdate = FALSE;
+    m_nPoints = 25;
+    m_bShowExtra = FALSE;
+    //}}AFX_DATA_INIT
 }
 
 
-void CPathPlotterDialog::DoDataExchange( CDataExchange* pDX ){
-	CDialog::DoDataExchange( pDX );
-	//{{AFX_DATA_MAP(CPathPlotterDialog)
-	DDX_Text( pDX, IDC_GRAVITY_EDIT, m_fGravity );
-	DDV_MinMaxFloat( pDX, m_fGravity, -10000.f, -1.f );
-	DDX_Text( pDX, IDC_MULTIPLIER_EDIT, m_fMultiplier );
-	DDV_MinMaxFloat( pDX, m_fMultiplier, 1.f, 10.f );
-	DDX_Check( pDX, IDC_NOUPDATE_CHECK, m_bNoUpdate );
-	DDX_Text( pDX, IDC_POINTCOUNT_EDIT, m_nPoints );
-	DDV_MinMaxInt( pDX, m_nPoints, 1, 1000 );
-	DDX_Check( pDX, IDC_SHOWEXTRA_CHECK, m_bShowExtra );
-	//}}AFX_DATA_MAP
+void CPathPlotterDialog::DoDataExchange(CDataExchange *pDX)
+{
+    CDialog::DoDataExchange(pDX);
+    //{{AFX_DATA_MAP(CPathPlotterDialog)
+    DDX_Text(pDX, IDC_GRAVITY_EDIT, m_fGravity);
+    DDV_MinMaxFloat(pDX, m_fGravity, -10000.f, -1.f);
+    DDX_Text(pDX, IDC_MULTIPLIER_EDIT, m_fMultiplier);
+    DDV_MinMaxFloat(pDX, m_fMultiplier, 1.f, 10.f);
+    DDX_Check(pDX, IDC_NOUPDATE_CHECK, m_bNoUpdate);
+    DDX_Text(pDX, IDC_POINTCOUNT_EDIT, m_nPoints);
+    DDV_MinMaxInt(pDX, m_nPoints, 1, 1000);
+    DDX_Check(pDX, IDC_SHOWEXTRA_CHECK, m_bShowExtra);
+    //}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CPathPlotterDialog, CDialog )
+BEGIN_MESSAGE_MAP( CPathPlotterDialog, CDialog
+)
 //{{AFX_MSG_MAP(CPathPlotterDialog)
-ON_BN_CLICKED( IDYES, OnYes )
-ON_BN_CLICKED( IDNO, OnNo )
+ON_BN_CLICKED( IDYES, OnYes
+)
+ON_BN_CLICKED( IDNO, OnNo
+)
+
 //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPathPlotterDialog message handlers
 
-void CPathPlotterDialog::OnYes(){
-	if ( UpdateData() ) {
-		EndModalLoop( IDYES );
-	}
+void CPathPlotterDialog::OnYes()
+{
+    if (UpdateData()) {
+        EndModalLoop(IDYES);
+    }
 }
 
-void CPathPlotterDialog::OnNo(){
-	EndModalLoop( IDNO );
+void CPathPlotterDialog::OnNo()
+{
+    EndModalLoop(IDNO);
 }

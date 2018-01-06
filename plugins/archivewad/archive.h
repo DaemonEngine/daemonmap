@@ -20,4 +20,5 @@
  */
 
 class Archive;
-Archive* OpenArchive( const char* name );
+
+Archive *OpenArchive(const char *name);

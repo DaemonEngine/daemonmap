@@ -27,6 +27,7 @@
 ui::MenuItem create_plugins_menu();
 
 void PluginsMenu_populate();
+
 void PluginsMenu_clear();
 
 #endif

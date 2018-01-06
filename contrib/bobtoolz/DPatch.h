@@ -27,24 +27,23 @@
 #include <list>
 #include <stdlib.h>
 
-typedef struct
-{
-	bool mergable;
-	int pos1;
-	int pos2;
+typedef struct {
+    bool mergable;
+    int pos1;
+    int pos2;
 } patch_merge_t;
 
 typedef struct {
-	float xyz[3];
-	float st[2];
-	float normal[3];
-	float lightmap[2];
+    float xyz[3];
+    float st[2];
+    float normal[3];
+    float lightmap[2];
 } drawVert_t;
 
-namespace scene
-{
-class Node;
-class Instance;
+namespace scene {
+    class Node;
+
+    class Instance;
 }
 
 const int MAX_PATCH_WIDTH = 32;
@@ -52,29 +51,42 @@ const int MAX_PATCH_HEIGHT = 32;
 const int MIN_PATCH_WIDTH = 3;
 const int MIN_PATCH_HEIGHT = 3;
 
-class DPatch
-{
+class DPatch {
 public:
-std::list<DPatch> SplitRows();
-std::list<DPatch> SplitCols();
-std::list<DPatch> Split();
-void Transpose();
+    std::list<DPatch> SplitRows();
+
+    std::list<DPatch> SplitCols();
+
+    std::list<DPatch> Split();
+
+    void Transpose();
+
 //DPatch* TransposePatch(DPatch* p1);
 //void DebugPrint();
-void Invert();
-DPatch* MergePatches( patch_merge_t merge_info, DPatch* p1, DPatch* p2 );
-patch_merge_t IsMergable( DPatch* other );
-bool ResetTextures( const char *oldTextureName, const char *newTextureName );
-scene::Node* QER_entity;
-scene::Node* QER_brush;
-void LoadFromPatch( scene::Instance& patch );
-void BuildInRadiant( scene::Node* entity = NULL );
-void SetTexture( const char* textureName );
-char texture[256];
-int width, height;
-drawVert_t points[MAX_PATCH_WIDTH][MAX_PATCH_HEIGHT];
-DPatch();
-virtual ~DPatch();
+    void Invert();
+
+    DPatch *MergePatches(patch_merge_t merge_info, DPatch *p1, DPatch *p2);
+
+    patch_merge_t IsMergable(DPatch *other);
+
+    bool ResetTextures(const char *oldTextureName, const char *newTextureName);
+
+    scene::Node *QER_entity;
+    scene::Node *QER_brush;
+
+    void LoadFromPatch(scene::Instance &patch);
+
+    void BuildInRadiant(scene::Node *entity = NULL);
+
+    void SetTexture(const char *textureName);
+
+    char texture[256];
+    int width, height;
+    drawVert_t points[MAX_PATCH_WIDTH][MAX_PATCH_HEIGHT];
+
+    DPatch();
+
+    virtual ~DPatch();
 
 };
 

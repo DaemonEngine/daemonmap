@@ -26,28 +26,32 @@
 // defines for polygon stuff
 #define MAX_POLYGON_FACES   128
 
-namespace scene
-{
-class Node;
+namespace scene {
+    class Node;
 }
 
 #include "mathlib.h"
 
 // generic (detail added 12/01/01, for AC+)
-void AddFaceWithTexture( scene::Node& brush, vec3_t va, vec3_t vb, vec3_t vc, const char* texture, bool detail );
+void AddFaceWithTexture(scene::Node &brush, vec3_t va, vec3_t vb, vec3_t vc, const char *texture, bool detail);
 
 // -------------
 // ---caulked---
 // -------------
-void Build_Wedge( int dir, vec3_t min, vec3_t max, bool bUp );
+void Build_Wedge(int dir, vec3_t min, vec3_t max, bool bUp);
 
 // --------------
 // ---textured---
 // --------------
-void BuildDoorsX2( vec3_t min, vec3_t max, bool bSclMainHor, bool bSclMainVert, bool bSclTrimHor, bool bSclTrimVert, const char* mainTexture, const char* trimTexture, int direction );
-void Build_StairStep( vec3_t min, vec3_t max, const char* mainTexture, const char* riserTexture, int direction );
-void Build_StairStep_Wedge( int dir, vec3_t min, vec3_t max, const char* mainTexture, const char* riserTexture, bool detail );
-void BuildCornerStairs( vec3_t vMin, vec3_t vMax, int nSteps, const char* mainTexture, const char* riserTex );
+void BuildDoorsX2(vec3_t min, vec3_t max, bool bSclMainHor, bool bSclMainVert, bool bSclTrimHor, bool bSclTrimVert,
+                  const char *mainTexture, const char *trimTexture, int direction);
+
+void Build_StairStep(vec3_t min, vec3_t max, const char *mainTexture, const char *riserTexture, int direction);
+
+void
+Build_StairStep_Wedge(int dir, vec3_t min, vec3_t max, const char *mainTexture, const char *riserTexture, bool detail);
+
+void BuildCornerStairs(vec3_t vMin, vec3_t vMax, int nSteps, const char *mainTexture, const char *riserTex);
 // stairs stuff.
 
 //void Build_Prism_Border(vec3_t min, vec3_t max, int nSides, int nBorder, bool bAlignTop = FALSE); //moved to DShape

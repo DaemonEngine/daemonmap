@@ -26,15 +26,15 @@
 
 struct WindowPosition;
 
-void PositionWindowOnPrimaryScreen( WindowPosition& position );
+void PositionWindowOnPrimaryScreen(WindowPosition &position);
 
-struct multimon_globals_t
-{
-	bool m_bStartOnPrimMon;
+struct multimon_globals_t {
+    bool m_bStartOnPrimMon;
 
-	multimon_globals_t() :
-		m_bStartOnPrimMon( false ){
-	}
+    multimon_globals_t() :
+            m_bStartOnPrimMon(false)
+    {
+    }
 };
 
 extern multimon_globals_t g_multimon_globals;
@@ -43,10 +43,15 @@ extern multimon_globals_t g_multimon_globals;
 void MultiMon_Construct();
 void MultiMon_Destroy();
 #else
-inline void MultiMon_Construct(){
+
+inline void MultiMon_Construct()
+{
 }
-inline void MultiMon_Destroy(){
+
+inline void MultiMon_Destroy()
+{
 }
+
 #endif
 
 #endif

@@ -24,6 +24,6 @@
 
 #include "imap.h"
 
-void Map_Write( scene::Node& root, GraphTraversalFunc traverse, TextOutputStream& out );
+void Map_Write(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &out);
 
 #endif

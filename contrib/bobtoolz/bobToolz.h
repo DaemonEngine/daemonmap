@@ -28,7 +28,7 @@
 #endif // _MSC_VER >= 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'StdAfx.h' before including this file for PCH
+#error include 'StdAfx.h' before including this file for PCH
 #endif
 
 #include "resource.h"       // main symbols
@@ -38,10 +38,9 @@
 // See plugin.cpp for the implementation of this class
 //
 
-class CPluginApp : public CWinApp
-{
+class CPluginApp : public CWinApp {
 public:
-CPluginApp();
+    CPluginApp();
 
 // Overrides
 // ClassWizard generated virtual function overrides
@@ -52,7 +51,7 @@ CPluginApp();
 // NOTE - the ClassWizard will add and remove member functions here.
 //    DO NOT EDIT what you see in these blocks of generated code !
 //}}AFX_MSG
-DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 

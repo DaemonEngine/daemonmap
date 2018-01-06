@@ -30,29 +30,38 @@
 #include "xml/xmltextags.h"
 
 class TextureBrowser;
-TextureBrowser& GlobalTextureBrowser();
 
-ui::Widget TextureBrowser_constructWindow( ui::Window toplevel );
+TextureBrowser &GlobalTextureBrowser();
+
+ui::Widget TextureBrowser_constructWindow(ui::Window toplevel);
+
 void TextureBrowser_destroyWindow();
 
 
-void TextureBrowser_ShowDirectory( TextureBrowser& textureBrowser, const char* name );
-void TextureBrowser_ShowStartupShaders( TextureBrowser& textureBrowser );
+void TextureBrowser_ShowDirectory(TextureBrowser &textureBrowser, const char *name);
 
-const char* TextureBrowser_GetSelectedShader( TextureBrowser& textureBrower );
+void TextureBrowser_ShowStartupShaders(TextureBrowser &textureBrowser);
+
+const char *TextureBrowser_GetSelectedShader(TextureBrowser &textureBrower);
 
 void TextureBrowser_Construct();
+
 void TextureBrowser_Destroy();
 
 extern ui::Widget g_page_textures;
-void TextureBrowser_exportTitle( const Callback<void(const char *)> & importer );
-typedef FreeCaller<void(const Callback<void(const char *)> &), TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
 
-const Vector3& TextureBrowser_getBackgroundColour( TextureBrowser& textureBrowser );
-void TextureBrowser_setBackgroundColour( TextureBrowser& textureBrowser, const Vector3& colour );
+void TextureBrowser_exportTitle(const Callback<void(const char *)> &importer);
 
-void TextureBrowser_addActiveShadersChangedCallback( const SignalHandler& handler );
-void TextureBrowser_addShadersRealiseCallback( const SignalHandler& handler );
+typedef FreeCaller<void(
+        const Callback<void(const char *)> &), TextureBrowser_exportTitle> TextureBrowserExportTitleCaller;
+
+const Vector3 &TextureBrowser_getBackgroundColour(TextureBrowser &textureBrowser);
+
+void TextureBrowser_setBackgroundColour(TextureBrowser &textureBrowser, const Vector3 &colour);
+
+void TextureBrowser_addActiveShadersChangedCallback(const SignalHandler &handler);
+
+void TextureBrowser_addShadersRealiseCallback(const SignalHandler &handler);
 
 void TextureBrowser_RefreshShaders();
 

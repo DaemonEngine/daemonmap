@@ -34,232 +34,263 @@
 #include "treemodel.h"
 
 template<std::size_t SIZE>
-class TypeIdMap
-{
-typedef const char* TypeName;
-typedef TypeName TypeNames[SIZE];
-TypeNames m_typeNames;
-TypeName* m_typeNamesEnd;
+class TypeIdMap {
+    typedef const char *TypeName;
+    typedef TypeName TypeNames[SIZE];
+    TypeNames m_typeNames;
+    TypeName *m_typeNamesEnd;
 
 public:
-TypeIdMap() : m_typeNamesEnd( m_typeNames ){
-}
-TypeId getTypeId( const char* name ){
-	TypeName *i = std::find_if(m_typeNames, m_typeNamesEnd, [&](const char *other) {
-		return string_equal(name, other);
-	});
-	if ( i == m_typeNamesEnd ) {
-		ASSERT_MESSAGE( m_typeNamesEnd != m_typeNames + SIZE, "reached maximum number of type names supported (" << Unsigned( SIZE ) << ")" );
-		*m_typeNamesEnd++ = name;
-	}
-	return i - m_typeNames;
-}
+    TypeIdMap() : m_typeNamesEnd(m_typeNames)
+    {
+    }
+
+    TypeId getTypeId(const char *name)
+    {
+        TypeName *i = std::find_if(m_typeNames, m_typeNamesEnd, [&](const char *other) {
+            return string_equal(name, other);
+        });
+        if (i == m_typeNamesEnd) {
+            ASSERT_MESSAGE(m_typeNamesEnd != m_typeNames + SIZE,
+                           "reached maximum number of type names supported (" << Unsigned(SIZE) << ")");
+            *m_typeNamesEnd++ = name;
+        }
+        return i - m_typeNames;
+    }
 };
 
-class CompiledGraph : public scene::Graph, public scene::Instantiable::Observer
-{
-typedef std::map<PathConstReference, scene::Instance*> InstanceMap;
+class CompiledGraph : public scene::Graph, public scene::Instantiable::Observer {
+    typedef std::map<PathConstReference, scene::Instance *> InstanceMap;
 
-InstanceMap m_instances;
-scene::Instantiable::Observer* m_observer;
-Signal0 m_boundsChanged;
-scene::Path m_rootpath;
-Signal0 m_sceneChangedCallbacks;
+    InstanceMap m_instances;
+    scene::Instantiable::Observer *m_observer;
+    Signal0 m_boundsChanged;
+    scene::Path m_rootpath;
+    Signal0 m_sceneChangedCallbacks;
 
-TypeIdMap<NODETYPEID_MAX> m_nodeTypeIds;
-TypeIdMap<INSTANCETYPEID_MAX> m_instanceTypeIds;
+    TypeIdMap<NODETYPEID_MAX> m_nodeTypeIds;
+    TypeIdMap<INSTANCETYPEID_MAX> m_instanceTypeIds;
 
 public:
 
-CompiledGraph( scene::Instantiable::Observer* observer )
-	: m_observer( observer ){
-}
+    CompiledGraph(scene::Instantiable::Observer *observer)
+            : m_observer(observer)
+    {
+    }
 
-void addSceneChangedCallback( const SignalHandler& handler ){
-	m_sceneChangedCallbacks.connectLast( handler );
-}
-void sceneChanged(){
-	m_sceneChangedCallbacks();
-}
+    void addSceneChangedCallback(const SignalHandler &handler)
+    {
+        m_sceneChangedCallbacks.connectLast(handler);
+    }
 
-scene::Node& root(){
-	ASSERT_MESSAGE( !m_rootpath.empty(), "scenegraph root does not exist" );
-	return m_rootpath.top();
-}
-void insert_root( scene::Node& root ){
-	//globalOutputStream() << "insert_root\n";
+    void sceneChanged()
+    {
+        m_sceneChangedCallbacks();
+    }
 
-	ASSERT_MESSAGE( m_rootpath.empty(), "scenegraph root already exists" );
+    scene::Node &root()
+    {
+        ASSERT_MESSAGE(!m_rootpath.empty(), "scenegraph root does not exist");
+        return m_rootpath.top();
+    }
 
-	root.IncRef();
+    void insert_root(scene::Node &root)
+    {
+        //globalOutputStream() << "insert_root\n";
 
-	Node_traverseSubgraph( root, InstanceSubgraphWalker( this, scene::Path(), 0 ) );
+        ASSERT_MESSAGE(m_rootpath.empty(), "scenegraph root already exists");
 
-	m_rootpath.push( makeReference( root ) );
-}
-void erase_root(){
-	//globalOutputStream() << "erase_root\n";
+        root.IncRef();
 
-	ASSERT_MESSAGE( !m_rootpath.empty(), "scenegraph root does not exist" );
+        Node_traverseSubgraph(root, InstanceSubgraphWalker(this, scene::Path(), 0));
 
-	scene::Node& root = m_rootpath.top();
+        m_rootpath.push(makeReference(root));
+    }
 
-	m_rootpath.pop();
+    void erase_root()
+    {
+        //globalOutputStream() << "erase_root\n";
 
-	Node_traverseSubgraph( root, UninstanceSubgraphWalker( this, scene::Path() ) );
+        ASSERT_MESSAGE(!m_rootpath.empty(), "scenegraph root does not exist");
 
-	root.DecRef();
-}
-void boundsChanged(){
-	m_boundsChanged();
-}
+        scene::Node &root = m_rootpath.top();
 
-void traverse( const Walker& walker ){
-	traverse_subgraph( walker, m_instances.begin() );
-}
+        m_rootpath.pop();
 
-void traverse_subgraph( const Walker& walker, const scene::Path& start ){
-	if ( !m_instances.empty() ) {
-		traverse_subgraph( walker, m_instances.find( PathConstReference( start ) ) );
-	}
-}
+        Node_traverseSubgraph(root, UninstanceSubgraphWalker(this, scene::Path()));
 
-scene::Instance* find( const scene::Path& path ){
-	InstanceMap::iterator i = m_instances.find( PathConstReference( path ) );
-	if ( i == m_instances.end() ) {
-		return 0;
-	}
-	return ( *i ).second;
-}
+        root.DecRef();
+    }
 
-void insert( scene::Instance* instance ){
-	m_instances.insert( InstanceMap::value_type( PathConstReference( instance->path() ), instance ) );
+    void boundsChanged()
+    {
+        m_boundsChanged();
+    }
 
-	m_observer->insert( instance );
-}
-void erase( scene::Instance* instance ){
-	m_observer->erase( instance );
+    void traverse(const Walker &walker)
+    {
+        traverse_subgraph(walker, m_instances.begin());
+    }
 
-	m_instances.erase( PathConstReference( instance->path() ) );
-}
+    void traverse_subgraph(const Walker &walker, const scene::Path &start)
+    {
+        if (!m_instances.empty()) {
+            traverse_subgraph(walker, m_instances.find(PathConstReference(start)));
+        }
+    }
 
-SignalHandlerId addBoundsChangedCallback( const SignalHandler& boundsChanged ){
-	return m_boundsChanged.connectLast( boundsChanged );
-}
-void removeBoundsChangedCallback( SignalHandlerId id ){
-	m_boundsChanged.disconnect( id );
-}
+    scene::Instance *find(const scene::Path &path)
+    {
+        InstanceMap::iterator i = m_instances.find(PathConstReference(path));
+        if (i == m_instances.end()) {
+            return 0;
+        }
+        return (*i).second;
+    }
 
-TypeId getNodeTypeId( const char* name ){
-	return m_nodeTypeIds.getTypeId( name );
-}
+    void insert(scene::Instance *instance)
+    {
+        m_instances.insert(InstanceMap::value_type(PathConstReference(instance->path()), instance));
 
-TypeId getInstanceTypeId( const char* name ){
-	return m_instanceTypeIds.getTypeId( name );
-}
+        m_observer->insert(instance);
+    }
+
+    void erase(scene::Instance *instance)
+    {
+        m_observer->erase(instance);
+
+        m_instances.erase(PathConstReference(instance->path()));
+    }
+
+    SignalHandlerId addBoundsChangedCallback(const SignalHandler &boundsChanged)
+    {
+        return m_boundsChanged.connectLast(boundsChanged);
+    }
+
+    void removeBoundsChangedCallback(SignalHandlerId id)
+    {
+        m_boundsChanged.disconnect(id);
+    }
+
+    TypeId getNodeTypeId(const char *name)
+    {
+        return m_nodeTypeIds.getTypeId(name);
+    }
+
+    TypeId getInstanceTypeId(const char *name)
+    {
+        return m_instanceTypeIds.getTypeId(name);
+    }
 
 private:
 
-bool pre( const Walker& walker, const InstanceMap::iterator& i ){
-	return walker.pre( i->first, *i->second );
-}
+    bool pre(const Walker &walker, const InstanceMap::iterator &i)
+    {
+        return walker.pre(i->first, *i->second);
+    }
 
-void post( const Walker& walker, const InstanceMap::iterator& i ){
-	walker.post( i->first, *i->second );
-}
+    void post(const Walker &walker, const InstanceMap::iterator &i)
+    {
+        walker.post(i->first, *i->second);
+    }
 
-void traverse_subgraph( const Walker& walker, InstanceMap::iterator i ){
-	Stack<InstanceMap::iterator> stack;
-	if ( i != m_instances.end() ) {
-		const std::size_t startSize = ( *i ).first.get().size();
-		do
-		{
-			if ( i != m_instances.end()
-				 && stack.size() < ( ( *i ).first.get().size() - startSize + 1 ) ) {
-				stack.push( i );
-				++i;
-				if ( !pre( walker, stack.top() ) ) {
-					// skip subgraph
-					while ( i != m_instances.end()
-							&& stack.size() < ( ( *i ).first.get().size() - startSize + 1 ) )
-					{
-						++i;
-					}
-				}
-			}
-			else
-			{
-				post( walker, stack.top() );
-				stack.pop();
-			}
-		}
-		while ( !stack.empty() );
-	}
-}
+    void traverse_subgraph(const Walker &walker, InstanceMap::iterator i)
+    {
+        Stack<InstanceMap::iterator> stack;
+        if (i != m_instances.end()) {
+            const std::size_t startSize = (*i).first.get().size();
+            do {
+                if (i != m_instances.end()
+                    && stack.size() < ((*i).first.get().size() - startSize + 1)) {
+                    stack.push(i);
+                    ++i;
+                    if (!pre(walker, stack.top())) {
+                        // skip subgraph
+                        while (i != m_instances.end()
+                               && stack.size() < ((*i).first.get().size() - startSize + 1)) {
+                            ++i;
+                        }
+                    }
+                } else {
+                    post(walker, stack.top());
+                    stack.pop();
+                }
+            } while (!stack.empty());
+        }
+    }
 };
 
-namespace
-{
-CompiledGraph* g_sceneGraph;
-GraphTreeModel* g_tree_model;
+namespace {
+    CompiledGraph *g_sceneGraph;
+    GraphTreeModel *g_tree_model;
 }
 
-GraphTreeModel* scene_graph_get_tree_model(){
-	return g_tree_model;
+GraphTreeModel *scene_graph_get_tree_model()
+{
+    return g_tree_model;
 }
 
 
-class SceneGraphObserver : public scene::Instantiable::Observer
-{
+class SceneGraphObserver : public scene::Instantiable::Observer {
 public:
-void insert( scene::Instance* instance ){
-	g_sceneGraph->sceneChanged();
-	graph_tree_model_insert( g_tree_model, *instance );
-}
-void erase( scene::Instance* instance ){
-	g_sceneGraph->sceneChanged();
-	graph_tree_model_erase( g_tree_model, *instance );
-}
+    void insert(scene::Instance *instance)
+    {
+        g_sceneGraph->sceneChanged();
+        graph_tree_model_insert(g_tree_model, *instance);
+    }
+
+    void erase(scene::Instance *instance)
+    {
+        g_sceneGraph->sceneChanged();
+        graph_tree_model_erase(g_tree_model, *instance);
+    }
 };
 
 SceneGraphObserver g_SceneGraphObserver;
 
-void SceneGraph_Construct(){
-	g_tree_model = graph_tree_model_new();
+void SceneGraph_Construct()
+{
+    g_tree_model = graph_tree_model_new();
 
-	g_sceneGraph = new CompiledGraph( &g_SceneGraphObserver );
+    g_sceneGraph = new CompiledGraph(&g_SceneGraphObserver);
 }
 
-void SceneGraph_Destroy(){
-	delete g_sceneGraph;
+void SceneGraph_Destroy()
+{
+    delete g_sceneGraph;
 
-	graph_tree_model_delete( g_tree_model );
+    graph_tree_model_delete(g_tree_model);
 }
 
 
 #include "modulesystem/singletonmodule.h"
 #include "modulesystem/moduleregistry.h"
 
-class SceneGraphAPI
-{
-scene::Graph* m_scenegraph;
+class SceneGraphAPI {
+    scene::Graph *m_scenegraph;
 public:
-typedef scene::Graph Type;
-STRING_CONSTANT( Name, "*" );
+    typedef scene::Graph Type;
 
-SceneGraphAPI(){
-	SceneGraph_Construct();
+    STRING_CONSTANT(Name, "*");
 
-	m_scenegraph = g_sceneGraph;
-}
-~SceneGraphAPI(){
-	SceneGraph_Destroy();
-}
-scene::Graph* getTable(){
-	return m_scenegraph;
-}
+    SceneGraphAPI()
+    {
+        SceneGraph_Construct();
+
+        m_scenegraph = g_sceneGraph;
+    }
+
+    ~SceneGraphAPI()
+    {
+        SceneGraph_Destroy();
+    }
+
+    scene::Graph *getTable()
+    {
+        return m_scenegraph;
+    }
 };
 
 typedef SingletonModule<SceneGraphAPI> SceneGraphModule;
 typedef Static<SceneGraphModule> StaticSceneGraphModule;
-StaticRegisterModule staticRegisterSceneGraph( StaticSceneGraphModule::instance() );
+StaticRegisterModule staticRegisterSceneGraph(StaticSceneGraphModule::instance());

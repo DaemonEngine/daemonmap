@@ -30,6 +30,7 @@
 #include "mathlib.h"
 
 class Brush;
+
 class DPoint;
 
 #define FACE_DETAIL 0x8000000
@@ -40,34 +41,41 @@ class DPoint;
 
 class DWinding;
 
-class DPlane
-{
+class DPlane {
 public:
-DPlane( const vec3_t va, const vec3_t vb, const vec3_t vc, const char* textureName, bool bDetail );
-void ScaleTexture();
-DWinding* BaseWindingForPlane();
+    DPlane(const vec3_t va, const vec3_t vb, const vec3_t vc, const char *textureName, bool bDetail);
 
-void Rebuild();
+    void ScaleTexture();
 
-bool AddToBrush( scene::Node& brush );
-bool operator !=( DPlane& other );
-bool operator ==( DPlane& other );
+    DWinding *BaseWindingForPlane();
 
-bool IsRedundant( std::list<DPoint*>& pointList );
-bool PlaneIntersection( DPlane* pl1, DPlane* pl2, vec3_t out );
+    void Rebuild();
 
-vec_t DistanceToPoint( vec3_t pnt );
+    bool AddToBrush(scene::Node &brush);
 
-DPlane( const vec3_t va, const vec3_t vb, const vec3_t vc, const _QERFaceData* texData );
-DPlane() { }
-virtual ~DPlane();
+    bool operator!=(DPlane &other);
 
-bool m_bChkOk;
-_QERFaceData texInfo;
-CopiedString m_shader;
-vec3_t points[3];           // djbob:do we really need these any more?
-vec3_t normal;
-float _d;
+    bool operator==(DPlane &other);
+
+    bool IsRedundant(std::list<DPoint *> &pointList);
+
+    bool PlaneIntersection(DPlane *pl1, DPlane *pl2, vec3_t out);
+
+    vec_t DistanceToPoint(vec3_t pnt);
+
+    DPlane(const vec3_t va, const vec3_t vb, const vec3_t vc, const _QERFaceData *texData);
+
+    DPlane()
+    {}
+
+    virtual ~DPlane();
+
+    bool m_bChkOk;
+    _QERFaceData texInfo;
+    CopiedString m_shader;
+    vec3_t points[3];           // djbob:do we really need these any more?
+    vec3_t normal;
+    float _d;
 };
 
 //typedef CList<DPlane*, DPlane*> DPlaneList;

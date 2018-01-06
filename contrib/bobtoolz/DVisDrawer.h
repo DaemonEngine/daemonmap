@@ -35,27 +35,31 @@
 
 #include "DWinding.h"
 
-class DVisDrawer : public Renderable, public OpenGLRenderable
-{
-Shader* m_shader_solid;
-Shader* m_shader_wireframe;
+class DVisDrawer : public Renderable, public OpenGLRenderable {
+    Shader *m_shader_solid;
+    Shader *m_shader_wireframe;
 public:
-DVisDrawer();
-virtual ~DVisDrawer();
+    DVisDrawer();
+
+    virtual ~DVisDrawer();
 
 protected:
-std::list<DWinding*>* m_list;
-int refCount;
+    std::list<DWinding *> *m_list;
+    int refCount;
 public:
-void ClearPoints();
-void SetList( std::list<DWinding*>* pointList );
+    void ClearPoints();
 
-void render( RenderStateFlags state ) const;
-void renderSolid( Renderer& renderer, const VolumeTest& volume ) const;
-void renderWireframe( Renderer& renderer, const VolumeTest& volume ) const;
+    void SetList(std::list<DWinding *> *pointList);
 
-void constructShaders();
-void destroyShaders();
+    void render(RenderStateFlags state) const;
+
+    void renderSolid(Renderer &renderer, const VolumeTest &volume) const;
+
+    void renderWireframe(Renderer &renderer, const VolumeTest &volume) const;
+
+    void constructShaders();
+
+    void destroyShaders();
 
 };
 

@@ -35,23 +35,31 @@
 #include "qerplugin.h"
 #include "string/string.h"
 
-EMessageBoxReturn DoLightIntensityDlg( int *intensity );
-EMessageBoxReturn DoShaderTagDlg( CopiedString *tag, const char* title );
-EMessageBoxReturn DoShaderInfoDlg( const char* name, const char* filename, const char* title );
-EMessageBoxReturn DoTextureLayout( float *fx, float *fy );
-void DoTextEditor( const char* filename, int cursorpos );
+EMessageBoxReturn DoLightIntensityDlg(int *intensity);
+
+EMessageBoxReturn DoShaderTagDlg(CopiedString *tag, const char *title);
+
+EMessageBoxReturn DoShaderInfoDlg(const char *name, const char *filename, const char *title);
+
+EMessageBoxReturn DoTextureLayout(float *fx, float *fy);
+
+void DoTextEditor(const char *filename, int cursorpos);
 
 void DoProjectSettings();
 
 void DoFind();
-void DoSides( int type, int axis );
+
+void DoSides(int type, int axis);
+
 void DoAbout();
 
 
 #if GDEF_OS_WINDOWS
 extern bool g_TextEditor_useWin32Editor;
 #else
+
 #include "string/stringfwd.h"
+
 extern bool g_TextEditor_useCustomEditor;
 extern CopiedString g_TextEditor_editorCommand;
 #endif

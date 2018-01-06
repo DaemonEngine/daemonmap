@@ -34,22 +34,25 @@ int g_count_oriented_bboxs;
 
 #endif
 
-void Cull_ResetStats(){
+void Cull_ResetStats()
+{
 #if defined( DEBUG_CULLING )
-	g_count_dots = 0;
-	g_count_planes = 0;
-	g_count_oriented_planes = 0;
-	g_count_bboxs = 0;
-	g_count_oriented_bboxs = 0;
+    g_count_dots = 0;
+    g_count_planes = 0;
+    g_count_oriented_planes = 0;
+    g_count_bboxs = 0;
+    g_count_oriented_bboxs = 0;
 #endif
 }
 
 
-const char* Cull_GetStats(){
+const char *Cull_GetStats()
+{
 #if defined( DEBUG_CULLING )
-	sprintf( g_cull_stats, "dots: %d | planes %d + %d | bboxs %d + %d", g_count_dots, g_count_planes, g_count_oriented_planes, g_count_bboxs, g_count_oriented_bboxs );
-	return g_cull_stats;
+    sprintf(g_cull_stats, "dots: %d | planes %d + %d | bboxs %d + %d", g_count_dots, g_count_planes,
+            g_count_oriented_planes, g_count_bboxs, g_count_oriented_bboxs);
+    return g_cull_stats;
 #else
-	return "";
+    return "";
 #endif
 }

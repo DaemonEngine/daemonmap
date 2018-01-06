@@ -22,7 +22,8 @@
 #if !defined( INCLUDED_RENDERSTATE_H )
 #define INCLUDED_RENDERSTATE_H
 
-void ShaderCache_setBumpEnabled( bool enabled );
+void ShaderCache_setBumpEnabled(bool enabled);
+
 void ShaderCache_extensionsInitialised();
 
 #endif

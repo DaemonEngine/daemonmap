@@ -23,10 +23,12 @@
 #define INCLUDED_QGL_H
 
 struct OpenGLBinding;
-void QGL_sharedContextCreated( OpenGLBinding& table );
-void QGL_sharedContextDestroyed( OpenGLBinding& table );
 
-bool QGL_ExtensionSupported( const char* extension );
+void QGL_sharedContextCreated(OpenGLBinding &table);
+
+void QGL_sharedContextDestroyed(OpenGLBinding &table);
+
+bool QGL_ExtensionSupported(const char *extension);
 
 float QGL_maxTextureAnisotropy();
 

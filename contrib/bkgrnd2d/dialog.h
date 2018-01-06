@@ -29,7 +29,9 @@
 #define _BKGRND2D_DIALOG_H_
 
 void InitBackgroundDialog();
+
 void ShowBackgroundDialog();
-void ShowBackgroundDialogPG( int page );
+
+void ShowBackgroundDialogPG(int page);
 
 #endif // _BKGRND2D_DIALOG_H_

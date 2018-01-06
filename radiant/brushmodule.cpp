@@ -34,182 +34,207 @@
 #include "mainframe.h"
 #include "preferences.h"
 
-LatchedValue<bool> g_useAlternativeTextureProjection( false, "Use alternative texture-projection (\"brush primitives\")" );
+LatchedValue<bool> g_useAlternativeTextureProjection(false,
+                                                     "Use alternative texture-projection (\"brush primitives\")");
 bool g_showAlternativeTextureProjectionOption = false;
 bool g_brush_always_caulk;
 
-bool getTextureLockEnabled(){
-	return g_brush_texturelock_enabled;
+bool getTextureLockEnabled()
+{
+    return g_brush_texturelock_enabled;
 }
 
 struct Face_SnapPlanes {
-	static void Export(const QuantiseFunc &self, const Callback<void(bool)> &returnz) {
-		returnz(self == quantiseInteger);
-	}
+    static void Export(const QuantiseFunc &self, const Callback<void(bool)> &returnz)
+    {
+        returnz(self == quantiseInteger);
+    }
 
-	static void Import(QuantiseFunc &self, bool value) {
-		self = value ? quantiseInteger : quantiseFloating;
-	}
+    static void Import(QuantiseFunc &self, bool value)
+    {
+        self = value ? quantiseInteger : quantiseFloating;
+    }
 };
 
-void Brush_constructPreferences( PreferencesPage& page ){
-	page.appendCheckBox(
-		"", "Snap planes to integer grid",
-		make_property<Face_SnapPlanes>(Face::m_quantise)
-		);
-	page.appendEntry(
-		"Default texture scale",
-		g_texdef_default_scale
-		);
-	if ( g_showAlternativeTextureProjectionOption ) {
-		page.appendCheckBox(
-			"", "Use alternative texture-projection (\"brush primitives\")",
-			make_property(g_useAlternativeTextureProjection)
-			);
-	}
-	// d1223m
-	page.appendCheckBox( "",
-						 "Always use caulk for new brushes",
-						 g_brush_always_caulk
-						 );
-}
-void Brush_constructPage( PreferenceGroup& group ){
-	PreferencesPage page( group.createPage( "Brush", "Brush Settings" ) );
-	Brush_constructPreferences( page );
-}
-void Brush_registerPreferencesPage(){
-	PreferencesDialog_addSettingsPage( makeCallbackF(Brush_constructPage) );
-}
-
-void Brush_unlatchPreferences(){
-	Brush_toggleFormat( 0 );
-}
-
-void Brush_toggleFormat( int i ){
-	if ( g_showAlternativeTextureProjectionOption ) {
-		g_useAlternativeTextureProjection.m_value = g_useAlternativeTextureProjection.m_latched ^ i;
-		Brush::destroyStatic();
-		Brush::constructStatic( g_useAlternativeTextureProjection.m_value ? eBrushTypeQuake3BP : eBrushTypeQuake3 );
-	}
-}
-
-int Brush_toggleFormatCount(){
-	if ( g_showAlternativeTextureProjectionOption ) {
-		return 2;
-	}
-	return 1;
-}
-
-void Brush_Construct( EBrushType type ){
-	if ( type == eBrushTypeQuake3 ) {
-		g_showAlternativeTextureProjectionOption = true;
-
-		const char *value = g_pGameDescription->getKeyValue( "brush_primit" );
-		if ( !string_empty( value ) ) {
-			g_useAlternativeTextureProjection.m_latched = atoi( value );
-		}
-
-		GlobalPreferenceSystem().registerPreference(
-			"AlternativeTextureProjection",
-			make_property_string( g_useAlternativeTextureProjection.m_latched )
-			);
-		g_useAlternativeTextureProjection.useLatched();
-
-		if ( g_useAlternativeTextureProjection.m_value ) {
-			type = eBrushTypeQuake3BP;
-		}
-
-		// d1223m
-		GlobalPreferenceSystem().registerPreference(
-			"BrushAlwaysCaulk",
-            make_property_string( g_brush_always_caulk )
-        );
-	}
-
-	Brush_registerCommands();
-	Brush_registerPreferencesPage();
-
-	BrushFilters_construct();
-
-	BrushClipPlane::constructStatic();
-	BrushInstance::constructStatic();
-	Brush::constructStatic( type );
-
-	Brush::m_maxWorldCoord = g_MaxWorldCoord;
-	BrushInstance::m_counter = &g_brushCount;
-
-	g_texdef_default_scale = 0.5f;
-	const char* value = g_pGameDescription->getKeyValue( "default_scale" );
-	if ( !string_empty( value ) ) {
-		float scale = static_cast<float>( atof( value ) );
-		if ( scale != 0 ) {
-			g_texdef_default_scale = scale;
-		}
-		else
-		{
-			globalErrorStream() << "error parsing \"default_scale\" attribute\n";
-		}
-	}
-
-	GlobalPreferenceSystem().registerPreference( "TextureLock", make_property_string( g_brush_texturelock_enabled ) );
-	GlobalPreferenceSystem().registerPreference("BrushSnapPlanes", make_property_string<Face_SnapPlanes>(Face::m_quantise));
-	GlobalPreferenceSystem().registerPreference( "TexdefDefaultScale", make_property_string( g_texdef_default_scale ) );
-
-	GridStatus_getTextureLockEnabled = getTextureLockEnabled;
-	g_texture_lock_status_changed = makeCallbackF(GridStatus_onTextureLockEnabledChanged);
-}
-
-void Brush_Destroy(){
-	Brush::m_maxWorldCoord = 0;
-	BrushInstance::m_counter = 0;
-
-	Brush::destroyStatic();
-	BrushInstance::destroyStatic();
-	BrushClipPlane::destroyStatic();
-}
-
-void Brush_clipperColourChanged(){
-	BrushClipPlane::destroyStatic();
-	BrushClipPlane::constructStatic();
-}
-
-void BrushFaceData_fromFace( const BrushFaceDataCallback& callback, Face& face ){
-	_QERFaceData faceData;
-	faceData.m_p0 = face.getPlane().planePoints()[0];
-	faceData.m_p1 = face.getPlane().planePoints()[1];
-	faceData.m_p2 = face.getPlane().planePoints()[2];
-	faceData.m_shader = face.GetShader();
-	faceData.m_texdef = face.getTexdef().m_projection.m_texdef;
-	faceData.contents = face.getShader().m_flags.m_contentFlags;
-	faceData.flags = face.getShader().m_flags.m_surfaceFlags;
-	faceData.value = face.getShader().m_flags.m_value;
-	callback( faceData );
-}
-typedef ConstReferenceCaller<BrushFaceDataCallback, void(Face&), BrushFaceData_fromFace> BrushFaceDataFromFaceCaller;
-typedef Callback<void(Face&)> FaceCallback;
-
-class Quake3BrushCreator : public BrushCreator
+void Brush_constructPreferences(PreferencesPage &page)
 {
+    page.appendCheckBox(
+            "", "Snap planes to integer grid",
+            make_property<Face_SnapPlanes>(Face::m_quantise)
+    );
+    page.appendEntry(
+            "Default texture scale",
+            g_texdef_default_scale
+    );
+    if (g_showAlternativeTextureProjectionOption) {
+        page.appendCheckBox(
+                "", "Use alternative texture-projection (\"brush primitives\")",
+                make_property(g_useAlternativeTextureProjection)
+        );
+    }
+    // d1223m
+    page.appendCheckBox("",
+                        "Always use caulk for new brushes",
+                        g_brush_always_caulk
+    );
+}
+
+void Brush_constructPage(PreferenceGroup &group)
+{
+    PreferencesPage page(group.createPage("Brush", "Brush Settings"));
+    Brush_constructPreferences(page);
+}
+
+void Brush_registerPreferencesPage()
+{
+    PreferencesDialog_addSettingsPage(makeCallbackF(Brush_constructPage));
+}
+
+void Brush_unlatchPreferences()
+{
+    Brush_toggleFormat(0);
+}
+
+void Brush_toggleFormat(int i)
+{
+    if (g_showAlternativeTextureProjectionOption) {
+        g_useAlternativeTextureProjection.m_value = g_useAlternativeTextureProjection.m_latched ^ i;
+        Brush::destroyStatic();
+        Brush::constructStatic(g_useAlternativeTextureProjection.m_value ? eBrushTypeQuake3BP : eBrushTypeQuake3);
+    }
+}
+
+int Brush_toggleFormatCount()
+{
+    if (g_showAlternativeTextureProjectionOption) {
+        return 2;
+    }
+    return 1;
+}
+
+void Brush_Construct(EBrushType type)
+{
+    if (type == eBrushTypeQuake3) {
+        g_showAlternativeTextureProjectionOption = true;
+
+        const char *value = g_pGameDescription->getKeyValue("brush_primit");
+        if (!string_empty(value)) {
+            g_useAlternativeTextureProjection.m_latched = atoi(value);
+        }
+
+        GlobalPreferenceSystem().registerPreference(
+                "AlternativeTextureProjection",
+                make_property_string(g_useAlternativeTextureProjection.m_latched)
+        );
+        g_useAlternativeTextureProjection.useLatched();
+
+        if (g_useAlternativeTextureProjection.m_value) {
+            type = eBrushTypeQuake3BP;
+        }
+
+        // d1223m
+        GlobalPreferenceSystem().registerPreference(
+                "BrushAlwaysCaulk",
+                make_property_string(g_brush_always_caulk)
+        );
+    }
+
+    Brush_registerCommands();
+    Brush_registerPreferencesPage();
+
+    BrushFilters_construct();
+
+    BrushClipPlane::constructStatic();
+    BrushInstance::constructStatic();
+    Brush::constructStatic(type);
+
+    Brush::m_maxWorldCoord = g_MaxWorldCoord;
+    BrushInstance::m_counter = &g_brushCount;
+
+    g_texdef_default_scale = 0.5f;
+    const char *value = g_pGameDescription->getKeyValue("default_scale");
+    if (!string_empty(value)) {
+        float scale = static_cast<float>( atof(value));
+        if (scale != 0) {
+            g_texdef_default_scale = scale;
+        } else {
+            globalErrorStream() << "error parsing \"default_scale\" attribute\n";
+        }
+    }
+
+    GlobalPreferenceSystem().registerPreference("TextureLock", make_property_string(g_brush_texturelock_enabled));
+    GlobalPreferenceSystem().registerPreference("BrushSnapPlanes",
+                                                make_property_string<Face_SnapPlanes>(Face::m_quantise));
+    GlobalPreferenceSystem().registerPreference("TexdefDefaultScale", make_property_string(g_texdef_default_scale));
+
+    GridStatus_getTextureLockEnabled = getTextureLockEnabled;
+    g_texture_lock_status_changed = makeCallbackF(GridStatus_onTextureLockEnabledChanged);
+}
+
+void Brush_Destroy()
+{
+    Brush::m_maxWorldCoord = 0;
+    BrushInstance::m_counter = 0;
+
+    Brush::destroyStatic();
+    BrushInstance::destroyStatic();
+    BrushClipPlane::destroyStatic();
+}
+
+void Brush_clipperColourChanged()
+{
+    BrushClipPlane::destroyStatic();
+    BrushClipPlane::constructStatic();
+}
+
+void BrushFaceData_fromFace(const BrushFaceDataCallback &callback, Face &face)
+{
+    _QERFaceData faceData;
+    faceData.m_p0 = face.getPlane().planePoints()[0];
+    faceData.m_p1 = face.getPlane().planePoints()[1];
+    faceData.m_p2 = face.getPlane().planePoints()[2];
+    faceData.m_shader = face.GetShader();
+    faceData.m_texdef = face.getTexdef().m_projection.m_texdef;
+    faceData.contents = face.getShader().m_flags.m_contentFlags;
+    faceData.flags = face.getShader().m_flags.m_surfaceFlags;
+    faceData.value = face.getShader().m_flags.m_value;
+    callback(faceData);
+}
+
+typedef ConstReferenceCaller<BrushFaceDataCallback, void(Face &), BrushFaceData_fromFace> BrushFaceDataFromFaceCaller;
+typedef Callback<void(Face &)> FaceCallback;
+
+class Quake3BrushCreator : public BrushCreator {
 public:
-scene::Node& createBrush(){
-	return ( new BrushNode )->node();
-}
-bool useAlternativeTextureProjection() const {
-	return g_useAlternativeTextureProjection.m_value;
-}
-void Brush_forEachFace( scene::Node& brush, const BrushFaceDataCallback& callback ){
-	::Brush_forEachFace( *Node_getBrush( brush ), FaceCallback( BrushFaceDataFromFaceCaller( callback ) ) );
-}
-bool Brush_addFace( scene::Node& brush, const _QERFaceData& faceData ){
-	Node_getBrush( brush )->undoSave();
-	return Node_getBrush( brush )->addPlane( faceData.m_p0, faceData.m_p1, faceData.m_p2, faceData.m_shader, TextureProjection( faceData.m_texdef, brushprimit_texdef_t(), Vector3( 0, 0, 0 ), Vector3( 0, 0, 0 ) ) ) != 0;
-}
+    scene::Node &createBrush()
+    {
+        return (new BrushNode)->node();
+    }
+
+    bool useAlternativeTextureProjection() const
+    {
+        return g_useAlternativeTextureProjection.m_value;
+    }
+
+    void Brush_forEachFace(scene::Node &brush, const BrushFaceDataCallback &callback)
+    {
+        ::Brush_forEachFace(*Node_getBrush(brush), FaceCallback(BrushFaceDataFromFaceCaller(callback)));
+    }
+
+    bool Brush_addFace(scene::Node &brush, const _QERFaceData &faceData)
+    {
+        Node_getBrush(brush)->undoSave();
+        return Node_getBrush(brush)->addPlane(faceData.m_p0, faceData.m_p1, faceData.m_p2, faceData.m_shader,
+                                              TextureProjection(faceData.m_texdef, brushprimit_texdef_t(),
+                                                                Vector3(0, 0, 0), Vector3(0, 0, 0))) != 0;
+    }
 };
 
 Quake3BrushCreator g_Quake3BrushCreator;
 
-BrushCreator& GetBrushCreator(){
-	return g_Quake3BrushCreator;
+BrushCreator &GetBrushCreator()
+{
+    return g_Quake3BrushCreator;
 }
 
 #include "modulesystem/singletonmodule.h"
@@ -217,161 +242,190 @@ BrushCreator& GetBrushCreator(){
 
 
 class BrushDependencies :
-	public GlobalRadiantModuleRef,
-	public GlobalSceneGraphModuleRef,
-	public GlobalShaderCacheModuleRef,
-	public GlobalSelectionModuleRef,
-	public GlobalOpenGLModuleRef,
-	public GlobalUndoModuleRef,
-	public GlobalFilterModuleRef
-{
+        public GlobalRadiantModuleRef,
+        public GlobalSceneGraphModuleRef,
+        public GlobalShaderCacheModuleRef,
+        public GlobalSelectionModuleRef,
+        public GlobalOpenGLModuleRef,
+        public GlobalUndoModuleRef,
+        public GlobalFilterModuleRef {
 };
 
-class BrushDoom3API : public TypeSystemRef
-{
-BrushCreator* m_brushdoom3;
+class BrushDoom3API : public TypeSystemRef {
+    BrushCreator *m_brushdoom3;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "doom3" );
+    typedef BrushCreator Type;
 
-BrushDoom3API(){
-	Brush_Construct( eBrushTypeDoom3 );
+    STRING_CONSTANT(Name, "doom3");
 
-	m_brushdoom3 = &GetBrushCreator();
-}
-~BrushDoom3API(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushdoom3;
-}
+    BrushDoom3API()
+    {
+        Brush_Construct(eBrushTypeDoom3);
+
+        m_brushdoom3 = &GetBrushCreator();
+    }
+
+    ~BrushDoom3API()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushdoom3;
+    }
 };
 
 typedef SingletonModule<BrushDoom3API, BrushDependencies> BrushDoom3Module;
 typedef Static<BrushDoom3Module> StaticBrushDoom3Module;
-StaticRegisterModule staticRegisterBrushDoom3( StaticBrushDoom3Module::instance() );
+StaticRegisterModule staticRegisterBrushDoom3(StaticBrushDoom3Module::instance());
 
 
-class BrushQuake4API : public TypeSystemRef
-{
-BrushCreator* m_brushquake4;
+class BrushQuake4API : public TypeSystemRef {
+    BrushCreator *m_brushquake4;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "quake4" );
+    typedef BrushCreator Type;
 
-BrushQuake4API(){
-	Brush_Construct( eBrushTypeQuake4 );
+    STRING_CONSTANT(Name, "quake4");
 
-	m_brushquake4 = &GetBrushCreator();
-}
-~BrushQuake4API(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushquake4;
-}
+    BrushQuake4API()
+    {
+        Brush_Construct(eBrushTypeQuake4);
+
+        m_brushquake4 = &GetBrushCreator();
+    }
+
+    ~BrushQuake4API()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushquake4;
+    }
 };
 
 typedef SingletonModule<BrushQuake4API, BrushDependencies> BrushQuake4Module;
 typedef Static<BrushQuake4Module> StaticBrushQuake4Module;
-StaticRegisterModule staticRegisterBrushQuake4( StaticBrushQuake4Module::instance() );
+StaticRegisterModule staticRegisterBrushQuake4(StaticBrushQuake4Module::instance());
 
 
-class BrushQuake3API : public TypeSystemRef
-{
-BrushCreator* m_brushquake3;
+class BrushQuake3API : public TypeSystemRef {
+    BrushCreator *m_brushquake3;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "quake3" );
+    typedef BrushCreator Type;
 
-BrushQuake3API(){
-	Brush_Construct( eBrushTypeQuake3 );
+    STRING_CONSTANT(Name, "quake3");
 
-	m_brushquake3 = &GetBrushCreator();
-}
-~BrushQuake3API(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushquake3;
-}
+    BrushQuake3API()
+    {
+        Brush_Construct(eBrushTypeQuake3);
+
+        m_brushquake3 = &GetBrushCreator();
+    }
+
+    ~BrushQuake3API()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushquake3;
+    }
 };
 
 typedef SingletonModule<BrushQuake3API, BrushDependencies> BrushQuake3Module;
 typedef Static<BrushQuake3Module> StaticBrushQuake3Module;
-StaticRegisterModule staticRegisterBrushQuake3( StaticBrushQuake3Module::instance() );
+StaticRegisterModule staticRegisterBrushQuake3(StaticBrushQuake3Module::instance());
 
 
-class BrushQuake2API : public TypeSystemRef
-{
-BrushCreator* m_brushquake2;
+class BrushQuake2API : public TypeSystemRef {
+    BrushCreator *m_brushquake2;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "quake2" );
+    typedef BrushCreator Type;
 
-BrushQuake2API(){
-	Brush_Construct( eBrushTypeQuake2 );
+    STRING_CONSTANT(Name, "quake2");
 
-	m_brushquake2 = &GetBrushCreator();
-}
-~BrushQuake2API(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushquake2;
-}
+    BrushQuake2API()
+    {
+        Brush_Construct(eBrushTypeQuake2);
+
+        m_brushquake2 = &GetBrushCreator();
+    }
+
+    ~BrushQuake2API()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushquake2;
+    }
 };
 
 typedef SingletonModule<BrushQuake2API, BrushDependencies> BrushQuake2Module;
 typedef Static<BrushQuake2Module> StaticBrushQuake2Module;
-StaticRegisterModule staticRegisterBrushQuake2( StaticBrushQuake2Module::instance() );
+StaticRegisterModule staticRegisterBrushQuake2(StaticBrushQuake2Module::instance());
 
 
-class BrushQuake1API : public TypeSystemRef
-{
-BrushCreator* m_brushquake1;
+class BrushQuake1API : public TypeSystemRef {
+    BrushCreator *m_brushquake1;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "quake" );
+    typedef BrushCreator Type;
 
-BrushQuake1API(){
-	Brush_Construct( eBrushTypeQuake );
+    STRING_CONSTANT(Name, "quake");
 
-	m_brushquake1 = &GetBrushCreator();
-}
-~BrushQuake1API(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushquake1;
-}
+    BrushQuake1API()
+    {
+        Brush_Construct(eBrushTypeQuake);
+
+        m_brushquake1 = &GetBrushCreator();
+    }
+
+    ~BrushQuake1API()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushquake1;
+    }
 };
 
 typedef SingletonModule<BrushQuake1API, BrushDependencies> BrushQuake1Module;
 typedef Static<BrushQuake1Module> StaticBrushQuake1Module;
-StaticRegisterModule staticRegisterBrushQuake1( StaticBrushQuake1Module::instance() );
+StaticRegisterModule staticRegisterBrushQuake1(StaticBrushQuake1Module::instance());
 
 
-class BrushHalfLifeAPI : public TypeSystemRef
-{
-BrushCreator* m_brushhalflife;
+class BrushHalfLifeAPI : public TypeSystemRef {
+    BrushCreator *m_brushhalflife;
 public:
-typedef BrushCreator Type;
-STRING_CONSTANT( Name, "halflife" );
+    typedef BrushCreator Type;
 
-BrushHalfLifeAPI(){
-	Brush_Construct( eBrushTypeHalfLife );
+    STRING_CONSTANT(Name, "halflife");
 
-	m_brushhalflife = &GetBrushCreator();
-}
-~BrushHalfLifeAPI(){
-	Brush_Destroy();
-}
-BrushCreator* getTable(){
-	return m_brushhalflife;
-}
+    BrushHalfLifeAPI()
+    {
+        Brush_Construct(eBrushTypeHalfLife);
+
+        m_brushhalflife = &GetBrushCreator();
+    }
+
+    ~BrushHalfLifeAPI()
+    {
+        Brush_Destroy();
+    }
+
+    BrushCreator *getTable()
+    {
+        return m_brushhalflife;
+    }
 };
 
 typedef SingletonModule<BrushHalfLifeAPI, BrushDependencies> BrushHalfLifeModule;
 typedef Static<BrushHalfLifeModule> StaticBrushHalfLifeModule;
-StaticRegisterModule staticRegisterBrushHalfLife( StaticBrushHalfLifeModule::instance() );
+StaticRegisterModule staticRegisterBrushHalfLife(StaticBrushHalfLifeModule::instance());

@@ -22,6 +22,6 @@
 #if !defined( INCLUDED_GENERIC_H )
 #define INCLUDED_GENERIC_H
 
-scene::Node& New_GenericEntity( EntityClass* eclass );
+scene::Node &New_GenericEntity(EntityClass *eclass);
 
 #endif

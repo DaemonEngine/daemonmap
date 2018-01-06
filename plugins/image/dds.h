@@ -23,8 +23,9 @@
 #define INCLUDED_DDS_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadDDS( ArchiveFile& file );
+Image *LoadDDS(ArchiveFile &file);
 
 #endif

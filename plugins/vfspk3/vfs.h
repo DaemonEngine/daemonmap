@@ -32,8 +32,11 @@
 #define INCLUDED_VFS_H
 
 void FileSystem_Init();
+
 void FileSystem_Shutdown();
+
 class VirtualFileSystem;
-VirtualFileSystem& GetFileSystem();
+
+VirtualFileSystem &GetFileSystem();
 
 #endif

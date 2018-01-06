@@ -48,7 +48,8 @@ class NonModalEntry {
     static gboolean escape(ui::Entry entry, GdkEventKey *event, NonModalEntry *self);
 
 public:
-    NonModalEntry(const Callback<void()> &apply, const Callback<void()> &cancel) : m_editing(false), m_apply(apply), m_cancel(cancel)
+    NonModalEntry(const Callback<void()> &apply, const Callback<void()> &cancel) : m_editing(false), m_apply(apply),
+                                                                                   m_cancel(cancel)
     {
     }
 

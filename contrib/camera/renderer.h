@@ -26,25 +26,34 @@
 
 class CRenderer : public IGL2DWindow, public IGL3DWindow {
 public:
-CRenderer();
-virtual ~CRenderer();
+    CRenderer();
+
+    virtual ~CRenderer();
 
 protected:
-int refCount;
+    int refCount;
 
 public:
-void Register();
-void UnRegister();
-void Initialize();
-void Draw2D( VIEWTYPE vt );
-void Draw3D();
+    void Register();
 
-void IncRef() { refCount++; }
-void DecRef() {
-	refCount--; if ( refCount <= 0 ) {
-		delete this;
-	}
-}
+    void UnRegister();
 
-bool m_bHooked;
+    void Initialize();
+
+    void Draw2D(VIEWTYPE vt);
+
+    void Draw3D();
+
+    void IncRef()
+    { refCount++; }
+
+    void DecRef()
+    {
+        refCount--;
+        if (refCount <= 0) {
+            delete this;
+        }
+    }
+
+    bool m_bHooked;
 };

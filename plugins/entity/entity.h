@@ -23,19 +23,21 @@
 #define INCLUDED_ENTITY_H
 
 class EntityCreator;
-EntityCreator& GetEntityCreator();
 
-enum EGameType
-{
-	eGameTypeQuake3,
-	eGameTypeRTCW,
-	eGameTypeDoom3,
+EntityCreator &GetEntityCreator();
+
+enum EGameType {
+    eGameTypeQuake3,
+    eGameTypeRTCW,
+    eGameTypeDoom3,
 };
 
 extern EGameType g_gameType;
 
 class FilterSystem;
-void Entity_Construct( EGameType gameType = eGameTypeQuake3 );
+
+void Entity_Construct(EGameType gameType = eGameTypeQuake3);
+
 void Entity_Destroy();
 
 extern bool g_showNames;

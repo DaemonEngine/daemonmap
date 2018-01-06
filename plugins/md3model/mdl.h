@@ -24,6 +24,7 @@
 
 namespace scene { class Node; }
 class ArchiveFile;
-scene::Node& loadMDLModel( ArchiveFile& file );
+
+scene::Node &loadMDLModel(ArchiveFile &file);
 
 #endif

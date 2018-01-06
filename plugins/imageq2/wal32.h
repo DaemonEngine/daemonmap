@@ -23,8 +23,9 @@
 #define INCLUDED_WAL32_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadM32( ArchiveFile& file );
+Image *LoadM32(ArchiveFile &file);
 
 #endif

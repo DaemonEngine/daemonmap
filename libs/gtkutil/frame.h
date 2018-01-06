@@ -24,6 +24,6 @@
 #if !defined( INCLUDED_GTKUTIL_FRAME_H )
 #define INCLUDED_GTKUTIL_FRAME_H
 
-ui::Frame create_framed_widget( ui::Widget widget );
+ui::Frame create_framed_widget(ui::Widget widget);
 
 #endif

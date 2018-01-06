@@ -21,9 +21,12 @@
 
 #include "itoolbar.h"
 
-const IToolbarButton* GetToolbarButton( std::size_t index );
-const IToolbarButton* GetToolbarNoButton( std::size_t index );
-std::size_t ToolbarButtonCount( void );
-std::size_t ToolbarNoButtons( void );
+const IToolbarButton *GetToolbarButton(std::size_t index);
+
+const IToolbarButton *GetToolbarNoButton(std::size_t index);
+
+std::size_t ToolbarButtonCount(void);
+
+std::size_t ToolbarNoButtons(void);
 
 #endif

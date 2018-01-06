@@ -25,6 +25,8 @@
 #include "qerplugin.h"
 
 /// \brief Shows a modal message-box.
-EMessageBoxReturn gtk_MessageBox( ui::Window parent, const char* text, const char* title = "NetRadiant", EMessageBoxType type = eMB_OK, EMessageBoxIcon icon = eMB_ICONDEFAULT );
+EMessageBoxReturn
+gtk_MessageBox(ui::Window parent, const char *text, const char *title = "NetRadiant", EMessageBoxType type = eMB_OK,
+               EMessageBoxIcon icon = eMB_ICONDEFAULT);
 
 #endif

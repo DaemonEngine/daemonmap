@@ -31,59 +31,60 @@ typedef unsigned char byte;
 const int M32_NAME_LENGTH = 128;
 const int M32_MIPMAP_COUNT = 16;
 
-typedef struct m32_header_t
-{
-	int version;
-	char name[M32_NAME_LENGTH];
-	char altname[M32_NAME_LENGTH];                      // texture substitution
-	char animname[M32_NAME_LENGTH];                     // next frame in animation chain
-	char damagename[M32_NAME_LENGTH];                   // image that should be shown when damaged
-	unsigned width[M32_MIPMAP_COUNT], height[M32_MIPMAP_COUNT];
-	unsigned offsets[M32_MIPMAP_COUNT];
-	int flags;
-	int contents;
-	int value;
-	float scale_x, scale_y;
-	int mip_scale;
+typedef struct m32_header_t {
+    int version;
+    char name[M32_NAME_LENGTH];
+    char altname[M32_NAME_LENGTH];                      // texture substitution
+    char animname[M32_NAME_LENGTH];                     // next frame in animation chain
+    char damagename[M32_NAME_LENGTH];                   // image that should be shown when damaged
+    unsigned width[M32_MIPMAP_COUNT], height[M32_MIPMAP_COUNT];
+    unsigned offsets[M32_MIPMAP_COUNT];
+    int flags;
+    int contents;
+    int value;
+    float scale_x, scale_y;
+    int mip_scale;
 
-	// detail texturing info
-	char dt_name[M32_NAME_LENGTH];              // detailed texture name
-	float dt_scale_x, dt_scale_y;
-	float dt_u, dt_v;
-	float dt_alpha;
-	int dt_src_blend_mode, dt_dst_blend_mode;
+    // detail texturing info
+    char dt_name[M32_NAME_LENGTH];              // detailed texture name
+    float dt_scale_x, dt_scale_y;
+    float dt_u, dt_v;
+    float dt_alpha;
+    int dt_src_blend_mode, dt_dst_blend_mode;
 
-	int unused[20];                         // future expansion to maintain compatibility with h2
+    int unused[20];                         // future expansion to maintain compatibility with h2
 } m32_header_t;
 
 
-Image* LoadM32Buff( byte* buffer ){
-	PointerInputStream inputStream( buffer );
+Image *LoadM32Buff(byte *buffer)
+{
+    PointerInputStream inputStream(buffer);
 
-	inputStream.seek( 4 // version
-					  + M32_NAME_LENGTH // name
-					  + M32_NAME_LENGTH // altname
-					  + M32_NAME_LENGTH // animname
-					  + M32_NAME_LENGTH ); // damagename
-	int w = istream_read_uint32_le( inputStream );
-	inputStream.seek( 4 * ( M32_MIPMAP_COUNT - 1 ) ); // remaining widths
-	int h = istream_read_uint32_le( inputStream );
-	inputStream.seek( 4 * ( M32_MIPMAP_COUNT - 1 ) ); // remaining heights
-	int offset = istream_read_uint32_le( inputStream );
-	inputStream.seek( 4 * ( M32_MIPMAP_COUNT - 1 ) ); // remaining offsets
-	int flags = istream_read_uint32_le( inputStream );
-	int contents = istream_read_uint32_le( inputStream );
-	int value = istream_read_uint32_le( inputStream );
+    inputStream.seek(4 // version
+                     + M32_NAME_LENGTH // name
+                     + M32_NAME_LENGTH // altname
+                     + M32_NAME_LENGTH // animname
+                     + M32_NAME_LENGTH); // damagename
+    int w = istream_read_uint32_le(inputStream);
+    inputStream.seek(4 * (M32_MIPMAP_COUNT - 1)); // remaining widths
+    int h = istream_read_uint32_le(inputStream);
+    inputStream.seek(4 * (M32_MIPMAP_COUNT - 1)); // remaining heights
+    int offset = istream_read_uint32_le(inputStream);
+    inputStream.seek(4 * (M32_MIPMAP_COUNT - 1)); // remaining offsets
+    int flags = istream_read_uint32_le(inputStream);
+    int contents = istream_read_uint32_le(inputStream);
+    int value = istream_read_uint32_le(inputStream);
 
-	RGBAImageFlags* image = new RGBAImageFlags( w, h, flags, contents, value );
+    RGBAImageFlags *image = new RGBAImageFlags(w, h, flags, contents, value);
 
-	const byte* source = buffer + offset;
-	std::copy( source, source + ( w * h * 4 ), image->getRGBAPixels() );
+    const byte *source = buffer + offset;
+    std::copy(source, source + (w * h * 4), image->getRGBAPixels());
 
-	return image;
+    return image;
 }
 
-Image* LoadM32( ArchiveFile& file ){
-	ScopedArchiveBuffer buffer( file );
-	return LoadM32Buff( buffer.buffer );
+Image *LoadM32(ArchiveFile &file)
+{
+    ScopedArchiveBuffer buffer(file);
+    return LoadM32Buff(buffer.buffer);
 }

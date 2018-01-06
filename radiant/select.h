@@ -24,67 +24,87 @@
 
 #include "math/vector.h"
 
-void Select_GetBounds( Vector3& mins, Vector3& maxs );
-void Select_GetMid( Vector3& mid );
+void Select_GetBounds(Vector3 &mins, Vector3 &maxs);
+
+void Select_GetMid(Vector3 &mid);
 
 void Select_Delete();
+
 void Select_Invert();
+
 void Select_Inside();
+
 void Select_Touching();
+
 void Scene_ExpandSelectionToEntities();
 
 void Selection_Flipx();
+
 void Selection_Flipy();
+
 void Selection_Flipz();
+
 void Selection_Rotatex();
+
 void Selection_Rotatey();
+
 void Selection_Rotatez();
 
 
 void Selection_MoveDown();
+
 void Selection_MoveUp();
 
 void Select_AllOfType();
 
 void DoRotateDlg();
+
 void DoScaleDlg();
 
 
-void Select_SetShader( const char* shader );
+void Select_SetShader(const char *shader);
 
 class TextureProjection;
-void Select_SetTexdef( const TextureProjection& projection );
+
+void Select_SetTexdef(const TextureProjection &projection);
 
 class ContentsFlagsValue;
-void Select_SetFlags( const ContentsFlagsValue& flags );
 
-void Select_RotateTexture( float amt );
-void Select_ScaleTexture( float x, float y );
-void Select_ShiftTexture( float x, float y );
-void Select_FitTexture( float horizontal = 1, float vertical = 1 );
-void FindReplaceTextures( const char* pFind, const char* pReplace, bool bSelected );
+void Select_SetFlags(const ContentsFlagsValue &flags);
+
+void Select_RotateTexture(float amt);
+
+void Select_ScaleTexture(float x, float y);
+
+void Select_ShiftTexture(float x, float y);
+
+void Select_FitTexture(float horizontal = 1, float vertical = 1);
+
+void FindReplaceTextures(const char *pFind, const char *pReplace, bool bSelected);
 
 void HideSelected();
+
 void Select_ShowAllHidden();
 
 // updating workzone to a given brush (depends on current view)
 
 void Selection_construct();
+
 void Selection_destroy();
 
 
-struct select_workzone_t
-{
-	// defines the boundaries of the current work area
-	// is used to guess brushes and drop points third coordinate when creating from 2D view
-	Vector3 d_work_min, d_work_max;
+struct select_workzone_t {
+    // defines the boundaries of the current work area
+    // is used to guess brushes and drop points third coordinate when creating from 2D view
+    Vector3 d_work_min, d_work_max;
 
-	select_workzone_t() :
-		d_work_min( -64.0f,-64.0f,-64.0f ),
-		d_work_max( 64.0f, 64.0f, 64.0f ){
-	}
+    select_workzone_t() :
+            d_work_min(-64.0f, -64.0f, -64.0f),
+            d_work_max(64.0f, 64.0f, 64.0f)
+    {
+    }
 };
 
-const select_workzone_t& Select_getWorkZone();
+const select_workzone_t &Select_getWorkZone();
 
 #endif

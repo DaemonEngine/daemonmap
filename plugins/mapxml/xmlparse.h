@@ -24,6 +24,6 @@
 
 #include "imap.h"
 
-void Map_Read( scene::Node& root, TextInputStream& in, EntityCreator& entityTable );
+void Map_Read(scene::Node &root, TextInputStream &in, EntityCreator &entityTable);
 
 #endif

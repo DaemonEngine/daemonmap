@@ -24,7 +24,7 @@
 
 typedef unsigned char byte;
 
-const unsigned char MDL_IDENT[4] = { 'I', 'D', 'P', 'O', };
+const unsigned char MDL_IDENT[4] = {'I', 'D', 'P', 'O',};
 
 #define MDL_VERSION 6
 
@@ -37,34 +37,34 @@ typedef enum { MDL_SKIN_SINGLE = 0, MDL_SKIN_GROUP } aliasskintype_t;
 typedef float float3[3];
 
 typedef struct {
-	byte ident[4];
-	int version;
-	float3 scale;
-	float3 scale_origin;
-	float boundingradius;
-	float3 eyeposition;
-	int numskins;
-	int skinwidth;
-	int skinheight;
-	int numverts;
-	int numtris;
-	int numframes;
-	int synctype;
-	int flags;
-	float size;
+    byte ident[4];
+    int version;
+    float3 scale;
+    float3 scale_origin;
+    float boundingradius;
+    float3 eyeposition;
+    int numskins;
+    int skinwidth;
+    int skinheight;
+    int numverts;
+    int numtris;
+    int numframes;
+    int synctype;
+    int flags;
+    float size;
 } mdlHeader_t;
 
 // TODO: could be shorts
 
 typedef struct {
-	int onseam;
-	int s;
-	int t;
+    int onseam;
+    int s;
+    int t;
 } mdlSt_t;
 
 typedef struct dtriangle_s {
-	int facesfront;
-	int vertindex[3];
+    int facesfront;
+    int vertindex[3];
 } mdlTriangle_t;
 
 #define MDL_FACES_FRONT             1
@@ -73,46 +73,46 @@ typedef struct dtriangle_s {
 // load this data
 
 typedef struct {
-	byte v[3];
-	byte lightnormalindex;
+    byte v[3];
+    byte lightnormalindex;
 } mdlXyzNormal_t;
 
 const int MDL_XYZNORMAL_SIZE = 4;
 
 typedef struct {
-	mdlXyzNormal_t bboxmin;     // lightnormal isn't used
-	mdlXyzNormal_t bboxmax;     // lightnormal isn't used
-	char name[16];          // frame name from grabbing
+    mdlXyzNormal_t bboxmin;     // lightnormal isn't used
+    mdlXyzNormal_t bboxmax;     // lightnormal isn't used
+    char name[16];          // frame name from grabbing
 } mdlFrame_t;
 
-const int MDL_FRAME_SIZE = ( MDL_XYZNORMAL_SIZE * 2 ) + 16;
+const int MDL_FRAME_SIZE = (MDL_XYZNORMAL_SIZE * 2) + 16;
 
 typedef struct {
-	int numframes;
-	mdlXyzNormal_t bboxmin;     // lightnormal isn't used
-	mdlXyzNormal_t bboxmax;     // lightnormal isn't used
+    int numframes;
+    mdlXyzNormal_t bboxmin;     // lightnormal isn't used
+    mdlXyzNormal_t bboxmax;     // lightnormal isn't used
 } mdlFrameGroup_t;
 
-const int MDL_FRAMEGROUP_SIZE = 4 + ( MDL_XYZNORMAL_SIZE * 2 );
+const int MDL_FRAMEGROUP_SIZE = 4 + (MDL_XYZNORMAL_SIZE * 2);
 
 typedef struct {
-	int numskins;
+    int numskins;
 } mdlSkinGroup_t;
 
 typedef struct {
-	float interval;
+    float interval;
 } mdlFrameInterval_t;
 
 typedef struct {
-	float interval;
+    float interval;
 } mdlSkinInterval_t;
 
 typedef struct {
-	aliasframetype_t type;
+    aliasframetype_t type;
 } mdlFrameType_t;
 
 typedef struct {
-	aliasskintype_t type;
+    aliasskintype_t type;
 } mdlSkinType_t;
 
 #endif

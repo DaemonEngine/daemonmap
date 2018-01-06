@@ -41,7 +41,9 @@
 #include "synapse.h"
 #include "iplugin.h"
 #include "itoolbar.h"
+
 #define USE_QERTABLE_DEFINE
+
 #include "qerplugin.h"
 #include "igl.h"
 #include "ifilesystem.h"
@@ -58,19 +60,24 @@ extern _QEREntityTable g_EntityTable;
 extern _QERAppDataTable g_DataTable;
 extern void *g_pMainWidget;
 
-extern CSynapseServer* g_pSynapseServer;
+extern CSynapseServer *g_pSynapseServer;
 
-class CSynapseClientBkgrnd2d : public CSynapseClient
-{
+class CSynapseClientBkgrnd2d : public CSynapseClient {
 public:
 // CSynapseClient API
-bool RequestAPI( APIDescriptor_t *pAPI );
-const char* GetInfo();
-const char* GetName();
+    bool RequestAPI(APIDescriptor_t *pAPI);
 
-CSynapseClientBkgrnd2d() { }
-virtual ~CSynapseClientBkgrnd2d() { }
+    const char *GetInfo();
+
+    const char *GetName();
+
+    CSynapseClientBkgrnd2d()
+    {}
+
+    virtual ~CSynapseClientBkgrnd2d()
+    {}
 };
+
 #define MSG_PREFIX "bkgrnd2d: "
 #define MSG_WARN "bkgrnd2d WARNING: "
 #define BKGRND2D_MINOR "bkgrnd2d"

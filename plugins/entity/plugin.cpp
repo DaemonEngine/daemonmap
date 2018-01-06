@@ -43,40 +43,44 @@
 #include "modulesystem/singletonmodule.h"
 
 class EntityDependencies :
-	public GlobalRadiantModuleRef,
-	public GlobalOpenGLModuleRef,
-	public GlobalUndoModuleRef,
-	public GlobalSceneGraphModuleRef,
-	public GlobalShaderCacheModuleRef,
-	public GlobalSelectionModuleRef,
-	public GlobalReferenceModuleRef,
-	public GlobalFilterModuleRef,
-	public GlobalPreferenceSystemModuleRef,
-	public GlobalNamespaceModuleRef,
-	public GlobalModelSkinCacheModuleRef
-{
+        public GlobalRadiantModuleRef,
+        public GlobalOpenGLModuleRef,
+        public GlobalUndoModuleRef,
+        public GlobalSceneGraphModuleRef,
+        public GlobalShaderCacheModuleRef,
+        public GlobalSelectionModuleRef,
+        public GlobalReferenceModuleRef,
+        public GlobalFilterModuleRef,
+        public GlobalPreferenceSystemModuleRef,
+        public GlobalNamespaceModuleRef,
+        public GlobalModelSkinCacheModuleRef {
 };
 
-class EntityQ3API : public TypeSystemRef
-{
-EntityCreator* m_entityq3;
+class EntityQ3API : public TypeSystemRef {
+    EntityCreator *m_entityq3;
 public:
-typedef EntityCreator Type;
-STRING_CONSTANT( Name, "quake3" );
+    typedef EntityCreator Type;
 
-EntityQ3API(){
-	Entity_Construct();
+    STRING_CONSTANT(Name, "quake3");
 
-	m_entityq3 = &GetEntityCreator();
+    EntityQ3API()
+    {
+        Entity_Construct();
 
-	GlobalReferenceCache().setEntityCreator( *m_entityq3 );
-}
-~EntityQ3API(){
-	Entity_Destroy();
-}
-EntityCreator* getTable(){
-	return m_entityq3;
-}
+        m_entityq3 = &GetEntityCreator();
+
+        GlobalReferenceCache().setEntityCreator(*m_entityq3);
+    }
+
+    ~EntityQ3API()
+    {
+        Entity_Destroy();
+    }
+
+    EntityCreator *getTable()
+    {
+        return m_entityq3;
+    }
 };
 
 typedef SingletonModule<EntityQ3API, EntityDependencies> EntityQ3Module;
@@ -84,26 +88,31 @@ typedef SingletonModule<EntityQ3API, EntityDependencies> EntityQ3Module;
 EntityQ3Module g_EntityQ3Module;
 
 
-class EntityWolfAPI : public TypeSystemRef
-{
-EntityCreator* m_entitywolf;
+class EntityWolfAPI : public TypeSystemRef {
+    EntityCreator *m_entitywolf;
 public:
-typedef EntityCreator Type;
-STRING_CONSTANT( Name, "wolf" );
+    typedef EntityCreator Type;
 
-EntityWolfAPI(){
-	Entity_Construct( eGameTypeRTCW );
+    STRING_CONSTANT(Name, "wolf");
 
-	m_entitywolf = &GetEntityCreator();
+    EntityWolfAPI()
+    {
+        Entity_Construct(eGameTypeRTCW);
 
-	GlobalReferenceCache().setEntityCreator( *m_entitywolf );
-}
-~EntityWolfAPI(){
-	Entity_Destroy();
-}
-EntityCreator* getTable(){
-	return m_entitywolf;
-}
+        m_entitywolf = &GetEntityCreator();
+
+        GlobalReferenceCache().setEntityCreator(*m_entitywolf);
+    }
+
+    ~EntityWolfAPI()
+    {
+        Entity_Destroy();
+    }
+
+    EntityCreator *getTable()
+    {
+        return m_entitywolf;
+    }
 };
 
 typedef SingletonModule<EntityWolfAPI, EntityDependencies> EntityWolfModule;
@@ -111,26 +120,31 @@ typedef SingletonModule<EntityWolfAPI, EntityDependencies> EntityWolfModule;
 EntityWolfModule g_EntityWolfModule;
 
 
-class EntityDoom3API : public TypeSystemRef
-{
-EntityCreator* m_entitydoom3;
+class EntityDoom3API : public TypeSystemRef {
+    EntityCreator *m_entitydoom3;
 public:
-typedef EntityCreator Type;
-STRING_CONSTANT( Name, "doom3" );
+    typedef EntityCreator Type;
 
-EntityDoom3API(){
-	Entity_Construct( eGameTypeDoom3 );
+    STRING_CONSTANT(Name, "doom3");
 
-	m_entitydoom3 = &GetEntityCreator();
+    EntityDoom3API()
+    {
+        Entity_Construct(eGameTypeDoom3);
 
-	GlobalReferenceCache().setEntityCreator( *m_entitydoom3 );
-}
-~EntityDoom3API(){
-	Entity_Destroy();
-}
-EntityCreator* getTable(){
-	return m_entitydoom3;
-}
+        m_entitydoom3 = &GetEntityCreator();
+
+        GlobalReferenceCache().setEntityCreator(*m_entitydoom3);
+    }
+
+    ~EntityDoom3API()
+    {
+        Entity_Destroy();
+    }
+
+    EntityCreator *getTable()
+    {
+        return m_entitydoom3;
+    }
 };
 
 typedef SingletonModule<EntityDoom3API, EntityDependencies> EntityDoom3Module;
@@ -138,11 +152,12 @@ typedef SingletonModule<EntityDoom3API, EntityDependencies> EntityDoom3Module;
 EntityDoom3Module g_EntityDoom3Module;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
-	initialiseModule( server );
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
+{
+    initialiseModule(server);
 
-	g_EntityQ3Module.selfRegister();
-	g_EntityWolfModule.selfRegister();
-	g_EntityDoom3Module.selfRegister();
-	Doom3ModelSkinCacheModule_selfRegister( server );
+    g_EntityQ3Module.selfRegister();
+    g_EntityWolfModule.selfRegister();
+    g_EntityDoom3Module.selfRegister();
+    Doom3ModelSkinCacheModule_selfRegister(server);
 }

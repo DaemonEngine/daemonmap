@@ -25,11 +25,15 @@
 #define INCLUDED_FINDTEXTUREDIALOG_H
 
 void FindTextureDialog_Construct();
+
 void FindTextureDialog_Destroy();
 
-void FindTextureDialog_constructWindow( ui::Window main_window );
+void FindTextureDialog_constructWindow(ui::Window main_window);
+
 void FindTextureDialog_destroyWindow();
+
 bool FindTextureDialog_isOpen();
-void FindTextureDialog_selectTexture( const char* name );
+
+void FindTextureDialog_selectTexture(const char *name);
 
 #endif

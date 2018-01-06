@@ -35,11 +35,14 @@ typedef unsigned char byte;
 #include <stdio.h>
 
 #define USE_QERTABLE_DEFINE
+
 #include "iscenegraph.h"
 #include "qerplugin.h"
 
 #define USE_QGLTABLE_DEFINE
+
 #include "igl.h"
+
 extern _QERQglTable __QGLTABLENAME;
 
 #include "iui.h"
@@ -63,12 +66,12 @@ extern _QERQglTable g_QglTable;
 extern _QERUITable g_UITable;
 extern _QERCameraTable g_CameraTable;
 
-extern CRenderer          *Renderer;
-extern CListener          *Listener;
+extern CRenderer *Renderer;
+extern CListener *Listener;
 
 // splinelib
 #define CAMERA_PLUGIN
-#define DotProduct( a,b )         ( ( a )[0] * ( b )[0] + ( a )[1] * ( b )[1] + ( a )[2] * ( b )[2] )
+#define DotProduct(a, b)         ( ( a )[0] * ( b )[0] + ( a )[1] * ( b )[1] + ( a )[2] * ( b )[2] )
 
 #include "splines/splines.h"
 
@@ -76,7 +79,7 @@ extern CListener          *Listener;
 #define MAX_CAMERAS 64
 extern idCameraDef camera[MAX_CAMERAS];
 
-extern "C" qboolean loadCamera( int camNum, const char *name );
+extern "C" qboolean loadCamera(int camNum, const char *name);
 
 #ifndef PATH_MAX
 #define PATH_MAX 260
@@ -88,71 +91,91 @@ extern "C" qboolean loadCamera( int camNum, const char *name );
 
 class CCamera {
 public:
-CCamera( int i ) {
-	cam = &camera[i];
-	camnum = i;
-	Init();
-}
-~CCamera();
+    CCamera(int i)
+    {
+        cam = &camera[i];
+        camnum = i;
+        Init();
+    }
 
-void Init() {
-	next = prev = NULL;
-	fileName[0] = '\0';
-	hasbeensaved = 0;
-}
+    ~CCamera();
 
-idCameraDef *GetCam() {
-	return( cam );
-}
-int GetCamNum() {
-	return( camnum );
-}
+    void Init()
+    {
+        next = prev = NULL;
+        fileName[0] = '\0';
+        hasbeensaved = 0;
+    }
 
-char *GetFileName() {
-	return( fileName );
-}
-void SetFileName( const char *name, bool save ) {
-	strcpy( fileName, name );
-	if ( save ) {
-		hasbeensaved = 1;
-	}
-}
+    idCameraDef *GetCam()
+    {
+        return (cam);
+    }
 
-CCamera *GetNext() {
-	return( next );
-}
+    int GetCamNum()
+    {
+        return (camnum);
+    }
 
-CCamera *GetPrev() {
-	return( prev );
-}
+    char *GetFileName()
+    {
+        return (fileName);
+    }
 
-void SetNext( CCamera *camera ) {
-	next = camera;
-}
-void SetPrev( CCamera *camera ) {
-	prev = camera;
-}
+    void SetFileName(const char *name, bool save)
+    {
+        strcpy(fileName, name);
+        if (save) {
+            hasbeensaved = 1;
+        }
+    }
 
-int HasBeenSaved() {
-	return( hasbeensaved );
-}
-void HasBeenModified() {
-	if ( hasbeensaved ) {
-		hasbeensaved = 2;
-	}
-}
+    CCamera *GetNext()
+    {
+        return (next);
+    }
+
+    CCamera *GetPrev()
+    {
+        return (prev);
+    }
+
+    void SetNext(CCamera *camera)
+    {
+        next = camera;
+    }
+
+    void SetPrev(CCamera *camera)
+    {
+        prev = camera;
+    }
+
+    int HasBeenSaved()
+    {
+        return (hasbeensaved);
+    }
+
+    void HasBeenModified()
+    {
+        if (hasbeensaved) {
+            hasbeensaved = 2;
+        }
+    }
 
 protected:
-idCameraDef *cam;
-int camnum;
-CCamera *next, *prev;
-char fileName[PATH_MAX];
-int hasbeensaved;       // 0:never saved 1:saved 2:saved, but modified
+    idCameraDef *cam;
+    int camnum;
+    CCamera *next, *prev;
+    char fileName[PATH_MAX];
+    int hasbeensaved;       // 0:never saved 1:saved 2:saved, but modified
 };
 
 CCamera *AllocCam();
-void FreeCam( CCamera *cam );
-void SetCurrentCam( CCamera *cam );
+
+void FreeCam(CCamera *cam);
+
+void SetCurrentCam(CCamera *cam);
+
 CCamera *GetCurrentCam();
 
 // globals

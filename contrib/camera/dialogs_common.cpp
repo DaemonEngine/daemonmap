@@ -26,23 +26,25 @@
 
 #include "camera.h"
 
-void dialog_button_callback( ui::Widget widget, gpointer data ){
-	int *loop, *ret;
+void dialog_button_callback(ui::Widget widget, gpointer data)
+{
+    int *loop, *ret;
 
-	auto parent = widget.window();
-	loop = (int*)g_object_get_data( G_OBJECT( parent ), "loop" );
-	ret = (int*)g_object_get_data( G_OBJECT( parent ), "ret" );
+    auto parent = widget.window();
+    loop = (int *) g_object_get_data(G_OBJECT(parent), "loop");
+    ret = (int *) g_object_get_data(G_OBJECT(parent), "ret");
 
-	*loop = 0;
-	*ret = gpointer_to_int( data );
+    *loop = 0;
+    *ret = gpointer_to_int(data);
 }
 
-gint dialog_delete_callback( GtkWidget *widget, GdkEvent* event, gpointer data ){
-	int *loop;
+gint dialog_delete_callback(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+    int *loop;
 
-	gtk_widget_hide( widget );
-	loop = (int*)g_object_get_data( G_OBJECT( widget ), "loop" );
-	*loop = 0;
+    gtk_widget_hide(widget);
+    loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
+    *loop = 0;
 
-	return TRUE;
+    return TRUE;
 }

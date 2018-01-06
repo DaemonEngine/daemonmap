@@ -23,8 +23,9 @@
 #define INCLUDED_MIP_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadMIP( ArchiveFile& file );
+Image *LoadMIP(ArchiveFile &file);
 
 #endif

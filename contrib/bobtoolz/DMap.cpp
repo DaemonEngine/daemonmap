@@ -49,120 +49,135 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DMap::DMap(){
-	m_nNextEntity = 1;
-	AddEntity( "worldspawn", 0 );
+DMap::DMap()
+{
+    m_nNextEntity = 1;
+    AddEntity("worldspawn", 0);
 }
 
-DMap::~DMap(){
-	ClearEntities();
+DMap::~DMap()
+{
+    ClearEntities();
 }
 
-DEntity* DMap::AddEntity( const char *classname, int ID ){
-	DEntity* newEntity;
-	if ( ID == -1 ) {
-		newEntity = new DEntity( classname, m_nNextEntity++ );
-	}
-	else{
-		newEntity = new DEntity( classname, ID );
-	}
+DEntity *DMap::AddEntity(const char *classname, int ID)
+{
+    DEntity *newEntity;
+    if (ID == -1) {
+        newEntity = new DEntity(classname, m_nNextEntity++);
+    } else {
+        newEntity = new DEntity(classname, ID);
+    }
 
-	entityList.push_back( newEntity );
+    entityList.push_back(newEntity);
 
-	return newEntity;
+    return newEntity;
 }
 
-void DMap::ClearEntities(){
-	m_nNextEntity = 1;
+void DMap::ClearEntities()
+{
+    m_nNextEntity = 1;
 
-	for ( std::list<DEntity *>::const_iterator deadEntity = entityList.begin(); deadEntity != entityList.end(); deadEntity++ )
-		delete *deadEntity;
+    for (std::list<DEntity *>::const_iterator deadEntity = entityList.begin();
+         deadEntity != entityList.end(); deadEntity++) {
+             delete *deadEntity;
+    }
 
-	entityList.clear();
+    entityList.clear();
 }
 
-DEntity* DMap::GetEntityForID( int ID ){
-	DEntity* findEntity = NULL;
+DEntity *DMap::GetEntityForID(int ID)
+{
+    DEntity *findEntity = NULL;
 
-	for ( std::list<DEntity *>::const_iterator chkEntity = entityList.begin(); chkEntity != entityList.end(); chkEntity++ )
-	{
-		if ( ( *chkEntity )->m_nID == ID ) {
-			findEntity = ( *chkEntity );
-			break;
-		}
-	}
+    for (std::list<DEntity *>::const_iterator chkEntity = entityList.begin();
+         chkEntity != entityList.end(); chkEntity++) {
+        if ((*chkEntity)->m_nID == ID) {
+            findEntity = (*chkEntity);
+            break;
+        }
+    }
 
-	if ( !findEntity ) {
-		findEntity = AddEntity( "worldspawn", ID );
-	}
+    if (!findEntity) {
+        findEntity = AddEntity("worldspawn", ID);
+    }
 
-	return findEntity;
+    return findEntity;
 }
 
 
-DEntity* DMap::GetWorldSpawn(){
-	return GetEntityForID( 0 );
+DEntity *DMap::GetWorldSpawn()
+{
+    return GetEntityForID(0);
 }
 
-void DMap::BuildInRadiant( bool bAllowDestruction ){
-	for ( std::list<DEntity *>::const_iterator buildEntity = entityList.begin(); buildEntity != entityList.end(); buildEntity++ )
-		( *buildEntity )->BuildInRadiant( bAllowDestruction );
+void DMap::BuildInRadiant(bool bAllowDestruction)
+{
+    for (std::list<DEntity *>::const_iterator buildEntity = entityList.begin();
+         buildEntity != entityList.end(); buildEntity++) {
+             (*buildEntity)->BuildInRadiant(bAllowDestruction);
+    }
 }
 
-void DMap::LoadAll( bool bLoadPatches ){
-	ClearEntities();
+void DMap::LoadAll(bool bLoadPatches)
+{
+    ClearEntities();
 
-	GlobalSelectionSystem().setSelectedAll( false );
+    GlobalSelectionSystem().setSelectedAll(false);
 
-	class load_entities_t : public scene::Traversable::Walker
-	{
-	DMap* m_map;
-	bool m_bLoadPatches;
-public:
-	load_entities_t( DMap* map, bool bLoadPatches )
-		: m_map( map ), m_bLoadPatches( bLoadPatches ){
-	}
-	bool pre( scene::Node& node ) const {
-		if ( Node_isEntity( node ) ) {
-			DEntity* loadEntity = m_map->AddEntity( "", 0 );
-			loadEntity->LoadFromEntity( node, m_bLoadPatches );
-		}
-		return false;
-	}
-	} load_entities( this, bLoadPatches );
+    class load_entities_t : public scene::Traversable::Walker {
+        DMap *m_map;
+        bool m_bLoadPatches;
+    public:
+        load_entities_t(DMap *map, bool bLoadPatches)
+                : m_map(map), m_bLoadPatches(bLoadPatches)
+        {
+        }
 
-	Node_getTraversable( GlobalSceneGraph().root() )->traverse( load_entities );
+        bool pre(scene::Node &node) const
+        {
+            if (Node_isEntity(node)) {
+                DEntity *loadEntity = m_map->AddEntity("", 0);
+                loadEntity->LoadFromEntity(node, m_bLoadPatches);
+            }
+            return false;
+        }
+    } load_entities(this, bLoadPatches);
+
+    Node_getTraversable(GlobalSceneGraph().root())->traverse(load_entities);
 }
 
-int DMap::FixBrushes(){
-	int count = 0;
-	for ( std::list<DEntity *>::const_iterator fixEntity = entityList.begin(); fixEntity != entityList.end(); fixEntity++ )
-	{
-		count += ( *fixEntity )->FixBrushes();
-	}
+int DMap::FixBrushes()
+{
+    int count = 0;
+    for (std::list<DEntity *>::const_iterator fixEntity = entityList.begin();
+         fixEntity != entityList.end(); fixEntity++) {
+        count += (*fixEntity)->FixBrushes();
+    }
 
-	return count;
+    return count;
 }
 
-void DMap::ResetTextures( const char* textureName, float fScale[2],      float fShift[2],      int rotation, const char* newTextureName,
-						  int bResetTextureName,  int bResetScale[2],  int bResetShift[2],  int bResetRotation ){
-	for ( std::list<DEntity *>::const_iterator texEntity = entityList.begin(); texEntity != entityList.end(); texEntity++ )
-	{
-		if ( string_equal_nocase( "worldspawn", ( *texEntity )->m_Classname ) ) {
-			( *texEntity )->ResetTextures( textureName,        fScale,       fShift,       rotation, newTextureName,
-										   bResetTextureName,  bResetScale,  bResetShift,  bResetRotation, true );
-		}
-		else
-		{
-			if ( ( *texEntity )->ResetTextures( textureName,        fScale,       fShift,       rotation, newTextureName,
-												bResetTextureName,  bResetScale,  bResetShift,  bResetRotation, false ) ) {
-				RebuildEntity( *texEntity );
-			}
-		}
-	}
+void
+DMap::ResetTextures(const char *textureName, float fScale[2], float fShift[2], int rotation, const char *newTextureName,
+                    int bResetTextureName, int bResetScale[2], int bResetShift[2], int bResetRotation)
+{
+    for (std::list<DEntity *>::const_iterator texEntity = entityList.begin();
+         texEntity != entityList.end(); texEntity++) {
+        if (string_equal_nocase("worldspawn", (*texEntity)->m_Classname)) {
+            (*texEntity)->ResetTextures(textureName, fScale, fShift, rotation, newTextureName,
+                                        bResetTextureName, bResetScale, bResetShift, bResetRotation, true);
+        } else {
+            if ((*texEntity)->ResetTextures(textureName, fScale, fShift, rotation, newTextureName,
+                                            bResetTextureName, bResetScale, bResetShift, bResetRotation, false)) {
+                RebuildEntity(*texEntity);
+            }
+        }
+    }
 }
 
-void DMap::RebuildEntity( DEntity *ent ){
-	ent->RemoveFromRadiant();
-	ent->BuildInRadiant( false );
+void DMap::RebuildEntity(DEntity *ent)
+{
+    ent->RemoveFromRadiant();
+    ent->BuildInRadiant(false);
 }

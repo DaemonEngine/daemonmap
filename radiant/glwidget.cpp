@@ -25,23 +25,26 @@
 #include "modulesystem.h"
 #include "gtkutil/glwidget.h"
 
-class GtkGLAPI
-{
-_QERGtkGLTable m_gtkgl;
+class GtkGLAPI {
+    _QERGtkGLTable m_gtkgl;
 public:
-typedef _QERGtkGLTable Type;
-STRING_CONSTANT( Name, "*" );
+    typedef _QERGtkGLTable Type;
 
-GtkGLAPI(){
-	m_gtkgl.glwidget_new = &glwidget_new;
-	m_gtkgl.glwidget_swap_buffers = &glwidget_swap_buffers;
-	m_gtkgl.glwidget_make_current = &glwidget_make_current;
-	m_gtkgl.glwidget_destroy_context = &glwidget_destroy_context;
-	m_gtkgl.glwidget_create_context = &glwidget_create_context;
-}
-_QERGtkGLTable* getTable(){
-	return &m_gtkgl;
-}
+    STRING_CONSTANT(Name, "*");
+
+    GtkGLAPI()
+    {
+        m_gtkgl.glwidget_new = &glwidget_new;
+        m_gtkgl.glwidget_swap_buffers = &glwidget_swap_buffers;
+        m_gtkgl.glwidget_make_current = &glwidget_make_current;
+        m_gtkgl.glwidget_destroy_context = &glwidget_destroy_context;
+        m_gtkgl.glwidget_create_context = &glwidget_create_context;
+    }
+
+    _QERGtkGLTable *getTable()
+    {
+        return &m_gtkgl;
+    }
 };
 
 #include "modulesystem/singletonmodule.h"
@@ -49,4 +52,4 @@ _QERGtkGLTable* getTable(){
 
 typedef SingletonModule<GtkGLAPI> GtkGLModule;
 typedef Static<GtkGLModule> StaticGtkGLModule;
-StaticRegisterModule staticRegisterGtkGL( StaticGtkGLModule::instance() );
+StaticRegisterModule staticRegisterGtkGL(StaticGtkGLModule::instance());

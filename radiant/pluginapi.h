@@ -22,12 +22,16 @@
 #if !defined( INCLUDED_PLUGINAPI_H )
 #define INCLUDED_PLUGINAPI_H
 
-template<typename Element> class BasicVector3;
+template<typename Element>
+class BasicVector3;
+
 typedef BasicVector3<float> Vector3;
 
 // camera API
-void QERApp_GetCamera( Vector3& origin, Vector3& angles );
-void QERApp_SetCamera( const Vector3& origin, const Vector3& angles );
-void QERApp_GetCamWindowExtents( int *x, int *y, int *width, int *height );
+void QERApp_GetCamera(Vector3 &origin, Vector3 &angles);
+
+void QERApp_SetCamera(const Vector3 &origin, const Vector3 &angles);
+
+void QERApp_GetCamWindowExtents(int *x, int *y, int *width, int *height);
 
 #endif

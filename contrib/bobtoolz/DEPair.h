@@ -30,16 +30,16 @@
 
 #include "str.h"
 
-class DEPair
-{
+class DEPair {
 public:
-DEPair();
-virtual ~DEPair();
+    DEPair();
 
-void Build( const char* pKey, const char* pValue );
+    virtual ~DEPair();
 
-Str key;
-Str value;
+    void Build(const char *pKey, const char *pValue);
+
+    Str key;
+    Str value;
 };
 
 //typedef CList<DEPair*, DEPair*> DEPairList;

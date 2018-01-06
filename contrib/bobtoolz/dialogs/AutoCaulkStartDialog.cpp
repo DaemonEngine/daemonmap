@@ -28,27 +28,31 @@
 // CAutoCaulkStartDialog dialog
 
 
-CAutoCaulkStartDialog::CAutoCaulkStartDialog( CWnd* pParent /*=NULL*/ )
-	: CDialog( CAutoCaulkStartDialog::IDD, pParent ){
-	//{{AFX_DATA_INIT(CAutoCaulkStartDialog)
-	m_bAllowDestruction = FALSE;
-	m_Warning1 = _T( "" );
-	m_nMode = 0;
-	//}}AFX_DATA_INIT
+CAutoCaulkStartDialog::CAutoCaulkStartDialog(CWnd *pParent /*=NULL*/ )
+        : CDialog(CAutoCaulkStartDialog::IDD, pParent)
+{
+    //{{AFX_DATA_INIT(CAutoCaulkStartDialog)
+    m_bAllowDestruction = FALSE;
+    m_Warning1 = _T("");
+    m_nMode = 0;
+    //}}AFX_DATA_INIT
 }
 
 
-void CAutoCaulkStartDialog::DoDataExchange( CDataExchange* pDX ){
-	CDialog::DoDataExchange( pDX );
-	//{{AFX_DATA_MAP(CAutoCaulkStartDialog)
-	DDX_Check( pDX, IDC_KILLBRUSHES_CHECK, m_bAllowDestruction );
-	DDX_Text( pDX, IDC_WARNING1_STATIC, m_Warning1 );
-	DDX_Radio( pDX, IDC_AC_NORMAL_RADIO, m_nMode );
-	//}}AFX_DATA_MAP
+void CAutoCaulkStartDialog::DoDataExchange(CDataExchange *pDX)
+{
+    CDialog::DoDataExchange(pDX);
+    //{{AFX_DATA_MAP(CAutoCaulkStartDialog)
+    DDX_Check(pDX, IDC_KILLBRUSHES_CHECK, m_bAllowDestruction);
+    DDX_Text(pDX, IDC_WARNING1_STATIC, m_Warning1);
+    DDX_Radio(pDX, IDC_AC_NORMAL_RADIO, m_nMode);
+    //}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CAutoCaulkStartDialog, CDialog )
+BEGIN_MESSAGE_MAP( CAutoCaulkStartDialog, CDialog
+)
+
 //{{AFX_MSG_MAP(CAutoCaulkStartDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP

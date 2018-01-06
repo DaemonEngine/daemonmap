@@ -29,17 +29,24 @@ typedef int gint;
 typedef gint gboolean;
 typedef unsigned int guint;
 
-void button_connect_callback( ui::Button button, const Callback<void()>& callback );
-void button_connect_callback( ui::ToolButton button, const Callback<void()>& callback );
-guint toggle_button_connect_callback( ui::ToggleButton button, const Callback<void()>& callback );
-guint toggle_button_connect_callback( ui::ToggleToolButton button, const Callback<void()>& callback );
+void button_connect_callback(ui::Button button, const Callback<void()> &callback);
 
-void button_set_icon( ui::Button button, const char* icon );
-void toggle_button_set_active_no_signal( ui::ToggleButton item, gboolean active );
-void toggle_button_set_active_no_signal( ui::ToggleToolButton item, gboolean active );
+void button_connect_callback(ui::ToolButton button, const Callback<void()> &callback);
 
-void radio_button_set_active( ui::RadioButton radio, int index );
-void radio_button_set_active_no_signal( ui::RadioButton radio, int index );
-int radio_button_get_active( ui::RadioButton radio );
+guint toggle_button_connect_callback(ui::ToggleButton button, const Callback<void()> &callback);
+
+guint toggle_button_connect_callback(ui::ToggleToolButton button, const Callback<void()> &callback);
+
+void button_set_icon(ui::Button button, const char *icon);
+
+void toggle_button_set_active_no_signal(ui::ToggleButton item, gboolean active);
+
+void toggle_button_set_active_no_signal(ui::ToggleToolButton item, gboolean active);
+
+void radio_button_set_active(ui::RadioButton radio, int index);
+
+void radio_button_set_active_no_signal(ui::RadioButton radio, int index);
+
+int radio_button_get_active(ui::RadioButton radio);
 
 #endif

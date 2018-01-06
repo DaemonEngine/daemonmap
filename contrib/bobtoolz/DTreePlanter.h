@@ -32,183 +32,198 @@
 const int MAX_QPATH = 64;
 
 typedef struct treeModel_s {
-	char name[MAX_QPATH];
+    char name[MAX_QPATH];
 } treeModel_t;
 
 const int MAX_TP_MODELS = 256;
 
 class DTreePlanter {
-MouseEventHandlerId m_mouseDown;
-SignalHandlerId m_destroyed;
+    MouseEventHandlerId m_mouseDown;
+    SignalHandlerId m_destroyed;
 public:
-SignalHandlerResult mouseDown( const WindowVector& position, ButtonIdentifier button, ModifierFlags modifiers );
-typedef Member<DTreePlanter, SignalHandlerResult(const WindowVector&, ButtonIdentifier, ModifierFlags), &DTreePlanter::mouseDown> MouseDownCaller;
-void destroyed(){
-	m_mouseDown = MouseEventHandlerId();
-	m_destroyed = SignalHandlerId();
-}
-typedef Member<DTreePlanter, void(), &DTreePlanter::destroyed> DestroyedCaller;
+    SignalHandlerResult mouseDown(const WindowVector &position, ButtonIdentifier button, ModifierFlags modifiers);
 
-DTreePlanter() {
-	m_numModels =   0;
-	m_offset =      0;
-	m_maxPitch =    0;
-	m_minPitch =    0;
-	m_maxYaw =      0;
-	m_minYaw =      0;
-	m_setAngles =   false;
-	m_useScale =    false;
-	m_autoLink =    false;
-	m_linkNum =     0;
+    typedef Member<DTreePlanter, SignalHandlerResult(const WindowVector &, ButtonIdentifier,
+                                                     ModifierFlags), &DTreePlanter::mouseDown> MouseDownCaller;
 
-	m_world.LoadSelectedBrushes();
+    void destroyed()
+    {
+        m_mouseDown = MouseEventHandlerId();
+        m_destroyed = SignalHandlerId();
+    }
 
-	char buffer[256];
-	GetFilename( buffer, "bt/tp_ent.txt" );
+    typedef Member<DTreePlanter, void(), &DTreePlanter::destroyed> DestroyedCaller;
 
-	FILE* file = fopen( buffer, "rb" );
-	if ( file ) {
-		fseek( file, 0, SEEK_END );
-		int len = ftell( file );
-		fseek( file, 0, SEEK_SET );
+    DTreePlanter()
+    {
+        m_numModels = 0;
+        m_offset = 0;
+        m_maxPitch = 0;
+        m_minPitch = 0;
+        m_maxYaw = 0;
+        m_minYaw = 0;
+        m_setAngles = false;
+        m_useScale = false;
+        m_autoLink = false;
+        m_linkNum = 0;
 
-		if ( len ) {
-			char* buf = new char[len + 1];
-			buf[len] = '\0';
-			// parser will do the cleanup, dont delete.
+        m_world.LoadSelectedBrushes();
 
-			fread( buf, len, 1, file );
+        char buffer[256];
+        GetFilename(buffer, "bt/tp_ent.txt");
 
-			CScriptParser parser;
-			parser.SetScript( buf );
+        FILE *file = fopen(buffer, "rb");
+        if (file) {
+            fseek(file, 0, SEEK_END);
+            int len = ftell(file);
+            fseek(file, 0, SEEK_SET);
 
-			ReadConfig( &parser );
-		}
+            if (len) {
+                char *buf = new char[len + 1];
+                buf[len] = '\0';
+                // parser will do the cleanup, dont delete.
 
-		fclose( file );
-	}
+                fread(buf, len, 1, file);
 
-	m_mouseDown = GlobalRadiant().XYWindowMouseDown_connect( makeSignalHandler3( MouseDownCaller(), *this ) );
-	m_destroyed = GlobalRadiant().XYWindowDestroyed_connect( makeSignalHandler( DestroyedCaller(), *this ) );
-}
+                CScriptParser parser;
+                parser.SetScript(buf);
 
-virtual ~DTreePlanter(){
-	if ( !m_mouseDown.isNull() ) {
-		GlobalRadiant().XYWindowMouseDown_disconnect( m_mouseDown );
-	}
-	if ( !m_destroyed.isNull() ) {
-		GlobalRadiant().XYWindowDestroyed_disconnect( m_destroyed );
-	}
-}
+                ReadConfig(&parser);
+            }
 
-#define MT( t )   string_equal_nocase( pToken, t )
+            fclose(file);
+        }
+
+        m_mouseDown = GlobalRadiant().XYWindowMouseDown_connect(makeSignalHandler3(MouseDownCaller(), *this));
+        m_destroyed = GlobalRadiant().XYWindowDestroyed_connect(makeSignalHandler(DestroyedCaller(), *this));
+    }
+
+    virtual ~DTreePlanter()
+    {
+        if (!m_mouseDown.isNull()) {
+            GlobalRadiant().XYWindowMouseDown_disconnect(m_mouseDown);
+        }
+        if (!m_destroyed.isNull()) {
+            GlobalRadiant().XYWindowDestroyed_disconnect(m_destroyed);
+        }
+    }
+
+#define MT(t)   string_equal_nocase( pToken, t )
 #define GT      pToken = pScriptParser->GetToken( true )
 #define CT      if ( !*pToken ) { return; }
 
-void ReadConfig( CScriptParser* pScriptParser ) {
-	const char* GT;
-	CT;
+    void ReadConfig(CScriptParser *pScriptParser)
+    {
+        const char *GT;
+        CT;
 
-	do {
-		GT;
-		if ( *pToken == '}' ) {
-			break;
-		}
+        do {
+            GT;
+            if (*pToken == '}') {
+                break;
+            }
 
-		if ( MT( "model" ) ) {
-			if ( m_numModels >= MAX_TP_MODELS ) {
-				return;
-			}
+            if (MT("model")) {
+                if (m_numModels >= MAX_TP_MODELS) {
+                    return;
+                }
 
-			GT; CT;
+                GT;
+                CT;
 
-			strncpy( m_trees[m_numModels++].name, pToken, MAX_QPATH );
-		}
-		else if ( MT( "link" ) ) {
-			GT; CT;
+                strncpy(m_trees[m_numModels++].name, pToken, MAX_QPATH);
+            } else if (MT("link")) {
+                GT;
+                CT;
 
-			strncpy( m_linkName, pToken, MAX_QPATH );
+                strncpy(m_linkName, pToken, MAX_QPATH);
 
-			m_autoLink = true;
-		}
-		else if ( MT( "entity" ) ) {
-			GT; CT;
+                m_autoLink = true;
+            } else if (MT("entity")) {
+                GT;
+                CT;
 
-			strncpy( m_entType, pToken, MAX_QPATH );
-		}
-		else if ( MT( "offset" ) ) {
-			GT; CT;
+                strncpy(m_entType, pToken, MAX_QPATH);
+            } else if (MT("offset")) {
+                GT;
+                CT;
 
-			m_offset = atoi( pToken );
-		}
-		else if ( MT( "pitch" ) ) {
-			GT; CT;
+                m_offset = atoi(pToken);
+            } else if (MT("pitch")) {
+                GT;
+                CT;
 
-			m_minPitch = atoi( pToken );
+                m_minPitch = atoi(pToken);
 
-			GT; CT;
+                GT;
+                CT;
 
-			m_maxPitch = atoi( pToken );
+                m_maxPitch = atoi(pToken);
 
-			m_setAngles = true;
-		}
-		else if ( MT( "yaw" ) ) {
-			GT; CT;
+                m_setAngles = true;
+            } else if (MT("yaw")) {
+                GT;
+                CT;
 
-			m_minYaw = atoi( pToken );
+                m_minYaw = atoi(pToken);
 
-			GT; CT;
+                GT;
+                CT;
 
-			m_maxYaw = atoi( pToken );
+                m_maxYaw = atoi(pToken);
 
-			m_setAngles = true;
-		}
-		else if ( MT( "scale" ) ) {
-			GT; CT;
+                m_setAngles = true;
+            } else if (MT("scale")) {
+                GT;
+                CT;
 
-			m_minScale = static_cast<float>( atof( pToken ) );
+                m_minScale = static_cast<float>( atof(pToken));
 
-			GT; CT;
+                GT;
+                CT;
 
-			m_maxScale = static_cast<float>( atof( pToken ) );
+                m_maxScale = static_cast<float>( atof(pToken));
 
-			m_useScale = true;
-		}
-		else if ( MT( "numlinks" ) ) {
-			GT; CT;
+                m_useScale = true;
+            } else if (MT("numlinks")) {
+                GT;
+                CT;
 
-			m_linkNum = atoi( pToken );
-		}
-	} while ( true );
-}
+                m_linkNum = atoi(pToken);
+            }
+        } while (true);
+    }
 
-bool FindDropPoint( vec3_t in, vec3_t out );
-void DropEntsToGround( void );
-void MakeChain( int linkNum, const char* linkName );
-void SelectChain( void );
+    bool FindDropPoint(vec3_t in, vec3_t out);
+
+    void DropEntsToGround(void);
+
+    void MakeChain(int linkNum, const char *linkName);
+
+    void SelectChain(void);
 
 private:
-DEntity m_world;
+    DEntity m_world;
 
-treeModel_t m_trees[MAX_TP_MODELS];
+    treeModel_t m_trees[MAX_TP_MODELS];
 
-int m_numModels;
-int m_offset;
-int m_maxPitch;
-int m_minPitch;
-int m_maxYaw;
-int m_minYaw;
+    int m_numModels;
+    int m_offset;
+    int m_maxPitch;
+    int m_minPitch;
+    int m_maxYaw;
+    int m_minYaw;
 
-char m_entType[MAX_QPATH];
-char m_linkName[MAX_QPATH];
-int m_linkNum;
+    char m_entType[MAX_QPATH];
+    char m_linkName[MAX_QPATH];
+    int m_linkNum;
 
-float m_minScale;
-float m_maxScale;
+    float m_minScale;
+    float m_maxScale;
 
-bool m_useScale;
-bool m_setAngles;
-bool m_autoLink;
+    bool m_useScale;
+    bool m_setAngles;
+    bool m_autoLink;
 };
 
 #endif

@@ -23,8 +23,9 @@
 #define INCLUDED_PCX_H
 
 class Image;
+
 class ArchiveFile;
 
-Image* LoadPCX32( ArchiveFile& file );
+Image *LoadPCX32(ArchiveFile &file);
 
 #endif

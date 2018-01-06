@@ -23,88 +23,97 @@
 #include "qerplugin.h"
 
 struct BuildStairsRS {
-	char mainTexture[256];
-	char riserTexture[256];
-	int direction;
-	int style;
-	int stairHeight;
-	bool bUseDetail;
+    char mainTexture[256];
+    char riserTexture[256];
+    int direction;
+    int style;
+    int stairHeight;
+    bool bUseDetail;
 };
 
 struct ResetTextureRS {
-	int bResetTextureName;
-	char textureName[256];
-	char newTextureName[256];
+    int bResetTextureName;
+    char textureName[256];
+    char newTextureName[256];
 
-	int bResetScale[2];
-	float fScale[2];
+    int bResetScale[2];
+    float fScale[2];
 
-	int bResetShift[2];
-	float fShift[2];
+    int bResetShift[2];
+    float fShift[2];
 
-	int bResetRotation;
-	int rotation;
+    int bResetRotation;
+    int rotation;
 };
 
 struct TrainThingRS {
-	float fRadiusX, fRadiusY;
-	float fStartAngle, fEndAngle;
-	int iNumPoints;
-	float fStartHeight, fEndHeight;
+    float fRadiusX, fRadiusY;
+    float fStartAngle, fEndAngle;
+    int iNumPoints;
+    float fStartHeight, fEndHeight;
 };
 
 struct IntersectRS {
-	int nBrushOptions;
-	bool bUseDetail;
-	bool bDuplicateOnly;
+    int nBrushOptions;
+    bool bUseDetail;
+    bool bDuplicateOnly;
 };
 
 struct PolygonRS {
-	bool bUseBorder;
-	bool bInverse;
-	bool bAlignTop;
-	int nSides;
-	int nBorderWidth;
+    bool bUseBorder;
+    bool bInverse;
+    bool bAlignTop;
+    int nSides;
+    int nBorderWidth;
 };
 
 struct DoorRS {
-	char mainTexture[256];
-	char trimTexture[256];
-	bool bScaleMainH;
-	bool bScaleMainV;
-	bool bScaleTrimH;
-	bool bScaleTrimV;
-	int nOrientation;
+    char mainTexture[256];
+    char trimTexture[256];
+    bool bScaleMainH;
+    bool bScaleMainV;
+    bool bScaleTrimH;
+    bool bScaleTrimV;
+    int nOrientation;
 };
 
 struct PathPlotterRS {
-	int nPoints;
-	float fMultiplier;
-	float fGravity;
-	bool bNoUpdate;
-	bool bShowExtra;
+    int nPoints;
+    float fMultiplier;
+    float fGravity;
+    bool bNoUpdate;
+    bool bShowExtra;
 };
 
 struct MakeChainRS {
-	char linkName[256];
-	int linkNum;
+    char linkName[256];
+    int linkNum;
 };
 
 struct TwinWidget {
-	ui::Widget one{ui::null};
-	ui::ComboBox two{ui::null};
+    ui::Widget one{ui::null};
+    ui::ComboBox two{ui::null};
 };
 
-EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMessageBoxType type );
-EMessageBoxReturn DoIntersectBox( IntersectRS* rs );
-EMessageBoxReturn DoPolygonBox( PolygonRS* rs );
-EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs );
-EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs );
-EMessageBoxReturn DoDoorsBox( DoorRS* rs );
-EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs );
+EMessageBoxReturn DoMessageBox(const char *lpText, const char *lpCaption, EMessageBoxType type);
+
+EMessageBoxReturn DoIntersectBox(IntersectRS *rs);
+
+EMessageBoxReturn DoPolygonBox(PolygonRS *rs);
+
+EMessageBoxReturn DoResetTextureBox(ResetTextureRS *rs);
+
+EMessageBoxReturn DoBuildStairsBox(BuildStairsRS *rs);
+
+EMessageBoxReturn DoDoorsBox(DoorRS *rs);
+
+EMessageBoxReturn DoPathPlotterBox(PathPlotterRS *rs);
+
 EMessageBoxReturn DoCTFColourChangeBox();
-EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs );
-EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs );
+
+EMessageBoxReturn DoTrainThingBox(TrainThingRS *rs);
+
+EMessageBoxReturn DoMakeChainBox(MakeChainRS *rs);
 //GtkWidget* GetProgressWindow(char* title, GtkProgressBar* feedback);
 
 #endif

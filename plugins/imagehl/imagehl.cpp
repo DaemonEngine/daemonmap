@@ -30,23 +30,25 @@
 #include "modulesystem/singletonmodule.h"
 
 
-class ImageDependencies : public GlobalFileSystemModuleRef
-{
+class ImageDependencies : public GlobalFileSystemModuleRef {
 };
 
-class ImageHLWAPI
-{
-_QERPlugImageTable m_imagehlw;
+class ImageHLWAPI {
+    _QERPlugImageTable m_imagehlw;
 public:
-typedef _QERPlugImageTable Type;
-STRING_CONSTANT( Name, "hlw" );
+    typedef _QERPlugImageTable Type;
 
-ImageHLWAPI(){
-	m_imagehlw.loadImage = LoadHLW;
-}
-_QERPlugImageTable* getTable(){
-	return &m_imagehlw;
-}
+    STRING_CONSTANT(Name, "hlw");
+
+    ImageHLWAPI()
+    {
+        m_imagehlw.loadImage = LoadHLW;
+    }
+
+    _QERPlugImageTable *getTable()
+    {
+        return &m_imagehlw;
+    }
 };
 
 typedef SingletonModule<ImageHLWAPI, ImageDependencies> ImageHLWModule;
@@ -54,19 +56,22 @@ typedef SingletonModule<ImageHLWAPI, ImageDependencies> ImageHLWModule;
 ImageHLWModule g_ImageHLWModule;
 
 
-class ImageMipAPI
-{
-_QERPlugImageTable m_imagemip;
+class ImageMipAPI {
+    _QERPlugImageTable m_imagemip;
 public:
-typedef _QERPlugImageTable Type;
-STRING_CONSTANT( Name, "mip" );
+    typedef _QERPlugImageTable Type;
 
-ImageMipAPI(){
-	m_imagemip.loadImage = LoadMIP;
-}
-_QERPlugImageTable* getTable(){
-	return &m_imagemip;
-}
+    STRING_CONSTANT(Name, "mip");
+
+    ImageMipAPI()
+    {
+        m_imagemip.loadImage = LoadMIP;
+    }
+
+    _QERPlugImageTable *getTable()
+    {
+        return &m_imagemip;
+    }
 };
 
 typedef SingletonModule<ImageMipAPI, ImageDependencies> ImageMipModule;
@@ -74,19 +79,22 @@ typedef SingletonModule<ImageMipAPI, ImageDependencies> ImageMipModule;
 ImageMipModule g_ImageMipModule;
 
 
-class ImageSpriteAPI
-{
-_QERPlugImageTable m_imagesprite;
+class ImageSpriteAPI {
+    _QERPlugImageTable m_imagesprite;
 public:
-typedef _QERPlugImageTable Type;
-STRING_CONSTANT( Name, "spr" );
+    typedef _QERPlugImageTable Type;
 
-ImageSpriteAPI(){
-	m_imagesprite.loadImage = LoadIDSP;
-}
-_QERPlugImageTable* getTable(){
-	return &m_imagesprite;
-}
+    STRING_CONSTANT(Name, "spr");
+
+    ImageSpriteAPI()
+    {
+        m_imagesprite.loadImage = LoadIDSP;
+    }
+
+    _QERPlugImageTable *getTable()
+    {
+        return &m_imagesprite;
+    }
 };
 
 typedef SingletonModule<ImageSpriteAPI, ImageDependencies> ImageSpriteModule;
@@ -94,11 +102,11 @@ typedef SingletonModule<ImageSpriteAPI, ImageDependencies> ImageSpriteModule;
 ImageSpriteModule g_ImageSpriteModule;
 
 
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
+{
+    initialiseModule(server);
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
-	initialiseModule( server );
-
-	g_ImageHLWModule.selfRegister();
-	g_ImageMipModule.selfRegister();
-	g_ImageSpriteModule.selfRegister();
+    g_ImageHLWModule.selfRegister();
+    g_ImageMipModule.selfRegister();
+    g_ImageSpriteModule.selfRegister();
 }

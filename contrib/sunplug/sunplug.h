@@ -19,7 +19,7 @@
  */
 
 #ifndef _PLUGIN_SUNPLUG_
-  #define _PLUGIN_SUNPLUG_
+#define _PLUGIN_SUNPLUG_
 
 
 #endif // _PLUGIN_SUNPLUG_

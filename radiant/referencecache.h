@@ -24,19 +24,23 @@
 
 /// \brief Saves all open resource references if they differ from the version on disk.
 void SaveReferences();
+
 /// \brief Flushes the cache of resource references. All resource references must be released before calling this.
 void FlushReferences();
+
 /// \brief Reloads all resource references that differ from the version on disk.
 void RefreshReferences();
 
 #include "iscenegraph.h"
-namespace scene
-{
-class Node;
+
+namespace scene {
+    class Node;
 }
 class MapFormat;
-typedef void ( *GraphTraversalFunc )( scene::Node& root, const scene::Traversable::Walker& walker );
 
-bool MapResource_saveFile( const MapFormat& format, scene::Node& root, GraphTraversalFunc traverse, const char* filename );
+typedef void ( *GraphTraversalFunc )(scene::Node &root, const scene::Traversable::Walker &walker);
+
+bool
+MapResource_saveFile(const MapFormat &format, scene::Node &root, GraphTraversalFunc traverse, const char *filename);
 
 #endif

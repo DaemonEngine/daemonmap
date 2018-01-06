@@ -26,19 +26,22 @@
 
 #include "archive.h"
 
-class ArchivePakAPI
-{
-_QERArchiveTable m_archivepak;
+class ArchivePakAPI {
+    _QERArchiveTable m_archivepak;
 public:
-typedef _QERArchiveTable Type;
-STRING_CONSTANT( Name, "pak" );
+    typedef _QERArchiveTable Type;
 
-ArchivePakAPI(){
-	m_archivepak.m_pfnOpenArchive = &OpenArchive;
-}
-_QERArchiveTable* getTable(){
-	return &m_archivepak;
-}
+    STRING_CONSTANT(Name, "pak");
+
+    ArchivePakAPI()
+    {
+        m_archivepak.m_pfnOpenArchive = &OpenArchive;
+    }
+
+    _QERArchiveTable *getTable()
+    {
+        return &m_archivepak;
+    }
 };
 
 typedef SingletonModule<ArchivePakAPI> ArchivePakModule;
@@ -46,8 +49,9 @@ typedef SingletonModule<ArchivePakAPI> ArchivePakModule;
 ArchivePakModule g_ArchivePakModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
-	initialiseModule( server );
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
+{
+    initialiseModule(server);
 
-	g_ArchivePakModule.selfRegister();
+    g_ArchivePakModule.selfRegister();
 }
