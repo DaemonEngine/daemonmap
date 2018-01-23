@@ -341,6 +341,7 @@ void TriangulatePatchSurface( entity_t *e, mapDrawSurface_t *ds ){
 	if ( ds->numVerts == 0 || ds->type != SURFACE_PATCH || ( patchMeta == qfalse && !forcePatchMeta ) ) {
 		return;
 	}
+
 	/* make a mesh from the drawsurf */
 	src.width = ds->patchWidth;
 	src.height = ds->patchHeight;
@@ -418,6 +419,8 @@ void TriangulatePatchSurface( entity_t *e, mapDrawSurface_t *ds ){
 	/* classify it */
 	ClassifySurfaces( 1, ds );
 }
+
+
 
 #define TINY_AREA 1.0f
 #define MAXAREA_MAXTRIES 8
@@ -589,6 +592,8 @@ int MaxAreaIndexes( bspDrawVert_t *vert, int cnt, int *indexes ){
 	return -1;
 }
 
+
+
 /*
    MaxAreaFaceSurface() - divVerent
    creates a triangle list using max area indexes
@@ -629,6 +634,7 @@ void MaxAreaFaceSurface( mapDrawSurface_t *ds ){
 	/* classify it */
 	ClassifySurfaces( 1, ds );
 }
+
 
 
 /*
@@ -835,6 +841,7 @@ void StripFaceSurface( mapDrawSurface_t *ds ){
 }
 
 
+
 /*
    EmitMetaStatictics
    vortex: prints meta statistics in general output
@@ -850,6 +857,8 @@ void EmitMetaStats(){
 	Sys_Printf( "%9d meta verts\n", numMetaVerts );
 	Sys_Printf( "%9d meta triangles\n", numMetaTriangles );
 }
+
+
 
 /*
    MakeEntityMetaTriangles()
@@ -1467,8 +1476,6 @@ static int AddMetaTriangleToSurface( mapDrawSurface_t *ds, metaTriangle_t *tri, 
 			return 0;
 		}
 	}
-
-
 
 	if ( metaMaxBBoxDistance >= 0 ) {
 		if ( ds->numIndexes > 0 ) {

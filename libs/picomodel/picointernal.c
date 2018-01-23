@@ -757,7 +757,7 @@ picoParser_t *_pico_new_parser( const picoByte_t *buffer, int bufSize ){
 	}
 	/* setup */
 	p->buffer   = (const char *) buffer;
-	p->cursor   = (const char *) buffer;
+	p->cursor   = p->buffer;
 	p->bufSize  = bufSize;
 	p->max      = p->buffer + bufSize;
 	p->curLine = 1; /* sea: new */

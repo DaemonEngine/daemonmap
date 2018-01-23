@@ -2342,6 +2342,8 @@ static int CompareRawLightmap( const void *a, const void *b ){
 	return 0;
 }
 
+
+
 void FillOutLightmap( outLightmap_t *olm ){
 	int x, y;
 	int ofs;
@@ -2454,6 +2456,8 @@ void FillOutLightmap( outLightmap_t *olm ){
 	}
 }
 
+
+
 /*
    StoreSurfaceLightmaps()
    stores the surface lightmaps into the bsp as byte rgb triplets
@@ -2477,8 +2481,8 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	char dirname[ 1024 ], filename[ 1024 ];
 	shaderInfo_t        *csi;
 	char lightmapName[ 128 ];
-	const char              *rgbGenValues[ 256 ];
-	const char              *alphaGenValues[ 256 ];
+	const char          *rgbGenValues[ 256 ];
+	const char          *alphaGenValues[ 256 ];
 
 
 	/* note it */

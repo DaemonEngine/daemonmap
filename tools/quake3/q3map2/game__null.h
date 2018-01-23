@@ -55,36 +55,36 @@
 	NULL,           /* unix home sub-dir */
 	NULL,           /* magic path word */
 	NULL,           /* shader directory */
-	0,          /* max lightmapped surface verts */
-	0,          /* max surface verts */
-	0,          /* max surface indexes */
+	0,              /* max lightmapped surface verts */
+	0,              /* max surface verts */
+	0,              /* max surface indexes */
 	qfalse,         /* flares */
 	NULL,           /* default flare shader */
 	qfalse,         /* wolf lighting model? */
-	0,          /* lightmap width/height */
-	0,          /* lightmap gamma */
+	0,              /* lightmap width/height */
+	0,              /* lightmap gamma */
 	qfalse,         /* lightmap sRGB */
 	qfalse,         /* texture sRGB */
 	qfalse,         /* color sRGB */
-	0,          /* lightmap exposure */
-	0,          /* lightmap compensate */
-	0,          /* lightgrid scale */
-	0,          /* lightgrid ambient scale */
+	0,              /* lightmap exposure */
+	0,              /* lightmap compensate */
+	0,              /* lightgrid scale */
+	0,              /* lightgrid ambient scale */
 	qfalse,         /* light angle attenuation uses half-lambert curve */
 	qfalse,         /* disable shader lightstyles hack */
 	qfalse,         /* keep light entities on bsp */
-	0,          /* default patchMeta subdivisions tolerance */
+	0,              /* default patchMeta subdivisions tolerance */
 	qfalse,         /* patch casting enabled */
 	qfalse,         /* compile deluxemaps */
-	0,          /* deluxemaps default mode */
-	0,          /* minimap size */
-	0,          /* minimap sharpener */
-	0,          /* minimap border */
+	0,              /* deluxemaps default mode */
+	0,              /* minimap size */
+	0,              /* minimap sharpener */
+	0,              /* minimap border */
 	qfalse,         /* minimap keep aspect */
 	MINIMAP_MODE_GRAY,  /* minimap mode */
 	NULL,           /* minimap name format */
 	NULL,           /* bsp file prefix */
-	0,          /* bsp file version */
+	0,              /* bsp file version */
 	qfalse,         /* cod-style lump len/ofs order */
 	NULL,           /* bsp load function */
 	NULL,           /* bsp write function */

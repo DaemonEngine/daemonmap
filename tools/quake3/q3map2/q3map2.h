@@ -41,8 +41,6 @@
 #define Q3MAP_MOTD      "Your map saw the pretty lights from q3map2's BFG"
 
 
-
-
 /* -------------------------------------------------------------------------------
 
    dependencies
@@ -200,7 +198,7 @@
 #define HINT_PRIORITY           1000        /* ydnar: force hint splits first and antiportal/areaportal splits last */
 #define ANTIPORTAL_PRIORITY     -1000
 #define AREAPORTAL_PRIORITY     -1000
-#define DETAIL_PRIORITY     -3000
+#define DETAIL_PRIORITY         -3000
 
 #define PSIDE_FRONT             1
 #define PSIDE_BACK              2
@@ -273,7 +271,7 @@
 #define RAD_LUXEL_SIZE          3
 #define SUPER_LUXEL_SIZE        4
 #define SUPER_FLAG_SIZE         4
-#define FLAG_FORCE_SUBSAMPLING 1
+#define FLAG_FORCE_SUBSAMPLING  1
 #define FLAG_ALREADY_SUBSAMPLED 2
 #define SUPER_ORIGIN_SIZE       3
 #define SUPER_NORMAL_SIZE       4
@@ -826,7 +824,7 @@ typedef struct face_s
 	struct face_s       *next;
 	int planenum;
 	int priority;
-	//qboolean			checked;
+	//qboolean checked;
 	int compileFlags;
 	winding_t           *w;
 }
@@ -958,8 +956,9 @@ typedef struct parseMesh_s
 	shaderInfo_t        *shaderInfo;
 	shaderInfo_t        *celShader;             /* :) */
 
+	/* jal : entity based _lightmapsamplesize */
+	int lightmapSampleSize;
 	/* ydnar: gs mods */
-	int lightmapSampleSize;                     /* jal : entity based _lightmapsamplesize */
 	float lightmapScale;
 	vec3_t eMins, eMaxs;
 	indexMap_t          *im;
@@ -1467,7 +1466,7 @@ typedef struct rawLightmap_s
 	float                   *bspLuxels[ MAX_LIGHTMAPS ];
 	float                   *radLuxels[ MAX_LIGHTMAPS ];
 	float                   *superLuxels[ MAX_LIGHTMAPS ];
-	unsigned char               *superFlags;
+	unsigned char           *superFlags;
 	float                   *superOrigins;
 	float                   *superNormals;
 	int                     *superClusters;
@@ -1523,14 +1522,18 @@ void                        HelpMain(const char* arg);
 game_t                      *GetGame( char *arg );
 void                        InitPaths( int *argc, char **argv );
 
+
 /* fixaas.c */
 int                         FixAASMain( int argc, char **argv );
+
 
 /* bsp.c */
 int                         BSPMain( int argc, char **argv );
 
+
 /* bsp_analyze.c */
 int                         AnalyzeBSPMain( int argc, char **argv );
+
 
 /* bsp_info.c */
 int                         BSPInfoMain( int count, char **fileNames );
@@ -1543,6 +1546,7 @@ int                         MiniMapBSPMain( int argc, char **argv );
 
 /* convert_bsp.c */
 int                         ConvertBSPMain( int argc, char **argv );
+
 
 /* convert_map.c */
 int                         ConvertBSPToMap( char *bspName );

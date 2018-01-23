@@ -163,7 +163,9 @@ int LeafVectorFromPortalVector( byte *portalbits, byte *leafbits ){
    Merges the portal visibility for a leaf
    ===============
  */
+
 static int clustersizehistogram[MAX_MAP_LEAFS] = {0};
+
 void ClusterMerge( int leafnum ){
 	leaf_t      *leaf;
 	byte portalvector[MAX_PORTALS / 8];

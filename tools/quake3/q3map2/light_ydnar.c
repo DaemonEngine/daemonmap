@@ -1740,7 +1740,7 @@ static qboolean SubmapRawLuxel( rawLightmap_t *lm, int x, int y, float bx, float
 		origin2 = SUPER_ORIGIN( x, y );
 		//%	normal2 = SUPER_NORMAL( x, y );
 	}
-	else{
+	else {
 		Sys_FPrintf( SYS_WRN, "WARNING: Spurious lightmap S vector\n" );
 	}
 
@@ -1764,16 +1764,13 @@ static qboolean SubmapRawLuxel( rawLightmap_t *lm, int x, int y, float bx, float
 		origin2 = SUPER_ORIGIN( x, y );
 		//%	normal2 = SUPER_NORMAL( x, y );
 	}
-	else{
+	else {
 		Sys_FPrintf( SYS_WRN, "WARNING: Spurious lightmap T vector\n" );
 	}
 
 	VectorSubtract( origin2, origin, originVecs[ 1 ] );
-	//%	VectorSubtract( normal2, normal, normalVecs[ 1 ] );
 
 	/* calculate new origin */
-	//%	VectorMA( origin, bx, originVecs[ 0 ], sampleOrigin );
-	//%	VectorMA( sampleOrigin, by, originVecs[ 1 ], sampleOrigin );
 	for ( i = 0; i < 3; i++ )
 		sampleOrigin[ i ] = sampleOrigin[ i ] + ( bx * originVecs[ 0 ][ i ] ) + ( by * originVecs[ 1 ][ i ] );
 
@@ -1784,10 +1781,6 @@ static qboolean SubmapRawLuxel( rawLightmap_t *lm, int x, int y, float bx, float
 	}
 
 	/* calculate new normal */
-	//%	VectorMA( normal, bx, normalVecs[ 0 ], sampleNormal );
-	//%	VectorMA( sampleNormal, by, normalVecs[ 1 ], sampleNormal );
-	//%	if( VectorNormalize( sampleNormal, sampleNormal ) <= 0.0f )
-	//%		return qfalse;
 	normal = SUPER_NORMAL( x, y );
 	VectorCopy( normal, sampleNormal );
 
@@ -2247,42 +2240,31 @@ void IlluminateRawLightmap( int rawLightmapNum ){
 					normal = SUPER_NORMAL( x, y );
 					flag = SUPER_FLAG( x, y );
 
-#if 0
-					////////// 27's temp hack for testing edge clipping ////
-					if ( origin[0] == 0 && origin[1] == 0 && origin[2] == 0 ) {
-						lightLuxel[ 1 ] = 255;
-						lightLuxel[ 3 ] = 1.0f;
-						totalLighted++;
+					/* set contribution count */
+					lightLuxel[ 3 ] = 1.0f;
+
+					/* setup trace */
+					trace.cluster = *cluster;
+					VectorCopy( origin, trace.origin );
+					VectorCopy( normal, trace.normal );
+
+					/* get light for this sample */
+					LightContributionToSample( &trace );
+					VectorCopy( trace.color, lightLuxel );
+
+					/* add the contribution to the deluxemap */
+					if ( deluxemap ) {
+						VectorCopy( trace.directionContribution, lightDeluxel );
 					}
-					else
-#endif
-					{
-						/* set contribution count */
-						lightLuxel[ 3 ] = 1.0f;
 
-						/* setup trace */
-						trace.cluster = *cluster;
-						VectorCopy( origin, trace.origin );
-						VectorCopy( normal, trace.normal );
-
-						/* get light for this sample */
-						LightContributionToSample( &trace );
-						VectorCopy( trace.color, lightLuxel );
-
-						/* add the contribution to the deluxemap */
-						if ( deluxemap ) {
-							VectorCopy( trace.directionContribution, lightDeluxel );
-						}
-
-						/* check for evilness */
-						if ( trace.forceSubsampling > 1.0f && ( lightSamples > 1 || lightRandomSamples ) && luxelFilterRadius == 0 ) {
+					/* check for evilness */
+					if ( trace.forceSubsampling > 1.0f && ( lightSamples > 1 || lightRandomSamples ) && luxelFilterRadius == 0 ) {
 							totalLighted++;
-							*flag |= FLAG_FORCE_SUBSAMPLING; /* force */
-						}
-						/* add to count */
-						else if ( trace.color[ 0 ] || trace.color[ 1 ] || trace.color[ 2 ] ) {
-							totalLighted++;
-						}
+						*flag |= FLAG_FORCE_SUBSAMPLING; /* force */
+					}
+					/* add to count */
+					else if ( trace.color[ 0 ] || trace.color[ 1 ] || trace.color[ 2 ] ) {
+						totalLighted++;
 					}
 				}
 			}
@@ -2610,8 +2592,6 @@ void IlluminateRawLightmap( int rawLightmapNum ){
 				{
 					/* get cluster */
 					cluster = SUPER_CLUSTER( x, y );
-					//%	if( *cluster < 0 ) // TODO why not do this check? These pixels should be zero anyway
-					//%		continue;
 
 					/* get particulars */
 					luxel = SUPER_LUXEL( lightmapNum, x, y );
@@ -2735,45 +2715,6 @@ void IlluminateRawLightmap( int rawLightmapNum ){
 			}
 		}
 	}
-
-
-#if 0
-	// audit pass
-	for ( lightmapNum = 0; lightmapNum < MAX_LIGHTMAPS; lightmapNum++ )
-	{
-		/* early out */
-		if ( lm->superLuxels[ lightmapNum ] == NULL ) {
-			continue;
-		}
-		for ( y = 0; y < lm->sh; y++ )
-			for ( x = 0; x < lm->sw; x++ )
-			{
-				/* get cluster */
-				cluster = SUPER_CLUSTER( x, y );
-				luxel = SUPER_LUXEL( lightmapNum, x, y );
-				deluxel = SUPER_DELUXEL( x, y );
-				if ( !luxel || !deluxel || !cluster ) {
-					Sys_FPrintf( SYS_VRB, "WARNING: I got NULL'd.\n" );
-					continue;
-				}
-				else if ( *cluster < 0 ) {
-					// unmapped pixel
-					// should have neither deluxemap nor lightmap
-					if ( deluxel[3] ) {
-						Sys_FPrintf( SYS_VRB, "WARNING: I have written deluxe to an unmapped luxel. Sorry.\n" );
-					}
-				}
-				else
-				{
-					// mapped pixel
-					// should have both deluxemap and lightmap
-					if ( deluxel[3] ) {
-						Sys_FPrintf( SYS_VRB, "WARNING: I forgot to write deluxe to a mapped luxel. Sorry.\n" );
-					}
-				}
-			}
-	}
-#endif
 }
 
 

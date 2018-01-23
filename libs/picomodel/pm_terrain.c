@@ -55,7 +55,7 @@ tga_t;
    fixme: replace/clean this function
  */
 
-void _terrain_load_tga_buffer( unsigned char *buffer, unsigned char **pic, int *width, int *height ){
+void _terrain_load_tga_buffer( unsigned char *buffer, unsigned char **pic, int *width, int *height ) {
 	int row, column;
 	int columns, rows, numPixels;
 	unsigned char   *pixbuf;
@@ -291,7 +291,7 @@ breakOut:;
    validates a picoterrain file
  */
 
-static int _terrain_canload( PM_PARAMS_CANLOAD ){
+static int _terrain_canload( PM_PARAMS_CANLOAD ) {
 	picoParser_t    *p;
 
 
@@ -326,7 +326,7 @@ static int _terrain_canload( PM_PARAMS_CANLOAD ){
    loads a picoterrain file
  */
 
-static picoModel_t *_terrain_load( PM_PARAMS_LOAD ){
+static picoModel_t *_terrain_load( PM_PARAMS_LOAD ) {
 	int i, j, v, pw[ 5 ], r;
 	picoParser_t    *p;
 

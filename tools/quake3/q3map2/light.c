@@ -1159,7 +1159,7 @@ int LightContributionToSample( trace_t *trace ){
 		/* return to sender */
 		return 1;
 	}
-	else{
+	else {
 		Error( "Light of undefined type!" );
 	}
 
@@ -1913,6 +1913,7 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 	if ( VectorLength( color ) == 0.0f ) {
 		VectorSet( color, 1.0, 1.0, 1.0 );
 	}
+
 	if ( colorsRGB ) {
 		color[0] = Image_LinearFloatFromsRGBFloat( color[0] );
 		color[1] = Image_LinearFloatFromsRGBFloat( color[1] );
@@ -2485,6 +2486,7 @@ int LightMain( int argc, char **argv ){
 			}
 			i++;
 		}
+
 		else if ( !strcmp( argv[ i ], "-deluxe" ) || !strcmp( argv[ i ], "-deluxemap" ) ) {
 			deluxemap = qtrue;
 			Sys_Printf( "Generating deluxemaps for average light direction\n" );

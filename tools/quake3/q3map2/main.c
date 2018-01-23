@@ -37,7 +37,6 @@
 #include "q3map2.h"
 #include <glib.h>
 
-
 /*
    Random()
    returns a pseudorandom number between 0 and 1
@@ -80,6 +79,7 @@ char *Q_strncat( char *dst, size_t dlen, const char *src, size_t slen ) {
 	return Q_strncpyz( dst + n, src, MIN( slen, dlen - n ) );
 }
 
+
 /*
    ExitQ3Map()
    cleanup routine
@@ -91,6 +91,7 @@ static void ExitQ3Map( void ){
 		free( mapDrawSurfs );
 	}
 }
+
 
 /*
    main()
