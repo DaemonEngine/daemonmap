@@ -37,11 +37,11 @@
 #define FLOAT_END   -FLOAT_START
 #define MAGIC       123322
 
-//#define NOISY 1
+// #define NOISY 1
 
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#if !GDEF_OS_WINDOWS
 #define strlwr strlower
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 typedef struct {
 	float v[3];

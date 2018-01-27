@@ -23,19 +23,13 @@
 #include "globaldefs.h"
 
 /* platform-specific */
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-	#define Q_UNIX
-#endif
-
-#ifdef Q_UNIX
+#if GDEF_OS_WINDOWS
+	#include <windows.h>
+#else // !GDEF_OS_WINDOWS
 	#include <unistd.h>
 	#include <pwd.h>
 	#include <limits.h>
-#endif
-
-#if GDEF_OS_WINDOWS
-	#include <windows.h>
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 #include <stdlib.h>
 

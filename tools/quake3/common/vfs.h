@@ -35,15 +35,16 @@
 
 // to get PATH_MAX
 #include <stdio.h>
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-#include <dirent.h>
-#include <unistd.h>
-#else
+
+#if GDEF_OS_WINDOWS
 #include <wtypes.h>
 #include <io.h>
 #define S_ISDIR( mode ) ( mode & _S_IFDIR )
 #define PATH_MAX 260
-#endif
+#else // !GDEF_OS_WINDOWS
+#include <dirent.h>
+#include <unistd.h>
+#endif // !GDEF_OS_WINDOWS
 
 #define VFS_MAXDIRS 64
 

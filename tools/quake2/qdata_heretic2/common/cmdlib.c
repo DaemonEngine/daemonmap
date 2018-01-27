@@ -31,18 +31,18 @@
 #if GDEF_OS_WINDOWS
 #include <direct.h>
 #include <windows.h>
-#endif
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-#include <unistd.h>
-#endif
-
-#ifdef NeXT
+#elif GDEF_OS_NEXT
 #include <libc.h>
-#endif
+#else // OTHER OSES
+#include <unistd.h>
+#endif // OTHER OSES
+
+#if !GDEF_OS_WINDOWS
+#define strlwr strlower
+#endif // !GDEF_OS_WINDOWS
 
 #define BASEDIRNAME "h"
-#define PATHSEPERATOR   '/'
+#define PATHSEPERATOR '/'
 
 extern qboolean verbose;
 
@@ -73,7 +73,7 @@ void *safe_malloc_info( size_t size, char* info ){
 
 	return p;
 }
-#endif
+#endif // !SAFE_MALLOC
 
 void *SafeMalloc( size_t n, char *desc ){
 	void *p;
@@ -84,16 +84,6 @@ void *SafeMalloc( size_t n, char *desc ){
 	memset( p, 0, n );
 	return p;
 }
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-void strlwr( char *conv_str ){
-	int i;
-
-	for ( i = 0; i < strlen( conv_str ); i++ )
-		conv_str[i] = tolower( conv_str[i] );
-}
-#endif
-
 
 // set these before calling CheckParm
 int myargc;
@@ -114,8 +104,10 @@ char archivedir[1024];
    ===================
  */
 #define MAX_EX_ARGC 1024
+
 int ex_argc;
 char    *ex_argv[MAX_EX_ARGC];
+
 #if GDEF_OS_WINDOWS
 #include "io.h"
 void ExpandWildcards( int *argc, char ***argv ){
@@ -155,10 +147,10 @@ void ExpandWildcards( int *argc, char ***argv ){
 	*argc = ex_argc;
 	*argv = ex_argv;
 }
-#else
+#else // !GDEF_OS_WINDOWS
 void ExpandWildcards( int *argc, char ***argv ){
 }
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 /*
 
@@ -346,11 +338,11 @@ void Q_getwd( char *out ){
 #if GDEF_OS_WINDOWS
 	_getcwd( out, 256 );
 	strcat( out, "\\" );
-#else
+#else // !GDEF_OS_WINDOWS
 	// Gef: Changed from getwd() to getcwd() to avoid potential buffer overflow
 	getcwd( out, 256 );
 	strcat( out, "/" );
-#endif
+#endif // !GDEF_OS_WINDOWS
 	while ( out[i] != 0 )
 	{
 		if ( out[i] == '\\' ) {
@@ -366,11 +358,11 @@ void Q_mkdir( const char *path ){
 	if ( _mkdir( path ) != -1 ) {
 		return;
 	}
-#else
+#else // !GDEF_OS_WINDOWS
 	if ( mkdir( path, 0777 ) != -1 ) {
 		return;
 	}
-#endif
+#endif // !GDEF_OS_WINDOWS
 	if ( errno != EEXIST ) {
 		Error( "mkdir %s: %s",path, strerror( errno ) );
 	}
@@ -800,6 +792,7 @@ void    StripExtension( char *path ){
    Extract file parts
    ====================
  */
+
 // FIXME: should include the slash, otherwise
 // backing to an empty path will be wrong when appending a slash
 void ExtractFilePath( const char *path, char *dest ){
@@ -1014,7 +1007,7 @@ float   BigFloat( float l ){
 }
 
 
-#else
+#else // !GDEF_ARCH_ENDIAN_BIG
 
 
 short   BigShort( short l ){
@@ -1062,8 +1055,7 @@ float   LittleFloat( float l ){
 	return l;
 }
 
-
-#endif
+#endif // ! GDEF_ARCH_ENDIAN_BIG
 
 
 //=======================================================
@@ -1144,7 +1136,7 @@ void    CreatePath( const char *path ){
 		olddrive = _getdrive();
 		_chdrive( toupper( path[0] ) - 'A' + 1 );
 	}
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 	if ( path[1] == ':' ) {
 		path += 2;
@@ -1164,7 +1156,7 @@ void    CreatePath( const char *path ){
 	if ( olddrive != -1 ) {
 		_chdrive( olddrive );
 	}
-#endif
+#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -1188,8 +1180,7 @@ void QCopyFile( const char *from, const char *to ){
 void Sys_Sleep( int n ){
 #if GDEF_OS_WINDOWS
 	Sleep( n );
-#endif
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#else // !GDEF_OS_WINDOWS
 	usleep( n * 1000 );
-#endif
+#endif // !GDEF_OS_WINDOWS
 }

@@ -32,11 +32,9 @@
 #if GDEF_OS_WINDOWS
 #include <direct.h>
 #include <windows.h>
-#endif
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#else // !GDEF_OS_WINDOWS
 #include <unistd.h>
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 #ifdef NeXT
 #include <libc.h>
@@ -1177,8 +1175,7 @@ void QCopyFile( const char *from, const char *to ){
 void Sys_Sleep( int n ){
 #if GDEF_OS_WINDOWS
 	Sleep( n );
-#endif
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#else // !GDEF_OS_WINDOWS
 	usleep( n * 1000 );
-#endif
+#endif // !GDEF_OS_WINDOWS
 }

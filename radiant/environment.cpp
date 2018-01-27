@@ -139,8 +139,10 @@ void gamedetect(){
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "nexuiz.exe", buf, p - buf ) )
 #elif GDEF_OS_MACOS
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "Nexuiz.app/Contents/Info.plist", buf, p - buf ) )
-#else
+#elif GDEF_OS_LINUX
 			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", "nexuiz-linux-glx.sh", buf, p - buf ) )
+#else
+			if ( gamedetect_check_game( "nexuiz.game", "data/common-spog.pk3", NULL, buf, p - buf ) )
 #endif
 			{ return; }
 

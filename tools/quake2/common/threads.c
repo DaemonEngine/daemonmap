@@ -25,8 +25,7 @@
 // The below define is necessary to use
 // pthreads extensions like pthread_mutexattr_settype
 #define _GNU_SOURCE
-#include <pthread.h>
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 #include "cmdlib.h"
 #include "mathlib.h"
@@ -101,6 +100,8 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 }
 
 
+#if GDEF_OS_WINDOWS
+
 /*
    ===================================================================
 
@@ -108,9 +109,6 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 
    ===================================================================
  */
-#if GDEF_OS_WINDOWS
-
-#define USED
 
 #include <windows.h>
 
@@ -212,7 +210,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
+#elif GDEF_OS_OSF1
 
 /*
    ===================================================================
@@ -221,9 +219,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 
    ===================================================================
  */
-
-#ifdef __osf__
-#define USED
 
 int numthreads = 4;
 
@@ -319,7 +314,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
+#elif GDEF_OS_IRIX
 
 /*
    ===================================================================
@@ -329,14 +324,10 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    ===================================================================
  */
 
-#ifdef _MIPS_ISA
-#define USED
-
 #include <task.h>
 #include <abi_mutex.h>
 #include <sys/types.h>
 #include <sys/prctl.h>
-
 
 int numthreads = -1;
 abilock_t lck;
@@ -406,8 +397,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
-
+#elif GDEF_OS_LINUX || GDEF_OS_BSD || GDEF_OS_MACOS
 
 /*
    =======================================================================
@@ -416,9 +406,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 
    =======================================================================
  */
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-#define USED
 
 // Setting default Threads to 1
 int numthreads = 1;
@@ -570,8 +557,9 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 		Sys_Printf( " (%i)\n", end - start );
 	}
 }
-#endif // ifdef __linux__
 
+
+#else // UNKNOWN OS
 
 /*
    =======================================================================
@@ -580,8 +568,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 
    =======================================================================
  */
-
-#ifndef USED
 
 int numthreads = 1;
 
@@ -617,4 +603,4 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 	}
 }
 
-#endif
+#endif // UNKNOWN OS

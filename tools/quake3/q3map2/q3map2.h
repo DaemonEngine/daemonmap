@@ -89,14 +89,12 @@
 
    ------------------------------------------------------------------------------- */
 
-#if 1
-	#if GDEF_OS_WINDOWS
-		#define Q_stricmp           stricmp
-		#define Q_strncasecmp       strnicmp
-	#else
-		#define Q_stricmp           strcasecmp
-		#define Q_strncasecmp       strncasecmp
-	#endif
+#if GDEF_OS_WINDOWS
+	#define Q_stricmp           stricmp
+	#define Q_strncasecmp       strnicmp
+#else
+	#define Q_stricmp           strcasecmp
+	#define Q_strncasecmp       strncasecmp
 #endif
 
 /* macro version */

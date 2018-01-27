@@ -29,7 +29,6 @@
 #include <stdlib.h>
 
 #if !GDEF_OS_WINDOWS
-
 // Necessary for proper boolean type declaration
 #include "qertypes.h"
 
@@ -77,8 +76,7 @@ typedef struct tagRECT
 	long right;
 	long bottom;
 } RECT, *PRECT, *LPRECT;
-
-#endif // __linux__
+#endif // !GDEF_OS_WINDOWS
 
 // plugin
 // FIXME TTimo: drop this

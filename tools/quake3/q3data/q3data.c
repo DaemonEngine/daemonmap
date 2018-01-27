@@ -20,9 +20,11 @@
  */
 
 #include "globaldefs.h"
+
 #if GDEF_OS_WINDOWS
 #include <io.h>
-#endif
+#endif // GDEF_OS_WINDOWS
+
 #include "q3data.h"
 #include "md3lib.h"
 
@@ -41,9 +43,9 @@ char *moddir = NULL;
 // some old defined that was in cmdlib lost during merge
 char writedir[1024];
 
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#if !GDEF_OS_WINDOWS
 #define strlwr strlower
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 /*
    =======================================================
