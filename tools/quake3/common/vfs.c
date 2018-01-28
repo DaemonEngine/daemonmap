@@ -316,7 +316,6 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 
 		f = fopen( filename, "rb" );
 		if ( f == NULL ) {
-			fclose( f );
 			return -1;
 		}
 
