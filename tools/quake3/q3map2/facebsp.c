@@ -77,19 +77,18 @@ void    FreeBspFace( face_t *f ) {
  */
 
 static void SelectSplitPlaneNum( node_t *node, face_t *list, int *splitPlaneNum, int *compileFlags ){
-	face_t      *split;
-	face_t      *check;
-	face_t      *bestSplit;
+	face_t *split;
+	face_t *check;
+	face_t *bestSplit;
 	int splits, facing, front, back;
 	int side;
-	plane_t     *plane;
+	plane_t *plane;
 	int value, bestValue;
 	int i;
 	vec3_t normal;
 	float dist;
 	int planenum;
 	float sizeBias;
-
 
 	/* ydnar: set some defaults */
 	*splitPlaneNum = -1; /* leaf */

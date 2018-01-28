@@ -1966,7 +1966,7 @@ Q_EXTERN game_t games[]
 	,
 								#include "game_tremulous.h" /*LinuxManMikeC: must be after game_quake3.h, depends on #define's set in it */
 	,
-								#include "game_unvanquished.h"
+								#include "game_unvanquished.h" /* must be after game_tremulous.h as they share defines! */
 	,
 								#include "game_tenebrae.h"
 	,
@@ -2042,8 +2042,8 @@ Q_EXTERN qboolean nofog Q_ASSIGN( qfalse );
 Q_EXTERN qboolean noHint Q_ASSIGN( qfalse );                        /* ydnar */
 Q_EXTERN qboolean renameModelShaders Q_ASSIGN( qfalse );            /* ydnar */
 Q_EXTERN qboolean skyFixHack Q_ASSIGN( qfalse );                    /* ydnar */
-Q_EXTERN qboolean bspAlternateSplitWeights Q_ASSIGN( qfalse );                      /* 27 */
-Q_EXTERN qboolean deepBSP Q_ASSIGN( qfalse );                   /* div0 */
+Q_EXTERN qboolean bspAlternateSplitWeights Q_ASSIGN( qfalse );      /* 27 */
+Q_EXTERN qboolean deepBSP Q_ASSIGN( qfalse );                       /* div0 */
 Q_EXTERN qboolean maxAreaFaceSurface Q_ASSIGN( qfalse );                    /* divVerent */
 
 Q_EXTERN int patchSubdivisions Q_ASSIGN( 8 );                       /* ydnar: -patchmeta subdivisions */
@@ -2527,7 +2527,7 @@ Q_EXTERN int allocatedBSPBrushSides Q_ASSIGN( 0 );
 Q_EXTERN bspBrushSide_t*    bspBrushSides Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPLightBytes Q_ASSIGN( 0 );
-Q_EXTERN byte               *bspLightBytes Q_ASSIGN( NULL );
+Q_EXTERN byte *bspLightBytes Q_ASSIGN( NULL );
 
 //%	Q_EXTERN int				numBSPGridPoints Q_ASSIGN( 0 );
 //%	Q_EXTERN byte				*bspGridPoints Q_ASSIGN( NULL );
@@ -2539,11 +2539,11 @@ Q_EXTERN int numBSPVisBytes Q_ASSIGN( 0 );
 Q_EXTERN byte bspVisBytes[ MAX_MAP_VISIBILITY ];
 
 Q_EXTERN int numBSPDrawVerts Q_ASSIGN( 0 );
-Q_EXTERN bspDrawVert_t          *bspDrawVerts Q_ASSIGN( NULL );
+Q_EXTERN bspDrawVert_t *bspDrawVerts Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPDrawIndexes Q_ASSIGN( 0 );
 Q_EXTERN int allocatedBSPDrawIndexes Q_ASSIGN( 0 );
-Q_EXTERN int                *bspDrawIndexes Q_ASSIGN( NULL );
+Q_EXTERN int *bspDrawIndexes Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPDrawSurfaces Q_ASSIGN( 0 );
 Q_EXTERN bspDrawSurface_t   *bspDrawSurfaces Q_ASSIGN( NULL );

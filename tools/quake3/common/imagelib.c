@@ -1172,7 +1172,7 @@ void WriteTGA( const char *filename, byte *data, int width, int height ) {
 
 void WriteTGAGray( const char *filename, byte *data, int width, int height ) {
 	byte buffer[18];
-	FILE    *f;
+	FILE *f;
 
 	memset( buffer, 0, 18 );
 	buffer[2] = 3;      // uncompressed type
