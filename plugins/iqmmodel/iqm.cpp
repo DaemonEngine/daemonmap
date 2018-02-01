@@ -176,16 +176,6 @@ void istream_read_iqmVertexarray( PointerInputStream &inputStream, iqmvertexarra
 #undef READINT
 }
 
-typedef struct iqmvertex_s {
-	float position[3];
-	float texcoord[2];
-	float normal[3];
-	float tangent[4];
-	unsigned char blendindices[4];
-	unsigned char blendweights[4];
-	unsigned char color[4];
-} iqmvertex_t;
-
 ArbitraryMeshVertex IQMVertex_construct( const iqmPos_t *pos, const iqmPos_t *norm, const iqmSt_t *st ){
 	return ArbitraryMeshVertex(
 		Vertex3f( pos->v[0], pos->v[1], pos->v[2] ),
@@ -200,8 +190,6 @@ void IQMSurface_read( Model &model, const byte *buffer, ArchiveFile &file ){
 		PointerInputStream inputStream( buffer );
 		istream_read_iqmHeader( inputStream, header );
 	}
-
-	printf( "num meshes: %d\n", header.num_meshes );
 
 	int ofs_position = -1, ofs_st = -1, ofs_normal = -1;
 	PointerInputStream vaStream( buffer + header.ofs_vertexarrays );
@@ -253,20 +241,11 @@ void IQMSurface_read( Model &model, const byte *buffer, ArchiveFile &file ){
 		iqmmesh_t iqmmesh;
 		istream_read_iqmMesh( iqmMesh, iqmmesh );
 
-		// if not malformed data neither missing string
-		if ( iqmmesh.name <= header.num_text && iqmmesh.name > 0 ) {
-			char *name;
-			name = (char*) buffer + header.ofs_text + iqmmesh.name;
-			printf( "mesh: %d, name: %s\n", m, name );
-		}
-
 		bool material_found = false;
 		// if not malformed data neither missing string
 		if ( iqmmesh.material <= header.num_text && iqmmesh.material > 0 ) {
 			char *material;
 			material = (char*) buffer + header.ofs_text + iqmmesh.material;
-
-			printf( "mesh: %d, texture: %s\n", m, material );
 
 			if ( material[0] != '\0' ) {
 				surface.setShader( material );
@@ -278,9 +257,6 @@ void IQMSurface_read( Model &model, const byte *buffer, ArchiveFile &file ){
 			// empty string will trigger "textures/shader/notex" on display
 			surface.setShader( "" );
 		}
-
-		printf( "mesh: %d, num vertexes: %d\n", m, iqmmesh.num_vertexes );
-		printf( "mesh: %d, num triangles: %d\n", m, iqmmesh.num_triangles );
 
 		UniqueVertexBuffer<ArbitraryMeshVertex> inserter( surface.vertices() );
 		inserter.reserve( iqmmesh.num_vertexes );
