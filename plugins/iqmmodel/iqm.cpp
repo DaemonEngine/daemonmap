@@ -138,6 +138,26 @@ void istream_read_iqmHeader( PointerInputStream &inputStream, iqmHeader_t &heade
 #undef READINT
 }
 
+typedef struct iqmmesh_s {
+	unsigned int name;
+	unsigned int material;
+	unsigned int first_vertex;
+	unsigned int num_vertexes;
+	unsigned int first_triangle;
+	unsigned int num_triangles;
+} iqmmesh_t;
+
+void istream_read_iqmMesh( PointerInputStream &inputStream, iqmmesh_t &iqmmesh ){
+#define READUINT( x ) iqmmesh.x = istream_read_uint32_le( inputStream );
+	READUINT( name )
+	READUINT( material )
+	READUINT( first_vertex )
+	READUINT( num_vertexes )
+	READUINT( first_triangle )
+	READUINT( num_triangles )
+#undef READUINT
+}
+
 typedef struct iqmvertexarray_s {
 	unsigned int type;
 	unsigned int flags;
@@ -146,8 +166,8 @@ typedef struct iqmvertexarray_s {
 	unsigned int offset;
 } iqmvertexarray_t;
 
-void istream_read_iqmVertexarray( PointerInputStream &inputStream, iqmvertexarray_t &out ){
-#define READINT( x ) out.x = istream_read_int32_le( inputStream );
+void istream_read_iqmVertexarray( PointerInputStream &inputStream, iqmvertexarray_t &vertexarray ){
+#define READINT( x ) vertexarray.x = istream_read_int32_le( inputStream );
 	READINT( type )
 	READINT( flags )
 	READINT( format )
@@ -156,6 +176,15 @@ void istream_read_iqmVertexarray( PointerInputStream &inputStream, iqmvertexarra
 #undef READINT
 }
 
+typedef struct iqmvertex_s {
+	float position[3];
+	float texcoord[2];
+	float normal[3];
+	float tangent[4];
+	unsigned char blendindices[4];
+	unsigned char blendweights[4];
+	unsigned char color[4];
+} iqmvertex_t;
 
 ArbitraryMeshVertex IQMVertex_construct( const iqmPos_t *pos, const iqmPos_t *norm, const iqmSt_t *st ){
 	return ArbitraryMeshVertex(
@@ -166,65 +195,101 @@ ArbitraryMeshVertex IQMVertex_construct( const iqmPos_t *pos, const iqmPos_t *no
 }
 
 void IQMSurface_read( Model &model, const byte *buffer, ArchiveFile &file ){
-	Surface &surface = model.newSurface();
 	iqmHeader_t header;
 	{
 		PointerInputStream inputStream( buffer );
 		istream_read_iqmHeader( inputStream, header );
 	}
 
-	{
+	printf( "num meshes: %d\n", header.num_meshes );
 
-		UniqueVertexBuffer<ArbitraryMeshVertex> inserter( surface.vertices() );
-		inserter.reserve( header.num_vertexes );
+	int ofs_position = -1, ofs_st = -1, ofs_normal = -1;
+	PointerInputStream vaStream( buffer + header.ofs_vertexarrays );
+	for ( unsigned int i = 0; i < header.num_vertexarrays; i++ ) {
+		iqmvertexarray_t va;
+		istream_read_iqmVertexarray( vaStream, va );
 
-		int ofs_position = -1, ofs_st = -1, ofs_normal = -1;
-		PointerInputStream vaStream( buffer + header.ofs_vertexarrays );
-		for ( unsigned int i = 0; i < header.num_vertexarrays; i++ ) {
-			iqmvertexarray_t va;
-			istream_read_iqmVertexarray( vaStream, va );
+		switch ( va.type ) {
+		case IQM_POSITION:
+			if ( va.format == IQM_FLOAT && va.size == 3 ) {
+				ofs_position = va.offset;
+			}
+			break;
+		case IQM_TEXCOORD:
+			if ( va.format == IQM_FLOAT && va.size == 2 ) {
+				ofs_st = va.offset;
+			}
+			break;
+		case IQM_NORMAL:
+			if ( va.format == IQM_FLOAT && va.size == 3 ) {
+				ofs_normal = va.offset;
+			}
+			break;
+		}
+	}
 
-			switch ( va.type ) {
-			case IQM_POSITION:
-				if ( va.format == IQM_FLOAT && va.size == 3 ) {
-					ofs_position = va.offset;
-				}
-				break;
-			case IQM_TEXCOORD:
-				if ( va.format == IQM_FLOAT && va.size == 2 ) {
-					ofs_st = va.offset;
-				}
-				break;
-			case IQM_NORMAL:
-				if ( va.format == IQM_FLOAT && va.size == 3 ) {
-					ofs_normal = va.offset;
-				}
-				break;
+	PointerInputStream posStream( buffer + ofs_position );
+	Array<iqmPos_t> iqmPos( header.num_vertexes );
+	for ( Array<iqmPos_t>::iterator i = iqmPos.begin(); i != iqmPos.end(); ++i ) {
+		istream_read_iqmPos( posStream, *i );
+	}
+
+	PointerInputStream normStream( buffer + ofs_normal );
+	Array<iqmPos_t> iqmNorm( header.num_vertexes );
+	for ( Array<iqmPos_t>::iterator i = iqmNorm.begin(); i != iqmNorm.end(); ++i ) {
+		istream_read_iqmPos( normStream, *i );
+	}
+
+	Array<iqmSt_t> iqmSt( header.num_vertexes );
+	PointerInputStream stStream( buffer + ofs_st );
+	for ( Array<iqmSt_t>::iterator i = iqmSt.begin(); i != iqmSt.end(); ++i ) {
+		istream_read_iqmSt( stStream, *i );
+	}
+
+	PointerInputStream iqmMesh( buffer + header.ofs_meshes );
+	for ( unsigned int m = 0; m < header.num_meshes; m++ ) {
+		Surface &surface = model.newSurface();
+
+		iqmmesh_t iqmmesh;
+		istream_read_iqmMesh( iqmMesh, iqmmesh );
+
+		// if not malformed data neither missing string
+		if ( iqmmesh.name <= header.num_text && iqmmesh.name > 0 ) {
+			char *name;
+			name = (char*) buffer + header.ofs_text + iqmmesh.name;
+			printf( "mesh: %d, name: %s\n", m, name );
+		}
+
+		bool material_found = false;
+		// if not malformed data neither missing string
+		if ( iqmmesh.material <= header.num_text && iqmmesh.material > 0 ) {
+			char *material;
+			material = (char*) buffer + header.ofs_text + iqmmesh.material;
+
+			printf( "mesh: %d, texture: %s\n", m, material );
+
+			if ( material[0] != '\0' ) {
+				surface.setShader( material );
+				material_found = true;
 			}
 		}
 
-		surface.indices().reserve( header.num_vertexes );
-
-		PointerInputStream posStream( buffer + ofs_position );
-		Array<iqmPos_t> iqmPos( header.num_vertexes );
-		for ( Array<iqmPos_t>::iterator i = iqmPos.begin(); i != iqmPos.end(); ++i ) {
-			istream_read_iqmPos( posStream, *i );
+		if ( !material_found ) {
+			// empty string will trigger "textures/shader/notex" on display
+			surface.setShader( "" );
 		}
 
-		PointerInputStream normStream( buffer + ofs_normal );
-		Array<iqmPos_t> iqmNorm( header.num_vertexes );
-		for ( Array<iqmPos_t>::iterator i = iqmNorm.begin(); i != iqmNorm.end(); ++i ) {
-			istream_read_iqmPos( normStream, *i );
-		}
+		printf( "mesh: %d, num vertexes: %d\n", m, iqmmesh.num_vertexes );
+		printf( "mesh: %d, num triangles: %d\n", m, iqmmesh.num_triangles );
 
-		Array<iqmSt_t> iqmSt( header.num_vertexes );
-		PointerInputStream stStream( buffer + ofs_st );
-		for ( Array<iqmSt_t>::iterator i = iqmSt.begin(); i != iqmSt.end(); ++i ) {
-			istream_read_iqmSt( stStream, *i );
-		}
+		UniqueVertexBuffer<ArbitraryMeshVertex> inserter( surface.vertices() );
+		inserter.reserve( iqmmesh.num_vertexes );
 
-		PointerInputStream triangleStream( buffer + header.ofs_triangles );
-		for ( unsigned int i = 0; i < header.num_triangles; ++i ) {
+		surface.indices().reserve( iqmmesh.num_vertexes );
+
+		unsigned int triangle_offset = header.ofs_triangles + iqmmesh.first_triangle * sizeof( iqmTriangle_t );
+		PointerInputStream triangleStream( buffer + triangle_offset );
+		for ( unsigned int i = 0; i < iqmmesh.num_triangles; ++i ) {
 			iqmTriangle_t triangle;
 			istream_read_iqmTriangle( triangleStream, triangle );
 			for ( int j = 0; j < 3; j++ ) {
@@ -234,10 +299,9 @@ void IQMSurface_read( Model &model, const byte *buffer, ArchiveFile &file ){
 															   &iqmSt[triangle.indices[j]] ) ) );
 			}
 		}
-	}
 
-	surface.setShader( "" );
-	surface.updateAABB();
+		surface.updateAABB();
+	}
 }
 
 void IQMModel_read( Model &model, const byte *buffer, ArchiveFile &file ){
