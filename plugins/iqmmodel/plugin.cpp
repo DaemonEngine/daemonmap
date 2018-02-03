@@ -63,7 +63,7 @@ typedef ModelLoader Type;
 STRING_CONSTANT( Name, "iqm" );
 
 ModelIQMAPI(){
-	GlobalFiletypesModule::getTable().addType( Type::Name(), Name(), filetype_t( "iqm models", "*.iqm" ) );
+	GlobalFiletypesModule::getTable().addType( Type::Name(), Name(), filetype_t( "InterQuake Models", "*.iqm" ) );
 }
 
 ModelLoader *getTable(){
