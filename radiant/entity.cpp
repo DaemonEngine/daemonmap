@@ -40,6 +40,8 @@
 #include "select.h"
 #include "map.h"
 #include "preferences.h"
+#include "preferencesystem.h"
+#include "stringio.h"
 #include "gtkdlgs.h"
 #include "mainframe.h"
 #include "qe3.h"
@@ -536,20 +538,32 @@ void Entity_setColour()
     }
 }
 
+CopiedString g_strLastModelFolder = "";
+
+const char *getLastModelFolderPath()
+{
+    if (g_strLastModelFolder.empty()) {
+        GlobalPreferenceSystem().registerPreference("LastModelFolder", make_property_string(g_strLastModelFolder));
+        if (g_strLastModelFolder.empty()) {
+            StringOutputStream buffer(1024);
+            buffer << g_qeglobals.m_userGamePath.c_str() << "models/";
+            if (!file_readable(buffer.c_str())) {
+                // just go to fsmain
+                buffer.clear();
+                buffer << g_qeglobals.m_userGamePath.c_str() << "/";
+            }
+            g_strLastModelFolder = buffer.c_str();
+        }
+    }
+    return g_strLastModelFolder.c_str();
+}
+
 const char *misc_model_dialog(ui::Widget parent)
 {
-    StringOutputStream buffer(1024);
+    const char *filename = parent.file_dialog(TRUE, "Choose Model", getLastModelFolderPath(), ModelLoader::Name());
 
-    buffer << g_qeglobals.m_userGamePath.c_str() << "models/";
-
-    if (!file_readable(buffer.c_str())) {
-        // just go to fsmain
-        buffer.clear();
-        buffer << g_qeglobals.m_userGamePath.c_str() << "/";
-    }
-
-    const char *filename = parent.file_dialog(TRUE, "Choose Model", buffer.c_str(), ModelLoader::Name());
-    if (filename != 0) {
+    if (filename != NULL) {
+        g_strLastModelFolder = g_path_get_dirname(filename);
         // use VFS to get the correct relative path
         const char *relative = path_make_relative(filename, GlobalFileSystem().findRoot(filename));
         if (relative == filename) {
@@ -602,9 +616,6 @@ void Entity_constructMenu(ui::Menu menu)
     create_menu_item_with_mnemonic(menu, "_Normalize Color...", "NormalizeColor");
 }
 
-
-#include "preferencesystem.h"
-#include "stringio.h"
 
 void Entity_Construct()
 {
