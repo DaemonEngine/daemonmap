@@ -59,6 +59,7 @@ MapModules &ReferenceAPI_getMapModules();
 #include "cmdlib.h"
 #include "stream/textfilestream.h"
 #include "os/path.h"
+#include "os/file.h"
 #include "uniquenames.h"
 #include "modulesystem/singletonmodule.h"
 #include "modulesystem/moduleregistry.h"
@@ -1945,7 +1946,13 @@ const char *getLastMapFolderPath()
     if (g_strLastMapFolder.empty()) {
         GlobalPreferenceSystem().registerPreference("LastMapFolder", make_property_string(g_strLastMapFolder));
         if (g_strLastMapFolder.empty()) {
-            g_strLastMapFolder = g_qeglobals.m_userGamePath;
+            StringOutputStream buffer(1024);
+            buffer << getMapsPath();
+            if (!file_readable(buffer.c_str())) {
+                buffer.clear();
+                buffer << g_qeglobals.m_userGamePath.c_str() << "/";
+            }
+            g_strLastMapFolder = buffer.c_str();
         }
     }
     return g_strLastMapFolder.c_str();
