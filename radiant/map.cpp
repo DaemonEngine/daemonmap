@@ -988,7 +988,7 @@ public:
     }
 };
 
-CopiedString g_strLastFolder = "";
+CopiedString g_strLastMapFolder = "";
 
 /*
    ================
@@ -1002,7 +1002,7 @@ void Map_LoadFile(const char *filename)
     ScopeDisableScreenUpdates disableScreenUpdates("Processing...", "Loading Map");
 
     MRU_AddFile(filename);
-    g_strLastFolder = g_path_get_dirname(filename);
+    g_strLastMapFolder = g_path_get_dirname(filename);
 
     {
         ScopeTimer timer("map load");
@@ -1596,7 +1596,7 @@ bool Map_ImportFile(const char *filename)
 {
     ScopeDisableScreenUpdates disableScreenUpdates("Processing...", "Loading Map");
 
-    g_strLastFolder = g_path_get_dirname(filename);
+    g_strLastMapFolder = g_path_get_dirname(filename);
 
     bool success = false;
 
@@ -1940,30 +1940,30 @@ const char *getMapsPath()
     return g_mapsPath.c_str();
 }
 
-const char *getLastFolderPath()
+const char *getLastMapFolderPath()
 {
-    if (g_strLastFolder.empty()) {
-        GlobalPreferenceSystem().registerPreference("LastFolder", make_property_string(g_strLastFolder));
-        if (g_strLastFolder.empty()) {
-            g_strLastFolder = g_qeglobals.m_userGamePath;
+    if (g_strLastMapFolder.empty()) {
+        GlobalPreferenceSystem().registerPreference("LastMapFolder", make_property_string(g_strLastMapFolder));
+        if (g_strLastMapFolder.empty()) {
+            g_strLastMapFolder = g_qeglobals.m_userGamePath;
         }
     }
-    return g_strLastFolder.c_str();
+    return g_strLastMapFolder.c_str();
 }
 
 const char *map_open(const char *title)
 {
-    return MainFrame_getWindow().file_dialog(TRUE, title, getLastFolderPath(), MapFormat::Name(), true, false, false);
+    return MainFrame_getWindow().file_dialog(TRUE, title, getLastMapFolderPath(), MapFormat::Name(), true, false, false);
 }
 
 const char *map_import(const char *title)
 {
-    return MainFrame_getWindow().file_dialog(TRUE, title, getLastFolderPath(), MapFormat::Name(), false, true, false);
+    return MainFrame_getWindow().file_dialog(TRUE, title, getLastMapFolderPath(), MapFormat::Name(), false, true, false);
 }
 
 const char *map_save(const char *title)
 {
-    return MainFrame_getWindow().file_dialog(FALSE, title, getLastFolderPath(), MapFormat::Name(), false, false, true);
+    return MainFrame_getWindow().file_dialog(FALSE, title, getLastMapFolderPath(), MapFormat::Name(), false, false, true);
 }
 
 void OpenMap()
@@ -1997,7 +1997,7 @@ bool Map_SaveAs()
     const char *filename = map_save("Save Map");
 
     if (filename != NULL) {
-        g_strLastFolder = g_path_get_dirname(filename);
+        g_strLastMapFolder = g_path_get_dirname(filename);
         MRU_AddFile(filename);
         Map_Rename(filename);
         return Map_Save();
@@ -2024,7 +2024,7 @@ void ExportMap()
     const char *filename = map_save("Export Selection");
 
     if (filename != NULL) {
-        g_strLastFolder = g_path_get_dirname(filename);
+        g_strLastMapFolder = g_path_get_dirname(filename);
         Map_SaveSelected(filename);
     }
 }
@@ -2034,7 +2034,7 @@ void SaveRegion()
     const char *filename = map_save("Export Region");
 
     if (filename != NULL) {
-        g_strLastFolder = g_path_get_dirname(filename);
+        g_strLastMapFolder = g_path_get_dirname(filename);
         Map_SaveRegion(filename);
     }
 }
