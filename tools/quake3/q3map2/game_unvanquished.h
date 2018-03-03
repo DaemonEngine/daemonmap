@@ -27,6 +27,7 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 ------------------------------------------------------------------------------- */
 
 /* Derived from Tremulous support by LinuxManMikeC */
+/* Updated to Unvanquished support by Neumond */
 
 
 /* marker */
