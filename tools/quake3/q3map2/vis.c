@@ -1168,7 +1168,7 @@ int VisMain( int argc, char **argv ){
 	}
 
 	if ( i != argc - 1 ) {
-		Error( "usage: vis [-threads #] [-level 0-4] [-fast] [-v] BSPFilePath" );
+		Error( "usage: vis [-threads #] [-fast] [-v] BSPFilePath" );
 	}
 
 
