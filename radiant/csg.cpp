@@ -43,6 +43,20 @@ void Face_makeBrush(Face &face, const Brush &brush, brush_vector_t &out, float o
     }
 }
 
+void Face_makeRoom(Face &face, const Brush &brush, brush_vector_t &out, float offset)
+{
+    if (face.contributes()) {
+        face.getPlane().offset(offset);
+        out.push_back(new Brush(brush));
+        face.getPlane().offset(-offset);
+        Face *newFace = out.back()->addFace(face);
+        if (newFace != 0) {
+            newFace->flipWinding();
+            newFace->planeChanged();
+        }
+    }
+}
+
 void Brush_makeHollow(const Brush &brush, brush_vector_t &out, float offset)
 {
     Brush_forEachFace(brush, [&](Face &face) {
@@ -50,11 +64,19 @@ void Brush_makeHollow(const Brush &brush, brush_vector_t &out, float offset)
     });
 }
 
+void Brush_makeRoom(const Brush &brush, brush_vector_t &out, float offset)
+{
+    Brush_forEachFace(brush, [&](Face &face) {
+        Face_makeRoom(face, brush, out, offset);
+    });
+}
+
 class BrushHollowSelectedWalker : public scene::Graph::Walker {
     float m_offset;
+    bool m_makeRoom;
 public:
-    BrushHollowSelectedWalker(float offset)
-            : m_offset(offset)
+    BrushHollowSelectedWalker(float offset, bool makeRoom)
+            : m_offset(offset), m_makeRoom(makeRoom)
     {
     }
 
@@ -66,7 +88,14 @@ public:
                 && Instance_getSelectable(instance)->isSelected()
                 && path.size() > 1) {
                 brush_vector_t out;
-                Brush_makeHollow(*brush, out, m_offset);
+
+                if (m_makeRoom) {
+                    Brush_makeRoom(*brush, out, m_offset);
+                }
+                else {
+                    Brush_makeHollow(*brush, out, m_offset);
+                }
+
                 for (brush_vector_t::const_iterator i = out.begin(); i != out.end(); ++i) {
                     (*i)->removeEmptyFaces();
                     NodeSmartReference node((new BrushNode())->node());
@@ -123,9 +152,9 @@ public:
     }
 };
 
-void Scene_BrushMakeHollow_Selected(scene::Graph &graph)
+void Scene_BrushMakeHollow_Selected(scene::Graph &graph, bool makeRoom)
 {
-    GlobalSceneGraph().traverse(BrushHollowSelectedWalker(GetGridSize()));
+    GlobalSceneGraph().traverse(BrushHollowSelectedWalker(GetGridSize(), makeRoom));
     GlobalSceneGraph().traverse(BrushDeleteSelected());
 }
 
@@ -139,7 +168,16 @@ void CSG_MakeHollow(void)
 {
     UndoableCommand undo("brushHollow");
 
-    Scene_BrushMakeHollow_Selected(GlobalSceneGraph());
+    Scene_BrushMakeHollow_Selected(GlobalSceneGraph(), false);
+
+    SceneChangeNotify();
+}
+
+void CSG_MakeRoom(void)
+{
+    UndoableCommand undo("brushRoom");
+
+    Scene_BrushMakeHollow_Selected(GlobalSceneGraph(), true);
 
     SceneChangeNotify();
 }

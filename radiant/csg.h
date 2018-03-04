@@ -24,6 +24,8 @@
 
 void CSG_MakeHollow(void);
 
+void CSG_MakeRoom(void);
+
 void CSG_Subtract(void);
 
 void CSG_Merge(void);
