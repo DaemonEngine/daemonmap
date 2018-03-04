@@ -46,7 +46,7 @@ typedef struct tag_error_struct
 	LPSTR errstr;
 } ERROR_STRUCT;
 
-const int NET_NAMELEN = 64;
+#define NET_NAMELEN 64
 
 char my_tcpip_address[NET_NAMELEN];
 
