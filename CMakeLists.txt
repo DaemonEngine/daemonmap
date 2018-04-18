@@ -242,7 +242,7 @@ endmacro()
 
 if (BUILD_RADIANT)
     add_subdirectory(radiant _radiant)
-    set_target_properties(radiant PROPERTIES
+    set_target_properties(${RADIANT_BASENAME} PROPERTIES
             COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
             )
 endif ()

@@ -92,11 +92,11 @@ set(RADIANTLIST
 )
 if (WIN32)
     list(APPEND RADIANTLIST multimon.cpp multimon.h)
-endif()
+endif ()
 
-radiant_tool(radiant WIN32 radiant.rc ${RADIANTLIST})
-add_dependencies(radiant modules)
-target_link_libraries(radiant
+radiant_tool(${RADIANT_BASENAME} WIN32 radiant.rc ${RADIANTLIST})
+add_dependencies(${RADIANT_BASENAME} modules)
+target_link_libraries(${RADIANT_BASENAME}
     ${CMAKE_DL_LIBS}
     ${LIBXML2_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
@@ -127,7 +127,7 @@ target_link_libraries(radiant
     xmllib
 )
 if (X11_LIBRARIES)
-    target_link_libraries(radiant ${X11_LIBRARIES})
+    target_link_libraries(${RADIANT_BASENAME} ${X11_LIBRARIES})
 endif ()
 
-copy_dlls(radiant)
+copy_dlls(${RADIANT_BASENAME})
