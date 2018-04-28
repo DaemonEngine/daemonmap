@@ -353,7 +353,7 @@ void HelpCommon()
 		{"-fs_game <gamename>", "Sets a different game directory name (default for Q3A: baseq3, can be used more than once)"},
 		{"-fs_homebase <dir>", "Specifies where the user home directory name is on Linux (default for Q3A: .q3a)"},
 		{"-fs_homepath <path>", "Sets the given path as home directory name"},
-		{"-fs_nobasepath", "Do not load base paths in VFS"},
+		{"-fs_nobasepath", "Do not load base paths in VFS, imply -fs_nomagicpath"},
 		{"-fs_nomagicpath", "Do not try to guess base path magically"},
 		{"-fs_nohomepath", "Do not load home path in VFS"},
 		{"-fs_pakpath <path>", "Specify a package directory (can be used more than once to look in multiple paths)"},

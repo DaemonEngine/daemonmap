@@ -460,6 +460,8 @@ void InitPaths( int *argc, char **argv ){
 		/* -fs_nobasepath */
 		else if ( strcmp( argv[ i ], "-fs_nobasepath" ) == 0 ) {
 			noBasePath = 1;
+			// we don't want any basepath, neither guessed ones
+			noMagicPath = 1;
 			argv[ i ] = NULL;
 		}		
 
