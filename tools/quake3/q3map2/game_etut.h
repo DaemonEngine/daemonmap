@@ -147,7 +147,7 @@
 	"flareshader",      /* default flare shader */
 	qfalse,             /* wolf lighting model? */
 	128,                /* lightmap width/height */
-	1.0f,               /* lightmap gamma */
+	2.2f,               /* lightmap gamma */
 	qtrue,              /* lightmap sRGB */
 	qfalse,             /* texture sRGB (yes, this is incorrect, but we better match ET:UT) */
 	qfalse,             /* color sRGB */

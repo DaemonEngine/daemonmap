@@ -56,7 +56,8 @@
 #define GROW_TRACE_NODES        16384       //%	16384
 #define GROW_NODE_ITEMS         16          //%	256
 
-#define MAX_TW_VERTS            24 // vortex: increased from 12 to 24 for ability co compile some insane maps with large curve count
+// vortex: increased from 12 to 24 for ability co compile some insane maps with large curve count
+#define MAX_TW_VERTS            24
 
 #define TRACE_ON_EPSILON        0.1f
 
@@ -198,9 +199,6 @@ static int AllocTraceNode( void ){
 	memset( &traceNodes[ numTraceNodes ], 0, sizeof( traceNode_t ) );
 	traceNodes[ numTraceNodes ].type = TRACE_LEAF;
 	ClearBounds( traceNodes[ numTraceNodes ].mins, traceNodes[ numTraceNodes ].maxs );
-
-	/* Sys_Printf("alloc node %d\n", numTraceNodes); */
-
 	numTraceNodes++;
 
 	/* return the count */
@@ -405,8 +403,6 @@ static int SetupTraceNodes_r( int bspNodeNum ){
 			Error( "Invalid tracenode allocated" );
 		}
 	}
-
-	/* Sys_Printf("node %d children: %d %d\n", nodeNum, traceNodes[ nodeNum ].children[0], traceNodes[ nodeNum ].children[1]); */
 
 	/* return node number */
 	return nodeNum;

@@ -890,7 +890,6 @@ static int CompareSurfaceInfo( const void *a, const void *b ){
 		return -1;
 	}
 
-
 	/* then lightmap sample size */
 	if ( aInfo->sampleSize < bInfo->sampleSize ) {
 		return 1;
@@ -2342,6 +2341,8 @@ static int CompareRawLightmap( const void *a, const void *b ){
 	return 0;
 }
 
+
+
 void FillOutLightmap( outLightmap_t *olm ){
 	int x, y;
 	int ofs;
@@ -2454,6 +2455,8 @@ void FillOutLightmap( outLightmap_t *olm ){
 	}
 }
 
+
+
 /*
    StoreSurfaceLightmaps()
    stores the surface lightmaps into the bsp as byte rgb triplets
@@ -2477,8 +2480,8 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	char dirname[ 1024 ], filename[ 1024 ];
 	shaderInfo_t        *csi;
 	char lightmapName[ 128 ];
-	const char              *rgbGenValues[ 256 ];
-	const char              *alphaGenValues[ 256 ];
+	const char          *rgbGenValues[ 256 ];
+	const char          *alphaGenValues[ 256 ];
 
 
 	/* note it */
@@ -2501,7 +2504,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	   ----------------------------------------------------------------- */
 
 	/* note it */
-	Sys_Printf( "Subsampling..." );
+	Sys_FPrintf( SYS_VRB, "Subsampling..." );
 
 	/* walk the list of raw lightmaps */
 	numUsed = 0;
@@ -2969,7 +2972,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 
 	if ( noCollapse == qfalse && deluxemap == qfalse ) {
 		/* note it */
-		Sys_Printf( "collapsing..." );
+		Sys_FPrintf( SYS_VRB, "collapsing..." );
 
 		/* set all twin refs to null */
 		for ( i = 0; i < numRawLightmaps; i++ )
@@ -3038,7 +3041,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	   ----------------------------------------------------------------- */
 
 	/* note it */
-	Sys_Printf( "sorting..." );
+	Sys_FPrintf( SYS_VRB, "sorting..." );
 
 	/* allocate a new sorted list */
 	if ( sortLightmaps == NULL ) {
@@ -3055,7 +3058,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	   ----------------------------------------------------------------- */
 
 	/* note it */
-	Sys_Printf( "allocating..." );
+	Sys_FPrintf( SYS_VRB, "allocating..." );
 
 	/* kill all existing output lightmaps */
 	if ( outLightmaps != NULL ) {
@@ -3108,7 +3111,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	   ----------------------------------------------------------------- */
 
 	/* note it */
-	Sys_Printf( "storing..." );
+	Sys_FPrintf( SYS_VRB, "storing..." );
 
 	/* count the bsp lightmaps and allocate space */
 	if ( bspLightBytes != NULL ) {
@@ -3178,7 +3181,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	}
 
 	if ( numExtLightmaps > 0 ) {
-		Sys_Printf( "\n" );
+		Sys_FPrintf( SYS_VRB, "\n" );
 	}
 
 	/* delete unused external lightmaps */
@@ -3199,7 +3202,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	   ----------------------------------------------------------------- */
 
 	/* note it */
-	Sys_Printf( "projecting..." );
+	Sys_FPrintf( SYS_VRB, "projecting..." );
 
 	/* walk the list of surfaces */
 	for ( i = 0; i < numBSPDrawSurfaces; i++ )
@@ -3478,7 +3481,7 @@ void StoreSurfaceLightmaps( qboolean fastAllocate ){
 	}
 
 	/* finish */
-	Sys_Printf( "done.\n" );
+	Sys_FPrintf( SYS_VRB, "done.\n" );
 
 	/* calc num stored */
 	numStored = numBSPLightBytes / 3;

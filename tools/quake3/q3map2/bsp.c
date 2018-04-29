@@ -44,6 +44,7 @@
 
    ------------------------------------------------------------------------------- */
 
+
 /*
    ProcessAdvertisements()
    copies advertisement info into the BSP structures
@@ -971,11 +972,13 @@ int BSPMain( int argc, char **argv ){
 			colorsRGB = qfalse;
 			Sys_Printf( "Colors are linear\n" );
 		}
-		else if ( !strcmp( argv[ i ], "-altsplit" ) ) {
+		else if ( !strcmp( argv[ i ], "-altsplit" ) )
+		{
 			Sys_Printf( "Alternate BSP splitting (by 27) enabled\n" );
 			bspAlternateSplitWeights = qtrue;
 		}
-		else if ( !strcmp( argv[ i ], "-deep" ) ) {
+		else if ( !strcmp( argv[ i ], "-deep" ) )
+		{
 			Sys_Printf( "Deep BSP tree generation enabled\n" );
 			deepBSP = qtrue;
 		}

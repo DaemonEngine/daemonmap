@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 1999-2006 Id Software, Inc. and contributors.
+   Copyright (C) 1999-2007 id Software, Inc. and contributors.
    For a list of contributors, see the accompanying CONTRIBUTORS file.
 
    This file is part of GtkRadiant.
@@ -47,7 +47,7 @@ static int ReadString( FILE *fp, char *buffer ){
 	return bytesRead;
 }
 
-static int ReadChunkAndLength( FILE *fp, short *chunk, long *len ){
+static int ReadChunkAndLength( FILE *fp, unsigned short *chunk, long *len ){
 	if ( fread( chunk, sizeof( short ), 1, fp ) != 1 ) {
 		return 0;
 	}
@@ -58,7 +58,7 @@ static int ReadChunkAndLength( FILE *fp, short *chunk, long *len ){
 }
 
 static void LoadMapName( FILE *fp, char *buffer, int thisChunkLen ){
-	short chunkID;
+	unsigned short chunkID;
 	long chunkLen;
 	long bytesRead = 0;
 
@@ -82,7 +82,7 @@ static void LoadMapName( FILE *fp, char *buffer, int thisChunkLen ){
 
 static void LoadMaterialList( FILE *fp, long thisChunkLen, _3DSMaterial_t *pMat ){
 	long chunkLen;
-	short chunkID;
+	unsigned short chunkID;
 	long bytesRead = 0;
 	_3DSMaterial_t mat;
 	char curdir[1024];
@@ -230,7 +230,7 @@ static void LoadMeshMaterialGroup( FILE *fp, long thisChunkLen, _3DSMeshMaterial
 
 static void LoadNamedTriObject( FILE *fp, long thisChunkLen, _3DSTriObject_t *pTO ){
 	long chunkLen;
-	short chunkID;
+	unsigned short chunkID;
 	int i = 0;
 	long bytesRead = 0;
 	_3DSTriObject_t triObj;
@@ -347,7 +347,7 @@ static void LoadNamedTriObject( FILE *fp, long thisChunkLen, _3DSTriObject_t *pT
 
 static void LoadNamedObject( FILE *fp, long thisChunkLen, _3DSNamedObject_t *pNO ){
 	long chunkLen;
-	short chunkID;
+	unsigned short chunkID;
 	int i = 0;
 	long bytesRead = 0;
 	char name[100];
@@ -391,7 +391,7 @@ static void LoadNamedObject( FILE *fp, long thisChunkLen, _3DSNamedObject_t *pNO
 }
 
 static void LoadEditChunk( FILE *fp, long thisChunkLen, _3DSEditChunk_t *pEC ){
-	short chunkID;
+	unsigned short chunkID;
 	long chunkLen;
 	long bytesRead = 0;
 	_3DSEditChunk_t editChunk;
@@ -451,7 +451,7 @@ static void LoadEditChunk( FILE *fp, long thisChunkLen, _3DSEditChunk_t *pEC ){
 
 static void Load3DS( const char *filename, _3DS_t *p3DS, qboolean verbose ){
 	FILE *fp;
-	short chunkID;
+	unsigned short chunkID;
 	long chunkLen;
 	_3DSEditChunk_t editChunk;
 

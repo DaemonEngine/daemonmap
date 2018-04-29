@@ -93,7 +93,6 @@ brush_t *AllocBrush( int numSides ){
 	brush_t     *bb;
 	size_t c;
 
-
 	/* allocate and clear */
 	if ( numSides <= 0 ) {
 		Error( "AllocBrush called with numsides = %d", numSides );
@@ -282,6 +281,8 @@ void SnapWeldVector( vec3_t a, vec3_t b, vec3_t out ){
 	}
 }
 
+
+
 /*
    ==================
    SnapWeldVectorAccu
@@ -328,6 +329,8 @@ void SnapWeldVectorAccu( vec3_accu_t a, vec3_accu_t b, vec3_accu_t out ){
 		}
 	}
 }
+
+
 
 /*
    FixWinding() - ydnar
@@ -1041,8 +1044,9 @@ void SplitBrush( brush_t *brush, int planenum, brush_t **front, brush_t **back )
 		if ( !w ) {
 			continue;
 		}
+		/* strict, in parallel case we get the face back because it also is the midwinding */
 		ClipWindingEpsilonStrict( w, plane->normal, plane->dist,
-								  0 /*PLANESIDE_EPSILON*/, &cw[0], &cw[1] ); /* strict, in parallel case we get the face back because it also is the midwinding */
+							0 /*PLANESIDE_EPSILON*/, &cw[0], &cw[1] );
 		for ( j = 0 ; j < 2 ; j++ )
 		{
 			if ( !cw[j] ) {

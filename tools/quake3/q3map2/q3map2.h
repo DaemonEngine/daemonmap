@@ -41,8 +41,6 @@
 #define Q3MAP_MOTD      "Your map saw the pretty lights from q3map2's BFG"
 
 
-
-
 /* -------------------------------------------------------------------------------
 
    dependencies
@@ -200,7 +198,7 @@
 #define HINT_PRIORITY           1000        /* ydnar: force hint splits first and antiportal/areaportal splits last */
 #define ANTIPORTAL_PRIORITY     -1000
 #define AREAPORTAL_PRIORITY     -1000
-#define DETAIL_PRIORITY     -3000
+#define DETAIL_PRIORITY         -3000
 
 #define PSIDE_FRONT             1
 #define PSIDE_BACK              2
@@ -273,7 +271,7 @@
 #define RAD_LUXEL_SIZE          3
 #define SUPER_LUXEL_SIZE        4
 #define SUPER_FLAG_SIZE         4
-#define FLAG_FORCE_SUBSAMPLING 1
+#define FLAG_FORCE_SUBSAMPLING  1
 #define FLAG_ALREADY_SUBSAMPLED 2
 #define SUPER_ORIGIN_SIZE       3
 #define SUPER_NORMAL_SIZE       4
@@ -826,7 +824,7 @@ typedef struct face_s
 	struct face_s       *next;
 	int planenum;
 	int priority;
-	//qboolean			checked;
+	//qboolean checked;
 	int compileFlags;
 	winding_t           *w;
 }
@@ -958,8 +956,9 @@ typedef struct parseMesh_s
 	shaderInfo_t        *shaderInfo;
 	shaderInfo_t        *celShader;             /* :) */
 
+	/* jal : entity based _lightmapsamplesize */
+	int lightmapSampleSize;
 	/* ydnar: gs mods */
-	int lightmapSampleSize;                     /* jal : entity based _lightmapsamplesize */
 	float lightmapScale;
 	vec3_t eMins, eMaxs;
 	indexMap_t          *im;
@@ -1467,7 +1466,7 @@ typedef struct rawLightmap_s
 	float                   *bspLuxels[ MAX_LIGHTMAPS ];
 	float                   *radLuxels[ MAX_LIGHTMAPS ];
 	float                   *superLuxels[ MAX_LIGHTMAPS ];
-	unsigned char               *superFlags;
+	unsigned char           *superFlags;
 	float                   *superOrigins;
 	float                   *superNormals;
 	int                     *superClusters;
@@ -1523,14 +1522,18 @@ void                        HelpMain(const char* arg);
 game_t                      *GetGame( char *arg );
 void                        InitPaths( int *argc, char **argv );
 
+
 /* fixaas.c */
 int                         FixAASMain( int argc, char **argv );
+
 
 /* bsp.c */
 int                         BSPMain( int argc, char **argv );
 
+
 /* bsp_analyze.c */
 int                         AnalyzeBSPMain( int argc, char **argv );
+
 
 /* bsp_info.c */
 int                         BSPInfoMain( int count, char **fileNames );
@@ -1543,6 +1546,7 @@ int                         MiniMapBSPMain( int argc, char **argv );
 
 /* convert_bsp.c */
 int                         ConvertBSPMain( int argc, char **argv );
+
 
 /* convert_map.c */
 int                         ConvertBSPToMap( char *bspName );
@@ -1962,7 +1966,7 @@ Q_EXTERN game_t games[]
 	,
 								#include "game_tremulous.h" /*LinuxManMikeC: must be after game_quake3.h, depends on #define's set in it */
 	,
-								#include "game_unvanquished.h"
+								#include "game_unvanquished.h" /* must be after game_tremulous.h as they share defines! */
 	,
 								#include "game_tenebrae.h"
 	,
@@ -2038,8 +2042,8 @@ Q_EXTERN qboolean nofog Q_ASSIGN( qfalse );
 Q_EXTERN qboolean noHint Q_ASSIGN( qfalse );                        /* ydnar */
 Q_EXTERN qboolean renameModelShaders Q_ASSIGN( qfalse );            /* ydnar */
 Q_EXTERN qboolean skyFixHack Q_ASSIGN( qfalse );                    /* ydnar */
-Q_EXTERN qboolean bspAlternateSplitWeights Q_ASSIGN( qfalse );                      /* 27 */
-Q_EXTERN qboolean deepBSP Q_ASSIGN( qfalse );                   /* div0 */
+Q_EXTERN qboolean bspAlternateSplitWeights Q_ASSIGN( qfalse );      /* 27 */
+Q_EXTERN qboolean deepBSP Q_ASSIGN( qfalse );                       /* div0 */
 Q_EXTERN qboolean maxAreaFaceSurface Q_ASSIGN( qfalse );                    /* divVerent */
 
 Q_EXTERN int patchSubdivisions Q_ASSIGN( 8 );                       /* ydnar: -patchmeta subdivisions */
@@ -2523,7 +2527,7 @@ Q_EXTERN int allocatedBSPBrushSides Q_ASSIGN( 0 );
 Q_EXTERN bspBrushSide_t*    bspBrushSides Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPLightBytes Q_ASSIGN( 0 );
-Q_EXTERN byte               *bspLightBytes Q_ASSIGN( NULL );
+Q_EXTERN byte *bspLightBytes Q_ASSIGN( NULL );
 
 //%	Q_EXTERN int				numBSPGridPoints Q_ASSIGN( 0 );
 //%	Q_EXTERN byte				*bspGridPoints Q_ASSIGN( NULL );
@@ -2535,11 +2539,11 @@ Q_EXTERN int numBSPVisBytes Q_ASSIGN( 0 );
 Q_EXTERN byte bspVisBytes[ MAX_MAP_VISIBILITY ];
 
 Q_EXTERN int numBSPDrawVerts Q_ASSIGN( 0 );
-Q_EXTERN bspDrawVert_t          *bspDrawVerts Q_ASSIGN( NULL );
+Q_EXTERN bspDrawVert_t *bspDrawVerts Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPDrawIndexes Q_ASSIGN( 0 );
 Q_EXTERN int allocatedBSPDrawIndexes Q_ASSIGN( 0 );
-Q_EXTERN int                *bspDrawIndexes Q_ASSIGN( NULL );
+Q_EXTERN int *bspDrawIndexes Q_ASSIGN( NULL );
 
 Q_EXTERN int numBSPDrawSurfaces Q_ASSIGN( 0 );
 Q_EXTERN bspDrawSurface_t   *bspDrawSurfaces Q_ASSIGN( NULL );

@@ -123,6 +123,7 @@ static void vfsInitPakFile( const char *filename ){
 	for ( i = 0; i < gi.number_entry; i++ )
 	{
 		char filename_inzip[NAME_MAX];
+		char *filename_lower;
 		unz_file_info file_info;
 		VFS_PAKFILE* file;
 
@@ -140,9 +141,10 @@ static void vfsInitPakFile( const char *filename ){
 		g_pakFiles = g_slist_append( g_pakFiles, file );
 
 		vfsFixDOSName( filename_inzip );
-		g_strdown( filename_inzip );
+		 //-1 null terminated string
+		filename_lower = g_ascii_strdown( filename_inzip, -1 );
 
-		file->name = strdup( filename_inzip );
+		file->name = strdup( filename_lower );
 		file->size = file_info.uncompressed_size;
 		file->zipfile = uf;
 		file->zippos = pos;
@@ -153,6 +155,7 @@ static void vfsInitPakFile( const char *filename ){
 				break;
 			}
 		}
+		g_free( filename_lower );
 	}
 }
 
@@ -271,17 +274,18 @@ void vfsShutdown(){
 int vfsGetFileCount( const char *filename ){
 	int i, count = 0;
 	char fixed[NAME_MAX], tmp[NAME_MAX];
+	char *lower;
 	GSList *lst;
 
 	strcpy( fixed, filename );
 	vfsFixDOSName( fixed );
-	g_strdown( fixed );
+	lower = g_ascii_strdown( fixed, -1 );
 
 	for ( lst = g_pakFiles; lst != NULL; lst = g_slist_next( lst ) )
 	{
 		VFS_PAKFILE* file = (VFS_PAKFILE*)lst->data;
 
-		if ( strcmp( file->name, fixed ) == 0 ) {
+		if ( strcmp( file->name, lower ) == 0 ) {
 			count++;
 		}
 	}
@@ -289,12 +293,12 @@ int vfsGetFileCount( const char *filename ){
 	for ( i = 0; i < g_numDirs; i++ )
 	{
 		strcpy( tmp, g_strDirs[i] );
-		strcat( tmp, fixed );
+		strcat( tmp, lower );
 		if ( access( tmp, R_OK ) == 0 ) {
 			count++;
 		}
 	}
-
+	g_free( lower );
 	return count;
 }
 
@@ -302,6 +306,7 @@ int vfsGetFileCount( const char *filename ){
 int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 	int i, count = 0;
 	char tmp[NAME_MAX], fixed[NAME_MAX];
+	char *lower;
 	GSList *lst;
 
 	// filename is a full path
@@ -339,7 +344,7 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 	*bufferptr = NULL;
 	strcpy( fixed, filename );
 	vfsFixDOSName( fixed );
-	g_strdown( fixed );
+	lower = g_ascii_strdown( fixed, -1 );
 
 	for ( i = 0; i < g_numDirs; i++ )
 	{
@@ -385,15 +390,15 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 	{
 		VFS_PAKFILE* file = (VFS_PAKFILE*)lst->data;
 
-		if ( strcmp( file->name, fixed ) != 0 ) {
+		if ( strcmp( file->name, lower ) != 0 ) {
 			continue;
 		}
 
 		if ( count == index ) {
 
-            if ( unzGoToFilePos( file->zipfile, &file->zippos ) != UNZ_OK ) {
-                return -1;
-            }
+		if ( unzGoToFilePos( file->zipfile, &file->zippos ) != UNZ_OK ) {
+			return -1;
+		}
 			if ( unzOpenCurrentFile( file->zipfile ) != UNZ_OK ) {
 				return -1;
 			}
@@ -408,12 +413,13 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 				return -1;
 			}
 			else{
+				g_free( lower );
 				return file->size;
 			}
 		}
 
 		count++;
 	}
-
+	g_free( lower );
 	return -1;
 }

@@ -163,7 +163,9 @@ int LeafVectorFromPortalVector( byte *portalbits, byte *leafbits ){
    Merges the portal visibility for a leaf
    ===============
  */
+
 static int clustersizehistogram[MAX_MAP_LEAFS] = {0};
+
 void ClusterMerge( int leafnum ){
 	leaf_t      *leaf;
 	byte portalvector[MAX_PORTALS / 8];
@@ -1168,7 +1170,7 @@ int VisMain( int argc, char **argv ){
 	}
 
 	if ( i != argc - 1 ) {
-		Error( "usage: vis [-threads #] [-level 0-4] [-fast] [-v] BSPFilePath" );
+		Error( "usage: vis [-threads #] [-fast] [-v] BSPFilePath" );
 	}
 
 
@@ -1184,9 +1186,9 @@ int VisMain( int argc, char **argv ){
 		sprintf( portalFilePath, "%s%s", inbase, ExpandArg( argv[ i ] ) );
 		StripExtension( portalFilePath );
 		strcat( portalFilePath, ".prt" );
-		Sys_Printf( "Loading %s\n", portalFilePath );
-		LoadPortals( portalFilePath );
 	}
+	Sys_Printf( "Loading %s\n", portalFilePath );
+	LoadPortals( portalFilePath );
 
 	/* ydnar: exit if no portals, hence no vis */
 	if ( numportals == 0 ) {

@@ -741,7 +741,6 @@ void AddTriangleModels( entity_t *e ){
 		}
 	}
 
-
 	/* walk the entity list */
 	for ( num = 1; num < numEntities; num++ )
 	{
