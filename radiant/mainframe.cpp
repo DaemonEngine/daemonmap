@@ -2606,7 +2606,8 @@ void CSG_constructToolbar(ui::Toolbar toolbar)
 {
     toolbar_append_button(toolbar, "CSG Subtract (SHIFT + U)", "selection_csgsubtract.png", "CSGSubtract");
     toolbar_append_button(toolbar, "CSG Merge (CTRL + U)", "selection_csgmerge.png", "CSGMerge");
-    toolbar_append_button(toolbar, "Hollow", "selection_makehollow.png", "CSGHollow");
+    toolbar_append_button(toolbar, "Make Hollow", "selection_makehollow.png", "CSGMakeHollow");
+    toolbar_append_button(toolbar, "Make Room", "selection_makeroom.png", "CSGMakeRoom");
 }
 
 void ComponentModes_constructToolbar(ui::Toolbar toolbar)
@@ -3623,7 +3624,8 @@ void MainFrame_Construct()
     GlobalCommands_insert("CSGSubtract", makeCallbackF(CSG_Subtract),
                           Accelerator('U', (GdkModifierType) GDK_SHIFT_MASK));
     GlobalCommands_insert("CSGMerge", makeCallbackF(CSG_Merge), Accelerator('U', (GdkModifierType) GDK_CONTROL_MASK));
-    GlobalCommands_insert("CSGHollow", makeCallbackF(CSG_MakeHollow));
+    GlobalCommands_insert("CSGMakeHollow", makeCallbackF(CSG_MakeHollow));
+    GlobalCommands_insert("CSGMakeRoom", makeCallbackF(CSG_MakeRoom));
 
     Grid_registerCommands();
 
