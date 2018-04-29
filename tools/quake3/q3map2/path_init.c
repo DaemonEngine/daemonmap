@@ -409,6 +409,7 @@ void InitPaths( int *argc, char **argv ){
 
 	int noBasePath = 0;
 	int noHomePath = 0;
+	int noMagicPath = 0;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- InitPaths ---\n" );
@@ -459,8 +460,16 @@ void InitPaths( int *argc, char **argv ){
 		/* -fs_nobasepath */
 		else if ( strcmp( argv[ i ], "-fs_nobasepath" ) == 0 ) {
 			noBasePath = 1;
+			// we don't want any basepath, neither guessed ones
+			noMagicPath = 1;
 			argv[ i ] = NULL;
 		}		
+
+		/* -fs_nomagicpath */
+		else if ( strcmp( argv[ i ], "-fs_nomagicpath") == 0) {
+			noMagicPath = 1;
+			argv[ i ] = NULL;
+		}
 
 		/* -fs_basepath */
 		else if ( strcmp( argv[ i ], "-fs_basepath" ) == 0 ) {
@@ -528,7 +537,6 @@ void InitPaths( int *argc, char **argv ){
 			AddPakPath( argv[ i ] );
 			argv[ i ] = NULL;
 		}
-
 	}
 
 	/* remove processed arguments */
@@ -545,8 +553,8 @@ void InitPaths( int *argc, char **argv ){
 	/* add standard game path */
 	AddGamePath( game->gamePath );
 
-	/* if there is no base path set, figure it out */
-	if ( numBasePaths == 0 && noBasePath == 0 ) {
+	/* if there is no base path set, figure it out unless fs_nomagicpath is set */
+	if ( numBasePaths == 0 && noBasePath == 0 && noMagicPath == 0 ) {
 		/* this is another crappy replacement for SetQdirFromPath() */
 		len2 = strlen( game->magic );
 		for ( i = 0; i < *argc && numBasePaths == 0; i++ )
