@@ -80,22 +80,22 @@ extern "C"
 /* types */
 typedef struct picoParser_s
 {
-	const char  *buffer;
+	const char *buffer;
 	int bufSize;
-	char    *token;
+	char *token;
 	int tokenSize;
 	int tokenMax;
-	const char  *cursor;
-	const char  *max;
+	const char *cursor;
+	const char *max;
 	int curLine;
 }
 picoParser_t;
 
 typedef struct picoMemStream_s
 {
-	const picoByte_t    *buffer;
+	const picoByte_t *buffer;
 	int bufSize;
-	const picoByte_t    *curPos;
+	const picoByte_t *curPos;
 	int flag;
 }
 picoMemStream_t;

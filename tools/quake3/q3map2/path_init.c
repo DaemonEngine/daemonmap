@@ -101,7 +101,7 @@ char *LokiGetHomeDir( void ){
  */
 
 void LokiInitPaths( char *argv0 ){
-	char        *home;
+	char *home;
 
 	if ( !homePath ) {
 		/* get home dir */
@@ -121,9 +121,10 @@ void LokiInitPaths( char *argv0 ){
 	/* this is kinda crap, but hey */
 	strcpy( installPath, "../" );
 	#else
+
 	char temp[ MAX_OS_PATH ];
-	char        *path;
-	char        *last;
+	char *path;
+	char *last;
 	qboolean found;
 
 
@@ -174,7 +175,6 @@ void LokiInitPaths( char *argv0 ){
 				Q_strncpyz( temp, home, sizeof( temp ) );
 				path++;
 			}
-
 
 			/* concatenate */
 			if ( last > ( path + 1 ) ) {

@@ -552,7 +552,7 @@ static void RadSubdivideDiffuseLight( int lightmapNum, bspDrawSurface_t *ds, raw
 	light->falloffTolerance = falloffTolerance;
 
 	/* bouncing light? */
-	if ( !bouncing ) {
+	if ( bouncing == qfalse ) {
 		/* This is weird. This actually handles surfacelight and not
  		 * bounces. */
 

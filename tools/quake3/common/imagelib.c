@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 1999-2006 Id Software, Inc. and contributors.
+   Copyright (C) 1999-2007 id Software, Inc. and contributors.
    For a list of contributors, see the accompanying CONTRIBUTORS file.
 
    This file is part of GtkRadiant.
@@ -1172,7 +1172,7 @@ void WriteTGA( const char *filename, byte *data, int width, int height ) {
 
 void WriteTGAGray( const char *filename, byte *data, int width, int height ) {
 	byte buffer[18];
-	FILE    *f;
+	FILE *f;
 
 	memset( buffer, 0, 18 );
 	buffer[2] = 3;      // uncompressed type

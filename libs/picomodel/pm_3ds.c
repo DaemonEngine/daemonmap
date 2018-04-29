@@ -119,7 +119,7 @@ debugChunkNames[] =
 	{ CHUNK_OBJECT_UV, "CHUNK_OBJECT_UV"         },
 	{ 0,  NULL                     }
 };
-static char *DebugGetChunkName( int id ){
+static char *DebugGetChunkName( int id ) {
 	int i,max;  /* imax? ;) */
 	max = sizeof( debugChunkNames ) / sizeof( debugChunkNames[0] );
 
@@ -518,7 +518,6 @@ static int DoNextEditorDataChunk( T3dsLoaderPers *pers, long endofs ){
 			/* read in surface name */
 			if ( !GetASCIIZ( pers,surfaceName,sizeof( surfaceName ) ) ) {
 				return 0; /* this is bad */
-
 			}
 //PicoGetSurfaceName
 			/* ignore NULL name surfaces */

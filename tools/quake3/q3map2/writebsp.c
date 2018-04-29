@@ -70,8 +70,6 @@ int EmitShader( const char *shader, int *contentFlags, int *surfaceFlags ){
 		}
 	}
 
-	// i == numBSPShaders
-
 	/* get shaderinfo */
 	si = ShaderInfoForShader( shader );
 

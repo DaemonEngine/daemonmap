@@ -55,7 +55,8 @@ typedef struct edgeLine_s {
 	vec3_t origin;
 	vec3_t dir;
 
-	edgePoint_t *chain;     // unused element of doubly linked list
+	// unused element of doubly linked list
+	edgePoint_t *chain;
 } edgeLine_t;
 
 typedef struct {
@@ -67,8 +68,7 @@ originalEdge_t  *originalEdges = NULL;
 int numOriginalEdges;
 int allocatedOriginalEdges = 0;
 
-
-edgeLine_t      *edgeLines = NULL;
+edgeLine_t *edgeLines = NULL;
 int numEdgeLines;
 int allocatedEdgeLines = 0;
 
@@ -373,7 +373,7 @@ void FixSurfaceJunctions( mapDrawSurface_t *ds ) {
 			p = e->chain->prev;
 		}
 
-		for (  ; p != e->chain ; ) {
+		for ( ; p != e->chain ; ) {
 			if ( start < end ) {
 				if ( p->intercept > end - ON_EPSILON ) {
 					break;

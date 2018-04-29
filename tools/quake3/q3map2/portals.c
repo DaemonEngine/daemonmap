@@ -409,8 +409,9 @@ void SplitNodePortals( node_t *node ){
 //
 // cut the portal into two portals, one on each side of the cut plane
 //
+		/* not strict, we want to always keep one of them even if coplanar */
 		ClipWindingEpsilon( p->winding, plane->normal, plane->dist,
-							SPLIT_WINDING_EPSILON, &frontwinding, &backwinding ); /* not strict, we want to always keep one of them even if coplanar */
+							SPLIT_WINDING_EPSILON, &frontwinding, &backwinding );
 
 		if ( frontwinding && WindingIsTiny( frontwinding ) ) {
 			if ( !f->tinyportals ) {

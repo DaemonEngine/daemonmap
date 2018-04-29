@@ -2051,6 +2051,8 @@ int FilterPointIntoTree_r( vec3_t point, mapDrawSurface_t *ds, node_t *node ){
 	return AddReferenceToLeaf( ds, node );
 }
 
+
+
 /*
    FilterPointConvexHullIntoTree_r() - ydnar
    filters the convex hull of multiple points from a surface into the tree
@@ -2099,6 +2101,7 @@ int FilterPointConvexHullIntoTree_r( vec3_t **points, int npoints, mapDrawSurfac
 	/* add a reference */
 	return AddReferenceToLeaf( ds, node );
 }
+
 
 
 /*
@@ -2183,7 +2186,7 @@ int FilterWindingIntoTree_r( winding_t *w, mapDrawSurface_t *ds, node_t *node ){
 			if ( DotProduct( plane1, reverse ) > 0.999f && fabs( plane1[ 3 ] - reverse[ 3 ] ) < 0.001f ) {
 				return FilterWindingIntoTree_r( w, ds, node->children[ 1 ] );
 			}
-            #else
+			#else
 			(void) plane2;
 			/* div0: this is the cholera (doesn't hit enough) */
 
@@ -2590,6 +2593,8 @@ void EmitFlareSurface( mapDrawSurface_t *ds ){
 	numSurfacesByType[ ds->type ]++;
 }
 
+
+
 /*
    EmitPatchSurface()
    emits a bsp patch drawsurface
@@ -2696,6 +2701,8 @@ void EmitPatchSurface( entity_t *e, mapDrawSurface_t *ds ){
 	/* add to count */
 	numSurfacesByType[ ds->type ]++;
 }
+
+
 
 /*
    OptimizeTriangleSurface() - ydnar
@@ -2965,6 +2972,7 @@ static void EmitFaceSurface( mapDrawSurface_t *ds ){
 	}
 	EmitTriangleSurface( ds );
 }
+
 
 
 /*

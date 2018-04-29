@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 1999-2006 Id Software, Inc. and contributors.
+   Copyright (C) 1999-2007 id Software, Inc. and contributors.
    For a list of contributors, see the accompanying CONTRIBUTORS file.
 
    This file is part of GtkRadiant.
@@ -152,7 +152,7 @@ void xml_Select( char *msg, int entitynum, int brushnum, qboolean bError ){
 	xmlNodeSetContent( node, (xmlChar*)buf );
 	level[0] = (int)'0' + ( bError ? SYS_ERR : SYS_WRN )  ;
 	level[1] = 0;
-	xmlSetProp( node, (xmlChar*)"level", (xmlChar *)&level );
+	xmlSetProp( node, (xmlChar*)"level", (xmlChar*)&level );
 	// a 'select' information
 	sprintf( buf, "%i %i", entitynum, brushnum );
 	select = xmlNewNode( NULL, (xmlChar*)"brush" );

@@ -581,6 +581,8 @@ void ParseEntities( void ){
 	numBSPEntities = numEntities;
 }
 
+
+
 /*
  * must be called before UnparseEntities
  */
@@ -621,6 +623,8 @@ void InjectCommandLine( char **argv, int beginArgs, int endArgs ){
 	SetKeyValue( &entities[0], "_q3map2_cmdline", newCommandLine );
 	SetKeyValue( &entities[0], "_q3map2_version", Q3MAP_VERSION );
 }
+
+
 
 /*
    UnparseEntities()
@@ -748,6 +752,8 @@ void SetKeyValue( entity_t *ent, const char *key, const char *value ){
 	ep->value = copystring( value );
 }
 
+
+
 /*
    KeyExists()
    returns true if entity has this key
@@ -767,6 +773,8 @@ qboolean KeyExists( const entity_t *ent, const char *key ){
 	/* no match */
 	return qfalse;
 }
+
+
 
 /*
    ValueForKey()
