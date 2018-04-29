@@ -1184,9 +1184,9 @@ int VisMain( int argc, char **argv ){
 		sprintf( portalFilePath, "%s%s", inbase, ExpandArg( argv[ i ] ) );
 		StripExtension( portalFilePath );
 		strcat( portalFilePath, ".prt" );
-		Sys_Printf( "Loading %s\n", portalFilePath );
-		LoadPortals( portalFilePath );
 	}
+	Sys_Printf( "Loading %s\n", portalFilePath );
+	LoadPortals( portalFilePath );
 
 	/* ydnar: exit if no portals, hence no vis */
 	if ( numportals == 0 ) {
