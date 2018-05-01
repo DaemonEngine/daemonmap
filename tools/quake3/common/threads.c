@@ -20,6 +20,7 @@
  */
 
 #include "globaldefs.h"
+#include <stdint.h>
 #if !GDEF_OS_WINDOWS
 // The below define is necessary to use
 // pthreads extensions like pthread_mutexattr_settype
