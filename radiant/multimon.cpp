@@ -37,7 +37,7 @@ void MultiMonitor_constructPreferences(PreferencesPage &page)
                                                           g_multimon_globals.m_bStartOnPrimMon);
     ui::CheckButton popup = page.appendCheckBox(
             "", "Disable system menu on popup windows",
-            mkImportExportCallback(g_Multimon_enableSysMenuPopups)
+            make_property(g_Multimon_enableSysMenuPopups)
     );
     Widget_connectToggleDependency(popup, primary_monitor);
 }
