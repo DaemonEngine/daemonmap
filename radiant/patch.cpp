@@ -19,6 +19,7 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#define _USE_MATH_DEFINES
 #include "patch.h"
 
 #include <glib.h>
@@ -1311,9 +1312,9 @@ void Patch::ConstructPrefab(const AABB &aabb, EPatchPrefab eType, int axis, std:
         // vPos[1] = aabb.origin;
         // vPos[2] = vector3_added(aabb.origin, aabb.extents);
 
-        float f = 1 / cos(G_PI / n);
+        float f = 1 / cos(M_PI / n);
         for (std::size_t i = 0; i < width; ++i) {
-            float angle = (G_PI * i) / n; // 0 to 2pi
+            float angle = (M_PI * i) / n; // 0 to 2pi
             float x = vPos[1][0] + (vPos[2][0] - vPos[1][0]) * cos(angle) * ((i & 1) ? f : 1.0f);
             float y = vPos[1][1] + (vPos[2][1] - vPos[1][1]) * sin(angle) * ((i & 1) ? f : 1.0f);
             for (std::size_t j = 0; j < height; ++j) {
@@ -1333,9 +1334,9 @@ void Patch::ConstructPrefab(const AABB &aabb, EPatchPrefab eType, int axis, std:
         // vPos[1] = aabb.origin;
         // vPos[2] = vector3_added(aabb.origin, aabb.extents);
 
-        float f = 1 / cos(G_PI / n);
+        float f = 1 / cos(M_PI / n);
         for (std::size_t i = 0; i < width; ++i) {
-            float angle = (G_PI * i) / n;
+            float angle = (M_PI * i) / n;
             for (std::size_t j = 0; j < height; ++j) {
                 float x = vPos[1][0] + (1.0f - (j / (float) (height - 1))) * (vPos[2][0] - vPos[1][0]) * cos(angle) *
                                        ((i & 1) ? f : 1.0f);
@@ -1358,12 +1359,12 @@ void Patch::ConstructPrefab(const AABB &aabb, EPatchPrefab eType, int axis, std:
         // vPos[1] = aabb.origin;
         // vPos[2] = vector3_added(aabb.origin, aabb.extents);
 
-        float f = 1 / cos(G_PI / n);
-        float g = 1 / cos(G_PI / (2 * m));
+        float f = 1 / cos(M_PI / n);
+        float g = 1 / cos(M_PI / (2 * m));
         for (std::size_t i = 0; i < width; ++i) {
-            float angle = (G_PI * i) / n;
+            float angle = (M_PI * i) / n;
             for (std::size_t j = 0; j < height; ++j) {
-                float angle2 = (G_PI * j) / (2 * m);
+                float angle2 = (M_PI * j) / (2 * m);
                 float x = vPos[1][0] + (vPos[2][0] - vPos[1][0]) * sin(angle2) * ((j & 1) ? g : 1.0f) * cos(angle) *
                                        ((i & 1) ? f : 1.0f);
                 float y = vPos[1][1] + (vPos[2][1] - vPos[1][1]) * sin(angle2) * ((j & 1) ? g : 1.0f) * sin(angle) *
