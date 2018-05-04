@@ -540,7 +540,7 @@ static picoModel_t *_obj_load( PM_PARAMS_LOAD ){
 	/* helper */
 #define _obj_error_return( m ) \
 	{ \
-		_pico_printf( PICO_ERROR,"%s in OBJ, line %d.",m,p->curLine ); \
+		_pico_printf( PICO_ERROR, "%s in OBJ %s, line %d.", m, model->fileName, p->curLine ); \
 		_pico_free_parser( p );	\
 		FreeObjVertexData( vertexData ); \
 		PicoFreeModel( model );	\
