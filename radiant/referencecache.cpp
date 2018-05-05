@@ -59,6 +59,7 @@ ModelModules &ReferenceAPI_getModelModules();
 #include "map.h"
 #include "filetypes.h"
 
+extern bool g_writeMapComments;
 
 bool References_Saved();
 
@@ -110,7 +111,7 @@ bool MapResource_saveFile(const MapFormat &format, scene::Node &root, GraphTrave
     if (!file.failed()) {
         globalOutputStream() << "success\n";
         ScopeDisableScreenUpdates disableScreenUpdates(path_get_filename_start(filename), "Saving Map");
-        format.writeGraph(root, traverse, file);
+        format.writeGraph(root, traverse, file, g_writeMapComments);
         return true;
     }
 

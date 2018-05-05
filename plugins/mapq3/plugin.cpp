@@ -129,13 +129,13 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
         writer.writeToken("Version");
         writer.writeInteger(MapVersion());
         writer.nextLine();
-        Map_Write(root, traverse, writer, false);
+        Map_Write(root, traverse, writer, false, writeComments);
         writer.release();
     }
 };
@@ -208,13 +208,13 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
         writer.writeToken("Version");
         writer.writeInteger(MapVersion());
         writer.nextLine();
-        Map_Write(root, traverse, writer, false);
+        Map_Write(root, traverse, writer, false, writeComments);
         writer.release();
     }
 };
@@ -312,10 +312,10 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
-        Map_Write(root, traverse, writer, false);
+        Map_Write(root, traverse, writer, false, writeComments);
         writer.release();
     }
 };
@@ -363,10 +363,10 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
-        Map_Write(root, traverse, writer, true);
+        Map_Write(root, traverse, writer, true, writeComments);
         writer.release();
     }
 };
@@ -414,10 +414,10 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
-        Map_Write(root, traverse, writer, true);
+        Map_Write(root, traverse, writer, true, writeComments);
         writer.release();
     }
 };
@@ -465,10 +465,10 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         TokenWriter &writer = GlobalScripLibModule::getTable().m_pfnNewSimpleTokenWriter(outputStream);
-        Map_Write(root, traverse, writer, true);
+        Map_Write(root, traverse, writer, true, writeComments);
         writer.release();
     }
 };
@@ -641,7 +641,7 @@ public:
         tokeniser.release();
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
     }
 };
