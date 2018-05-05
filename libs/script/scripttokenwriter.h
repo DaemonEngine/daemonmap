@@ -28,7 +28,8 @@ class SimpleTokenWriter : public TokenWriter
 {
 public:
 SimpleTokenWriter( TextOutputStream& ostream )
-	: m_ostream( ostream ), m_separator( '\n' ){
+	// HACK: \0 separator is used to tell we are at beginning of file
+	: m_ostream( ostream ), m_separator( '\0' ){
 }
 ~SimpleTokenWriter(){
 	writeSeparator();
@@ -63,7 +64,10 @@ void writeFloat( double f ){
 
 private:
 void writeSeparator(){
-	m_ostream << m_separator;
+	// HACK: do not write separator at beginning of file
+	if (m_separator != '\0') {
+		m_ostream << m_separator;
+	}
 	m_separator = ' ';
 }
 TextOutputStream& m_ostream;
