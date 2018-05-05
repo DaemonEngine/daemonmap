@@ -2297,7 +2297,7 @@ void DoFind()
 
 void Map_constructPreferences(PreferencesPage &page)
 {
-    page.appendCheckBox("", "Load last map on open", g_bLoadLastMap);
+    page.appendCheckBox("", "Load last map at startup", g_bLoadLastMap);
     page.appendCheckBox("", "Add entity and brush number comments on map write", g_writeMapComments);
 }
 
