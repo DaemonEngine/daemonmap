@@ -154,7 +154,7 @@ void VFS_Refresh()
     QE_InitVFS();
     GlobalFileSystem().refresh();
     g_vfsInitialized = true;
-    // also refresg models
+    // also refresh models
     RefreshReferences();
     // also refresh texture browser
     TextureBrowser_RefreshShaders();
