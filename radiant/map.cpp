@@ -1050,9 +1050,9 @@ void Map_LoadFile(const char *filename)
 
     g_currentMap = &g_map;
 
-    // restart VFS to apply new pak filtering based on mapname
+    // refresh VFS to apply new pak filtering based on mapname
     // needed for daemon DPK VFS
-    VFS_Restart();
+    VFS_Refresh();
 }
 
 class Excluder {
