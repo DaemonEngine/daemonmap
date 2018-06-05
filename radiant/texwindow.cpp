@@ -775,14 +775,27 @@ bool texture_name_ignore(const char *name)
             endswith(strTemp.c_str(), ".diffuse") ||
             endswith(strTemp.c_str(), ".blend") ||
             endswith(strTemp.c_str(), ".alpha") ||
-            endswith(strTemp.c_str(), "_norm") ||
+            endswith(strTemp.c_str(), "_alpha") ||
+            /* Quetoo */
+            endswith(strTemp.c_str(), "_h") ||
+            endswith(strTemp.c_str(), "_local") ||
+            endswith(strTemp.c_str(), "_nm") ||
+            endswith(strTemp.c_str(), "_s") ||
+            /* DarkPlaces */
             endswith(strTemp.c_str(), "_bump") ||
             endswith(strTemp.c_str(), "_glow") ||
             endswith(strTemp.c_str(), "_gloss") ||
+            endswith(strTemp.c_str(), "_luma") ||
+            endswith(strTemp.c_str(), "_norm") ||
             endswith(strTemp.c_str(), "_pants") ||
             endswith(strTemp.c_str(), "_shirt") ||
             endswith(strTemp.c_str(), "_reflect") ||
-            endswith(strTemp.c_str(), "_alpha") ||
+            /* Unvanquished */
+            endswith(strTemp.c_str(), "_d") ||
+            endswith(strTemp.c_str(), "_n") ||
+            endswith(strTemp.c_str(), "_p") ||
+            endswith(strTemp.c_str(), "_g") ||
+            endswith(strTemp.c_str(), "_a") ||
             0;
 }
 
