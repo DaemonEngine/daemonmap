@@ -1,0 +1,663 @@
+#! /usr/bin/env bash
+
+# get usage help this way:
+# ./gamepack_manager -h
+
+: "${CP:=cp -v}"
+: "${CP_R:=cp -r --preserve=timestamps}"
+: "${GIT:=git}"
+: "${SVN:=svn}"
+: "${WGET:=wget}"
+: "${ECHO:=echo}"
+: "${MKDIR:=mkdir -v}"
+: "${MKDIR_P:=mkdir -vp}"
+: "${RM_R:=rm -vrf}"
+: "${MV:=mv -v}"
+: "${TAR:=tar}"
+: "${UNZIPPER:=unzip}"
+
+set -e
+
+default_download_dir='build/download'
+default_install_dir='build'
+
+games_dir='games'
+pack_suffix='Pack'
+
+free_license_list='BSD GPL'
+
+printRawDB () {
+cat <<\EOF
+#######################################################
+#                                                     #
+#  IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT  #
+#                                                     #
+#   Use two whitespaces or more as column separator   #
+#                                                     #
+#######################################################
+
+#######################################################
+# Obsolete packs                                      #
+#######################################################
+
+# Quake2World was renamed as Quetoo
+# Other gamepacks have better version available
+
+# OpenArena     unknown      zip     http://ingar.intranifty.net/files/netradiant/gamepacks/OpenArenaPack.zip
+# Quake         proprietary  zip     http://ingar.intranifty.net/files/netradiant/gamepacks/QuakePack.zip
+# Quake2World   GPL          svn     svn://jdolan.dyndns.org/quake2world/trunk/gtkradiant
+# Tremulous     proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/TremulousPack/branches/1.5/
+# Unvanquished  unknown      zip     http://ingar.intranifty.net/gtkradiant/files/gamepacks/UnvanquishedPack.zip
+# Warsow        GPL          svn     https://svn.bountysource.com/wswpack/trunk/netradiant/games/WarsowPack/
+# Warsow        GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/WarsowPack.zip
+
+#######################################################
+# Usable packs                                        #
+#######################################################
+
+DarkPlaces      GPL          svn     svn://svn.icculus.org/gtkradiant-gamepacks/DarkPlacesPack/branches/1.5/
+Doom3           proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Doom3Pack/branches/1.5/
+ET              proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/ETPack/branches/1.5/
+Heretic2        proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Her2Pack/branches/1.5/
+JediAcademy     proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/JAPack/branches/1.5/
+Neverball       proprietary  zip     http://ingar.intranifty.net/files/netradiant/gamepacks/NeverballPack.zip
+Nexuiz          GPL          gitdir  git://git.icculus.org/divverent/nexuiz.git misc/netradiant-NexuizPack master
+OpenArena       GPL          git     https://github.com/NeonKnightOA/oagamepack.git
+Osirion         GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/OsirionPack.zip
+Prey            proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/PreyPack/trunk/
+Q3              proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q3Pack/trunk/ 29
+Quake2          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q2Pack/branches/1.5/
+Quake4          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q4Pack/branches/1.5/
+Quake           GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/Quake1Pack.zip
+Quetoo          GPL          svn     svn://svn.icculus.org/gtkradiant-gamepacks/QuetooPack/branches/1.5/
+Tremulous       proprietary  zip     http://ingar.intranifty.net/files/netradiant/gamepacks/TremulousPack.zip
+TurtleArena     proprietary  git     https://github.com/Turtle-Arena/turtle-arena-radiant-pack.git
+UFOAI           proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/UFOAIPack/branches/1.5/
+Unvanquished    BSD          svn     https://github.com/Unvanquished/unvanquished-mapeditor-support.git/trunk/build/netradiant
+Warsow          GPL          git     https://github.com/Warsow/NetRadiantPack.git
+Wolf            proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/WolfPack/branches/1.5/
+Xonotic         GPL          git     https://gitlab.com/xonotic/netradiant-xonoticpack.git
+EOF
+}
+
+sanitizeDB () {
+	sed -e 's/#.*//;s/[ \t][ \t][ \t]*/\t/g;s/^[ \t]*//;s/[ \t]*$//' \
+	| grep -v '^$'
+}
+
+inList () {
+	[ "$(grep "^${1}$")" = "${1}" ]
+}
+
+printList () {
+	echo "${1}" \
+	| tr ' ' '\n' \
+	| grep -v '^$' \
+	| sort -u
+}
+
+dedupeList () {
+	printList "${1}" \
+	| tr '\n' ' ' \
+	| sed -e 's/ $//'
+}
+
+printGamePackDB () {
+	printRawDB \
+	| sanitizeDB
+}
+
+printLicenseList () {
+	printGamePackDB \
+	| awk '{ print $2 }' \
+	| sort -u
+}
+
+printNameList () {
+	printGamePackDB \
+	| awk '{ print $1 }' \
+	| sort -u
+}
+
+printNameListByLicense () {
+	local arg_license_list
+	local license_list
+	local license
+
+	arg_license_list="${1}"
+	license_list=''
+
+	for license in ${arg_license_list}
+	do
+		case "${license}" in
+			'none')
+				break
+			;;
+			'all')
+				license_list="$(printLicenseList)"
+				break
+			;;
+			'free')
+				license_list="${license_list} ${free_license_list}"
+			;;
+			*)
+				if printLicenseList | inList "${license}"
+				then
+					license_list="${license_list} ${license}"
+				else
+					printError "unknown license: ${license}"
+				fi
+			;;
+		esac
+	done
+
+	license_list="$(dedupeList "${license_list}")"
+
+	for license in ${license_list}
+	do
+		printGamePackDB \
+		| awk '$2 == "'"${license}"'"' \
+		| awk '{ print $1 }'
+	done
+}
+
+printNameListByName () {
+	local argname_list
+	local name_list
+	local name
+
+	argname_list="${1}"
+	name_list=''
+
+	for name in ${argname_list}
+	do
+		case "${name}" in
+			'none')
+				break
+			;;
+			'all')
+				local name_list
+				name_list="$(printNameList)"
+				break
+			;;
+			*)
+				if printNameList | inList "${name}"
+				then
+					local name_list
+					name_list="${name_list} ${name}"
+				else
+					printError "unknown name: ${name}"
+				fi
+			;;
+		esac
+	done
+
+	name_list="$(dedupeList "${name_list}")"
+
+	for name in ${name_list}
+	do
+		printGamePackDB \
+		| awk '$1 == "'"${name}"'"' \
+		| awk '{ print $1 }'
+	done
+}
+
+printPackLine () {
+	local name
+
+	name="${1}"
+
+	printGamePackDB \
+	| awk '$1 == "'"${name}"'"'
+}
+
+getValue () {
+	local name
+	local key
+
+	name="${1}"
+	key="${2}"
+
+	printPackLine "${name}" \
+	| awk '{ print $'"${key}"' }'
+}
+
+downloadExtraUrls ()
+{
+	local dir
+
+	dir="${1}"
+
+	if [ -f "${dir}/extra-urls.txt" ]
+	then
+		while IFS='	' read -r FILE URL
+		do
+			(
+				${WGET} -O "${dir}/${FILE}" "${URL}"
+			) </dev/null
+		done < "${dir}/extra-urls.txt"
+	fi
+}
+
+downloadPack () {
+	local download_dir
+	local name
+	local license
+	local source_type
+	local source_url
+	local pack
+	local reference
+	local subdir
+	local branch
+
+	download_dir="${1}"
+	name="${2}"
+
+	license="$(getValue "${name}" '2')"
+	source_type="$(getValue "${name}" '3')"
+	source_url="$(getValue "${name}" '4')"
+
+	pack="${name}${pack_suffix}"
+
+	${MKDIR_P} "${download_dir}"
+
+	(
+		cd "${download_dir}"
+
+		${ECHO} ''
+		${ECHO} "Available pack: ${pack}"
+		${ECHO} "  License: ${license}"
+		${ECHO} "  Download via ${source_type} from ${source_url}"
+		${ECHO} ''
+
+		if [ -d "${download_dir}/${pack}" ]
+		then
+			${ECHO} "Updating ${name}…"
+		else
+			${ECHO} "Downloading ${pack}…"
+		fi
+
+		case "${source_type}" in
+			'svn')
+				reference="$(getValue "${name}" '5')"
+				if [ -z "${reference}" ]
+				then
+					reference='HEAD'
+				fi
+
+				if [ -d "${download_dir}/${pack}" ]
+				then
+					${SVN} update -r"${reference}" "${pack}"
+				else
+					${SVN} checkout -r"${reference}" "${source_url}" "${pack}"
+				fi
+			;;
+			'zip')
+				${RM_R} 'zipdownload'
+				${MKDIR} 'zipdownload'
+				(
+					cd 'zipdownload'
+					${WGET} "${source_url}"
+					${UNZIPPER} './'*.zip
+				)
+				${RM_R} "${pack}"
+				${MKDIR} "${pack}"
+				${MV} 'zipdownload/'*'/'* "${pack}/"
+				${RM_R} 'zipdownload'
+			;;
+			'gitdir')
+				subdir="$(getValue "${name}" '5')"
+				branch="$(getValue "${name}" '6')"
+				${RM_R} "${pack}"
+				${GIT} archive --remote="${source_url}" --prefix="${pack}/" "${branch}":"${subdir}" \
+				| ${TAR} xvf -
+			;;
+			'git')
+				if [ -d "${download_dir}/${pack}" ]
+				then
+					(
+						cd "${pack}"
+						${GIT} pull
+					)
+				else
+					${GIT} clone "${source_url}" "${pack}"
+				fi
+			;;
+		esac
+
+		if [ -d "${download_dir}/${pack}" ]
+		then
+			(
+				cd "${download_dir}/${pack}"
+				downloadExtraUrls "${pack}"
+			)
+		fi
+
+	)
+}
+
+downloadPackList () {
+	local download_dir
+	local name_list
+
+	download_dir="${1}"
+	name_list="${2}"
+
+	for name in ${name_list}
+	do
+		if printNameList | inList "${name}"
+		then
+			downloadPack "${download_dir}" "${name}"
+		else
+			printError "unknown name: ${name}"
+		fi
+	done
+}
+
+installPack () {
+	local download_dir
+	local install_dir
+	local name
+	local pack
+	local path
+	local game_file
+	local game_dir
+
+	download_dir="${1}"
+	install_dir="${2}"
+	name="${3}"
+
+	pack="${name}${pack_suffix}"
+
+	${MKDIR_P} "${real_install_dir}/${games_dir}"
+
+	# Some per-game workaround for malformed gamepack
+	case "${name}" in
+		'JediAcademy')
+			pack="${pack}/Tools"
+		;;
+		'Prey'|'Q3')
+			pack="${pack}/tools"
+		;;
+		'Wolf')
+			pack="${pack}/bin"
+		;;
+	esac
+
+	path="${download_dir}/${pack}"
+
+	for game_file in "${path}/${games_dir}/"*'.game'
+	do
+		if [ x"${game_file}" != x"${path}/"*'.game' ]
+		then
+			${CP} "${game_file}" "${real_install_dir}/${games_dir}/"
+		fi
+	done
+
+	for game_dir in "${path}/"*'.game'
+	do
+		if [ x"${game_dir}" != x"${path}/"*'.game' ]
+		then
+			${CP_R} "${game_dir}" "${real_install_dir}/"
+		fi
+	done
+}
+
+installPackList () {
+	local download_dir
+	local install_dir
+	local name_list
+
+	download_dir="${1}"
+	install_dir="${2}"
+	name_list="${3}"
+
+	for name in ${name_list}
+	do
+		if printNameList | inList "${name}"
+		then
+			installPack "${download_dir}" "${install_dir}" "${name}"
+		else
+			printError "unknown name: ${name}"
+		fi
+	done
+}
+
+printError () {
+	printf 'ERROR: %s\n' "${1}" >&2
+	exit 1
+}
+
+printHelp () {
+	local tab
+	local prog_name
+
+	tab="$(printf '\t')"
+	prog_name="$(basename "$(readlink -f "${0}")")"
+
+	cat <<-EOF
+	Usage: ${prog_name} [OPTION] [SELECTION <ARGUMENTS>] [ACTION]
+
+	OPTIONS:
+	${tab}-dd, --download-dir DIRNAME
+	${tab}${tab}store downloaded games to DIRNAME (default: ${default_download_dir})
+
+	${tab}-id, --install-dir DIRNAME
+	${tab}${tab}store installed games to DIRNAME (default: ${default_install_dir})
+
+	SELECTIONS:
+	${tab}-n, --name NAMES…
+	${tab}${tab}select games by name (default: none)
+	${tab}${tab}special keyword: all, none
+	${tab}${tab}available games:
+	$(printNameList | sed -e 's/^/\t\t\t/')
+
+	${tab}-l, --license LICENSES…
+	${tab}${tab}select games by license (default: none)
+	${tab}${tab}special keyword: free, all, none
+	${tab}${tab}available licenses:
+	$(printLicenseList | sed -e 's/^/\t\t\t/')
+
+	ACTIONS:
+	${tab}-ln, --list-names
+	${tab}${tab}list all game names
+
+	${tab}-ll, --list-licenses
+	${tab}${tab}list all game licenses
+
+	${tab}-ls, --list
+	${tab}${tab}list selected games
+
+	${tab}-d, --download
+	${tab}${tab}download selected games
+
+	${tab}-i, --install
+	${tab}${tab}install selected games
+
+	${tab}-h, --help
+	${tab}${tab}print this help
+
+	Example:
+	${tab}${prog_name} --license GPL BSD --download --install
+
+	EOF
+
+	exit
+}
+
+option_list=''
+
+list_selected='false'
+list_licenses='false'
+list_names='false'
+
+download_packs='false'
+install_packs='false'
+
+by_license='false'
+by_name='false'
+
+arg_type=''
+selected_list=''
+license_list=''
+name_list=''
+install_dir=''
+
+while ! [ -z "${1}" ]
+do
+
+	if printList "${option_list}" | inList "${1}"
+	then
+		printError "option called more than once: ${1}"
+	fi
+
+	if echo "${@}" | tr ' ' '\n' | inList '--help'
+	then
+		printHelp
+	elif echo "${@}" | tr ' ' '\n' | inList '-h'
+	then
+		printHelp
+	fi
+
+	case "${1}" in
+		'--list-licenses'|'-ll')
+			arg_type=''
+			list_licenses='true'
+		;;
+		'--list-names'|'-ln')
+			arg_type=''
+			list_names='true'
+		;;
+		'--list-selected'|'-ls')
+			arg_type=''
+			list_selected='true'
+			option_list="${option_list} ${1}"
+		;;
+		'--download'|'-d')
+			arg_type=''
+			download_packs='true'
+			option_list="${option_list} ${1}"
+		;;
+		'--install'|'-i')
+			arg_type=''
+			install_packs='true'
+			option_list="${option_list} ${1}"
+		;;
+		'--license'|'-l')
+			by_license='true'
+			arg_type='pack-license'
+			option_list="${option_list} ${1}"
+		;;
+		'--name'|'-n')
+			by_name='true'
+			arg_type='pack-name'
+			option_list="${option_list} ${1}"
+		;;
+		'--download-dir'|'-dd')
+			arg_type='download-dir'
+			option_list="${option_list} ${1}"
+		;;
+		'--install-dir'|'-id')
+			arg_type='install-dir'
+			option_list="${option_list} ${1}"
+		;;
+		'-'*)
+			printError "unknown option: ${1}"
+		;;
+		*)
+			case "${arg_type}" in
+				'pack-license')
+					license_list="${license_list} ${1}"
+				;;
+				'pack-name')
+					name_list="${name_list} ${1}"
+				;;
+				'download-dir')
+					if [ -z "${download_dir}" ]
+					then
+						download_dir="${1}"
+					else
+						printError "more than one download dir: ${1}"
+					fi
+				;;
+				'install-dir')
+					if [ -z "${install_dir}" ]
+					then
+						install_dir="${1}"
+					else
+						printError "more than one install dir: ${1}"
+					fi
+				;;
+				*)
+					printError "misplaced argument: ${1}"
+				;;
+			esac
+		;;
+	esac
+
+	shift
+done
+
+# compatibility with legacy Makefile
+if [ "${DOWNLOAD_GAMEPACKS}" = 'yes' ]
+then
+	! [ -z "${DOWNLOADDIR}" ] && download_dir="${DOWNLOADDIR}"
+	! [ -z "${INSTALLDIR}" ] && install_dir="${INSTALDIR}"
+	license_list='free'
+	by_license='true'
+	download_packs='true'
+	install_packs='true'
+fi
+
+if [ -z "${download_dir}" ]
+then
+	download_dir="${default_download_dir}"
+fi
+
+if [ -z "${install_dir}" ]
+then
+	install_dir="${default_install_dir}"
+fi
+
+if "${by_license}"
+then
+	selected_list="${selected_list} $(printNameListByLicense "${license_list}")"
+fi
+
+if "${by_name}"
+then
+	selected_list="${selected_list} $(printNameListByName "${name_list}")"
+fi
+
+selected_list="$(dedupeList "${selected_list}")"
+
+${MKDIR_P} "${download_dir}"
+${MKDIR_P} "${install_dir}"
+real_download_dir="$(readlink -f "${download_dir}")"
+real_install_dir="$(readlink -f "${install_dir}")"
+
+if "${list_licenses}"
+then
+	printLicenseList
+fi
+
+if "${list_names}"
+then
+	printNameList
+fi
+if "${list_selected}"
+then
+	printList "${selected_list}"
+fi
+
+if "${download_packs}"
+then
+	downloadPackList "${real_download_dir}" "${selected_list}"
+fi
+
+if "${install_packs}"
+then
+	installPackList "${real_download_dir}" "${real_install_dir}" "${selected_list}"
+fi
+
+#EOF
