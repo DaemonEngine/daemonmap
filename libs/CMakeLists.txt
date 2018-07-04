@@ -1,5 +1,6 @@
 add_subdirectory(cmdlib)
 add_subdirectory(container)
+add_subdirectory(crunch)
 add_subdirectory(ddslib)
 add_subdirectory(debugging)
 add_subdirectory(etclib)

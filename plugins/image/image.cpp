@@ -28,6 +28,7 @@
 #include "pcx.h"
 #include "dds.h"
 #include "ktx.h"
+#include "crn.h"
 
 
 #include "modulesystem/singletonmodule.h"
@@ -173,6 +174,29 @@ typedef SingletonModule<ImageKTXAPI, ImageDependencies> ImageKTXModule;
 ImageKTXModule g_ImageKTXModule;
 
 
+class ImageCRNAPI {
+    _QERPlugImageTable m_imagecrn;
+public:
+    typedef _QERPlugImageTable Type;
+
+    STRING_CONSTANT(Name, "crn");
+
+    ImageCRNAPI()
+    {
+        m_imagecrn.loadImage = LoadCRN;
+    }
+
+    _QERPlugImageTable *getTable()
+    {
+        return &m_imagecrn;
+    }
+};
+
+typedef SingletonModule<ImageCRNAPI, ImageDependencies> ImageCRNModule;
+
+ImageCRNModule g_ImageCRNModule;
+
+
 extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
 {
     initialiseModule(server);
@@ -183,4 +207,5 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
     g_ImagePCXModule.selfRegister();
     g_ImageDDSModule.selfRegister();
     g_ImageKTXModule.selfRegister();
+    g_ImageCRNModule.selfRegister();
 }
