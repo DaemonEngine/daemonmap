@@ -31,6 +31,8 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
+include_directories(${CMAKE_SOURCE_DIR}/libs/crunch)
+
 set(q3map2_games
         q3map2/game_darkplaces.h
         q3map2/game_dq.h
@@ -127,6 +129,7 @@ target_link_libraries(q3map2
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ddslib
+        crnlib
         etclib
         filematch
         l_net

@@ -86,6 +86,26 @@ static void LoadDDSBuffer( byte *buffer, int size, byte **pixels, int *width, in
 	DDSDecompress( (ddsBuffer_t*) buffer, *pixels );
 }
 
+/*
+    LoadCRNBuffer
+    loads a crn image into a valid rgba image
+*/
+void LoadCRNBuffer( byte *buffer, int size, byte **pixels, int *width, int *height) {
+	/* dummy check */
+	if ( buffer == NULL || size <= 0 || pixels == NULL || width == NULL || height == NULL ) {
+		return;
+	}
+	if ( !GetCRNImageSize( buffer, size, width, height ) ) {
+		Sys_FPrintf( SYS_WRN, "WARNING: Error getting crn imag dimensions.\n");;
+		return;
+	}
+	int outBufSize = *width * *height * 4;
+	*pixels = safe_malloc( outBufSize );
+	if ( !ConvertCRNtoRGBA( buffer, size, outBufSize, *pixels) ) {
+		Sys_FPrintf( SYS_WRN, "WARNING: Error decoding crn image.\n", 0 );
+		return;
+	}
+}
 
 
 /*
@@ -437,6 +457,16 @@ image_t *ImageLoad( const char *filename ){
 					if ( size > 0 ) {
 						LoadKTXBufferFirstImage( buffer, size, &image->pixels, &image->width, &image->height );
 					}
+					else
+					{
+						/* attempt to load crn */
+						StripExtension( name );
+						strcat( name, ".crn" );
+						size = vfsLoadFile( ( const char* ) name, ( void** ) &buffer, 0 );
+						if ( size > 0 ) {
+							LoadCRNBuffer( buffer, size, &image->pixels, &image->width, &image->height );
+						}
+					}
 				}
 			}
 		}
@@ -473,7 +503,7 @@ image_t *ImageLoad( const char *filename ){
 				if (pixels) {
 					// On error, LoadJPGBuff might store a pointer to the error message in pixels
 					Sys_FPrintf( SYS_WRN, "WARNING: LoadJPGBuff %s %s\n", name, (unsigned char*) pixels );
-				}				
+				}
 			} else {
 				if ( width == image->width && height == image->height ) {
 					int i;

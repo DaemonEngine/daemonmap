@@ -70,6 +70,7 @@
 #include "mathlib.h"
 #include "md5lib.h"
 #include "ddslib.h"
+#include "crn_rgba.h"
 
 #include "picomodel.h"
 
