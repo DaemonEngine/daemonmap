@@ -27,6 +27,7 @@ See also https://gitlab.com/xonotic/netradiant/ for a source browser, issues and
  * GtkGLExt
  * LibJpeg
  * LibPng
+ * LibWebp
  * Minizip
  * ZLib
 

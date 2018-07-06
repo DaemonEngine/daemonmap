@@ -22,6 +22,9 @@ include_directories(${JPEG_INCLUDE_DIR})
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
+find_package(WebP REQUIRED)
+include_directories(${WEBP_INCLUDE_DIR})
+
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
@@ -135,6 +138,7 @@ target_link_libraries(q3map2
         ${GLIB_LIBRARIES}
         ${JPEG_LIBRARIES}
         ${PNG_LIBRARIES}
+        ${WEBP_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
