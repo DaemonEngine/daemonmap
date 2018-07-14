@@ -34,6 +34,7 @@
 // Leonardo Zide (leo@lokigames.com)
 //
 
+#include "defaults.h"
 #include "shaders.h"
 #include "globaldefs.h"
 
@@ -76,7 +77,7 @@ bool g_enableDefaultShaders = true;
 ShaderLanguage g_shaderLanguage = SHADERLANGUAGE_QUAKE3;
 bool g_useShaderList = true;
 _QERPlugImageTable *g_bitmapModule = 0;
-const char *g_texturePrefix = "textures/";
+const char *g_texturePrefix = DEFAULT_TEXTURE_DIRNAME;
 
 void ActiveShaders_IteratorBegin();
 
@@ -995,9 +996,7 @@ public:
             m_notfound = m_pTexture;
 
             {
-                StringOutputStream name(256);
-                name << GlobalRadiant().getAppPath() << "bitmaps/" << (IsDefault() ? "notex.png" : "shadernotex.png");
-                m_pTexture = GlobalTexturesCache().capture(LoadImageCallback(0, loadBitmap), name.c_str());
+                m_pTexture = GlobalTexturesCache().capture(IsDefault() ? DEFAULT_NOTEX_NAME : DEFAULT_SHADERNOTEX_NAME);
             }
         }
 

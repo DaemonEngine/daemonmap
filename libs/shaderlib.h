@@ -22,6 +22,7 @@
 #if !defined ( INCLUDED_SHADERLIB_H )
 #define INCLUDED_SHADERLIB_H
 
+#include "defaults.h"
 #include "string/string.h"
 #include "character.h"
 #include "ishaders.h"
@@ -79,6 +80,5 @@ inline bool texdef_name_valid( const char* name ){
 inline const char* texdef_name_default(){
 	return GlobalTexturePrefix_get();
 }
-
 
 #endif
