@@ -78,7 +78,8 @@ inline bool texdef_name_valid( const char* name ){
 }
 
 inline const char* texdef_name_default(){
-	return GlobalTexturePrefix_get();
+	const char* notex = DEFAULT_NOTEX_NAME;
+	return notex;
 }
 
 #endif
