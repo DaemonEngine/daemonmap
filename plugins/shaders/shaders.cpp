@@ -210,20 +210,6 @@ Image *loadHeightmap(void *environment, const char *name)
     return 0;
 }
 
-
-Image *loadSpecial(void *environment, const char *name)
-{
-    if (*name == '_') { // special image
-        StringOutputStream bitmapName(256);
-        bitmapName << GlobalRadiant().getAppPath() << "bitmaps/" << name + 1 << ".png";
-        Image *image = loadBitmap(environment, bitmapName.c_str());
-        if (image != 0) {
-            return image;
-        }
-    }
-    return GlobalTexturesCache().loadImage(name);
-}
-
 class ShaderPoolContext {
 };
 
