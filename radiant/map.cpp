@@ -87,6 +87,8 @@ MapModules &ReferenceAPI_getMapModules();
 #include "brushmodule.h"
 #include "brush.h"
 
+bool g_writeMapComments = true;
+
 class NameObserver {
     UniqueNames &m_names;
     CopiedString m_name;
@@ -1215,7 +1217,7 @@ void Map_Traverse_Selected(scene::Node &root, const scene::Traversable::Walker &
 
 void Map_ExportSelected(TextOutputStream &out, const MapFormat &format)
 {
-    format.writeGraph(GlobalSceneGraph().root(), Map_Traverse_Selected, out);
+    format.writeGraph(GlobalSceneGraph().root(), Map_Traverse_Selected, out, g_writeMapComments);
 }
 
 void Map_Traverse(scene::Node &root, const scene::Traversable::Walker &walker)
@@ -2295,7 +2297,8 @@ void DoFind()
 
 void Map_constructPreferences(PreferencesPage &page)
 {
-    page.appendCheckBox("", "Load last map on open", g_bLoadLastMap);
+    page.appendCheckBox("", "Load last map at startup", g_bLoadLastMap);
+    page.appendCheckBox("", "Add entity and brush number comments on map write", g_writeMapComments);
 }
 
 
@@ -2373,6 +2376,7 @@ void Map_Construct()
     GlobalPreferenceSystem().registerPreference("LastMap", make_property_string(g_strLastMap));
     GlobalPreferenceSystem().registerPreference("LoadLastMap", make_property_string(g_bLoadLastMap));
     GlobalPreferenceSystem().registerPreference("MapInfoDlg", make_property<WindowPosition_String>(g_posMapInfoWnd));
+	GlobalPreferenceSystem().registerPreference("WriteMapComments", make_property_string(g_writeMapComments));
 
     PreferencesDialog_addSettingsPreferences(makeCallbackF(Map_constructPreferences));
 

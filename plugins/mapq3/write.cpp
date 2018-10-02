@@ -63,9 +63,10 @@ class WriteTokensWalker : public scene::Traversable::Walker {
     mutable Stack<bool> m_stack;
     TokenWriter &m_writer;
     bool m_ignorePatches;
+    bool m_writeComments;
 public:
-    WriteTokensWalker(TokenWriter &writer, bool ignorePatches)
-            : m_writer(writer), m_ignorePatches(ignorePatches)
+    WriteTokensWalker(TokenWriter &writer, bool ignorePatches, bool writeComments)
+            : m_writer(writer), m_ignorePatches(ignorePatches), m_writeComments(writeComments)
     {
     }
 
@@ -75,10 +76,12 @@ public:
 
         Entity *entity = Node_getEntity(node);
         if (entity != 0) {
-            m_writer.writeToken("//");
-            m_writer.writeToken("entity");
-            m_writer.writeUnsigned(g_count_entities++);
-            m_writer.nextLine();
+            if (m_writeComments) {
+                m_writer.writeToken("//");
+                m_writer.writeToken("entity");
+                m_writer.writeUnsigned(g_count_entities++);
+                m_writer.nextLine();
+            }
 
             m_writer.writeToken("{");
             m_writer.nextLine();
@@ -89,10 +92,12 @@ public:
             MapExporter *exporter = Node_getMapExporter(node);
             if (exporter != 0
                 && !(m_ignorePatches && Node_isPatch(node))) {
-                m_writer.writeToken("//");
-                m_writer.writeToken("brush");
-                m_writer.writeUnsigned(g_count_brushes++);
-                m_writer.nextLine();
+                if (m_writeComments) {
+                    m_writer.writeToken("//");
+                    m_writer.writeToken("brush");
+                    m_writer.writeUnsigned(g_count_brushes++);
+                    m_writer.nextLine();
+                }
 
                 exporter->exportTokens(m_writer);
             }
@@ -111,8 +116,8 @@ public:
     }
 };
 
-void Map_Write(scene::Node &root, GraphTraversalFunc traverse, TokenWriter &writer, bool ignorePatches)
+void Map_Write(scene::Node &root, GraphTraversalFunc traverse, TokenWriter &writer, bool ignorePatches, bool writeComments)
 {
     g_count_entities = 0;
-    traverse(root, WriteTokensWalker(writer, ignorePatches));
+    traverse(root, WriteTokensWalker(writer, ignorePatches, writeComments));
 }

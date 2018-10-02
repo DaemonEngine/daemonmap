@@ -86,7 +86,7 @@ public:
         Map_Read(root, inputStream, entityTable);
     }
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream) const
+    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
     {
         Map_Write(root, traverse, outputStream);
     }
