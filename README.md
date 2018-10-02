@@ -13,7 +13,7 @@ http://git-scm.org
 
 To get a copy of the source using the commandline git client:
 ```
-git clone https://gitlab.com/xonotic/netradiant.git
+git clone --recursive https://gitlab.com/xonotic/netradiant.git
 cd netradiant
 ```
 
@@ -54,6 +54,17 @@ brew install Caskroom/cask/xquartz
 brew link --force gettext
 ```
 
+# Submodules
+
+ * Crunch
+
+If you forgot to add `--recursive` option at `git clone` time, fetch it this way:
+
+
+```
+git submodule update --init --recursive
+```
+
 # Compiling
 
 This project uses the usual CMake workflow:
@@ -86,3 +97,7 @@ targets:
  * `quake3`     Compiles all the Quake3 tools
    - `q3map2`     Quake3 map compiler
    - `q3data`
+
+## Note about Crunch
+
+The crnlib used to decode `.crn` files is the one from [Dæmon](http://github.com/DaemonEngine/Daemon) which is just the one by [Unity](https://github.com/Unity-Technologies/crunch/tree/unity) made cross-platform. Since Unity brokes compatibility with [BinomialLLC's legacy tree](https://github.com/BinomialLLC/crunch) it's required to use either crunch from Dæmon or the one from Unity to compress textures that have to be read by radiant or q3map2.
