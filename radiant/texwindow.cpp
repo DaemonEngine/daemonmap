@@ -31,7 +31,8 @@
 
 #include "debugging/debugging.h"
 #include "warnings.h"
-
+ 
+#include "defaults.h"
 #include "ifilesystem.h"
 #include "iundo.h"
 #include "igl.h"
@@ -85,9 +86,6 @@
 #include "preferences.h"
 #include "shaders.h"
 #include "commands.h"
-
-#define NOTEX_BASENAME "notex"
-#define SHADERNOTEX_BASENAME "shadernotex"
 
 bool TextureBrowser_showWads()
 {
@@ -145,10 +143,10 @@ bool isMissing(const char *name)
 
 bool isNotex(const char *name)
 {
-    if (string_equal_suffix(name, "/" NOTEX_BASENAME)) {
+    if (string_equal_suffix(name, "/" DEFAULT_NOTEX_BASENAME)) {
         return true;
     }
-    if (string_equal_suffix(name, "/" SHADERNOTEX_BASENAME)) {
+    if (string_equal_suffix(name, "/" DEFAULT_SHADERNOTEX_BASENAME)) {
         return true;
     }
     return false;
@@ -2091,13 +2089,14 @@ void TextureBrowser_checkTagFile()
 
 void TextureBrowser_SetNotex()
 {
-    StringOutputStream name(256);
-    name << GlobalRadiant().getAppPath() << "bitmaps/" NOTEX_BASENAME ".png";
-    g_notex = name.c_str();
+	IShader *notex = QERApp_Shader_ForName(DEFAULT_NOTEX_NAME);
+	IShader *shadernotex = QERApp_Shader_ForName(DEFAULT_SHADERNOTEX_NAME);
 
-    name = StringOutputStream(256);
-    name << GlobalRadiant().getAppPath() << "bitmaps/" SHADERNOTEX_BASENAME " .png";
-    g_shadernotex = name.c_str();
+    g_notex = notex->getTexture()->name;
+    g_shadernotex = shadernotex->getTexture()->name;
+
+	notex->DecRef();
+	shadernotex->DecRef();
 }
 
 ui::Widget TextureBrowser_constructWindow(ui::Window toplevel)

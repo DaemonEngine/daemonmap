@@ -32,6 +32,7 @@
 // Leonardo Zide (leo@lokigames.com)
 //
 
+#include "defaults.h"
 #include "qe3.h"
 #include "globaldefs.h"
 
@@ -83,6 +84,11 @@ void QE_InitVFS()
     const char *basegame = basegame_get();
     const char *userRoot = g_qeglobals.m_userEnginePath.c_str();
     const char *globalRoot = EnginePath_get();
+
+	// editor builtin VFS
+	StringOutputStream editorGamePath(256);
+	editorGamePath << GlobalRadiant().getAppPath() << DEFAULT_EDITORVFS_DIRNAME;
+	GlobalFileSystem().initDirectory(editorGamePath.c_str());
 
     // if we have a mod dir
     if (!string_equal(gamename, basegame)) {

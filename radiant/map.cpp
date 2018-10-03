@@ -1001,6 +1001,12 @@ CopiedString g_strLastMapFolder = "";
 
 void Map_LoadFile(const char *filename)
 {
+    g_map.m_name = filename;
+
+    // refresh VFS to apply new pak filtering based on mapname
+    // needed for daemon DPK VFS
+    VFS_Refresh();
+
     globalOutputStream() << "Loading map from " << filename << "\n";
     ScopeDisableScreenUpdates disableScreenUpdates("Processing...", "Loading Map");
 
@@ -1021,8 +1027,8 @@ void Map_LoadFile(const char *filename)
                 Map_Free();
             }
             Brush_toggleFormat(i);
-            g_map.m_name = filename;
             Map_UpdateTitle(g_map);
+
             g_map.m_resource = GlobalReferenceCache().capture(g_map.m_name.c_str());
             if (format) {
                 format->wrongFormat = false;
@@ -1052,10 +1058,6 @@ void Map_LoadFile(const char *filename)
     Map_StartPosition();
 
     g_currentMap = &g_map;
-
-    // refresh VFS to apply new pak filtering based on mapname
-    // needed for daemon DPK VFS
-    VFS_Refresh();
 }
 
 class Excluder {

@@ -80,7 +80,6 @@ virtual float alphaTest() const = 0;
 
 typedef Callback<void(const ShaderLayer&)> ShaderLayerCallback;
 
-
 class IShader
 {
 public:
@@ -182,7 +181,6 @@ typedef GlobalModuleRef<ShaderSystem> GlobalShadersModuleRef;
 inline ShaderSystem& GlobalShaderSystem(){
 	return GlobalShadersModule::getTable();
 }
-
 
 #define QERApp_Shader_ForName GlobalShaderSystem().getShaderForName
 #define QERApp_ActiveShaders_IteratorBegin GlobalShaderSystem().beginActiveShadersIterator
