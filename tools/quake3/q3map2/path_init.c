@@ -417,8 +417,8 @@ void InitPaths( int *argc, char **argv ){
 	/* get the install path for backup */
 	LokiInitPaths( argv[ 0 ] );
 
-	/* set game to default (q3a) */
-	game = &games[ 0 ];
+	/* set game to default (unvanquished) */
+	game = &games[ 1 ];
 	numBasePaths = 0;
 	numGamePaths = 0;
 
