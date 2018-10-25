@@ -180,14 +180,6 @@ int main( int argc, char **argv ){
 		}
 	}
 
-	/* init model library */
-	PicoInit();
-	PicoSetMallocFunc( safe_malloc );
-	PicoSetFreeFunc( free );
-	PicoSetPrintFunc( PicoPrintFunc );
-	PicoSetLoadFileFunc( PicoLoadFileFunc );
-	PicoSetFreeFileFunc( free );
-
 	/* set number of threads */
 	ThreadSetDefault();
 

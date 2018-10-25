@@ -548,39 +548,6 @@ qboolean CreateBrushWindings( brush_t *brush ){
 
 
 
-
-/*
-   ==================
-   BrushFromBounds
-
-   Creates a new axial brush
-   ==================
- */
-brush_t *BrushFromBounds( vec3_t mins, vec3_t maxs ){
-	brush_t     *b;
-	int i;
-	vec3_t normal;
-	vec_t dist;
-
-	b = AllocBrush( 6 );
-	b->numsides = 6;
-	for ( i = 0 ; i < 3 ; i++ )
-	{
-		VectorClear( normal );
-		normal[i] = 1;
-		dist = maxs[i];
-		b->sides[i].planenum = FindFloatPlane( normal, dist, 1, (vec3_t*) &maxs );
-
-		normal[i] = -1;
-		dist = -mins[i];
-		b->sides[3 + i].planenum = FindFloatPlane( normal, dist, 1, (vec3_t*) &mins );
-	}
-
-	CreateBrushWindings( b );
-
-	return b;
-}
-
 /*
    ==================
    BrushVolume

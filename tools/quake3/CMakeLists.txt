@@ -54,34 +54,19 @@ radiant_tool(daemonmap
         common/vfs.c common/vfs.h
 
         q3map2/brush.c
-        q3map2/brush_primit.c
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
         q3map2/bspfile_rbsp.c
-        q3map2/facebsp.c
-        q3map2/fog.c
         ${q3map2_games} q3map2/game__null.h
         q3map2/help.c
         q3map2/image.c
 		q3map2/light_bounce.c
         q3map2/main.c
-        q3map2/map.c
         q3map2/mesh.c
-        q3map2/model.c
         q3map2/nav.cpp
-        q3map2/patch.c
         q3map2/path_init.c
-        q3map2/portals.c
         q3map2/q3map2.h
         q3map2/shaders.c
-        q3map2/surface.c
-        q3map2/surface_extra.c
-        q3map2/surface_foliage.c
-        q3map2/surface_fur.c
-        q3map2/surface_meta.c
-        q3map2/tjunction.c
-        q3map2/tree.c
-        q3map2/writebsp.c
         )
 
 target_link_libraries(daemonmap
