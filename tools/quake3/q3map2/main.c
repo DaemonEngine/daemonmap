@@ -276,11 +276,6 @@ int main( int argc, char **argv ){
 		r = ConvertBSPMain( argc - 1, argv + 1 );
 	}
 
-	/* div0: minimap */
-	else if ( !strcmp( argv[ 1 ], "-minimap" ) ) {
-		r = MiniMapBSPMain( argc - 1, argv + 1 );
-	}
-
 	/* Navigation Mesh generation */
 	else if ( !strcmp( argv[1], "-nav" ) ) {
 		r = NavMain( argc - 1, argv + 1 );

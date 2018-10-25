@@ -83,7 +83,6 @@ radiant_tool(daemonmap
         q3map2/main.c
         q3map2/map.c
         q3map2/mesh.c
-        q3map2/minimap.c
         q3map2/model.c
         q3map2/nav.cpp
         q3map2/patch.c
