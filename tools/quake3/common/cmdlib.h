@@ -61,8 +61,6 @@
 #endif
 #define MEM_BLOCKSIZE 4096
 
-// the dec offsetof macro doesnt work very well...
-#define myoffsetof( type,identifier ) ( (size_t)& ( (type *)0 )->identifier )
 
 #define SAFE_MALLOC
 #ifdef SAFE_MALLOC
@@ -151,13 +149,5 @@ extern char archivedir[1024];
 
 // sleep for the given amount of milliseconds
 void Sys_Sleep( int n );
-
-// for compression routines
-typedef struct
-{
-	void    *data;
-	int count, width, height;
-} cblock_t;
-
 
 #endif

@@ -29,77 +29,9 @@
 
 // surface geometry should not exceed these limits
 #define SHADER_MAX_VERTEXES 1000
-#define SHADER_MAX_INDEXES  ( 6 * SHADER_MAX_VERTEXES )
-
 
 // the maximum size of game reletive pathnames
 #define MAX_QPATH       64
-
-/*
-   ========================================================================
-
-   QVM files
-
-   ========================================================================
- */
-
-#define VM_MAGIC    0x12721444
-typedef struct {
-	int vmMagic;
-
-	int instructionCount;
-
-	int codeOffset;
-	int codeLength;
-
-	int dataOffset;
-	int dataLength;
-	int litLength;              // ( dataLength - litLength ) should be byteswapped on load
-	int bssLength;              // zero filled memory appended to datalength
-} vmHeader_t;
-
-
-/*
-   ========================================================================
-
-   PCX files are used for 8 bit images
-
-   ========================================================================
- */
-
-typedef struct {
-	char manufacturer;
-	char version;
-	char encoding;
-	char bits_per_pixel;
-	unsigned short xmin,ymin,xmax,ymax;
-	unsigned short hres,vres;
-	unsigned char palette[48];
-	char reserved;
-	char color_planes;
-	unsigned short bytes_per_line;
-	unsigned short palette_type;
-	char filler[58];
-	unsigned char data;             // unbounded
-} pcx_t;
-
-
-/*
-   ========================================================================
-
-   TGA files are used for 24/32 bit images
-
-   ========================================================================
- */
-
-typedef struct _TargaHeader {
-	unsigned char id_length, colormap_type, image_type;
-	unsigned short colormap_index, colormap_length;
-	unsigned char colormap_size;
-	unsigned short x_origin, y_origin, width, height;
-	unsigned char pixel_size, attributes;
-} TargaHeader;
-
 
 
 /*
@@ -109,34 +41,6 @@ typedef struct _TargaHeader {
 
    ========================================================================
  */
-
-#define MD3_IDENT           ( ( '3' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
-#define MD3_VERSION         15
-
-// limits
-#define MD3_MAX_LODS        4
-#define MD3_MAX_TRIANGLES   8192    // per surface
-#define MD3_MAX_VERTS       4096    // per surface
-#define MD3_MAX_SHADERS     256     // per surface
-#define MD3_MAX_FRAMES      1024    // per model
-#define MD3_MAX_SURFACES    32      // per model
-#define MD3_MAX_TAGS        16      // per frame
-
-// vertex scales
-#define MD3_XYZ_SCALE       ( 1.0 / 64 )
-
-typedef struct md3Frame_s {
-	vec3_t bounds[2];
-	vec3_t localOrigin;
-	float radius;
-	char name[16];
-} md3Frame_t;
-
-typedef struct md3Tag_s {
-	char name[MAX_QPATH];           // tag name
-	vec3_t origin;
-	vec3_t axis[3];
-} md3Tag_t;
 
 /*
 ** md3Surface_t
@@ -186,118 +90,6 @@ typedef struct {
 	short xyz[3];
 	short normal;
 } md3XyzNormal_t;
-
-typedef struct {
-	int ident;
-	int version;
-
-	char name[MAX_QPATH];           // model name
-
-	int flags;
-
-	int numFrames;
-	int numTags;
-	int numSurfaces;
-
-	int numSkins;
-
-	int ofsFrames;                  // offset for first frame
-	int ofsTags;                    // numFrames * numTags
-	int ofsSurfaces;                // first surface, others follow
-
-	int ofsEnd;                     // end of file
-} md3Header_t;
-
-/*
-   ==============================================================================
-
-   MD4 file format
-
-   ==============================================================================
- */
-
-#define MD4_IDENT           ( ( '4' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
-#define MD4_VERSION         1
-#define MD4_MAX_BONES       128
-
-typedef struct {
-	int boneIndex;              // these are indexes into the boneReferences,
-	float boneWeight;               // not the global per-frame bone list
-} md4Weight_t;
-
-typedef struct {
-	vec3_t vertex;
-	vec3_t normal;
-	float texCoords[2];
-	int numWeights;
-	md4Weight_t weights[1];     // variable sized
-} md4Vertex_t;
-
-typedef struct {
-	int indexes[3];
-} md4Triangle_t;
-
-typedef struct {
-	int ident;
-
-	char name[MAX_QPATH];           // polyset name
-	char shader[MAX_QPATH];
-	int shaderIndex;                // for in-game use
-
-	int ofsHeader;                  // this will be a negative number
-
-	int numVerts;
-	int ofsVerts;
-
-	int numTriangles;
-	int ofsTriangles;
-
-	// Bone references are a set of ints representing all the bones
-	// present in any vertex weights for this surface.  This is
-	// needed because a model may have surfaces that need to be
-	// drawn at different sort times, and we don't want to have
-	// to re-interpolate all the bones for each surface.
-	int numBoneReferences;
-	int ofsBoneReferences;
-
-	int ofsEnd;                     // next surface follows
-} md4Surface_t;
-
-typedef struct {
-	float matrix[3][4];
-} md4Bone_t;
-
-typedef struct {
-	vec3_t bounds[2];               // bounds of all surfaces of all LOD's for this frame
-	vec3_t localOrigin;             // midpoint of bounds, used for sphere cull
-	float radius;                   // dist from localOrigin to corner
-	char name[16];
-	md4Bone_t bones[1];             // [numBones]
-} md4Frame_t;
-
-typedef struct {
-	int numSurfaces;
-	int ofsSurfaces;                // first surface, others follow
-	int ofsEnd;                     // next lod follows
-} md4LOD_t;
-
-typedef struct {
-	int ident;
-	int version;
-
-	char name[MAX_QPATH];           // model name
-
-	// frames and bones are shared by all levels of detail
-	int numFrames;
-	int numBones;
-	int ofsFrames;                  // md4Frame_t[numFrames]
-
-	// each level of detail has completely separate sets of surfaces
-	int numLODs;
-	int ofsLODs;
-
-	int ofsEnd;                     // end of file
-} md4Header_t;
 
 
 /*
@@ -454,14 +246,6 @@ typedef struct {
 	vec3_t normal;
 	byte color[4];
 } drawVert_t;
-
-typedef enum {
-	MST_BAD,
-	MST_PLANAR,
-	MST_PATCH,
-	MST_TRIANGLE_SOUP,
-	MST_FLARE
-} mapSurfaceType_t;
 
 typedef struct {
 	int shaderNum;

@@ -132,7 +132,6 @@ extern "C"
 /* 2011-01-10 TTimo says we should turn these on in SVN, so turning on now */
 #define Q3MAP2_EXPERIMENTAL_HIGH_PRECISION_MATH_FIXES   1
 #define Q3MAP2_EXPERIMENTAL_SNAP_NORMAL_FIX     1
-#define Q3MAP2_EXPERIMENTAL_SNAP_PLANE_FIX      1
 
 /* general */
 #define MAX_QPATH               64
@@ -174,8 +173,6 @@ extern "C"
 
 
 /* bsp */
-#define MAX_PATCH_SIZE          32
-#define MAX_BRUSH_SIDES         1024
 #define MAX_BUILD_SIDES         1024
 
 #define MAX_EXPANDED_AXIS       128
@@ -184,103 +181,11 @@ extern "C"
 #define PLANESIDE_EPSILON       0.001f
 #define PLANENUM_LEAF           -1
 
-#define HINT_PRIORITY           1000        /* ydnar: force hint splits first and antiportal/areaportal splits last */
-#define ANTIPORTAL_PRIORITY     -1000
-#define AREAPORTAL_PRIORITY     -1000
-#define DETAIL_PRIORITY         -3000
-
 #define PSIDE_FRONT             1
 #define PSIDE_BACK              2
-#define PSIDE_BOTH              ( PSIDE_FRONT | PSIDE_BACK )
-#define PSIDE_FACING            4
-
-#define BPRIMIT_UNDEFINED       0
-#define BPRIMIT_OLDBRUSHES      1
-#define BPRIMIT_NEWBRUSHES      2
-
 
 /* vis */
 #define VIS_HEADER_SIZE         8
-
-#define SEPERATORCACHE          /* seperator caching helps a bit */
-
-#define PORTALFILE              "PRT1"
-
-#define MAX_PORTALS             0x20000 /* same as MAX_MAP_PORTALS */
-#define MAX_SEPERATORS          MAX_POINTS_ON_WINDING
-#define MAX_POINTS_ON_FIXED_WINDING 24  /* ydnar: increased this from 12 at the expense of more memory */
-#define MAX_PORTALS_ON_LEAF     1024
-
-
-/* light */
-#define EMIT_POINT              0
-#define EMIT_AREA               1
-#define EMIT_SPOT               2
-#define EMIT_SUN                3
-
-#define LIGHT_ATTEN_LINEAR      1
-#define LIGHT_ATTEN_ANGLE       2
-#define LIGHT_ATTEN_DISTANCE    4
-#define LIGHT_TWOSIDED          8
-#define LIGHT_GRID              16
-#define LIGHT_SURFACES          32
-#define LIGHT_DARK              64      /* probably never use this */
-#define LIGHT_FAST              256
-#define LIGHT_FAST_TEMP         512
-#define LIGHT_FAST_ACTUAL       ( LIGHT_FAST | LIGHT_FAST_TEMP )
-#define LIGHT_NEGATIVE          1024
-#define LIGHT_UNNORMALIZED      2048    /* vortex: do not normalize _color */
-
-#define LIGHT_SUN_DEFAULT       ( LIGHT_ATTEN_ANGLE | LIGHT_GRID | LIGHT_SURFACES )
-#define LIGHT_AREA_DEFAULT      ( LIGHT_ATTEN_ANGLE | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES )    /* q3a and wolf are the same */
-#define LIGHT_Q3A_DEFAULT       ( LIGHT_ATTEN_ANGLE | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES | LIGHT_FAST )
-#define LIGHT_WOLF_DEFAULT      ( LIGHT_ATTEN_LINEAR | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES | LIGHT_FAST )
-
-#define MAX_TRACE_TEST_NODES    256
-#define DEFAULT_INHIBIT_RADIUS  1.5f
-
-#define LUXEL_EPSILON           0.125f
-#define VERTEX_EPSILON          -0.125f
-#define GRID_EPSILON            0.0f
-
-#define DEFAULT_LIGHTMAP_SAMPLE_SIZE    16
-#define DEFAULT_LIGHTMAP_MIN_SAMPLE_SIZE    0
-#define DEFAULT_LIGHTMAP_SAMPLE_OFFSET  1.0f
-#define DEFAULT_SUBDIVIDE_THRESHOLD     1.0f
-
-#define EXTRA_SCALE             2   /* -extrawide = -super 2 */
-#define EXTRAWIDE_SCALE         2   /* -extrawide = -super 2 -filter */
-
-#define CLUSTER_UNMAPPED        -1
-#define CLUSTER_OCCLUDED        -2
-#define CLUSTER_FLOODED         -3
-
-#define VERTEX_LUXEL_SIZE       3
-#define BSP_LUXEL_SIZE          3
-#define RAD_LUXEL_SIZE          3
-#define SUPER_LUXEL_SIZE        4
-#define SUPER_FLAG_SIZE         4
-#define FLAG_FORCE_SUBSAMPLING  1
-#define FLAG_ALREADY_SUBSAMPLED 2
-#define SUPER_ORIGIN_SIZE       3
-#define SUPER_NORMAL_SIZE       4
-#define SUPER_DELUXEL_SIZE      3
-#define BSP_DELUXEL_SIZE        3
-#define SUPER_FLOODLIGHT_SIZE   4
-
-#define VERTEX_LUXEL( s, v )    ( vertexLuxels[ s ] + ( ( v ) * VERTEX_LUXEL_SIZE ) )
-#define RAD_VERTEX_LUXEL( s, v )( radVertexLuxels[ s ] + ( ( v ) * VERTEX_LUXEL_SIZE ) )
-#define BSP_LUXEL( s, x, y )    ( lm->bspLuxels[ s ] + ( ( ( ( y ) * lm->w ) + ( x ) ) * BSP_LUXEL_SIZE ) )
-#define RAD_LUXEL( s, x, y )    ( lm->radLuxels[ s ] + ( ( ( ( y ) * lm->w ) + ( x ) ) * RAD_LUXEL_SIZE ) )
-#define SUPER_LUXEL( s, x, y )  ( lm->superLuxels[ s ] + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
-#define SUPER_FLAG( x, y )  ( lm->superFlags + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_FLAG_SIZE ) )
-#define SUPER_DELUXEL( x, y )   ( lm->superDeluxels + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_DELUXEL_SIZE ) )
-#define BSP_DELUXEL( x, y )     ( lm->bspDeluxels + ( ( ( ( y ) * lm->w ) + ( x ) ) * BSP_DELUXEL_SIZE ) )
-#define SUPER_CLUSTER( x, y )   ( lm->superClusters + ( ( ( y ) * lm->sw ) + ( x ) ) )
-#define SUPER_ORIGIN( x, y )    ( lm->superOrigins + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_ORIGIN_SIZE ) )
-#define SUPER_NORMAL( x, y )    ( lm->superNormals + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) )
-#define SUPER_DIRT( x, y )      ( lm->superNormals + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) + 3 )   /* stash dirtyness in normal[ 3 ] */
-#define SUPER_FLOODLIGHT( x, y )    ( lm->superFloodLight + ( ( ( ( y ) * lm->sw ) + ( x ) ) * SUPER_FLOODLIGHT_SIZE ) )
 
 
 
@@ -290,16 +195,9 @@ extern "C"
 
    ------------------------------------------------------------------------------- */
 
-#define EXTERNAL_LIGHTMAP       "lm_%04d.tga"
-
 #define MAX_LIGHTMAPS           4           /* RBSP */
-#define MAX_LIGHT_STYLES        64
-#define MAX_SWITCHED_LIGHTS     32
 #define LS_NORMAL               0x00
-#define LS_UNUSED               0xFE
 #define LS_NONE                 0xFF
-
-#define MAX_LIGHTMAP_SHADERS    256
 
 /* ok to increase these at the expense of more memory */
 #define MAX_MAP_AREAS           0x100       /* MAX_MAP_AREA_BYTES in q_shared must match! */
@@ -619,12 +517,6 @@ typedef struct foliage_s
 }
 foliage_t;
 
-typedef struct foliageInstance_s
-{
-	vec3_t xyz, normal;
-}
-foliageInstance_t;
-
 
 typedef struct remap_s
 {
@@ -913,15 +805,6 @@ typedef struct brush_s
 brush_t;
 
 
-typedef struct fog_s
-{
-	shaderInfo_t        *si;
-	brush_t             *brush;
-	int visibleSide;                        /* the brush side that ray tests need to clip against (-1 == none) */
-}
-fog_t;
-
-
 typedef struct
 {
 	int width, height;
@@ -1065,20 +948,6 @@ typedef struct drawSurfRef_s
 drawSurfRef_t;
 
 
-/* ydnar: metasurfaces are constructed from lists of metatriangles so they can be merged in the best way */
-typedef struct metaTriangle_s
-{
-	shaderInfo_t        *si;
-	side_t              *side;
-	int entityNum, surfaceNum, planeNum, fogNum, sampleSize, castShadows, recvShadows;
-	float shadeAngleDegrees;
-	vec4_t plane;
-	vec3_t lightmapAxis;
-	int indexes[ 3 ];
-}
-metaTriangle_t;
-
-
 typedef struct epair_s
 {
 	struct epair_s      *next;
@@ -1133,21 +1002,6 @@ typedef struct node_s
 	qboolean has_structural_children;
 }
 node_t;
-
-
-typedef struct portal_s
-{
-	plane_t plane;
-	node_t              *onnode;        /* NULL = outside box */
-	node_t              *nodes[ 2 ];    /* [ 0 ] = front side of plane */
-	struct portal_s     *next[ 2 ];
-	winding_t           *winding;
-
-	qboolean sidefound;                 /* false if ->side hasn't been checked */
-	int compileFlags;                   /* from original face that caused the split */
-	side_t              *side;          /* NULL = non-visible */
-}
-portal_t;
 
 
 typedef struct
@@ -1390,13 +1244,6 @@ Q_EXTERN double distanceEpsilon Q_ASSIGN( 0.01 );
 /* bsp */
 Q_EXTERN int numMapEntities Q_ASSIGN( 0 );
 
-Q_EXTERN int blockSize[ 3 ]                                 /* should be the same as in radiant */
-#ifndef MAIN_C
-;
-#else
-	= { 1024, 1024, 1024 };
-#endif
-
 Q_EXTERN char name[ 1024 ];
 Q_EXTERN char source[ 1024 ];
 Q_EXTERN char outbase[ 32 ];
@@ -1412,8 +1259,6 @@ Q_EXTERN int entitySourceBrushes;
 Q_EXTERN plane_t            *mapplanes Q_ASSIGN( NULL );  /* mapplanes[ num ^ 1 ] will always be the mirror or mapplanes[ num ] */
 Q_EXTERN int nummapplanes Q_ASSIGN( 0 );                    /* nummapplanes will always be even */
 Q_EXTERN int allocatedmapplanes Q_ASSIGN( 0 );
-Q_EXTERN int numMapPatches;
-Q_EXTERN vec3_t mapMins, mapMaxs;
 
 Q_EXTERN entity_t           *mapEnt;
 Q_EXTERN brush_t            *buildBrush;
@@ -1532,10 +1377,6 @@ Q_EXTERN bspAdvertisement_t bspAds[ MAX_MAP_ADVERTISEMENTS ];
 	} \
 	while ( 0 )
 
-#define AUTOEXPAND_BY_REALLOC_BSP( suffix, def ) AUTOEXPAND_BY_REALLOC( bsp##suffix, numBSP##suffix, allocatedBSP##suffix, def )
-
-#define Image_LinearFloatFromsRGBFloat( c ) ( ( ( c ) <= 0.04045f ) ? ( c ) * ( 1.0f / 12.92f ) : (float)pow( ( ( c ) + 0.055f ) * ( 1.0f / 1.055f ), 2.4f ) )
-#define Image_sRGBFloatFromLinearFloat( c ) ( ( ( c ) < 0.0031308f ) ? ( c ) * 12.92f : 1.055f * (float)pow( ( c ), 1.0f / 2.4f ) - 0.055f )
 
 #ifdef __cplusplus
 }

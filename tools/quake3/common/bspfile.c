@@ -182,21 +182,6 @@ void SetDrawSurfaces( int n ){
 	memset( drawSurfaces, 0, n * sizeof( drawVert_t ) );
 }
 
-void BspFilesCleanup(){
-	if ( drawVerts != 0 ) {
-		free( drawVerts );
-	}
-	if ( drawSurfaces != 0 ) {
-		free( drawSurfaces );
-	}
-	if ( lightBytes != 0 ) {
-		free( lightBytes );
-	}
-	if ( gridData != 0 ) {
-		free( gridData );
-	}
-}
-
 //=============================================================================
 
 /*

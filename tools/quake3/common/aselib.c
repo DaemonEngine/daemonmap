@@ -29,7 +29,6 @@
 
 #define MAX_ASE_MATERIALS           32
 #define MAX_ASE_OBJECTS             64
-#define MAX_ASE_ANIMATIONS          32
 #define MAX_ASE_ANIMATION_FRAMES    512
 
 #define VERBOSE( x ) { if ( ase.verbose ) { Sys_Printf x ; } }

@@ -49,7 +49,6 @@
 #endif
 
 #define BASEDIRNAME "quake"     // assumed to have a 2 or 3 following
-#define PATHSEPERATOR   '/'
 
 #ifdef SAFE_MALLOC
 void *safe_malloc( size_t size ){
