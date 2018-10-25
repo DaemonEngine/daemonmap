@@ -56,7 +56,6 @@ radiant_tool(daemonmap
         q3map2/brush.c
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
-        q3map2/bspfile_rbsp.c
         ${q3map2_games} q3map2/game__null.h
         q3map2/help.c
         q3map2/image.c
