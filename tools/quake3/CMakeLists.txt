@@ -32,24 +32,8 @@ find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
 set(q3map2_games
-        q3map2/game_darkplaces.h
-        q3map2/game_dq.h
-        q3map2/game_ef.h
-        q3map2/game_etut.h
-        q3map2/game_ja.h
-        q3map2/game_jk2.h
-        q3map2/game_nexuiz.h
-        q3map2/game_prophecy.h
-        q3map2/game_qfusion.h
         q3map2/game_quake3.h
-        q3map2/game_quakelive.h
-        q3map2/game_reaction.h
-        q3map2/game_sof2.h
-        q3map2/game_tenebrae.h
-        q3map2/game_tremulous.h
         q3map2/game_unvanquished.h
-        q3map2/game_wolf.h
-        q3map2/game_wolfet.h
         q3map2/game_xonotic.h
         )
 
