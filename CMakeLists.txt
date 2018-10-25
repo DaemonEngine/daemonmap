@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(NetRadiant C CXX)
 
-option(BUILD_RADIANT "Build the GUI" ON)
-
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
@@ -17,10 +15,6 @@ set(NetRadiant_VERSION_MAJOR 1)
 set(NetRadiant_VERSION_MINOR 5)
 set(NetRadiant_VERSION_PATCH 0)
 set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.${NetRadiant_VERSION_PATCH}")
-
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MAJOR" ${NetRadiant_VERSION_MAJOR})
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MINOR" ${NetRadiant_VERSION_MINOR})
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_PATCH" ${NetRadiant_VERSION_PATCH})
 
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
@@ -94,10 +88,6 @@ addflags("-Wno-unused-function")
 addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
 
-set(CMAKE_POSITION_INDEPENDENT_CODE 1)
-set(GTK_TARGET 2 CACHE STRING "GTK target")
-add_definitions(-DGTK_TARGET=${GTK_TARGET})
-
 #-----------------------------------------------------------------------
 # Defs
 #-----------------------------------------------------------------------
@@ -112,20 +102,6 @@ add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
 if (NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-D_DEBUG=1)
 endif ()
-
-macro(disable_deprecated name gtk2only)
-    add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
-    if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
-        add_definitions(-D${name}_DISABLE_DEPRECATED)
-    endif ()
-endmacro()
-
-disable_deprecated(ATK 0)
-disable_deprecated(G 0)
-disable_deprecated(GDK 0)
-disable_deprecated(GDK_PIXBUF 0)
-disable_deprecated(GTK 1)
-disable_deprecated(PANGO 0)
 
 if (APPLE)
     option(XWINDOWS "Build against X11" ON)
@@ -175,23 +151,6 @@ endmacro()
 #-----------------------------------------------------------------------
 
 add_subdirectory(libs)
-add_subdirectory(include)
-
-#-----------------------------------------------------------------------
-# Plugins
-#-----------------------------------------------------------------------
-
-if (BUILD_RADIANT)
-    add_subdirectory(contrib)
-endif ()
-
-#-----------------------------------------------------------------------
-# Modules
-#-----------------------------------------------------------------------
-
-if (BUILD_RADIANT)
-    add_subdirectory(plugins)
-endif ()
 
 #-----------------------------------------------------------------------
 # Radiant
@@ -224,51 +183,11 @@ macro(radiant_tool name)
     endif ()
 endmacro()
 
-if (BUILD_RADIANT)
-    add_subdirectory(radiant _radiant)
-    set_target_properties(radiant PROPERTIES
-            COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
-            )
-endif ()
-
 #-----------------------------------------------------------------------
 # Tools
 #-----------------------------------------------------------------------
 
 add_subdirectory(tools)
-
-file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/setup/data/tools/*")
-
-if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
-    # Copy data files from sources to the build directory
-    message(STATUS "Copying data files")
-    file(COPY ${DATA_FILES} DESTINATION "${PROJECT_BINARY_DIR}")
-endif ()
-
-#-----------------------------------------------------------------------
-# Game packs
-#-----------------------------------------------------------------------
-
-option(DOWNLOAD_GAMEPACKS "Download game packs" ON)
-add_custom_target(game_packs_free
-        COMMAND ${CMAKE_COMMAND} -E make_directory games
-        COMMAND DOWNLOAD_GAMEPACKS=yes SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-        COMMENT "Downloading free game packs"
-        )
-add_custom_target(game_packs_all
-        COMMAND ${CMAKE_COMMAND} -E make_directory games
-        COMMAND DOWNLOAD_GAMEPACKS=all SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-        COMMENT "Downloading all game packs"
-        )
-
-if (DOWNLOAD_GAMEPACKS)
-    set(DOWNLOAD_GAMEPACKS "all")
-endif()
-if ("${DOWNLOAD_GAMEPACKS}" STREQUAL "free")
-    add_custom_target(game_packs_go ALL DEPENDS game_packs_free)
-elseif ("${DOWNLOAD_GAMEPACKS}" STREQUAL "all")
-    add_custom_target(game_packs_go ALL DEPENDS game_packs_all)
-endif ()
 
 #-----------------------------------------------------------------------
 # Install
@@ -280,44 +199,6 @@ install(
         "${PROJECT_BINARY_DIR}/RADIANT_MINOR"
         "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
         DESTINATION .
-)
-
-install(
-        DIRECTORY
-        setup/data/tools/
-        docs
-        DESTINATION .
-)
-
-set(GAME_FILES
-        DarkPlaces
-        Nexuiz
-        OpenArena
-        Osirion
-        Q3
-        Quake2
-        Quake
-        Quetoo
-        Tremulous
-        UFOAI
-        Unvanquished
-        Warsow
-        Xonotic
-        )
-unset(_tmp)
-foreach (it ${GAME_FILES})
-    set(dir "${PROJECT_BINARY_DIR}/games/${it}Pack")
-    string(TOLOWER "${it}" it)
-    list(APPEND _tmp "${dir}/games")
-    list(APPEND _tmp "${dir}/${it}.game")
-endforeach ()
-set(GAME_FILES ${_tmp})
-
-install(
-        DIRECTORY
-        ${GAME_FILES}
-        DESTINATION .
-        OPTIONAL
 )
 
 include(cmake/scripts/package.cmake)
