@@ -219,11 +219,6 @@ int main( int argc, char **argv ){
 		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
 	}
 
-	/* fixaas */
-	if ( !strcmp( argv[ 1 ], "-fixaas" ) ) {
-		r = FixAASMain( argc - 1, argv + 1 );
-	}
-
 	/* vis */
 	else if ( !strcmp( argv[ 1 ], "-vis" ) ) {
 		r = VisMain( argc - 1, argv + 1 );

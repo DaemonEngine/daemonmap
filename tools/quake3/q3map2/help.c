@@ -256,15 +256,6 @@ void HelpExport()
 	HelpOptions("Exporting lightmaps", 0, 80, exportl, sizeof(exportl)/sizeof(struct HelpOption));
 }
 
-void HelpFixaas()
-{
-	struct HelpOption fixaas[] = {
-		{"-fixaas <filename.bsp>", "Switch that enters this mode"},
-	};
-
-	HelpOptions("Fixing AAS checksum", 0, 80, fixaas, sizeof(fixaas)/sizeof(struct HelpOption));
-}
-
 void HelpImport()
 {
 	struct HelpOption import[] = {
@@ -318,7 +309,6 @@ void HelpMain(const char* arg)
 		{"-vis", "VIS Stage"},
 		{"-light", "Light Stage"},
 		{"-export", "Exporting lightmaps"},
-		{"-fixaas", "Fixing AAS checksum"},
 		{"-import", "Importing lightmaps"},
 		{"-nav", "NavMesh"},
 	};
@@ -327,7 +317,6 @@ void HelpMain(const char* arg)
 		HelpVis,
 		HelpLight,
 		HelpExport,
-		HelpFixaas,
 		HelpImport,
 		HelpNavMesh,
 	};
