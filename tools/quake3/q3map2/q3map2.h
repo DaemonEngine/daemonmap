@@ -1961,11 +1961,11 @@ Q_EXTERN game_t games[]
 	{
 								#include "game_quake3.h"
 	,
-								#include "game_quakelive.h" /* most be after game_quake3.h as they share defines! */
+								#include "game_quakelive.h" /* must be after game_quake3.h as they share defines! */
 	,
-								#include "game_nexuiz.h" /* most be after game_quake3.h as they share defines! */
+								#include "game_nexuiz.h" /* must be after game_quake3.h as they share defines! */
 	,
-								#include "game_xonotic.h" /* most be after game_quake3.h as they share defines! */
+								#include "game_xonotic.h" /* must be after game_quake3.h as they share defines! */
 	,
 								#include "game_tremulous.h" /*LinuxManMikeC: must be after game_quake3.h, depends on #define's set in it */
 	,
@@ -1975,7 +1975,7 @@ Q_EXTERN game_t games[]
 	,
 								#include "game_wolf.h"
 	,
-								#include "game_wolfet.h" /* most be after game_wolf.h as they share defines! */
+								#include "game_wolfet.h" /* must be after game_wolf.h as they share defines! */
 	,
 								#include "game_etut.h"
 	,
@@ -1983,9 +1983,9 @@ Q_EXTERN game_t games[]
 	,
 								#include "game_sof2.h"
 	,
-								#include "game_jk2.h"   /* most be after game_sof2.h as they share defines! */
+								#include "game_jk2.h"   /* must be after game_sof2.h as they share defines! */
 	,
-								#include "game_ja.h"    /* most be after game_jk2.h as they share defines! */
+								#include "game_ja.h"    /* must be after game_jk2.h as they share defines! */
 	,
 								#include "game_qfusion.h"   /* qfusion game */
 	,
