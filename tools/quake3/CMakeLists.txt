@@ -53,7 +53,7 @@ set(q3map2_games
         q3map2/game_xonotic.h
         )
 
-radiant_tool(q3map2
+radiant_tool(daemonmap
         common/cmdlib.c common/cmdlib.h
         common/imagelib.c common/imagelib.h
         common/inout.c common/inout.h
@@ -120,7 +120,7 @@ radiant_tool(q3map2
         q3map2/writebsp.c
         )
 
-target_link_libraries(q3map2
+target_link_libraries(daemonmap
         ${GLIB_LIBRARIES}
         ${JPEG_LIBRARIES}
         ${PNG_LIBRARIES}
@@ -139,8 +139,8 @@ target_link_libraries(q3map2
         )
 
 add_custom_target(quake3)
-add_dependencies(quake3 q3map2)
+add_dependencies(quake3 daemonmap)
 
 if (UNIX)
-    target_link_libraries(q3map2 pthread m)
+    target_link_libraries(daemonmap pthread m)
 endif ()
