@@ -247,24 +247,6 @@ void HelpLight()
 	HelpOptions("Light Stage", 0, 80, light, sizeof(light)/sizeof(struct HelpOption));
 }
 
-void HelpExport()
-{
-	struct HelpOption exportl[] = {
-		{"-export <filename.bsp>", "Copies lightmaps from the BSP to `filename/lightmap_0000.tga` ff"}
-	};
-
-	HelpOptions("Exporting lightmaps", 0, 80, exportl, sizeof(exportl)/sizeof(struct HelpOption));
-}
-
-void HelpImport()
-{
-	struct HelpOption import[] = {
-		{"-import <filename.bsp>", "Copies lightmaps from `filename/lightmap_0000.tga` ff into the BSP"},
-	};
-
-	HelpOptions("Importing lightmaps", 0, 80, import, sizeof(import)/sizeof(struct HelpOption));
-}
-
 void HelpNavMesh()
 {
 	struct HelpOption navmesh[] = {
@@ -308,16 +290,12 @@ void HelpMain(const char* arg)
 		{"-bsp", "BSP Stage"},
 		{"-vis", "VIS Stage"},
 		{"-light", "Light Stage"},
-		{"-export", "Exporting lightmaps"},
-		{"-import", "Importing lightmaps"},
 		{"-nav", "NavMesh"},
 	};
 	void(*help_funcs[])() = {
 		HelpBsp,
 		HelpVis,
 		HelpLight,
-		HelpExport,
-		HelpImport,
 		HelpNavMesh,
 	};
 

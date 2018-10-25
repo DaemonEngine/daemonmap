@@ -219,41 +219,9 @@ int main( int argc, char **argv ){
 		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
 	}
 
-	/* vis */
-	else if ( !strcmp( argv[ 1 ], "-vis" ) ) {
-		r = VisMain( argc - 1, argv + 1 );
-	}
-
-	/* light */
-	else if ( !strcmp( argv[ 1 ], "-light" ) ) {
-		r = LightMain( argc - 1, argv + 1 );
-	}
-
-	/* vlight */
-	else if ( !strcmp( argv[ 1 ], "-vlight" ) ) {
-		Sys_FPrintf( SYS_WRN, "WARNING: VLight is no longer supported, defaulting to -light -fast instead\n\n" );
-		argv[ 1 ] = "-fast";    /* eek a hack */
-		r = LightMain( argc, argv );
-	}
-
-	/* ydnar: lightmap export */
-	else if ( !strcmp( argv[ 1 ], "-export" ) ) {
-		r = ExportLightmapsMain( argc - 1, argv + 1 );
-	}
-
-	/* ydnar: lightmap import */
-	else if ( !strcmp( argv[ 1 ], "-import" ) ) {
-		r = ImportLightmapsMain( argc - 1, argv + 1 );
-	}
-
 	/* Navigation Mesh generation */
 	else if ( !strcmp( argv[1], "-nav" ) ) {
 		r = NavMain( argc - 1, argv + 1 );
-	}
-
-	/* ydnar: otherwise create a bsp */
-	else{
-		r = BSPMain( argc, argv );
 	}
 
 	/* emit time */
