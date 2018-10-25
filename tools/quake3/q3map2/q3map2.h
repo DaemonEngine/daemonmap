@@ -1289,9 +1289,9 @@ Q_EXTERN game_t games[]
 	{
 								#include "game_quake3.h"
 	,
-								#include "game_xonotic.h" /* most be after game_quake3.h as they share defines! */
+								#include "game_xonotic.h" /* must be after game_quake3.h as they share defines! */
 	,
-								#include "game_unvanquished.h" /* must be after game_tremulous.h as they share defines! */
+								#include "game_unvanquished.h" /* must be after game_quake3.h as they share defines! */
 	,
 								#include "game__null.h" /* null game (must be last item) */
 	};
