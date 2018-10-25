@@ -9,22 +9,13 @@ add_library(libs
         globaldefs.h
         )
 
-include_directories(
-        recastnavigation/DebugUtils/Include
-        recastnavigation/Detour/Include
-        recastnavigation/DetourCrowd/Include
-        recastnavigation/DetourTileCache/Include
-        recastnavigation/Recast/Include
-        recastnavigation/RecastDemo/Include
-        )
+target_include_directories(libs PRIVATE ${GLIB_INCLUDE_DIRS})
+target_link_libraries(libs PRIVATE ${GLIB_LIBRARIES})
 
 add_library(detour
-#add_library(debugutils
         recastnavigation/DebugUtils/Source/DebugDraw.cpp
         recastnavigation/DebugUtils/Include/DebugDraw.h
-#        )
 
-#add_library(detour
         recastnavigation/Detour/Source/DetourAlloc.cpp
         recastnavigation/Detour/Include/DetourAlloc.h
         recastnavigation/Detour/Include/DetourAssert.h
@@ -40,18 +31,21 @@ add_library(detour
         recastnavigation/Detour/Source/DetourNode.cpp
         recastnavigation/Detour/Include/DetourNode.h
         recastnavigation/Detour/Include/DetourStatus.h
-#        )
 
-#add_library(detourcrowd
         recastnavigation/DetourCrowd/Source/DetourPathCorridor.cpp
         recastnavigation/DetourCrowd/Include/DetourPathCorridor.h
-#        )
 
-#add_library(detourtilecache
         recastnavigation/DetourTileCache/Source/DetourTileCacheBuilder.cpp
         recastnavigation/DetourTileCache/Include/DetourTileCacheBuilder.h
         recastnavigation/DetourTileCache/Source/DetourTileCache.cpp
         recastnavigation/DetourTileCache/Include/DetourTileCache.h
+        )
+
+include_directories(detour PRIVATE
+        recastnavigation/DebugUtils/Include
+        recastnavigation/Detour/Include
+        recastnavigation/DetourCrowd/Include
+        recastnavigation/DetourTileCache/Include
         )
 
 add_library(recast
@@ -68,12 +62,12 @@ add_library(recast
         recastnavigation/Recast/Source/RecastMeshDetail.cpp
         recastnavigation/Recast/Source/RecastRasterization.cpp
         recastnavigation/Recast/Source/RecastRegion.cpp
-#        )
 
-#add_library(recastdemo
         recastnavigation/RecastDemo/Source/ChunkyTriMesh.cpp
         recastnavigation/RecastDemo/Include/ChunkyTriMesh.h
         )
 
-target_include_directories(libs PRIVATE ${GLIB_INCLUDE_DIRS})
-target_link_libraries(libs PRIVATE ${GLIB_LIBRARIES})
+target_include_directories(recast PRIVATE
+        recastnavigation/Recast/Include
+        recastnavigation/RecastDemo/Include
+        )
