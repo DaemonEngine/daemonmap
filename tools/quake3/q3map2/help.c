@@ -247,17 +247,6 @@ void HelpLight()
 	HelpOptions("Light Stage", 0, 80, light, sizeof(light)/sizeof(struct HelpOption));
 }
 
-void HelpScale()
-{
-	struct HelpOption scale[] = {
-		{"-scale <S filename.bsp>", "Scale uniformly"},
-		{"-scale <SX SY SZ filename.bsp>", "Scale non-uniformly"},
-		{"-scale -tex <S filename.bsp>", "Scale uniformly without texture lock"},
-		{"-scale -tex <SX SY SZ filename.bsp>", "Scale non-uniformly without texture lock"},
-	};
-	HelpOptions("Scaling", 0, 80, scale, sizeof(scale)/sizeof(struct HelpOption));
-}
-
 void HelpExport()
 {
 	struct HelpOption exportl[] = {
@@ -328,7 +317,6 @@ void HelpMain(const char* arg)
 		{"-bsp", "BSP Stage"},
 		{"-vis", "VIS Stage"},
 		{"-light", "Light Stage"},
-		{"-scale", "Scaling"},
 		{"-export", "Exporting lightmaps"},
 		{"-fixaas", "Fixing AAS checksum"},
 		{"-import", "Importing lightmaps"},
@@ -338,7 +326,6 @@ void HelpMain(const char* arg)
 		HelpBsp,
 		HelpVis,
 		HelpLight,
-		HelpScale,
 		HelpExport,
 		HelpFixaas,
 		HelpImport,

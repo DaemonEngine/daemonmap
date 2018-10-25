@@ -56,7 +56,6 @@ radiant_tool(daemonmap
         q3map2/brush.c
         q3map2/brush_primit.c
         q3map2/bsp.c
-        q3map2/bsp_scale.c
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
         q3map2/bspfile_rbsp.c

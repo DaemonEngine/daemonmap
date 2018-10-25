@@ -251,11 +251,6 @@ int main( int argc, char **argv ){
 		r = ImportLightmapsMain( argc - 1, argv + 1 );
 	}
 
-	/* ydnar: bsp scaling */
-	else if ( !strcmp( argv[ 1 ], "-scale" ) ) {
-		r = ScaleBSPMain( argc - 1, argv + 1 );
-	}
-
 	/* Navigation Mesh generation */
 	else if ( !strcmp( argv[1], "-nav" ) ) {
 		r = NavMain( argc - 1, argv + 1 );
