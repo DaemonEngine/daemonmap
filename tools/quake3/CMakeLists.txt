@@ -66,11 +66,7 @@ radiant_tool(daemonmap
         q3map2/help.c
         q3map2/image.c
         q3map2/leakfile.c
-        q3map2/light.c
-        q3map2/light_bounce.c
-        q3map2/light_trace.c
-        q3map2/light_ydnar.c
-        q3map2/lightmaps_ydnar.c
+		q3map2/light_bounce.c
         q3map2/main.c
         q3map2/map.c
         q3map2/mesh.c
