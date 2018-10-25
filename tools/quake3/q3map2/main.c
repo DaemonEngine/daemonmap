@@ -224,11 +224,6 @@ int main( int argc, char **argv ){
 		r = FixAASMain( argc - 1, argv + 1 );
 	}
 
-	/* info */
-	else if ( !strcmp( argv[ 1 ], "-info" ) ) {
-		r = BSPInfoMain( argc - 2, argv + 2 );
-	}
-
 	/* vis */
 	else if ( !strcmp( argv[ 1 ], "-vis" ) ) {
 		r = VisMain( argc - 1, argv + 1 );
