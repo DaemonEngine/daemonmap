@@ -20,16 +20,16 @@
    ===========================================================================
  */
 
-#include "../../../libs/recast/Recast.h"
-#include "../../../libs/recast/RecastAlloc.h"
-#include "../../../libs/recast/RecastAssert.h"
-#include "../../../libs/recast/ChunkyTriMesh.h"
-#include "../../../libs/detour/DetourCommon.h"
-#include "../../../libs/detour/DetourNavMesh.h"
-#include "../../../libs/detour/DetourNavMeshBuilder.h"
-#include "../../../libs/detour/DetourTileCache.h"
-#include "../../../libs/detour/DetourTileCacheBuilder.h"
-#include "../../../libs/botlib/nav.h"
+#include "Recast.h"
+#include "RecastAlloc.h"
+#include "RecastAssert.h"
+#include "ChunkyTriMesh.h"
+#include "DetourCommon.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshBuilder.h"
+#include "DetourTileCache.h"
+#include "DetourTileCacheBuilder.h"
+#include "nav.h"
 
 static const int MAX_LAYERS = 32;
 static const int EXPECTED_LAYERS_PER_TILE = 4;

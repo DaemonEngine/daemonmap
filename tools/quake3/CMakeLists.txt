@@ -31,6 +31,14 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
+include_directories(
+        ../../libs/botlib
+        ../../libs/recastnavigation/Recast/Include
+        ../../libs/recastnavigation/RecastDemo/Include
+        ../../libs/recastnavigation/Detour/Include
+        ../../libs/recastnavigation/DetourTileCache/Include
+        )
+
 set(q3map2_games
         q3map2/game_quake3.h
         q3map2/game_unvanquished.h

@@ -1,0 +1,3 @@
+[submodule "libs/recastnavigation"]
+	path = libs/recastnavigation
+	url = https://github.com/Unvanquished/recastnavigation.git
