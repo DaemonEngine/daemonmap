@@ -267,14 +267,6 @@ void HelpExport()
 	HelpOptions("Exporting lightmaps", 0, 80, exportl, sizeof(exportl)/sizeof(struct HelpOption));
 }
 
-void HelpExportEnts()
-{
-	struct HelpOption exportents[] = {
-		{"-exportents <filename.bsp>", "Exports the entities to a text file (.ent)"},
-	};
-	HelpOptions("ExportEnts Stage", 0, 80, exportents, sizeof(exportents)/sizeof(struct HelpOption));
-}
-
 void HelpFixaas()
 {
 	struct HelpOption fixaas[] = {
@@ -347,7 +339,6 @@ void HelpMain(const char* arg)
 		{"-light", "Light Stage"},
 		{"-scale", "Scaling"},
 		{"-export", "Exporting lightmaps"},
-		{"-exportents", "Exporting entities"},
 		{"-fixaas", "Fixing AAS checksum"},
 		{"-info", "Get info about BSP file"},
 		{"-import", "Importing lightmaps"},
@@ -359,7 +350,6 @@ void HelpMain(const char* arg)
 		HelpLight,
 		HelpScale,
 		HelpExport,
-		HelpExportEnts,
 		HelpFixaas,
 		HelpInfo,
 		HelpImport,
