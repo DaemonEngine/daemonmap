@@ -132,25 +132,6 @@ void HelpBsp()
 	HelpOptions("BSP Stage", 0, 80, bsp, sizeof(bsp)/sizeof(struct HelpOption));
 }
 
-void HelpVis()
-{
-	struct HelpOption vis[] = {
-		{"-vis <filename.map>", "Switch that enters this stage"},
-		{"-fast", "Very fast and crude vis calculation"},
-		{"-hint", "Merge all but hint portals"},
-		{"-mergeportals", "The less crude half of `-merge`, makes vis sometimes much faster but doesn't hurt fps usually"},
-		{"-merge", "Faster but still okay vis calculation"},
-		{"-nopassage", "Just use PortalFlow vis (usually less fps)"},
-		{"-nosort", "Do not sort the portals before calculating vis (usually slower)"},
-		{"-passageOnly", "Just use PassageFlow vis (usually less fps)"},
-		{"-prtfile <filename.prt>", "Portal file to read"},
-		{"-saveprt", "Keep the Portal file after running vis (so you can run vis again)"},
-		{"-tmpin", "Use /tmp folder for input"},
-		{"-tmpout", "Use /tmp folder for output"},
-	};
-	HelpOptions("VIS Stage", 0, 80, vis, sizeof(vis)/sizeof(struct HelpOption));
-}
-
 void HelpNavMesh()
 {
 	struct HelpOption navmesh[] = {
@@ -192,12 +173,10 @@ void HelpMain(const char* arg)
 
 	struct HelpOption stages[] = {
 		{"-bsp", "BSP Stage"},
-		{"-vis", "VIS Stage"},
 		{"-nav", "NavMesh"},
 	};
 	void(*help_funcs[])() = {
 		HelpBsp,
-		HelpVis,
 		HelpNavMesh,
 	};
 
