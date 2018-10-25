@@ -62,10 +62,6 @@ radiant_tool(daemonmap
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
         q3map2/bspfile_rbsp.c
-        q3map2/convert_ase.c
-        q3map2/convert_bsp.c
-        q3map2/convert_map.c
-        q3map2/convert_obj.c
         q3map2/decals.c
         q3map2/exportents.c
         q3map2/facebsp.c

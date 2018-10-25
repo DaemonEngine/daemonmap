@@ -268,19 +268,6 @@ void HelpScale()
 	HelpOptions("Scaling", 0, 80, scale, sizeof(scale)/sizeof(struct HelpOption));
 }
 
-void HelpConvert()
-{
-	struct HelpOption convert[] = {
-		{"-convert <filename.bsp>", "Switch that enters this mode"},
-		{"-de <number>", "Distance epsilon for the conversion"},
-		{"-format <converter>", "Select the converter (available: map, ase, or game names)"},
-		{"-ne <F>", "Normal epsilon for the conversion"},
-		{"-shadersasbitmap", "(only for ase) use the shader names as \\*BITMAP key so they work as prefabs"},
-	};
-
-	HelpOptions("Converting & Decompiling", 0, 80, convert, sizeof(convert)/sizeof(struct HelpOption));
-}
-
 void HelpExport()
 {
 	struct HelpOption exportl[] = {
@@ -370,7 +357,6 @@ void HelpMain(const char* arg)
 		{"-light", "Light Stage"},
 		{"-analyze", "Analyzing BSP-like file structure"},
 		{"-scale", "Scaling"},
-		{"-convert", "Converting & Decompiling"},
 		{"-export", "Exporting lightmaps"},
 		{"-exportents", "Exporting entities"},
 		{"-fixaas", "Fixing AAS checksum"},
@@ -384,7 +370,6 @@ void HelpMain(const char* arg)
 		HelpLight,
 		HelpAnalyze,
 		HelpScale,
-		HelpConvert,
 		HelpExport,
 		HelpExportEnts,
 		HelpFixaas,

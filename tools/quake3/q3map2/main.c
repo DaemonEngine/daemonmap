@@ -271,11 +271,6 @@ int main( int argc, char **argv ){
 		r = ScaleBSPMain( argc - 1, argv + 1 );
 	}
 
-	/* ydnar: bsp conversion */
-	else if ( !strcmp( argv[ 1 ], "-convert" ) ) {
-		r = ConvertBSPMain( argc - 1, argv + 1 );
-	}
-
 	/* Navigation Mesh generation */
 	else if ( !strcmp( argv[1], "-nav" ) ) {
 		r = NavMain( argc - 1, argv + 1 );
