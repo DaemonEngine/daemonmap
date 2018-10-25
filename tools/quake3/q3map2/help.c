@@ -117,8 +117,8 @@ void HelpCommon()
 
 void HelpMain(const char* arg)
 {
-	printf("Usage: q3map2 [stage] [common options...] [stage options...] [stage source file]\n");
-	printf("       q3map2 -help [stage]\n\n");
+	printf("Usage: daemonmap [stage] [common options...] [stage options...] [stage source file]\n");
+	printf("       daemonmap -help [stage]\n\n");
 
 	HelpCommon();
 

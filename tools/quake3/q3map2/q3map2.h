@@ -43,7 +43,7 @@ extern "C"
 #ifndef Q3MAP_VERSION
 #error no Q3MAP_VERSION defined
 #endif
-#define Q3MAP_MOTD      "Your map saw the pretty lights from q3map2's BFG"
+#define Q3MAP_MOTD      "Your map saw the pretty lights from daemonmap's lucifer cannon"
 
 
 /* -------------------------------------------------------------------------------

@@ -194,8 +194,8 @@ int main( int argc, char **argv ){
 	   and we put the GtkRadiant version to make it easy to track with what version of Radiant it was built with */
 
 	Sys_Printf( "Q3Map         - v1.0r (c) 1999 Id Software Inc.\n" );
-	Sys_Printf( "Q3Map (ydnar) - v" Q3MAP_VERSION "\n" );
-	Sys_Printf( "NetRadiant    - v" RADIANT_VERSION " " __DATE__ " " __TIME__ "\n" );
+	Sys_Printf( "Q3Map (ydnar) - v2.5\n" );
+	Sys_Printf( "DaemonMap     - v" Q3MAP_VERSION "\n" );
 	Sys_Printf( "%s\n", Q3MAP_MOTD );
 
 	/* ydnar: new path initialization */
@@ -208,7 +208,7 @@ int main( int argc, char **argv ){
 
 	/* check if we have enough options left to attempt something */
 	if ( argc < 2 ) {
-		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
+		Error( "Usage: %s [stage] [common options...] [stage options...] [stage source file]", argv[ 0 ] );
 	}
 
 	/* Navigation Mesh generation */
@@ -218,7 +218,7 @@ int main( int argc, char **argv ){
 
 	/* otherwise print an error */
 	else{
-		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
+		Error( "Usage: %s [stage] [common options...] [stage options...] [stage source file]", argv[ 0 ] );
 	}
 
 	/* emit time */
