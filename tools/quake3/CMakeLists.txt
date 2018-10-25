@@ -62,7 +62,8 @@ radiant_tool(daemonmap
         )
 
 target_include_directories(daemonmap PRIVATE
-        ../../libs/botlib
+        ../../libs/daemon/src/common/
+        ../../libs/daemon/src/engine/botlib
         ../../libs/recastnavigation/Recast/Include
         ../../libs/recastnavigation/RecastDemo/Include
         ../../libs/recastnavigation/Detour/Include

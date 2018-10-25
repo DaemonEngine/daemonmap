@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __NAV_H
 
 #include "bot_types.h"
-#include "../fastlz/fastlz.h"
+#include "fastlz/fastlz.h"
 #include "bot_convert.h"
 
 // should be the same as in rest of engine
@@ -94,7 +94,7 @@ struct OffMeshConnection
 
 struct OffMeshConnections
 {
-	static const int MAX_CON = 128;
+	static CONSTEXPR int MAX_CON = 128;
 	float  verts[ MAX_CON * 6 ];
 	float  rad[ MAX_CON ];
 	unsigned short flags[ MAX_CON ];
@@ -105,7 +105,7 @@ struct OffMeshConnections
 
 	OffMeshConnections() : offMeshConCount( 0 ) { }
 
-	void reset( void )
+	void reset()
 	{
 		offMeshConCount = 0;
 	}
@@ -172,7 +172,7 @@ struct FastLZCompressor : public dtTileCacheCompressor
 							   unsigned char *compressed, const int /*maxCompressedSize*/, int *compressedSize )
 	{
 
-		*compressedSize = fastlz_compress( ( const void *const ) buffer, bufferSize, compressed );
+		*compressedSize = fastlz_compress( ( const void * ) buffer, bufferSize, compressed );
 		return DT_SUCCESS;
 	}
 
@@ -195,16 +195,16 @@ struct MeshProcess : public dtTileCacheMeshProcess
 		{
 			if ( polyAreas[ i ] == DT_TILECACHE_WALKABLE_AREA )
 			{
-				polyAreas[ i ] = POLYAREA_GROUND;
-				polyFlags[ i ] = POLYFLAGS_WALK;
+				polyAreas[ i ] = navPolyAreas::POLYAREA_GROUND;
+				polyFlags[ i ] = navPolyFlags::POLYFLAGS_WALK;
 			}
-			else if ( polyAreas[ i ] == POLYAREA_WATER )
+			else if ( polyAreas[ i ] == navPolyAreas::POLYAREA_WATER )
 			{
-				polyFlags[ i ] = POLYFLAGS_SWIM;
+				polyFlags[ i ] = navPolyFlags::POLYFLAGS_SWIM;
 			}
-			else if ( polyAreas[ i ] == POLYAREA_DOOR )
+			else if ( polyAreas[ i ] == navPolyAreas::POLYAREA_DOOR )
 			{
-				polyFlags[ i ] = POLYFLAGS_WALK | POLYFLAGS_DOOR;
+				polyFlags[ i ] = navPolyFlags::POLYFLAGS_WALK | navPolyFlags::POLYFLAGS_DOOR;
 			}
 		}
 
@@ -221,21 +221,21 @@ struct MeshProcess : public dtTileCacheMeshProcess
 struct LinearAllocator : public dtTileCacheAlloc
 {
 	unsigned char* buffer;
-	int capacity;
-	int top;
-	int high;
+	size_t capacity;
+	size_t top;
+	size_t high;
 
-	LinearAllocator( const int cap ) : buffer(0), capacity(0), top(0), high(0)
+	LinearAllocator( const size_t cap ) : buffer(0), capacity(0), top(0), high(0)
 	{
 		resize(cap);
 	}
 
-	~LinearAllocator()
+	~LinearAllocator() OVERRIDE
 	{
 		free( buffer );
 	}
 
-	void resize( const int cap )
+	void resize( const size_t cap )
 	{
 		if ( buffer )
 		{
@@ -246,13 +246,13 @@ struct LinearAllocator : public dtTileCacheAlloc
 		capacity = cap;
 	}
 
-	virtual void reset()
+	void reset() OVERRIDE
 	{
 		high = dtMax( high, top );
 		top = 0;
 	}
 
-	virtual void* alloc( const int size )
+	void* alloc( const size_t size ) OVERRIDE
 	{
 		if ( !buffer )
 		{
@@ -269,8 +269,8 @@ struct LinearAllocator : public dtTileCacheAlloc
 		return mem;
 	}
 
-	virtual void free( void* /*ptr*/ ) { }
-	int getHighSize() { return high; }
+	void free( void* /*ptr*/ ) OVERRIDE { }
+	size_t getHighSize() { return high; }
 };
 #endif
 

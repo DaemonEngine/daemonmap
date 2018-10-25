@@ -20,6 +20,7 @@
    ===========================================================================
  */
 
+#include "Compiler.h"
 #include "Recast.h"
 #include "RecastAlloc.h"
 #include "RecastAssert.h"
