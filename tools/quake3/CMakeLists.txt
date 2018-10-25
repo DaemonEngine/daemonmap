@@ -55,17 +55,14 @@ radiant_tool(daemonmap
 
         q3map2/brush.c
         q3map2/brush_primit.c
-        q3map2/bsp.c
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
         q3map2/bspfile_rbsp.c
-        q3map2/decals.c
         q3map2/facebsp.c
         q3map2/fog.c
         ${q3map2_games} q3map2/game__null.h
         q3map2/help.c
         q3map2/image.c
-        q3map2/leakfile.c
 		q3map2/light_bounce.c
         q3map2/main.c
         q3map2/map.c
@@ -75,7 +72,6 @@ radiant_tool(daemonmap
         q3map2/patch.c
         q3map2/path_init.c
         q3map2/portals.c
-        q3map2/prtfile.c
         q3map2/q3map2.h
         q3map2/shaders.c
         q3map2/surface.c
@@ -85,8 +81,6 @@ radiant_tool(daemonmap
         q3map2/surface_meta.c
         q3map2/tjunction.c
         q3map2/tree.c
-        q3map2/vis.c
-        q3map2/visflow.c
         q3map2/writebsp.c
         )
 

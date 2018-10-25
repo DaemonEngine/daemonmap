@@ -224,9 +224,9 @@ int main( int argc, char **argv ){
 		r = NavMain( argc - 1, argv + 1 );
 	}
 
-	/* ydnar: otherwise create a bsp */
+	/* otherwise print an error */
 	else{
-		r = BSPMain( argc, argv );
+		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
 	}
 
 	/* emit time */

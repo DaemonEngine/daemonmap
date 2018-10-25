@@ -83,55 +83,6 @@ void HelpOptions(const char* group_name, int indentation, int width, struct Help
 	free(indent);
 }
 
-void HelpBsp()
-{
-	struct HelpOption bsp[] = {
-		{"-bsp <filename.map>", "Switch that enters this stage"},
-		{"-altsplit", "Alternate BSP tree splitting weights (should give more fps)"},
-		{"-bspfile <filename.bsp>", "BSP file to write"},
-		{"-celshader <shadername>", "Sets a global cel shader name"},
-		{"-custinfoparms", "Read scripts/custinfoparms.txt"},
-		{"-debuginset", "Push all triangle vertexes towards the triangle center"},
-		{"-debugportals", "Make BSP portals visible in the map"},
-		{"-debugsurfaces", "Color the vertexes according to the index of the surface"},
-		{"-deep", "Use detail brushes in the BSP tree, but at lowest priority (should give more fps)"},
-		{"-de <F>", "Distance epsilon for plane snapping etc."},
-		{"-fakemap", "Write fakemap.map containing all world brushes"},
-		{"-flares", "Turn on support for flares (TEST?)"},
-		{"-flat", "Enable flat shading (good for combining with -celshader)"},
-		{"-fulldetail", "Treat detail brushes as structural ones"},
-		{"-leaktest", "Abort if a leak was found"},
-		{"-linfile <filename.lin>", "Line file to write"},
-		{"-meta", "Combine adjacent triangles of the same texture to surfaces (ALWAYS USE THIS)"},
-		{"-minsamplesize <N>", "Sets minimum lightmap resolution in luxels/qu"},
-		{"-mi <N>", "Sets the maximum number of indexes per surface"},
-		{"-mv <N>", "Sets the maximum number of vertices of a lightmapped surface"},
-		{"-ne <F>", "Normal epsilon for plane snapping etc."},
-		{"-nocurves", "Turn off support for patches"},
-		{"-nodetail", "Leave out detail brushes"},
-		{"-noflares", "Turn off support for flares"},
-		{"-nofog", "Turn off support for fog volumes"},
-		{"-nohint", "Turn off support for hint brushes"},
-		{"-nosubdivide", "Turn off support for `q3map_tessSize` (breaks water vertex deforms)"},
-		{"-notjunc", "Do not fix T-junctions (causes cracks between triangles, do not use)"},
-		{"-nowater", "Turn off support for water, slime or lava (Stef, this is for you)"},
-		{"-np <A>", "Force all surfaces to be nonplanar with a given shade angle"},
-		{"-onlyents", "Only update entities in the BSP"},
-		{"-patchmeta", "Turn patches into triangle meshes for display"},
-		{"-prtfile <filename.prt>", "Portal file to write"},
-		{"-rename", "Append suffix to miscmodel shaders (needed for SoF2)"},
-		{"-samplesize <N>", "Sets default lightmap resolution in luxels/qu"},
-		{"-skyfix", "Turn sky box into six surfaces to work around ATI problems"},
-		{"-snap <N>", "Snap brush bevel planes to the given number of units"},
-		{"-srffile <filename.srf>", "Surface file to write"},
-		{"-tempname <filename.map>", "Read the MAP file from the given file name"},
-		{"-texrange <N>", "Limit per-surface texture range to the given number of units, and subdivide surfaces like with `q3map_tessSize` if this is not met"},
-		{"-tmpout", "Write the BSP file to /tmp"},
-		{"-verboseentities", "Enable `-v` only for map entities, not for the world"},
-	};
-	HelpOptions("BSP Stage", 0, 80, bsp, sizeof(bsp)/sizeof(struct HelpOption));
-}
-
 void HelpNavMesh()
 {
 	struct HelpOption navmesh[] = {
@@ -172,11 +123,9 @@ void HelpMain(const char* arg)
 	HelpCommon();
 
 	struct HelpOption stages[] = {
-		{"-bsp", "BSP Stage"},
 		{"-nav", "NavMesh"},
 	};
 	void(*help_funcs[])() = {
-		HelpBsp,
 		HelpNavMesh,
 	};
 
