@@ -1,11 +1,8 @@
-add_subdirectory(ddslib)
 add_subdirectory(detour)
-add_subdirectory(etclib)
 add_subdirectory(fastlz)
 add_subdirectory(filematch)
 add_subdirectory(l_net)
 add_subdirectory(mathlib)
-add_subdirectory(picomodel)
 add_subdirectory(recast)
 
 add_library(libs

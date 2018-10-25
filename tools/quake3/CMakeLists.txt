@@ -39,17 +39,12 @@ set(q3map2_games
 
 radiant_tool(daemonmap
         common/cmdlib.c common/cmdlib.h
-        common/imagelib.c common/imagelib.h
         common/inout.c common/inout.h
-        common/jpeg.c
-        common/md4.c common/md4.h
         common/mutex.c common/mutex.h
         common/polylib.c common/polylib.h
-        common/polyset.h
         common/qfiles.h
         common/qthreads.h
         common/scriplib.c common/scriplib.h
-        common/surfaceflags.h
         common/threads.c
         common/vfs.c common/vfs.h
 
@@ -58,7 +53,6 @@ radiant_tool(daemonmap
         q3map2/bspfile_ibsp.c
         ${q3map2_games} q3map2/game__null.h
         q3map2/help.c
-        q3map2/image.c
         q3map2/main.c
         q3map2/mesh.c
         q3map2/nav.cpp
@@ -69,19 +63,14 @@ radiant_tool(daemonmap
 
 target_link_libraries(daemonmap
         ${GLIB_LIBRARIES}
-        ${JPEG_LIBRARIES}
-        ${PNG_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        ddslib
         detour
-        etclib
         fastlz
         filematch
         l_net
         mathlib
-        picomodel
         recast
         )
 
