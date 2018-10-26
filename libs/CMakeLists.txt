@@ -12,6 +12,11 @@ add_library(libs
 target_include_directories(libs PRIVATE ${GLIB_INCLUDE_DIRS})
 target_link_libraries(libs PRIVATE ${GLIB_LIBRARIES})
 
+add_library(cm
+        cm/cm_patch.cpp
+        cm/cm_patch.h
+        )
+
 add_library(detour
         recastnavigation/DebugUtils/Source/DebugDraw.cpp
         recastnavigation/DebugUtils/Include/DebugDraw.h

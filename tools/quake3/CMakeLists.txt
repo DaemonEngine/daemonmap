@@ -62,6 +62,7 @@ radiant_tool(daemonmap
         )
 
 target_include_directories(daemonmap PRIVATE
+        ../../libs/cm
         ../../libs/daemon/src/common/
         ../../libs/daemon/src/engine/botlib
         ../../libs/recastnavigation/Recast/Include
@@ -75,6 +76,7 @@ target_link_libraries(daemonmap
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
+        cm
         detour
         fastlz
         filematch
