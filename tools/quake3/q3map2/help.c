@@ -87,6 +87,11 @@ void HelpNavMesh()
 {
 	struct HelpOption navmesh[] = {
 		{"-nav <filename.bsp>", "Creates navmeshes from BSP file"},
+		{"-cellheight <F>", "Sets cell height, increasing cell height may cause a less accurate navmesh (default: 2)"},
+		{"-stepsize <F>", "Sets step size (default: 18)"},
+		{"-includecaulk", "Caulk surfaces will not be excluded from navmeshes"},
+		{"-includesky", "Sky surfaces will not be excluded from navmeshes"},
+		{"-nogapfilter", "Turn off gap filter, no walkable span will be added to enable bots to walk over small gaps"},
 	};
 
 	HelpOptions("NavMesh", 0, 80, navmesh, sizeof(navmesh)/sizeof(struct HelpOption));

@@ -954,7 +954,7 @@ extern "C" int NavMain( int argc, char **argv ){
 	int i;
 
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: q3map2 -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <mapname>\n" );
+		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <filename.bsp>\n" );
 		return 0;
 	}
 
@@ -1028,8 +1028,8 @@ extern "C" int NavMain( int argc, char **argv ){
 			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
 		}
 
-		Sys_Printf( "Previous cellheight: %f\n", prevCellHeight );
-		Sys_Printf( "New cellheight: %f\n", cellHeight );
+		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
+		Sys_Printf( "New cell height: %f\n", cellHeight );
 	}
 
 	RunThreadsOnIndividual( sizeof( characterArray ) / sizeof( characterArray[ 0 ] ), qtrue, BuildNavMesh );
