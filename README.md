@@ -40,7 +40,7 @@ No future
 ---------
 
 This tool is made to be deleted one day because the only way for a game
-to get proper navmeshes after having changed model size or added or
-removed models is to get the navmesh produced by engine using game code
+to get proper navmeshes after having modified model size or added or
+removed models is to get the navmeshes produced by engine using game code
 settings. That's why there is no effort to merge this code into
-NetRadiant upstream since this tool must be considered as temporary hack.
+NetRadiant upstream since this tool is a temporary hack.
