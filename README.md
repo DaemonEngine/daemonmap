@@ -9,6 +9,9 @@ code by Fuma using [recastnavigation](https://github.com/recastnavigation/recast
 Everything else than navmesh code was removed but original file layoutd was
 kept, allowing code exchange with NetRadiant upstream if required.
 
+Use [`q3map2` from Xonotic's NetRadiant tree](https://gitlab.com/xonotic/netradiant/) for every other task
+like bsp compilation, vis computation, light casting etc.
+
 The navmesh settings are currently hardcoded with Unvanquished models and sizes.
 
 Fetch & Build
