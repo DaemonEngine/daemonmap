@@ -4,6 +4,7 @@ project(NetRadiant C CXX)
 
 option(BUILD_RADIANT "Build the GUI" ON)
 option(BUILD_CRUNCH "Build Crunch image support" OFF)
+option(USE_WERROR "Build with -Werror -pedantic-errors" OFF)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
@@ -80,7 +81,7 @@ if (NOT WIN32)
     addflags("-fvisibility=hidden")
 endif ()
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if (USE_WERROR)
     addflags("-Werror")
     addflags("-pedantic-errors")
 endif ()
