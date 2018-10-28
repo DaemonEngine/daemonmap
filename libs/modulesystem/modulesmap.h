@@ -99,6 +99,7 @@ class ModulesRef
 ModulesMap<Type> m_modules;
 public:
 ModulesRef( const char* names ){
+	std::string type_name { typename Type::Name() };
 	if ( !globalModuleServer().getError() ) {
 		if ( string_equal( names, "*" ) ) {
 			InsertModules<Type> visitor( m_modules );
@@ -115,8 +116,14 @@ ModulesRef( const char* names ){
 				}
 				Module* module = globalModuleServer().findModule( typename Type::Name(), typename Type::Version(), name );
 				if ( module == 0 ) {
-					globalModuleServer().setError( true );
-					globalErrorStream() << "ModulesRef::initialise: type=" << makeQuoted( typename Type::Name() ) << " version=" << makeQuoted( typename Type::Version() ) << " name=" << makeQuoted( name ) << " - not found\n";
+					// do not fail on missing image or model plugin, they can be optional
+					if ( type_name.compare("image") == 0 || type_name.compare("model") == 0 ) {
+						globalOutputStream() << "ModulesRef::initialise: type=" << makeQuoted( typename Type::Name() ) << " version=" << makeQuoted( typename Type::Version() ) << " name=" << makeQuoted( name ) << " - not found\n";
+					}
+					else {
+						globalModuleServer().setError( true );
+						globalErrorStream() << "ModulesRef::initialise: type=" << makeQuoted( typename Type::Name() ) << " version=" << makeQuoted( typename Type::Version() ) << " name=" << makeQuoted( name ) << " - not found\n";
+					}
 					break;
 				}
 				else
