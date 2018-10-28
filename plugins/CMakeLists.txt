@@ -17,6 +17,11 @@ add_subdirectory(archivewad)
 add_subdirectory(archivezip)
 add_subdirectory(entity)
 add_subdirectory(image)
+
+if(BUILD_CRUNCH)
+	add_subdirectory(imagecrn)
+endif()
+
 add_subdirectory(imagehl)
 add_subdirectory(imagepng)
 add_subdirectory(imageq2)

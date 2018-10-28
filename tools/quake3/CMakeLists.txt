@@ -31,6 +31,8 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
+include_directories(${CMAKE_SOURCE_DIR}/libs/crnrgba)
+
 set(q3map2_games
         q3map2/game_darkplaces.h
         q3map2/game_dq.h
@@ -119,6 +121,16 @@ radiant_tool(q3map2
         q3map2/writebsp.c
         )
 
+if (BUILD_CRUNCH)
+        set(OPTIONAL_IMAGE_LIBRARIES crnrgba)
+        set(OPTIONAL_IMAGE_DEFINES BUILD_CRUNCH=1)
+endif ()
+
+target_compile_definitions(q3map2
+        PRIVATE
+        ${OPTIONAL_IMAGE_DEFINES}
+        )
+
 target_link_libraries(q3map2
         ${GLIB_LIBRARIES}
         ${JPEG_LIBRARIES}
@@ -126,6 +138,7 @@ target_link_libraries(q3map2
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
+        ${OPTIONAL_IMAGE_LIBRARIES}
         ddslib
         etclib
         filematch
