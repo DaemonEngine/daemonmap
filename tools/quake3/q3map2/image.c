@@ -464,20 +464,6 @@ image_t *ImageLoad( const char *filename ){
 		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
 		if ( size > 0 ) {
 			LoadDDSBuffer( buffer, size, &image->pixels, &image->width, &image->height );
-
-			/* debug code */
-			#if 1
-			{
-				ddsPF_t pf;
-				DDSGetInfo( (ddsBuffer_t*) buffer, NULL, NULL, &pf );
-				Sys_Printf( "pf = %d\n", pf );
-				if ( image->width > 0 ) {
-					StripExtension( name );
-					strcat( name, "_converted.tga" );
-					WriteTGA( "C:\\games\\quake3\\baseq3\\textures\\rad\\dds_converted.tga", image->pixels, image->width, image->height );
-				}
-			}
-			#endif // debug
 			break;
 		}
 
