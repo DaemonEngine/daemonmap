@@ -426,76 +426,76 @@ image_t *ImageLoad( const char *filename ){
 	image->name = safe_malloc( strlen( name ) + 1 );
 	strcpy( image->name, name );
 
-	do {
-		/* attempt to load tga */
-		StripExtension( name );
-		strcat( name, ".tga" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadTGABuffer( buffer, buffer + size, &image->pixels, &image->width, &image->height );
-			break;
-		}
+	/* attempt to load tga */
+	StripExtension( name );
+	strcat( name, ".tga" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadTGABuffer( buffer, buffer + size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
 
-		/* attempt to load png */
-		StripExtension( name );
-		strcat( name, ".png" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadPNGBuffer( buffer, size, &image->pixels, &image->width, &image->height );
-			break;
-		}
+	/* attempt to load png */
+	StripExtension( name );
+	strcat( name, ".png" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadPNGBuffer( buffer, size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
 
-		/* attempt to load jpg */
-		StripExtension( name );
-		strcat( name, ".jpg" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			if ( LoadJPGBuff( buffer, size, &image->pixels, &image->width, &image->height ) == -1 && image->pixels != NULL ) {
-				// On error, LoadJPGBuff might store a pointer to the error message in image->pixels
-				Sys_FPrintf( SYS_WRN, "WARNING: LoadJPGBuff: %s\n", (unsigned char*) image->pixels );
-			}
-			alphaHack = qtrue;
-			break;
+	/* attempt to load jpg */
+	StripExtension( name );
+	strcat( name, ".jpg" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		if ( LoadJPGBuff( buffer, size, &image->pixels, &image->width, &image->height ) == -1 && image->pixels != NULL ) {
+			// On error, LoadJPGBuff might store a pointer to the error message in image->pixels
+			Sys_FPrintf( SYS_WRN, "WARNING: LoadJPGBuff: %s\n", (unsigned char*) image->pixels );
 		}
+		alphaHack = qtrue;
+		goto image_load_success;
+	}
 
-		/* attempt to load dds */
-		StripExtension( name );
-		strcat( name, ".dds" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadDDSBuffer( buffer, size, &image->pixels, &image->width, &image->height );
-			break;
-		}
+	/* attempt to load dds */
+	StripExtension( name );
+	strcat( name, ".dds" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadDDSBuffer( buffer, size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
 
-		/* attempt to load ktx */
-		StripExtension( name );
-		strcat( name, ".ktx" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadKTXBufferFirstImage( buffer, size, &image->pixels, &image->width, &image->height );
-			break;
-		}
+	/* attempt to load ktx */
+	StripExtension( name );
+	strcat( name, ".ktx" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadKTXBufferFirstImage( buffer, size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
 
-		#ifdef BUILD_CRUNCH
-		/* attempt to load crn */
-		StripExtension( name );
-		strcat( name, ".crn" );
-		size = vfsLoadFile( ( const char* ) name, ( void** ) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadCRNBuffer( buffer, size, &image->pixels, &image->width, &image->height );
-			break;
-		}
-		#endif // BUILD_CRUNCH
+	#ifdef BUILD_CRUNCH
+	/* attempt to load crn */
+	StripExtension( name );
+	strcat( name, ".crn" );
+	size = vfsLoadFile( ( const char* ) name, ( void** ) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadCRNBuffer( buffer, size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
+	#endif // BUILD_CRUNCH
 
-		/* attempt to load webp */
-		StripExtension( name );
-		strcat( name, ".webp" );
-		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
-		if ( size > 0 ) {
-			LoadWEBPBuffer( buffer, size, &image->pixels, &image->width, &image->height );
-			break;
-		}
-	} while (qfalse);
+	/* attempt to load webp */
+	StripExtension( name );
+	strcat( name, ".webp" );
+	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	if ( size > 0 ) {
+		LoadWEBPBuffer( buffer, size, &image->pixels, &image->width, &image->height );
+		goto image_load_success;
+	}
+
+	image_load_success:
 
 	/* free file buffer */
 	free( buffer );
