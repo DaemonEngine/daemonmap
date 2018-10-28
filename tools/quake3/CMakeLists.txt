@@ -121,6 +121,16 @@ radiant_tool(q3map2
         q3map2/writebsp.c
         )
 
+if (BUILD_CRUNCH)
+        set(OPTIONAL_IMAGE_LIBRARIES crnrgba)
+        set(OPTIONAL_IMAGE_DEFINES BUILD_CRUNCH=1)
+endif ()
+
+target_compile_definitions(q3map2
+        PRIVATE
+        ${OPTIONAL_IMAGE_DEFINES}
+        )
+
 target_link_libraries(q3map2
         ${GLIB_LIBRARIES}
         ${JPEG_LIBRARIES}
@@ -128,7 +138,7 @@ target_link_libraries(q3map2
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        crnrgba
+        ${OPTIONAL_IMAGE_LIBRARIES}
         ddslib
         etclib
         filematch

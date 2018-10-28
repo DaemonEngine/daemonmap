@@ -86,6 +86,7 @@ static void LoadDDSBuffer( byte *buffer, int size, byte **pixels, int *width, in
 	DDSDecompress( (ddsBuffer_t*) buffer, *pixels );
 }
 
+#ifdef BUILD_CRUNCH
 /*
     LoadCRNBuffer
     loads a crn image into a valid rgba image
@@ -106,6 +107,7 @@ void LoadCRNBuffer( byte *buffer, int size, byte **pixels, int *width, int *heig
 		return;
 	}
 }
+#endif // BUILD_CRUNCH
 
 
 /*
@@ -457,6 +459,7 @@ image_t *ImageLoad( const char *filename ){
 					if ( size > 0 ) {
 						LoadKTXBufferFirstImage( buffer, size, &image->pixels, &image->width, &image->height );
 					}
+					#ifdef BUILD_CRUNCH
 					else
 					{
 						/* attempt to load crn */
@@ -467,6 +470,7 @@ image_t *ImageLoad( const char *filename ){
 							LoadCRNBuffer( buffer, size, &image->pixels, &image->width, &image->height );
 						}
 					}
+					#endif // BUILD_CRUNCH
 				}
 			}
 		}
