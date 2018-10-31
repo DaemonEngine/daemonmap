@@ -18,6 +18,7 @@ RADIANT_ABOUTMSG   ?= Custom build
 # warning: this directory may NOT contain any files other than the ones written by this Makefile!
 # NEVER SET THIS TO A SYSTEM WIDE "bin" DIRECTORY!
 INSTALLDIR         ?= install
+DOWNLOADDIR        ?= build/download
 
 CC                 ?= gcc
 CXX                ?= g++
@@ -36,7 +37,7 @@ ECHO_NOLF          ?= echo -n
 CAT                ?= cat
 MKDIR              ?= mkdir -p
 CP                 ?= cp
-CP_R               ?= $(CP) -r
+CP_R               ?= $(CP) -r --preserve=timestamps
 LN                 ?= ln
 LN_SNF             ?= $(LN) -snf
 RM                 ?= rm
@@ -448,6 +449,7 @@ binaries-q3map2: \
 .PHONY: clean
 clean:
 	$(RM_R) $(INSTALLDIR_BASE)/
+	$(RM_R) $(DOWNLOADDIR)/
 	$(FIND) . \( -name \*.o -o -name \*.d -o -name \*.$(DLL) -o -name \*.$(A) -o -name \*.$(EXE) \) -exec $(RM) {} \;
 	$(RM) icons/*.rc
 
@@ -1043,15 +1045,13 @@ $(INSTALLDIR)/heretic2/h2data.$(EXE): \
 .PHONY: install-data
 install-data: binaries
 	$(MKDIR) $(INSTALLDIR)/games
-	$(FIND) $(INSTALLDIR_BASE)/ -name .svn -exec $(RM_R) {} \; -prune
-	DOWNLOAD_GAMEPACKS="$(DOWNLOAD_GAMEPACKS)" GIT="$(GIT)" SVN="$(SVN)" WGET="$(WGET)" RM_R="$(RM_R)" MV="$(MV)" UNZIPPER="$(UNZIPPER)" ECHO="$(ECHO)" SH="$(SH)" CP="$(CP)" CP_R="$(CP_R)" $(SH) install-gamepacks.sh "$(INSTALLDIR)"
+	DOWNLOAD_GAMEPACKS="$(DOWNLOAD_GAMEPACKS)" DOWNLOADDIR="$(DOWNLOADDIR)" INSTALLDIR="$(INSTALLDIR)" GIT="$(GIT)" SVN="$(SVN)" WGET="$(WGET)" RM_R="$(RM_R)" MV="$(MV)" UNZIPPER="$(UNZIPPER)" ECHO="$(ECHO)" SH="$(SH)" CP="$(CP)" CP_R="$(CP_R)" $(SH) gamepack-manager
 	$(ECHO) $(RADIANT_MAJOR_VERSION) > $(INSTALLDIR)/RADIANT_MAJOR
 	$(ECHO) $(RADIANT_MINOR_VERSION) > $(INSTALLDIR)/RADIANT_MINOR
 	$(ECHO) $(RADIANT_PATCH_VERSION) > $(INSTALLDIR)/RADIANT_PATCH
 	$(CP_R) setup/data/tools/* $(INSTALLDIR)/
 	$(MKDIR) $(INSTALLDIR)/docs
 	$(CP_R) docs/* $(INSTALLDIR)/docs/
-	$(FIND) $(INSTALLDIR_BASE)/ -name .svn -exec $(RM_R) {} \; -prune
 
 .PHONY: install-dll
 ifeq ($(OS),Win32)

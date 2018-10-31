@@ -251,25 +251,16 @@ endif ()
 #-----------------------------------------------------------------------
 
 option(DOWNLOAD_GAMEPACKS "Download game packs" ON)
-add_custom_target(game_packs_free
-        COMMAND ${CMAKE_COMMAND} -E make_directory games
-        COMMAND DOWNLOAD_GAMEPACKS=yes SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-        COMMENT "Downloading free game packs"
-        )
-add_custom_target(game_packs_all
-        COMMAND ${CMAKE_COMMAND} -E make_directory games
-        COMMAND DOWNLOAD_GAMEPACKS=all SOURCE_DIR="${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/install-gamepacks.sh" "${PROJECT_BINARY_DIR}"
-        COMMENT "Downloading all game packs"
-        )
+
+set(GAMEPACKS_LICENSE_LIST free CACHE STRING "Download game packs by license")
+set(GAMEPACKS_NAME_LIST none CACHE STRING "Download game packs by name")
 
 if (DOWNLOAD_GAMEPACKS)
-    set(DOWNLOAD_GAMEPACKS "all")
+   add_custom_target(game_packs ALL
+      COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${PROJECT_BINARY_DIR}/download" --install-dir "${PROJECT_BINARY_DIR}" --download --install
+      COMMENT "Downloading ${GAMEPACKS_LICENSE_LIST} game packs"
+   )
 endif()
-if ("${DOWNLOAD_GAMEPACKS}" STREQUAL "free")
-    add_custom_target(game_packs_go ALL DEPENDS game_packs_free)
-elseif ("${DOWNLOAD_GAMEPACKS}" STREQUAL "all")
-    add_custom_target(game_packs_go ALL DEPENDS game_packs_all)
-endif ()
 
 #-----------------------------------------------------------------------
 # Install
@@ -290,35 +281,7 @@ install(
         DESTINATION .
 )
 
-set(GAME_FILES
-        DarkPlaces
-        Nexuiz
-        OpenArena
-        Osirion
-        Q3
-        Quake2
-        Quake
-        Quetoo
-        Tremulous
-        UFOAI
-        Unvanquished
-        Warsow
-        Xonotic
-        )
-unset(_tmp)
-foreach (it ${GAME_FILES})
-    set(dir "${PROJECT_BINARY_DIR}/games/${it}Pack")
-    string(TOLOWER "${it}" it)
-    list(APPEND _tmp "${dir}/games")
-    list(APPEND _tmp "${dir}/${it}.game")
-endforeach ()
-set(GAME_FILES ${_tmp})
-
-install(
-        DIRECTORY
-        ${GAME_FILES}
-        DESTINATION .
-        OPTIONAL
+install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}\" --install)"
 )
 
 include(cmake/scripts/package.cmake)
