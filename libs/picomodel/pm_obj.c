@@ -291,7 +291,7 @@ static int _obj_mtl_load( picoModel_t *model ){
 
 			/* validate material name */
 			if ( name == NULL || !strlen( name ) ) {
-				_pico_printf( PICO_ERROR,"Missing material name in MTL, line %d.",p->curLine );
+				_pico_printf( PICO_ERROR,"Missing material name in MTL %s, line %d.",fileName,p->curLine );
 				_obj_mtl_error_return;
 			}
 			/* create a new pico shader */
@@ -321,7 +321,7 @@ static int _obj_mtl_load( picoModel_t *model ){
 
 			/* validate map name */
 			if ( mapName == NULL || !strlen( mapName ) ) {
-				_pico_printf( PICO_ERROR,"Missing material map name in MTL, line %d.",p->curLine );
+				_pico_printf( PICO_ERROR,"Missing material map name in MTL %s, line %d.",fileName,p->curLine );
 				_obj_mtl_error_return;
 			}
 			/* create a new pico shader */
@@ -706,7 +706,7 @@ static picoModel_t *_obj_load( PM_PARAMS_LOAD ){
 			int i;
 
 			if ( curSurface == NULL ) {
-				_pico_printf( PICO_WARNING,"No group defined for faces, so creating an autoSurface in OBJ, line %d.",p->curLine );
+				_pico_printf( PICO_WARNING,"No group defined for faces, so creating an autoSurface in OBJ %s, line %d.",model->fileName,p->curLine );
 				AUTO_GROUPNAME( autoGroupNameBuf );
 				NEW_SURFACE( autoGroupNameBuf );
 			}
@@ -889,20 +889,20 @@ static picoModel_t *_obj_load( PM_PARAMS_LOAD ){
 			name = _pico_parse( p,0 );
 
 			if ( curFace != 0 || curSurface == NULL ) {
-				_pico_printf( PICO_WARNING,"No group defined for usemtl, so creating an autoSurface in OBJ, line %d.",p->curLine );
+				_pico_printf( PICO_WARNING,"No group defined for usemtl, so creating an autoSurface in OBJ %s, line %d.",model->fileName,p->curLine );
 				AUTO_GROUPNAME( autoGroupNameBuf );
 				NEW_SURFACE( autoGroupNameBuf );
 			}
 
 			/* validate material name */
 			if ( name == NULL || !strlen( name ) ) {
-				_pico_printf( PICO_ERROR,"Missing material name in OBJ, line %d.",p->curLine );
+				_pico_printf( PICO_ERROR,"Missing material name in OBJ %s, line %d.",model->fileName,p->curLine );
 			}
 			else
 			{
 				shader = PicoFindShader( model, name, 1 );
 				if ( shader == NULL ) {
-					_pico_printf( PICO_WARNING,"Undefined material name in OBJ, line %d. Making a default shader.",p->curLine );
+					_pico_printf( PICO_WARNING,"Undefined material name \"%s\" in OBJ %s, line %d. Making a default shader.",name,model->fileName,p->curLine );
 
 					/* create a new pico shader */
 					shader = PicoNewShader( model );
