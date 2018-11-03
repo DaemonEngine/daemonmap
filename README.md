@@ -63,7 +63,7 @@ brew link --force gettext
 
  * Crunch (optional, disabled by default, only supported with CMake build)
 
-If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run it whithin NetRadiant repository):
+If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run it within the NetRadiant repository):
 
 
 ```
