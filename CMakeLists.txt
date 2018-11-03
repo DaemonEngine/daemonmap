@@ -20,10 +20,6 @@ set(NetRadiant_VERSION_MINOR 5)
 set(NetRadiant_VERSION_PATCH 0)
 set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.${NetRadiant_VERSION_PATCH}")
 
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MAJOR" ${NetRadiant_VERSION_MAJOR})
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_MINOR" ${NetRadiant_VERSION_MINOR})
-file(WRITE "${PROJECT_BINARY_DIR}/RADIANT_PATCH" ${NetRadiant_VERSION_PATCH})
-
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
 find_package(Git REQUIRED)
@@ -266,14 +262,6 @@ endif()
 #-----------------------------------------------------------------------
 # Install
 #-----------------------------------------------------------------------
-
-install(
-        FILES
-        "${PROJECT_BINARY_DIR}/RADIANT_MAJOR"
-        "${PROJECT_BINARY_DIR}/RADIANT_MINOR"
-        "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
-        DESTINATION .
-)
 
 install(
         DIRECTORY

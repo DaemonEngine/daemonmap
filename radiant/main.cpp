@@ -362,39 +362,6 @@ bool check_version_file( const char* filename, const char* version ){
 	return false;
 }
 
-bool check_version(){
-	// a safe check to avoid people running broken installations
-	// (otherwise, they run it, crash it, and blame us for not forcing them hard enough to pay attention while installing)
-	// make something idiot proof and someone will make better idiots, this may be overkill
-	// let's leave it disabled in debug mode in any case
-	// http://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=431
-    if (GDEF_DEBUG) {
-        return true;
-    }
-    // locate and open RADIANT_MAJOR and RADIANT_MINOR
-    bool bVerIsGood = true;
-    {
-        StringOutputStream ver_file_name(256);
-        ver_file_name << AppPath_get() << "RADIANT_MAJOR";
-        bVerIsGood = check_version_file(ver_file_name.c_str(), RADIANT_MAJOR_VERSION);
-    }
-    {
-        StringOutputStream ver_file_name(256);
-        ver_file_name << AppPath_get() << "RADIANT_MINOR";
-        bVerIsGood = check_version_file(ver_file_name.c_str(), RADIANT_MINOR_VERSION);
-    }
-
-    if (!bVerIsGood) {
-        StringOutputStream msg(256);
-        msg
-                << "This editor binary (" RADIANT_VERSION ") doesn't match what the latest setup has configured in this directory\n"
-                        "Make sure you run the right/latest editor binary you installed\n"
-                << AppPath_get();
-        ui::alert(ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Default);
-    }
-    return bVerIsGood;
-}
-
 void create_global_pid(){
 	/*!
 	   the global prefs loading / game selection dialog might fail for any reason we don't know about
@@ -596,10 +563,6 @@ int main( int argc, char* argv[] ){
 	environment_init(argc, (char const **) argv);
 
 	paths_init();
-
-	if ( !check_version() ) {
-		return EXIT_FAILURE;
-	}
 
 	show_splash();
 
