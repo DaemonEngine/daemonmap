@@ -195,9 +195,6 @@ add_subdirectory(tools)
 
 install(
         FILES
-        "${PROJECT_BINARY_DIR}/RADIANT_MAJOR"
-        "${PROJECT_BINARY_DIR}/RADIANT_MINOR"
-        "${PROJECT_BINARY_DIR}/RADIANT_PATCH"
         DESTINATION .
 )
 
