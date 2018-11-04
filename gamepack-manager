@@ -73,7 +73,7 @@ Quetoo          GPL          svn     svn://svn.icculus.org/gtkradiant-gamepacks/
 Tremulous       proprietary  zip     http://ingar.intranifty.net/files/netradiant/gamepacks/TremulousPack.zip
 TurtleArena     proprietary  git     https://github.com/Turtle-Arena/turtle-arena-radiant-pack.git
 UFOAI           proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/UFOAIPack/branches/1.5/
-Unvanquished    BSD          svn     https://github.com/Unvanquished/unvanquished-mapeditor-support.git/trunk/build/netradiant
+Unvanquished    BSD          git     https://github.com/Unvanquished/unvanquished-mapeditor-support.git
 Warsow          GPL          git     https://github.com/Warsow/NetRadiantPack.git
 Wolf            proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/WolfPack/branches/1.5/
 Xonotic         GPL          git     https://gitlab.com/xonotic/netradiant-xonoticpack.git
@@ -132,14 +132,14 @@ printNameListByLicense () {
 		case "${license}" in
 			'none')
 				break
-			;;
+				;;
 			'all')
 				license_list="$(printLicenseList)"
 				break
-			;;
+				;;
 			'free')
 				license_list="${license_list} ${free_license_list}"
-			;;
+				;;
 			*)
 				if printLicenseList | inList "${license}"
 				then
@@ -147,7 +147,7 @@ printNameListByLicense () {
 				else
 					printError "unknown license: ${license}"
 				fi
-			;;
+				;;
 		esac
 	done
 
@@ -174,12 +174,12 @@ printNameListByName () {
 		case "${name}" in
 			'none')
 				break
-			;;
+				;;
 			'all')
 				local name_list
 				name_list="$(printNameList)"
 				break
-			;;
+				;;
 			*)
 				if printNameList | inList "${name}"
 				then
@@ -188,7 +188,7 @@ printNameListByName () {
 				else
 					printError "unknown name: ${name}"
 				fi
-			;;
+				;;
 		esac
 	done
 
@@ -285,13 +285,22 @@ downloadPack () {
 					reference='HEAD'
 				fi
 
-				if [ -d "${download_dir}/${pack}" ]
+				if [ -d "${pack}" ]
 				then
-					${SVN} update -r"${reference}" "${pack}"
+					if [ -d "${pack}/.git" ]
+					then
+						(
+							cd "${pack}"
+							${GIT} svn fetch
+						)
+					else
+						${SVN} update -r"${reference}" "${pack}"
+					fi
 				else
-					${SVN} checkout -r"${reference}" "${source_url}" "${pack}"
+					${SVN} checkout -r"${reference}" "${source_url}" "${pack}" \
+					|| ${GIT} svn clone "${source_url}" "${pack}"
 				fi
-			;;
+				;;
 			'zip')
 				${RM_R} 'zipdownload'
 				${MKDIR} 'zipdownload'
@@ -304,16 +313,16 @@ downloadPack () {
 				${MKDIR} "${pack}"
 				${MV} 'zipdownload/'*'/'* "${pack}/"
 				${RM_R} 'zipdownload'
-			;;
+				;;
 			'gitdir')
-				subdir="$(getValue "${name}" '5')"
-				branch="$(getValue "${name}" '6')"
+				local subdir="$(getValue "${name}" '5')"
+				local branch="$(getValue "${name}" '6')"
 				${RM_R} "${pack}"
 				${GIT} archive --remote="${source_url}" --prefix="${pack}/" "${branch}":"${subdir}" \
 				| ${TAR} xvf -
-			;;
+				;;
 			'git')
-				if [ -d "${download_dir}/${pack}" ]
+				if [ -d "${pack}" ]
 				then
 					(
 						cd "${pack}"
@@ -322,7 +331,7 @@ downloadPack () {
 				else
 					${GIT} clone "${source_url}" "${pack}"
 				fi
-			;;
+				;;
 		esac
 
 		if [ -d "${download_dir}/${pack}" ]
@@ -369,20 +378,26 @@ installPack () {
 
 	pack="${name}${pack_suffix}"
 
-	${MKDIR_P} "${real_install_dir}/${games_dir}"
+	${MKDIR_P} "${install_dir}/${games_dir}"
 
 	# Some per-game workaround for malformed gamepack
 	case "${name}" in
 		'JediAcademy')
 			pack="${pack}/Tools"
-		;;
+			;;
 		'Prey'|'Q3')
 			pack="${pack}/tools"
-		;;
+			;;
 		'Wolf')
 			pack="${pack}/bin"
-		;;
+			;;
 	esac
+
+	# mkeditorpacks-based gamepack
+	if [ -d "${download_dir}/${pack}/build/netradiant" ]
+	then
+		pack="${pack}/build/netradiant"
+	fi
 
 	path="${download_dir}/${pack}"
 
@@ -494,6 +509,9 @@ list_names='false'
 download_packs='false'
 install_packs='false'
 
+mkdir_download='false'
+mkdir_install='false'
+
 by_license='false'
 by_name='false'
 
@@ -523,55 +541,60 @@ do
 		'--list-licenses'|'-ll')
 			arg_type=''
 			list_licenses='true'
-		;;
+			option_list="${option_list} ${1}"
+			;;
 		'--list-names'|'-ln')
 			arg_type=''
 			list_names='true'
-		;;
+			option_list="${option_list} ${1}"
+			;;
 		'--list-selected'|'-ls')
 			arg_type=''
 			list_selected='true'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--download'|'-d')
 			arg_type=''
 			download_packs='true'
+			mkdir_download='true'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--install'|'-i')
 			arg_type=''
 			install_packs='true'
+			mkdir_download='true'
+			mkdir_install='true'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--license'|'-l')
 			by_license='true'
 			arg_type='pack-license'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--name'|'-n')
 			by_name='true'
 			arg_type='pack-name'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--download-dir'|'-dd')
 			arg_type='download-dir'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'--install-dir'|'-id')
 			arg_type='install-dir'
 			option_list="${option_list} ${1}"
-		;;
+			;;
 		'-'*)
 			printError "unknown option: ${1}"
-		;;
+			;;
 		*)
 			case "${arg_type}" in
 				'pack-license')
 					license_list="${license_list} ${1}"
-				;;
+					;;
 				'pack-name')
 					name_list="${name_list} ${1}"
-				;;
+					;;
 				'download-dir')
 					if [ -z "${download_dir}" ]
 					then
@@ -579,7 +602,7 @@ do
 					else
 						printError "more than one download dir: ${1}"
 					fi
-				;;
+					;;
 				'install-dir')
 					if [ -z "${install_dir}" ]
 					then
@@ -587,12 +610,12 @@ do
 					else
 						printError "more than one install dir: ${1}"
 					fi
-				;;
+					;;
 				*)
 					printError "misplaced argument: ${1}"
-				;;
+					;;
 			esac
-		;;
+			;;
 	esac
 
 	shift
@@ -631,10 +654,17 @@ fi
 
 selected_list="$(dedupeList "${selected_list}")"
 
-${MKDIR_P} "${download_dir}"
-${MKDIR_P} "${install_dir}"
-real_download_dir="$(readlink -f "${download_dir}")"
-real_install_dir="$(readlink -f "${install_dir}")"
+if "${mkdir_download}"
+then
+	${MKDIR_P} "${download_dir}"
+	real_download_dir="$(readlink -f "${download_dir}")"
+fi
+
+if "${mkdir_install}"
+then
+	${MKDIR_P} "${install_dir}"
+	real_install_dir="$(readlink -f "${install_dir}")"
+fi
 
 if "${list_licenses}"
 then
