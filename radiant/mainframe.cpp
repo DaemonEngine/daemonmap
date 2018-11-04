@@ -943,6 +943,53 @@ void ColorScheme_Ydnar(){
 	XY_UpdateAllWindows();
 }
 
+/* color scheme to fit the GTK Adwaita Dark theme */
+void ColorScheme_AdwaitaDark()
+{
+	// SI_Colors0
+	// GlobalTextureBrowser().color_textureback
+	TextureBrowser_setBackgroundColour(GlobalTextureBrowser(), Vector3(0.25f, 0.25f, 0.25f));
+
+	// SI_Colors4
+	g_camwindow_globals.color_cameraback = Vector3(0.25f, 0.25f, 0.25f);
+	// SI_Colors12
+	g_camwindow_globals.color_selbrushes3d = Vector3(1.0f, 0.0f, 0.0f);
+	CamWnd_Update(*g_pParentWnd->GetCamWnd());
+
+	// SI_Colors1
+	g_xywindow_globals.color_gridback = Vector3(0.25f, 0.25f, 0.25f);
+	// SI_Colors2
+	g_xywindow_globals.color_gridminor = Vector3(0.21f, 0.23f, 0.23f);
+	// SI_Colors3
+	g_xywindow_globals.color_gridmajor = Vector3(0.14f, 0.15f, 0.15f);
+	// SI_Colors14
+	g_xywindow_globals.color_gridmajor_alt = Vector3(1.0f, 0.0f, 0.0f);
+	// SI_Colors6
+	g_xywindow_globals.color_gridblock = Vector3(1.0f, 1.0f, 1.0f);
+	// SI_Colors7
+	g_xywindow_globals.color_gridtext = Vector3(0.0f, 0.0f, 0.0f);
+	// ??
+	g_xywindow_globals.color_selbrushes = Vector3(1.0f, 0.0f, 0.0f);
+	// ??
+	g_xywindow_globals.color_clipper = Vector3(0.0f, 0.0f, 1.0f);
+	// SI_Colors8
+	g_xywindow_globals.color_brushes = Vector3(0.73f, 0.73f, 0.73f);
+
+	// SI_AxisColors0
+	g_xywindow_globals.AxisColorX = Vector3(1.0f, 0.0f, 0.0f);
+	// SI_AxisColors1
+	g_xywindow_globals.AxisColorY = Vector3(0.0f, 1.0f, 0.0f);
+	// SI_AxisColors2
+	g_xywindow_globals.AxisColorZ = Vector3(0.0f, 0.0f, 1.0f);
+	SetWorldspawnColour(g_xywindow_globals.color_brushes);
+	// ??
+	g_xywindow_globals.color_viewname = Vector3(0.5f, 0.0f, 0.75f);
+	XY_UpdateAllWindows();
+
+	// SI_Colors5
+	// g_entity_globals.color_entity = Vector3(0.0f, 0.0f, 0.0f);
+}
+
 typedef Callback<void(Vector3&)> GetColourCallback;
 typedef Callback<void(const Vector3&)> SetColourCallback;
 
@@ -1060,6 +1107,7 @@ ui::MenuItem create_colours_menu(){
 	create_menu_item_with_mnemonic( menu_3, "Q3Radiant Original", "ColorSchemeQER" );
 	create_menu_item_with_mnemonic( menu_3, "Black and Green", "ColorSchemeBlackAndGreen" );
 	create_menu_item_with_mnemonic( menu_3, "Maya/Max/Lightwave Emulation", "ColorSchemeYdnar" );
+	create_menu_item_with_mnemonic(menu_3, "Adwaita Dark", "ColorSchemeAdwaitaDark");
 
 	menu_separator( menu_in_menu );
 
@@ -3395,6 +3443,7 @@ void MainFrame_Construct(){
 	GlobalCommands_insert( "ColorSchemeQER", makeCallbackF(ColorScheme_QER) );
 	GlobalCommands_insert( "ColorSchemeBlackAndGreen", makeCallbackF(ColorScheme_Black) );
 	GlobalCommands_insert( "ColorSchemeYdnar", makeCallbackF(ColorScheme_Ydnar) );
+	GlobalCommands_insert("ColorSchemeAdwaitaDark", makeCallbackF(ColorScheme_AdwaitaDark));
 	GlobalCommands_insert( "ChooseTextureBackgroundColor", makeCallback( g_ColoursMenu.m_textureback ) );
 	GlobalCommands_insert( "ChooseGridBackgroundColor", makeCallback( g_ColoursMenu.m_xyback ) );
 	GlobalCommands_insert( "ChooseGridMajorColor", makeCallback( g_ColoursMenu.m_gridmajor ) );
