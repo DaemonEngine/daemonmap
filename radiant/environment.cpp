@@ -167,6 +167,8 @@ namespace
 {
 CopiedString home_path;
 CopiedString app_path;
+	CopiedString lib_path;
+	CopiedString data_path;
 }
 
 const char* environment_get_home_path(){
@@ -177,10 +179,21 @@ const char* environment_get_app_path(){
 	return app_path.c_str();
 }
 
+
+const char *environment_get_lib_path()
+{
+	return lib_path.c_str();
+}
+
+const char *environment_get_data_path()
+{
+	return data_path.c_str();
+}
+
 bool portable_app_setup(){
 	StringOutputStream confdir( 256 );
 	confdir << app_path.c_str() << "settings/";
-	if ( file_exists( confdir.c_str() ) ) {
+	if ( file_is_directory( confdir.c_str() ) ) {
 		home_path = confdir.c_str();
 		return true;
 	}
@@ -251,9 +264,31 @@ void environment_init( int argc, char const* argv[] ){
 		ASSERT_MESSAGE( !string_empty( app_path.c_str() ), "failed to deduce app path" );
 	}
 
+	{
+		StringOutputStream buffer;
+		buffer << app_path.c_str() << "../lib/" << RADIANT_BASENAME << "/";
+		if ( file_is_directory( buffer.c_str() ) ) {
+			lib_path = buffer.c_str();
+		}
+		else {
+			lib_path = app_path.c_str();
+		}
+	}
+
+	{
+		StringOutputStream buffer;
+		buffer << app_path.c_str() << "../share/" << RADIANT_BASENAME << "/";
+		if ( file_is_directory( buffer.c_str() ) ) {
+			data_path = buffer.c_str();
+		}
+		else {
+			data_path = app_path.c_str();
+		}
+	}
+
 	if ( !portable_app_setup() ) {
 		StringOutputStream home( 256 );
-		home << DirectoryCleaned( g_get_user_config_dir() ) << "netradiant/";
+		home << DirectoryCleaned(g_get_user_config_dir()) << "/" << RADIANT_BASENAME << "/";
 		Q_mkdir( home.c_str() );
 		home_path = home.c_str();
 	}
@@ -282,6 +317,9 @@ void environment_init( int argc, char const* argv[] ){
 		StringOutputStream app( 256 );
 		app << PathCleaned( filename );
 		app_path = app.c_str();
+
+		lib_path = app_path;
+		data_path = app_path;
 	}
 
 	if ( !portable_app_setup() ) {

@@ -5,9 +5,27 @@ project(NetRadiant C CXX)
 option(BUILD_RADIANT "Build the GUI" ON)
 option(BUILD_CRUNCH "Build Crunch image support" OFF)
 option(USE_WERROR "Build with -Werror -pedantic-errors" OFF)
+option(STANDARD_INSTALL "Install following Filesystem Hierarchy Standard" OFF)
+
+#-----------------------------------------------------------------------
+# Paths
+#-----------------------------------------------------------------------
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
+endif ()
+
+set(RADIANT_BASENAME netradiant CACHE INTERNAL "...")
+add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
+
+set(RADIANT_LIB_SUBDIR . CACHE INTERNAL "...")
+set(RADIANT_BIN_SUBDIR . CACHE INTERNAL "...")
+set(RADIANT_DATA_SUBDIR . CACHE INTERNAL "...")
+
+if (STANDARD_INSTALL)
+	set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
+	set(RADIANT_BIN_SUBDIR bin)
+	set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
 endif ()
 
 #-----------------------------------------------------------------------
@@ -209,7 +227,7 @@ macro(radiant_tool name)
     add_executable(${name} ${ARGN})
     install(
             TARGETS ${name}
-            RUNTIME DESTINATION .
+            RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}/.
     )
     if (NOT (CMAKE_EXECUTABLE_SUFFIX STREQUAL ".${RADIANT_EXECUTABLE}"))
         add_custom_command(TARGET ${name} POST_BUILD
@@ -217,7 +235,7 @@ macro(radiant_tool name)
                 VERBATIM
                 )
         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-                ${name}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_INSTALL_PREFIX}/${name}.${RADIANT_EXECUTABLE})
+                ${name}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_INSTALL_PREFIX}/${RADIANT_BIN_SUBDIR}/${name}.${RADIANT_EXECUTABLE})
                 ")
     endif ()
 endmacro()
@@ -267,10 +285,10 @@ install(
         DIRECTORY
         setup/data/tools/
         docs
-        DESTINATION .
+        DESTINATION ${RADIANT_DATA_SUBDIR}/.
 )
 
-install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}\" --install)"
+install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}/${RADIANT_DATA_SUBDIR}\" --install)"
 )
 
 include(cmake/scripts/package.cmake)

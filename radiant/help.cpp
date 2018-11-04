@@ -115,8 +115,8 @@ void process_xlink( const char* filename, const char *menu_name, const char *bas
 
 void create_game_help_menu( ui::Menu menu ){
 	StringOutputStream filename( 256 );
-	filename << AppPath_get() << "global.xlink";
-	process_xlink( filename.c_str(), "General", AppPath_get(), menu );
+	filename << DataPath_get() << "global.xlink";
+	process_xlink(filename.c_str(), "General", DataPath_get(), menu);
 
 #if 1
 	filename.clear();

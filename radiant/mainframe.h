@@ -213,7 +213,12 @@ extern CopiedString g_strPakPath[g_pakPathCount];
 const char* PakPath_get( int num );
 
 extern CopiedString g_strAppPath;
+extern CopiedString g_strLibPath;
+extern CopiedString g_strDataPath;
+
 const char* AppPath_get();
+const char *LibPath_get();
+const char *DataPath_get();
 
 extern CopiedString g_strSettingsPath;
 const char* SettingsPath_get();

@@ -437,9 +437,21 @@ void setPakPath( int num, const char* path ){
 // App Path
 
 CopiedString g_strAppPath;                 ///< holds the full path of the executable
+CopiedString g_strLibPath;
+CopiedString g_strDataPath;
 
 const char* AppPath_get(){
 	return g_strAppPath.c_str();
+}
+
+const char *LibPath_get()
+{
+    return g_strLibPath.c_str();
+}
+
+const char *DataPath_get()
+{
+    return g_strDataPath.c_str();
 }
 
 /// the path to the local rc-dir
@@ -753,7 +765,7 @@ void Radiant_detachGameToolsPathObserver( ModuleObserver& observer ){
 void Radiant_Initialise(){
 	GlobalModuleServer_Initialise();
 
-	Radiant_loadModulesFromRoot( AppPath_get() );
+	Radiant_loadModulesFromRoot( LibPath_get() );
 
 	Preferences_Load();
 

@@ -26,6 +26,10 @@ void environment_init( int argc, char const* argv[] );
 const char* environment_get_home_path();
 const char* environment_get_app_path();
 
+const char *environment_get_lib_path();
+
+const char *environment_get_data_path();
+
 extern int g_argc;
 extern char const** g_argv;
 

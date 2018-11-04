@@ -330,6 +330,8 @@ void paths_init(){
 	Q_mkdir( g_strSettingsPath.c_str() );
 
 	g_strAppPath = environment_get_app_path();
+	g_strLibPath = environment_get_lib_path();
+	g_strDataPath = environment_get_data_path();
 
 	// radiant is installed in the parent dir of "tools/"
 	// NOTE: this is not very easy for debugging
@@ -337,12 +339,12 @@ void paths_init(){
 	// (for now I had to create symlinks)
 	{
 		StringOutputStream path( 256 );
-		path << g_strAppPath.c_str() << "bitmaps/";
+		path << g_strDataPath.c_str() << "bitmaps/";
 		BitmapsPath_set( path.c_str() );
 	}
 
 	// we will set this right after the game selection is done
-	g_strGameToolsPath = g_strAppPath;
+	g_strGameToolsPath = g_strDataPath;
 }
 
 bool check_version_file( const char* filename, const char* version ){
