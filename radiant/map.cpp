@@ -1580,8 +1580,13 @@ tryDecompile:
 	if ( n && ( extension_equal( path_get_extension( filename ), "bsp" ) || extension_equal( path_get_extension( filename ), "map" ) ) ) {
 		StringBuffer output;
 		output.push_string( AppPath_get() );
-		output.push_string( "q3map2." );
+		output.push_string( "q3map2" );
+
+		#if GDEF_OS_WINDOWS
+		output.push_string( "." );
 		output.push_string( RADIANT_EXECUTABLE );
+		#endif // GDEF_OS_WINDOWS
+
 		output.push_string( " -v -game " );
 		output.push_string( ( type && *type ) ? type : "quake3" );
 		output.push_string( " -fs_basepath \"" );

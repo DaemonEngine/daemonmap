@@ -215,13 +215,7 @@ endif ()
 
 if (CMAKE_EXECUTABLE_SUFFIX)
     string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
-else ()
-    execute_process(
-            COMMAND uname -m
-            OUTPUT_VARIABLE RADIANT_EXECUTABLE
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-endif ()
+endif()
 
 macro(radiant_tool name)
     add_executable(${name} ${ARGN})
@@ -229,15 +223,6 @@ macro(radiant_tool name)
             TARGETS ${name}
             RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}/.
     )
-    if (NOT (CMAKE_EXECUTABLE_SUFFIX STREQUAL ".${RADIANT_EXECUTABLE}"))
-        add_custom_command(TARGET ${name} POST_BUILD
-                COMMAND ln -f -s "$<TARGET_FILE_NAME:${name}>" "${PROJECT_BINARY_DIR}/${name}.${RADIANT_EXECUTABLE}"
-                VERBATIM
-                )
-        install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-                ${name}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_INSTALL_PREFIX}/${RADIANT_BIN_SUBDIR}/${name}.${RADIANT_EXECUTABLE})
-                ")
-    endif ()
 endmacro()
 
 if (BUILD_RADIANT)
