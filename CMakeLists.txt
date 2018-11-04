@@ -5,7 +5,7 @@ project(NetRadiant C CXX)
 option(BUILD_RADIANT "Build the GUI" ON)
 option(BUILD_CRUNCH "Build Crunch image support" OFF)
 option(USE_WERROR "Build with -Werror -pedantic-errors" OFF)
-option(STANDARD_INSTALL "Install following Filesystem Hierarchy Standard" OFF)
+option(FHS_INSTALL "Install according to Filesystem Hierarchy Standard" OFF)
 
 #-----------------------------------------------------------------------
 # Paths
@@ -22,7 +22,7 @@ set(RADIANT_LIB_SUBDIR . CACHE INTERNAL "...")
 set(RADIANT_BIN_SUBDIR . CACHE INTERNAL "...")
 set(RADIANT_DATA_SUBDIR . CACHE INTERNAL "...")
 
-if (STANDARD_INSTALL)
+if (FHS_INSTALL)
     set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
     set(RADIANT_BIN_SUBDIR bin)
     set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
@@ -275,7 +275,7 @@ install(DIRECTORY
 install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}/${RADIANT_DATA_SUBDIR}\" --install)"
 )
 
-if(NOT WIN32 AND NOT APPLE AND STANDARD_INSTALL)
+if(NOT WIN32 AND NOT APPLE AND FHS_INSTALL)
     install(FILES
         ${PROJECT_SOURCE_DIR}/icons/netradiant.png
         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
