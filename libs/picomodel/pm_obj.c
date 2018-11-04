@@ -524,8 +524,9 @@ static picoModel_t *_obj_load( PM_PARAMS_LOAD ){
 		newSurface = PicoNewSurface( model ); \
 		if ( newSurface == NULL ) {	\
 			_obj_error_return( "Error allocating surface" ); } \
-		/* reset face index for surface */ \
+		/* reset face index and vertex index for surface */ \
 		curFace = 0; \
+		curVertex = 0; \
 		/* if we can, assign the previous shader to this surface */	\
 		if ( curSurface ) {	\
 			PicoSetSurfaceShader( newSurface, curSurface->shader ); } \
