@@ -224,18 +224,14 @@ getValue () {
 
 downloadExtraUrls ()
 {
-	local dir
-
-	dir="${1}"
-
-	if [ -f "${dir}/extra-urls.txt" ]
+	if [ -f 'extra-urls.txt' ]
 	then
-		while IFS='	' read -r FILE URL
+		while IFS='	' read -r extra_file extra_url
 		do
 			(
-				${WGET} -O "${dir}/${FILE}" "${URL}"
+				${WGET} -O "${extra_file}" "${extra_url}"
 			) </dev/null
-		done < "${dir}/extra-urls.txt"
+		done < 'extra-urls.txt'
 	fi
 }
 
@@ -334,11 +330,11 @@ downloadPack () {
 				;;
 		esac
 
-		if [ -d "${download_dir}/${pack}" ]
+		if [ -d "${pack}" ]
 		then
 			(
-				cd "${download_dir}/${pack}"
-				downloadExtraUrls "${pack}"
+				cd "${pack}"
+				downloadExtraUrls
 			)
 		fi
 
