@@ -1,16 +1,21 @@
 add_subdirectory(cmdlib)
 add_subdirectory(container)
+
 if (BUILD_CRUNCH)
     add_subdirectory(crnrgba)
 endif ()
+
 add_subdirectory(ddslib)
 add_subdirectory(debugging)
 add_subdirectory(etclib)
 add_subdirectory(filematch)
 add_subdirectory(generic)
+
 if (BUILD_RADIANT)
     add_subdirectory(gtkutil)
+    add_subdirectory(uilib)
 endif ()
+
 add_subdirectory(l_net)
 add_subdirectory(math)
 add_subdirectory(mathlib)
@@ -24,7 +29,6 @@ add_subdirectory(signal)
 add_subdirectory(splines)
 add_subdirectory(stream)
 add_subdirectory(string)
-add_subdirectory(uilib)
 add_subdirectory(xml)
 
 add_library(libs

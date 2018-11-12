@@ -41,13 +41,16 @@ set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
 find_package(Git REQUIRED)
+
 execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         OUTPUT_VARIABLE GIT_VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
 set(RADIANT_VERSION_STRING "${NetRadiant_VERSION}n")
+
 if (GIT_VERSION)
     set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
 endif ()
@@ -61,6 +64,7 @@ message(STATUS "Building ${PROJECT_NAME} ${RADIANT_VERSION_STRING} ${RADIANT_ABO
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
 if (CMAKE_VERSION VERSION_LESS "3.1")
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
         include(CheckCXXCompilerFlag)
@@ -80,16 +84,20 @@ endif ()
 #-----------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
+
 macro(addflags_c args)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${args}")
 endmacro()
+
 macro(addflags_cxx args)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${args}")
+
 endmacro()
 macro(addflags args)
     addflags_c("${args}")
     addflags_cxx("${args}")
 endmacro()
+
 addflags("-fno-strict-aliasing")
 if (NOT WIN32)
     addflags("-fvisibility=hidden")
@@ -111,8 +119,11 @@ addflags("-Wno-unused-variable")
 addflags("-Wno-unused-parameter")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
+
+if (BUILD_RADIANT)
 set(GTK_TARGET 2 CACHE STRING "GTK target")
 add_definitions(-DGTK_TARGET=${GTK_TARGET})
+endif()
 
 #-----------------------------------------------------------------------
 # Defs
@@ -129,6 +140,7 @@ if (NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-D_DEBUG=1)
 endif ()
 
+if (BUILD_RADIANT)
 macro(disable_deprecated name gtk2only)
     add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
     if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
@@ -142,9 +154,13 @@ disable_deprecated(GDK 0)
 disable_deprecated(GDK_PIXBUF 0)
 disable_deprecated(GTK 1)
 disable_deprecated(PANGO 0)
+endif()
 
 if (APPLE)
+    if (BUILD_RADIANT)
     option(XWINDOWS "Build against X11" ON)
+    endif()
+
     add_definitions(
             -DPOSIX=1
     )
@@ -154,13 +170,16 @@ elseif (WIN32)
             -D_WIN32=1
     )
 else ()
+    if (BUILD_RADIANT)
     set(XWINDOWS ON)
+    endif()
+
     add_definitions(
             -DPOSIX=1
     )
 endif ()
 
-if (XWINDOWS)
+if (BUILD_RADIANT AND XWINDOWS)
     find_package(X11 REQUIRED)
     include_directories(${X11_INCLUDE_DIR})
     add_definitions(-DXWINDOWS=1)
@@ -174,6 +193,7 @@ if (WIN32 AND NOT CMAKE_CROSSCOMPILING)
 else ()
     set(BUNDLE_LIBRARIES_DEFAULT OFF)
 endif ()
+
 option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
 macro(copy_dlls target)
@@ -191,7 +211,10 @@ endmacro()
 #-----------------------------------------------------------------------
 
 add_subdirectory(libs)
+
+if (BUILD_RADIANT)
 add_subdirectory(include)
+endif()
 
 #-----------------------------------------------------------------------
 # Plugins
@@ -215,7 +238,7 @@ endif ()
 
 if (CMAKE_EXECUTABLE_SUFFIX)
     string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
-endif()
+endif ()
 
 macro(radiant_tool name)
     add_executable(${name} ${ARGN})
@@ -272,21 +295,24 @@ install(DIRECTORY
         DESTINATION ${RADIANT_DATA_SUBDIR}/.
 )
 
-install(CODE "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}/${RADIANT_DATA_SUBDIR}\" --install)"
-)
+if (DOWNLOAD_GAMEPACKS)
+    install(CODE
+            "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}\" --install)"
+        )
+endif()
 
 if(NOT WIN32 AND NOT APPLE AND FHS_INSTALL)
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.png
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
+            ${PROJECT_SOURCE_DIR}/icons/netradiant.png
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+            ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
+            ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
     )
 endif()
 

@@ -23,7 +23,6 @@
 
 #include <string>
 
-#include "qerplugin.h"
 #include "stream/stringstream.h"
 
 XmlTagBuilder::XmlTagBuilder(){
