@@ -256,9 +256,17 @@ void HomePaths_Realise(){
 
 #if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 			path.clear();
-			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
-			g_qeglobals.m_userEnginePath = path.c_str();
-			break;
+			path << DirectoryCleaned( g_get_user_data_dir() ) << ( prefix + 1 ) << "/";
+			if ( file_exists( path.c_str() ) && file_is_directory( path.c_str() ) ) {
+				g_qeglobals.m_userEnginePath = path.c_str();
+				break;
+			}
+			else {
+				path.clear();
+				path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
+				g_qeglobals.m_userEnginePath = path.c_str();
+				break;
+			}
 #endif
 		}
 
