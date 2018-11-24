@@ -43,7 +43,11 @@
 #define MAX_GAME_PATHS  10
 #define MAX_PAK_PATHS  200
 
+qboolean				customHomePath = qfalse;
 char                    *homePath;
+#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+char                    *xdgDataHomePath;
+#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 char installPath[ MAX_OS_PATH ];
 
 int numBasePaths;
@@ -112,6 +116,16 @@ void LokiInitPaths( char *argv0 ){
 	else {
 		home = homePath;
 	}
+
+	#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+	xdgDataHomePath = getenv( "XDG_DATA_HOME" );
+
+	if ( xdgDataHomePath == NULL ) {
+		char *subPath = "/.local/share";
+		xdgDataHomePath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
+		sprintf( xdgDataHomePath, "%s%s", home, subPath );
+	}
+	#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 
 	#ifndef Q_UNIX
 	/* this is kinda crap, but hey */
@@ -286,7 +300,7 @@ void AddBasePath( char *path ){
 
 /*
    AddHomeBasePath() - ydnar
-   adds a base path to the beginning of the list, prefixed by ~/
+   adds a base path to the beginning of the list
  */
 
 void AddHomeBasePath( char *path ){
@@ -307,8 +321,36 @@ void AddHomeBasePath( char *path ){
 		strcpy( temp, homePath );
 	}
 	else {
+		char *tempHomePath;
+		tempHomePath = homePath;
+
+		#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+		/*
+		   on Linux, check if game uses ${XDG_DATA_HOME}/prefix instead of ${HOME}/.prefix
+		   if yes and home path is not user supplied
+		   use XDG_DATA_HOME instead of HOME
+		   and strip the leading dot
+		  
+		   basically it produces
+		   ${XDG_DATA_HOME}/unvanquished
+		   /user/supplied/home/path/unvanquished
+		   
+		   or
+		   ${HOME}/.q3a
+		   /user/supplied/home/path/.q3a
+		 */
+
+		sprintf( temp, "%s/%s", xdgDataHomePath, ( path + 1 ) );
+		if ( access( temp, X_OK ) == 0 ) {
+			if ( customHomePath == qfalse ) {
+				tempHomePath = xdgDataHomePath;
+			}
+			path = path + 1;
+		}
+		#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+
 		/* concatenate home dir and path */
-		sprintf( temp, "%s/%s", homePath, path );
+		sprintf( temp, "%s/%s", tempHomePath, path );
 	}
 
 	/* make a hole */
@@ -477,6 +519,7 @@ void InitPaths( int *argc, char **argv ){
 				Error( "Out of arguments: No path specified after %s.", argv[ i - 1 ] );
 			}
 			argv[ i - 1 ] = NULL;
+			customHomePath = qtrue;
 			homePath = argv[i];
 			argv[ i ] = NULL;
 		}
