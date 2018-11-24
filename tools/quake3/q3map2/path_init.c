@@ -72,24 +72,20 @@ char *LokiGetHomeDir( void ){
 	static char	buf[ 4096 ];
 	struct passwd   pw, *pwp;
 	char            *home;
-	static char homeBuf[MAX_OS_PATH];
-
 
 	/* get the home environment variable */
 	home = getenv( "HOME" );
 
 	/* look up home dir in password database */
-	if(!home)
+	if( home == NULL )
 	{
 		if ( getpwuid_r( getuid(), &pw, buf, sizeof( buf ), &pwp ) == 0 ) {
 			return pw.pw_dir;
 		}
 	}
 
-	snprintf( homeBuf, sizeof( homeBuf ), "%s/.", home );
-
 	/* return it */
-	return homeBuf;
+	return home;
 	#endif
 }
 
@@ -103,7 +99,7 @@ char *LokiGetHomeDir( void ){
 void LokiInitPaths( char *argv0 ){
 	char *home;
 
-	if ( !homePath ) {
+	if ( homePath == NULL ) {
 		/* get home dir */
 		home = LokiGetHomeDir();
 		if ( home == NULL ) {
@@ -113,7 +109,7 @@ void LokiInitPaths( char *argv0 ){
 		/* set home path */
 		homePath = home;
 	}
-	else{
+	else {
 		home = homePath;
 	}
 
@@ -135,7 +131,7 @@ void LokiInitPaths( char *argv0 ){
 	if ( strrchr( temp, '/' ) ) {
 		argv0 = strrchr( argv0, '/' ) + 1;
 	}
-	else if ( path ) {
+	else if ( path != NULL ) {
 
 		/*
 		   This code has a special behavior when q3map2 is a symbolic link.
@@ -296,9 +292,8 @@ void AddBasePath( char *path ){
 void AddHomeBasePath( char *path ){
 	int i;
 	char temp[ MAX_OS_PATH ];
-	int homePathLen;
 
-	if ( !homePath ) {
+	if ( homePath == NULL ) {
 		return;
 	}
 
@@ -307,26 +302,11 @@ void AddHomeBasePath( char *path ){
 		return;
 	}
 
-	/* strip leading dot, if homePath does not end in /. */
-	homePathLen = strlen( homePath );
-	if ( !strcmp( path, "." ) ) {
+	if ( strcmp( path, "." ) == 0 ) {
 		/* -fs_homebase . means that -fs_home is to be used as is */
 		strcpy( temp, homePath );
 	}
-	else if ( homePathLen >= 2 && !strcmp( homePath + homePathLen - 2, "/." ) ) {
-		/* remove trailing /. of homePath */
-		homePathLen -= 2;
-
-		/* concatenate home dir and path */
-		sprintf( temp, "%.*s/%s", homePathLen, homePath, path );
-	}
-	else
-	{
-		/* remove leading . of path */
-		if ( path[0] == '.' ) {
-			++path;
-		}
-
+	else {
 		/* concatenate home dir and path */
 		sprintf( temp, "%s/%s", homePath, path );
 	}
