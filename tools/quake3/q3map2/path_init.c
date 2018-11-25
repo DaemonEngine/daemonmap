@@ -70,9 +70,9 @@ char                    *homeBasePath = NULL;
  */
 
 char *LokiGetHomeDir( void ){
-	#ifndef Q_UNIX
+	#if GDEF_OS_WINDOWS
 	return NULL;
-	#else
+	#else // !GDEF_OS_WINDOWS
 	static char	buf[ 4096 ];
 	struct passwd   pw, *pwp;
 	char            *home;
@@ -127,10 +127,10 @@ void LokiInitPaths( char *argv0 ){
 	}
 	#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 
-	#ifndef Q_UNIX
+	#if GDEF_OS_WINDOWS
 	/* this is kinda crap, but hey */
 	strcpy( installPath, "../" );
-	#else
+	#else // !GDEF_OS_WINDOWS
 
 	char temp[ MAX_OS_PATH ];
 	char *path;
@@ -213,7 +213,7 @@ void LokiInitPaths( char *argv0 ){
 		*( strrchr( installPath, '/' ) ) = '\0';
 		*( strrchr( installPath, '/' ) ) = '\0';
 	}
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
