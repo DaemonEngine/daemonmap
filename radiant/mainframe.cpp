@@ -254,7 +254,7 @@ void HomePaths_Realise(){
 			}
 #endif
 
-#if GDEF_OS_POSIX
+#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 			path.clear();
 			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
 			g_qeglobals.m_userEnginePath = path.c_str();
