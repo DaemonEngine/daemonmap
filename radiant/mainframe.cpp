@@ -187,7 +187,7 @@ void VFS_Destroy(){
 // Home Paths
 
 #if GDEF_OS_WINDOWS
-															#include <shlobj.h>
+#include <shlobj.h>
 #include <objbase.h>
 const GUID qFOLDERID_SavedGames = {0x4C5C32FF, 0xBB9D, 0x43b0, {0xB5, 0xB4, 0x2D, 0x72, 0xE5, 0x4E, 0xAA, 0xA4}};
 #define qREFKNOWNFOLDERID GUID
