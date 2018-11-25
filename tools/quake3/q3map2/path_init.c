@@ -45,9 +45,15 @@
 
 qboolean				customHomePath = qfalse;
 char                    *homePath;
+
+#if GDEF_OS_MACOS
+char					*macLibraryApplicationSupportPath;
+#endif
+
 #if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 char                    *xdgDataHomePath;
 #endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+
 char installPath[ MAX_OS_PATH ];
 
 int numBasePaths;
@@ -116,6 +122,12 @@ void LokiInitPaths( char *argv0 ){
 	else {
 		home = homePath;
 	}
+
+	#if GDEF_OS_MACOS
+		char *subPath = "/Library/Application Support";
+		macLibraryApplicationSupportPath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
+		sprintf( macLibraryApplicationSupportPath, "%s%s", home, subPath );
+	#endif // GDEF_OS_MACOS
 
 	#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 	xdgDataHomePath = getenv( "XDG_DATA_HOME" );
@@ -323,6 +335,22 @@ void AddHomeBasePath( char *path ){
 	else {
 		char *tempHomePath;
 		tempHomePath = homePath;
+
+		/* homePath is . on Windows if not user supplied */
+
+		#if GDEF_OS_MACOS
+		/*
+		   use ${HOME}/Library/Application as ${HOME}
+		   if home path is not user supplied
+		   and strip the leading dot from prefix in any case
+		  
+		   basically it produces
+		   ${HOME}/Library/Application/unvanquished
+		   /user/supplied/home/path/unvanquished
+		*/
+		tempHomePath = macLibraryApplicationSupportPath;
+		path = path + 1;
+		#endif // GDEF_OS_MACOS
 
 		#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 		/*
