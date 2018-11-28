@@ -882,7 +882,7 @@ static void ASE_Process( void ){
 			}
 		}
 		else if ( s_token[0] ) {
-			Sys_Printf( "Unknown token '%s'\n", s_token );
+			Error( "Unknown token '%s'\n", s_token );
 		}
 	}
 

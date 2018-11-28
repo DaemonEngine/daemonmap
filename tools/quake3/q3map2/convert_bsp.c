@@ -183,7 +183,7 @@ int ConvertBSPMain( int argc, char **argv ){
 				convertGame = GetGame( argv[ i ] );
 				map_allowed = qfalse;
 				if ( convertGame == NULL ) {
-					Sys_Printf( "Unknown conversion format \"%s\". Defaulting to ASE.\n", argv[ i ] );
+					Sys_FPrintf( SYS_WRN, "Unknown conversion format \"%s\". Defaulting to ASE.\n", argv[ i ] );
 				}
 			}
 		}

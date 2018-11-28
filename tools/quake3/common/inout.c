@@ -56,6 +56,7 @@ socket_t *brdcst_socket;
 netmessage_t msg;
 
 qboolean verbose = qfalse;
+qboolean werror = qfalse;
 
 // our main document
 // is streamed through the network to Radiant
@@ -315,6 +316,11 @@ void Sys_FPrintf( int flag, const char *format, ... ){
 	va_start( argptr, format );
 	vsprintf( out_buffer, format, argptr );
 	va_end( argptr );
+
+	if ( ( flag == SYS_WRN ) && ( werror == qtrue ) ) {
+		Error( out_buffer );
+		return;
+	}
 
 	FPrintf( flag, out_buffer );
 }
