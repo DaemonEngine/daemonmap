@@ -255,7 +255,7 @@ static void LoadWEBPBuffer( byte *buffer, int size, byte **pixels, int *width, i
 	
 	if ( !WebPGetInfo( buffer, ( size_t) size, &image_width, &image_height ) )
 	{
-		Sys_Printf( "WARNING: An error occurred reading WEBP image info\n" );
+		Sys_FPrintf( SYS_WRN, "WARNING: An error occurred reading WEBP image info\n" );
 		return;
 	}
 

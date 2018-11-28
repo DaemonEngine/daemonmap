@@ -49,6 +49,7 @@ void Broadcast_Shutdown();
 #define SYS_NOXML 4 // don't send that down the XML stream
 
 extern qboolean verbose;
+extern qboolean werror;
 void Sys_Printf( const char *text, ... );
 void Sys_FPrintf( int flag, const char *text, ... );
 
