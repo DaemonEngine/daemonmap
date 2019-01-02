@@ -120,6 +120,7 @@ struct _QERFuncTable_1
 	const char* ( *getLocalRcPath )( );
 	const char* ( *getGameToolsPath )( );
 	const char* ( *getAppPath )( );
+	const char* ( *getDataPath )( );
 	const char* ( *getSettingsPath )( );
 	const char* ( *getMapsPath )( );
 

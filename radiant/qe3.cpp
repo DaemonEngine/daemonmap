@@ -86,7 +86,7 @@ void QE_InitVFS(){
 
 	// editor builtin VFS
 	StringOutputStream editorGamePath( 256 );
-	editorGamePath << GlobalRadiant().getAppPath() << DEFAULT_EDITORVFS_DIRNAME;
+	editorGamePath << GlobalRadiant().getDataPath() << DEFAULT_EDITORVFS_DIRNAME;
 	GlobalFileSystem().initDirectory( editorGamePath.c_str() );
 
 	// if we have a mod dir

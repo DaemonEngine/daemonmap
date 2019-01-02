@@ -319,8 +319,13 @@ if (BUILD_BINARIES)
 endif ()
 
 if (DOWNLOAD_GAMEPACKS)
+    if (FHS_INSTALL)
+       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share/netradiant")
+    else ()
+       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+    endif ()
     install(CODE
-            "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${CMAKE_INSTALL_PREFIX}\" --install)"
+	    "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${GAME_INSTALL_PREFIX}\" --install)"
         )
 endif()
 
