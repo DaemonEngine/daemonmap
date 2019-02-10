@@ -25,38 +25,30 @@
 #include "gtkutil/accelerator.h"
 
 
-const Accelerator &GlobalShortcuts_insert(const char *name, const Accelerator &accelerator);
-
-void GlobalShortcuts_register(const char *name, int type); // 1 = command, 2 = toggle
+const Accelerator& GlobalShortcuts_insert( const char* name, const Accelerator& accelerator );
+void GlobalShortcuts_register( const char* name, int type ); // 1 = command, 2 = toggle
 void GlobalShortcuts_reportUnregistered();
 
-class CommandVisitor {
+class CommandVisitor
+{
 public:
-    virtual void visit(const char *name, Accelerator &accelerator) = 0;
+virtual void visit( const char* name, Accelerator& accelerator ) = 0;
 };
 
-void GlobalCommands_insert(const char *name, const Callback<void()> &callback,
-                           const Accelerator &accelerator = accelerator_null());
+void GlobalCommands_insert( const char* name, const Callback<void()>& callback, const Accelerator& accelerator = accelerator_null() );
+const Command& GlobalCommands_find( const char* name );
 
-const Command &GlobalCommands_find(const char *name);
+void GlobalToggles_insert( const char* name, const Callback<void()>& callback, const Callback<void(const Callback<void(bool)> &)>& exportCallback, const Accelerator& accelerator = accelerator_null() );
+const Toggle& GlobalToggles_find( const char* name );
 
-void GlobalToggles_insert(const char *name, const Callback<void()> &callback,
-                          const Callback<void(const Callback<void(bool)> &)> &exportCallback,
-                          const Accelerator &accelerator = accelerator_null());
-
-const Toggle &GlobalToggles_find(const char *name);
-
-void GlobalKeyEvents_insert(const char *name, const Accelerator &accelerator, const Callback<void()> &keyDown,
-                            const Callback<void()> &keyUp);
-
-const KeyEvent &GlobalKeyEvents_find(const char *name);
+void GlobalKeyEvents_insert( const char* name, const Accelerator& accelerator, const Callback<void()>& keyDown, const Callback<void()>& keyUp );
+const KeyEvent& GlobalKeyEvents_find( const char* name );
 
 
 void DoCommandListDlg();
 
-void LoadCommandMap(const char *path);
-
-void SaveCommandMap(const char *path);
+void LoadCommandMap( const char* path );
+void SaveCommandMap( const char* path );
 
 
 #endif

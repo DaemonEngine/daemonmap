@@ -23,9 +23,8 @@
 #define INCLUDED_MDLIMAGE_H
 
 class Image;
-
 class ArchiveFile;
 
-Image *LoadMDLImage(ArchiveFile &file);
+Image* LoadMDLImage( ArchiveFile& file );
 
 #endif

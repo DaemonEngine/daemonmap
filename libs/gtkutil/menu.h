@@ -29,37 +29,23 @@ typedef int gint;
 typedef gint gboolean;
 typedef struct _GSList GSList;
 
-void menu_add_item(ui::Menu menu, ui::MenuItem item);
-
-ui::MenuItem menu_separator(ui::Menu menu);
-
-ui::TearoffMenuItem menu_tearoff(ui::Menu menu);
-
-ui::MenuItem new_sub_menu_item_with_mnemonic(const char *mnemonic);
-
-ui::Menu create_sub_menu_with_mnemonic(ui::MenuBar bar, const char *mnemonic);
-
-ui::Menu create_sub_menu_with_mnemonic(ui::Menu parent, const char *mnemonic);
-
-ui::MenuItem create_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const Callback<void()> &callback);
-
-ui::CheckMenuItem
-create_check_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const Callback<void()> &callback);
-
-ui::RadioMenuItem create_radio_menu_item_with_mnemonic(ui::Menu menu, GSList **group, const char *mnemonic,
-                                                       const Callback<void()> &callback);
+void menu_add_item( ui::Menu menu, ui::MenuItem item );
+ui::MenuItem menu_separator( ui::Menu menu );
+ui::TearoffMenuItem menu_tearoff( ui::Menu menu );
+ui::MenuItem new_sub_menu_item_with_mnemonic( const char* mnemonic );
+ui::Menu create_sub_menu_with_mnemonic( ui::MenuBar bar, const char* mnemonic );
+ui::Menu create_sub_menu_with_mnemonic( ui::Menu parent, const char* mnemonic );
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback<void()>& callback );
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Callback<void()>& callback );
+ui::RadioMenuItem create_radio_menu_item_with_mnemonic( ui::Menu menu, GSList** group, const char* mnemonic, const Callback<void()>& callback );
 
 class Command;
-
-ui::MenuItem create_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const Command &command);
-
+ui::MenuItem create_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Command& command );
 class Toggle;
+ui::CheckMenuItem create_check_menu_item_with_mnemonic( ui::Menu menu, const char* mnemonic, const Toggle& toggle );
 
-ui::CheckMenuItem create_check_menu_item_with_mnemonic(ui::Menu menu, const char *mnemonic, const Toggle &toggle);
 
-
-void check_menu_item_set_active_no_signal(ui::CheckMenuItem item, gboolean active);
-
-void radio_menu_item_set_active_no_signal(ui::RadioMenuItem item, gboolean active);
+void check_menu_item_set_active_no_signal( ui::CheckMenuItem item, gboolean active );
+void radio_menu_item_set_active_no_signal( ui::RadioMenuItem item, gboolean active );
 
 #endif

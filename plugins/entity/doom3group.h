@@ -22,15 +22,14 @@
 #if !defined( INCLUDED_STATIC_H )
 #define INCLUDED_STATIC_H
 
-namespace scene {
-    class Node;
+namespace scene
+{
+class Node;
 }
 class EntityClass;
 
 void Doom3Group_construct();
-
 void Doom3Group_destroy();
-
-scene::Node &New_Doom3Group(EntityClass *eclass);
+scene::Node& New_Doom3Group( EntityClass* eclass );
 
 #endif

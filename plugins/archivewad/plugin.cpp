@@ -26,22 +26,19 @@
 
 #include "archive.h"
 
-class ArchiveWadAPI {
-    _QERArchiveTable m_archivewad;
+class ArchiveWadAPI
+{
+_QERArchiveTable m_archivewad;
 public:
-    typedef _QERArchiveTable Type;
+typedef _QERArchiveTable Type;
+STRING_CONSTANT( Name, "wad" );
 
-    STRING_CONSTANT(Name, "wad");
-
-    ArchiveWadAPI()
-    {
-        m_archivewad.m_pfnOpenArchive = &OpenArchive;
-    }
-
-    _QERArchiveTable *getTable()
-    {
-        return &m_archivewad;
-    }
+ArchiveWadAPI(){
+	m_archivewad.m_pfnOpenArchive = &OpenArchive;
+}
+_QERArchiveTable* getTable(){
+	return &m_archivewad;
+}
 };
 
 typedef SingletonModule<ArchiveWadAPI> ArchiveWadModule;
@@ -49,9 +46,8 @@ typedef SingletonModule<ArchiveWadAPI> ArchiveWadModule;
 ArchiveWadModule g_ArchiveWadModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ArchiveWadModule.selfRegister();
+	g_ArchiveWadModule.selfRegister();
 }

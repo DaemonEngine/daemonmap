@@ -9,6 +9,6 @@
 // -1: error
 // 0: timeout
 // 1: ready
-int Net_Wait(socket_t *sock, long sec, long usec);
+int Net_Wait( socket_t *sock, long sec, long usec );
 
 #endif

@@ -42,207 +42,190 @@
 #include "generic/callback.h"
 
 namespace {
-    const char SHADERTAG_FILE[] = "shadertags.xml";
+const char SHADERTAG_FILE[] = "shadertags.xml";
 }
 
 class ShaderPlugPluginDependencies : public GlobalRadiantModuleRef,
-                                     public GlobalFileSystemModuleRef,
-                                     public GlobalShadersModuleRef {
+	public GlobalFileSystemModuleRef,
+	public GlobalShadersModuleRef
+{
 public:
-    ShaderPlugPluginDependencies() :
-            GlobalShadersModuleRef(GlobalRadiant().getRequiredGameDescriptionKeyValue("shaders"))
-    {
-    }
+ShaderPlugPluginDependencies() :
+	GlobalShadersModuleRef( GlobalRadiant().getRequiredGameDescriptionKeyValue( "shaders" ) ){
+}
 };
 
-namespace Shaderplug {
-    ui::Window g_window{ui::null};
+namespace Shaderplug
+{
+ui::Window g_window{ui::null};
 
-    std::vector<const char *> archives;
-    std::set<std::string> shaders;
-    std::set<std::string> textures;
+std::vector<const char*> archives;
+std::set<std::string> shaders;
+std::set<std::string> textures;
 
-    XmlTagBuilder TagBuilder;
+XmlTagBuilder TagBuilder;
+void CreateTagFile();
 
-    void CreateTagFile();
+const char* init( void* hApp, void* pMainWidget ){
+	g_window = ui::Window::from(pMainWidget);
+	return "";
+}
+const char* getName(){
+	return "ShaderPlug";
+}
+const char* getCommandList(){
+	return "About;Create tag file";
+}
+const char* getCommandTitleList(){
+	return "";
+}
+void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
+	if ( string_equal( command, "About" ) ) {
+		GlobalRadiant().m_pfnMessageBox( g_window, "Shaderplug (1.0)\n\n"
+																 "by Shaderman (shaderman@gmx.net)",
+										 "About",
+										 eMB_OK,
+										 eMB_ICONDEFAULT );
+	}
+	if ( string_equal( command, "Create tag file" ) ) {
+		CreateTagFile();
+	}
+}
 
-    const char *init(void *hApp, void *pMainWidget)
-    {
-        g_window = ui::Window::from(pMainWidget);
-        return "";
-    }
+void loadArchiveFile( const char* filename ){
+	archives.push_back( filename );
+}
 
-    const char *getName()
-    {
-        return "ShaderPlug";
-    }
+void LoadTextureFile( const char* filename ){
+	std::string s_filename = filename;
 
-    const char *getCommandList()
-    {
-        return "About;Create tag file";
-    }
+	char buffer[256];
+	strcpy( buffer, "textures/" );
 
-    const char *getCommandTitleList()
-    {
-        return "";
-    }
+	// append filename without trailing file extension (.tga or .jpg for example)
+	strncat( buffer, filename, s_filename.length() - 4 );
 
-    void dispatch(const char *command, float *vMin, float *vMax, bool bSingleBrush)
-    {
-        if (string_equal(command, "About")) {
-            GlobalRadiant().m_pfnMessageBox(g_window, "Shaderplug (1.0)\n\n"
-                                                    "by Shaderman (shaderman@gmx.net)",
-                                            "About",
-                                            eMB_OK,
-                                            eMB_ICONDEFAULT);
-        }
-        if (string_equal(command, "Create tag file")) {
-            CreateTagFile();
-        }
-    }
+	std::set<std::string>::iterator iter;
+	iter = shaders.find( buffer );
 
-    void loadArchiveFile(const char *filename)
-    {
-        archives.push_back(filename);
-    }
+	// a shader with this name already exists
+	if ( iter == shaders.end() ) {
+		textures.insert( buffer );
+	}
+}
 
-    void LoadTextureFile(const char *filename)
-    {
-        std::string s_filename = filename;
+void GetTextures( const char* extension ){
+	GlobalFileSystem().forEachFile("textures/", extension, makeCallbackF(LoadTextureFile), 0);
+}
 
-        char buffer[256];
-        strcpy(buffer, "textures/");
+void LoadShaderList( const char* filename ){
+	if ( string_equal_prefix( filename, "textures/" ) ) {
+		shaders.insert( filename );
+	}
+}
 
-        // append filename without trailing file extension (.tga or .jpg for example)
-        strncat(buffer, filename, s_filename.length() - 4);
+void GetAllShaders(){
+	GlobalShaderSystem().foreachShaderName(makeCallbackF(LoadShaderList));
+}
 
-        std::set<std::string>::iterator iter;
-        iter = shaders.find(buffer);
+void GetArchiveList(){
+	GlobalFileSystem().forEachArchive(makeCallbackF(loadArchiveFile));
+	globalOutputStream() << "Shaderplug: " << (const Unsigned)Shaderplug::archives.size() << " archives found.\n";
+}
 
-        // a shader with this name already exists
-        if (iter == shaders.end()) {
-            textures.insert(buffer);
-        }
-    }
+void CreateTagFile(){
+	const char* shader_type = GlobalRadiant().getGameDescriptionKeyValue( "shaders" );
 
-    void GetTextures(const char *extension)
-    {
-        GlobalFileSystem().forEachFile("textures/", extension, makeCallbackF(LoadTextureFile), 0);
-    }
+	GetAllShaders();
+	globalOutputStream() << "Shaderplug: " << (const Unsigned)shaders.size() << " shaders found.\n";
 
-    void LoadShaderList(const char *filename)
-    {
-        if (string_equal_prefix(filename, "textures/")) {
-            shaders.insert(filename);
-        }
-    }
+	if ( string_equal( shader_type, "quake3" ) ) {
+		GetTextures( "jpg" );
+		GetTextures( "tga" );
+		GetTextures( "png" );
 
-    void GetAllShaders()
-    {
-        GlobalShaderSystem().foreachShaderName(makeCallbackF(LoadShaderList));
-    }
+		globalOutputStream() << "Shaderplug: " << (const Unsigned)textures.size() << " textures found.\n";
+	}
 
-    void GetArchiveList()
-    {
-        GlobalFileSystem().forEachArchive(makeCallbackF(loadArchiveFile));
-        globalOutputStream() << "Shaderplug: " << (const Unsigned) Shaderplug::archives.size() << " archives found.\n";
-    }
+	if ( shaders.size() || textures.size() != 0 ) {
+		globalOutputStream() << "Shaderplug: Creating XML tag file.\n";
 
-    void CreateTagFile()
-    {
-        const char *shader_type = GlobalRadiant().getGameDescriptionKeyValue("shaders");
+		TagBuilder.CreateXmlDocument();
 
-        GetAllShaders();
-        globalOutputStream() << "Shaderplug: " << (const Unsigned) shaders.size() << " shaders found.\n";
+		std::set<std::string>::reverse_iterator r_iter;
 
-        if (string_equal(shader_type, "quake3")) {
-            GetTextures("jpg");
-            GetTextures("tga");
-            GetTextures("png");
+		for ( r_iter = textures.rbegin(); r_iter != textures.rend(); ++r_iter )
+		{
+			TagBuilder.AddShaderNode( const_cast<char*>( ( *r_iter ).c_str() ), STOCK, TEXTURE );
+		}
 
-            globalOutputStream() << "Shaderplug: " << (const Unsigned) textures.size() << " textures found.\n";
-        }
+		for ( r_iter = shaders.rbegin(); r_iter != shaders.rend(); ++r_iter )
+		{
+			TagBuilder.AddShaderNode( const_cast<char*>( ( *r_iter ).c_str() ), STOCK, SHADER );
+		}
 
-        if (shaders.size() || textures.size() != 0) {
-            globalOutputStream() << "Shaderplug: Creating XML tag file.\n";
+		// Get the tag file
+		StringOutputStream tagFileStream( 256 );
+		tagFileStream << GlobalRadiant().getLocalRcPath() << SHADERTAG_FILE;
+		char* tagFile = tagFileStream.c_str();
 
-            TagBuilder.CreateXmlDocument();
+		char message[256];
+		strcpy( message, "Tag file saved to\n" );
+		strcat( message, tagFile );
+		strcat( message, "\nPlease restart Radiant now.\n" );
 
-            std::set<std::string>::reverse_iterator r_iter;
+		if ( file_exists( tagFile ) ) {
+			EMessageBoxReturn result = GlobalRadiant().m_pfnMessageBox( g_window ,
+																		"WARNING! A tag file already exists! Overwrite it?", "Overwrite tag file?",
+																		eMB_NOYES,
+																		eMB_ICONWARNING );
 
-            for (r_iter = textures.rbegin(); r_iter != textures.rend(); ++r_iter) {
-                TagBuilder.AddShaderNode(const_cast<char *>((*r_iter).c_str()), STOCK, TEXTURE);
-            }
-
-            for (r_iter = shaders.rbegin(); r_iter != shaders.rend(); ++r_iter) {
-                TagBuilder.AddShaderNode(const_cast<char *>((*r_iter).c_str()), STOCK, SHADER);
-            }
-
-            // Get the tag file
-            StringOutputStream tagFileStream(256);
-            tagFileStream << GlobalRadiant().getLocalRcPath() << SHADERTAG_FILE;
-            char *tagFile = tagFileStream.c_str();
-
-            char message[256];
-            strcpy(message, "Tag file saved to\n");
-            strcat(message, tagFile);
-            strcat(message, "\nPlease restart Radiant now.\n");
-
-            if (file_exists(tagFile)) {
-                EMessageBoxReturn result = GlobalRadiant().m_pfnMessageBox(g_window,
-                                                                           "WARNING! A tag file already exists! Overwrite it?",
-                                                                           "Overwrite tag file?",
-                                                                           eMB_NOYES,
-                                                                           eMB_ICONWARNING);
-
-                if (result == eIDYES) {
-                    TagBuilder.SaveXmlDoc(tagFile);
-                    GlobalRadiant().m_pfnMessageBox(g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK);
-                }
-            } else {
-                TagBuilder.SaveXmlDoc(tagFile);
-                GlobalRadiant().m_pfnMessageBox(g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK);
-            }
-        } else {
-            GlobalRadiant().m_pfnMessageBox(g_window,
-                                            "No shaders or textures found. No XML tag file created!\n"
-                                                    "",
-                                            "ERROR",
-                                            eMB_OK,
-                                            eMB_ICONERROR);
-        }
-    }
+			if ( result == eIDYES ) {
+				TagBuilder.SaveXmlDoc( tagFile );
+				GlobalRadiant().m_pfnMessageBox( g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
+			}
+		}
+		else {
+			TagBuilder.SaveXmlDoc( tagFile );
+			GlobalRadiant().m_pfnMessageBox( g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
+		}
+	}
+	else {
+		GlobalRadiant().m_pfnMessageBox( g_window,
+										 "No shaders or textures found. No XML tag file created!\n"
+										 "",
+										 "ERROR",
+										 eMB_OK,
+										 eMB_ICONERROR );
+	}
+}
 } // namespace
 
-class ShaderPluginModule {
-    _QERPluginTable m_plugin;
+class ShaderPluginModule
+{
+_QERPluginTable m_plugin;
 public:
-    typedef _QERPluginTable Type;
+typedef _QERPluginTable Type;
+STRING_CONSTANT( Name, "ShaderPlug" );
 
-    STRING_CONSTANT(Name, "ShaderPlug");
-
-    ShaderPluginModule()
-    {
-        m_plugin.m_pfnQERPlug_Init = &Shaderplug::init;
-        m_plugin.m_pfnQERPlug_GetName = &Shaderplug::getName;
-        m_plugin.m_pfnQERPlug_GetCommandList = &Shaderplug::getCommandList;
-        m_plugin.m_pfnQERPlug_GetCommandTitleList = &Shaderplug::getCommandTitleList;
-        m_plugin.m_pfnQERPlug_Dispatch = &Shaderplug::dispatch;
-    }
-
-    _QERPluginTable *getTable()
-    {
-        return &m_plugin;
-    }
+ShaderPluginModule(){
+	m_plugin.m_pfnQERPlug_Init = &Shaderplug::init;
+	m_plugin.m_pfnQERPlug_GetName = &Shaderplug::getName;
+	m_plugin.m_pfnQERPlug_GetCommandList = &Shaderplug::getCommandList;
+	m_plugin.m_pfnQERPlug_GetCommandTitleList = &Shaderplug::getCommandTitleList;
+	m_plugin.m_pfnQERPlug_Dispatch = &Shaderplug::dispatch;
+}
+_QERPluginTable* getTable(){
+	return &m_plugin;
+}
 };
 
 typedef SingletonModule<ShaderPluginModule, ShaderPlugPluginDependencies> SingletonShaderPluginModule;
 
 SingletonShaderPluginModule g_ShaderPluginModule;
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ShaderPluginModule.selfRegister();
+	g_ShaderPluginModule.selfRegister();
 }

@@ -28,46 +28,42 @@
 // CTextureResetDialog dialog
 
 
-CTextureResetDialog::CTextureResetDialog(CWnd *pParent /*=NULL*/ )
-        : CDialog(CTextureResetDialog::IDD, pParent)
-{
-    //{{AFX_DATA_INIT(CTextureResetDialog)
-    m_bAllTextures = FALSE;
-    m_TextureName = _T("");
-    m_nRotation = 0;
-    m_fScaleHorizontal = 0.5f;
-    m_fScaleVertical = 0.5f;
-    m_nShiftHorizontal = 0;
-    m_nShiftVertical = 0;
-    m_bOnlyTexture = FALSE;
-    m_NewTextureName = _T("");
-    //}}AFX_DATA_INIT
+CTextureResetDialog::CTextureResetDialog( CWnd* pParent /*=NULL*/ )
+	: CDialog( CTextureResetDialog::IDD, pParent ){
+	//{{AFX_DATA_INIT(CTextureResetDialog)
+	m_bAllTextures = FALSE;
+	m_TextureName = _T( "" );
+	m_nRotation = 0;
+	m_fScaleHorizontal = 0.5f;
+	m_fScaleVertical = 0.5f;
+	m_nShiftHorizontal = 0;
+	m_nShiftVertical = 0;
+	m_bOnlyTexture = FALSE;
+	m_NewTextureName = _T( "" );
+	//}}AFX_DATA_INIT
 }
 
 
-void CTextureResetDialog::DoDataExchange(CDataExchange *pDX)
-{
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CTextureResetDialog)
-    DDX_Check(pDX, IDC_ALLTEXTURES_CHECK, m_bAllTextures);
-    DDX_Text(pDX, IDC_RESET_TEXTURE_EDIT, m_TextureName);
-    DDV_MaxChars(pDX, m_TextureName, 256);
-    DDX_Text(pDX, IDC_ROTATION_EDIT, m_nRotation);
-    DDV_MinMaxInt(pDX, m_nRotation, 0, 360);
-    DDX_Text(pDX, IDC_SCL_HOR_EDIT, m_fScaleHorizontal);
-    DDX_Text(pDX, IDC_SCL_VERT_EDIT, m_fScaleVertical);
-    DDX_Text(pDX, IDC_SHFT_HOR_EDIT, m_nShiftHorizontal);
-    DDX_Text(pDX, IDC_SHFT_VER_EDIT, m_nShiftVertical);
-    DDX_Check(pDX, IDC_ONLYTEXTURE_CHECK, m_bOnlyTexture);
-    DDX_Text(pDX, IDC_RESET_NEW_TEXTURE_EDIT, m_NewTextureName);
-    DDV_MaxChars(pDX, m_NewTextureName, 256);
-    //}}AFX_DATA_MAP
+void CTextureResetDialog::DoDataExchange( CDataExchange* pDX ){
+	CDialog::DoDataExchange( pDX );
+	//{{AFX_DATA_MAP(CTextureResetDialog)
+	DDX_Check( pDX, IDC_ALLTEXTURES_CHECK, m_bAllTextures );
+	DDX_Text( pDX, IDC_RESET_TEXTURE_EDIT, m_TextureName );
+	DDV_MaxChars( pDX, m_TextureName, 256 );
+	DDX_Text( pDX, IDC_ROTATION_EDIT, m_nRotation );
+	DDV_MinMaxInt( pDX, m_nRotation, 0, 360 );
+	DDX_Text( pDX, IDC_SCL_HOR_EDIT, m_fScaleHorizontal );
+	DDX_Text( pDX, IDC_SCL_VERT_EDIT, m_fScaleVertical );
+	DDX_Text( pDX, IDC_SHFT_HOR_EDIT, m_nShiftHorizontal );
+	DDX_Text( pDX, IDC_SHFT_VER_EDIT, m_nShiftVertical );
+	DDX_Check( pDX, IDC_ONLYTEXTURE_CHECK, m_bOnlyTexture );
+	DDX_Text( pDX, IDC_RESET_NEW_TEXTURE_EDIT, m_NewTextureName );
+	DDV_MaxChars( pDX, m_NewTextureName, 256 );
+	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CTextureResetDialog, CDialog
-)
-
+BEGIN_MESSAGE_MAP( CTextureResetDialog, CDialog )
 //{{AFX_MSG_MAP(CTextureResetDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP

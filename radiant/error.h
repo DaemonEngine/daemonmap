@@ -22,6 +22,6 @@
 #if !defined( INCLUDED_ERROR_H )
 #define INCLUDED_ERROR_H
 
-void Error(const char *error, ...);
+void Error( const char *error, ... );
 
 #endif

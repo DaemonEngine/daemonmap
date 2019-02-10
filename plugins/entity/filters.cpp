@@ -25,47 +25,40 @@
 
 #include <list>
 
-class EntityFilterWrapper : public Filter {
-    bool m_active;
-    bool m_invert;
-    EntityFilter &m_filter;
+class EntityFilterWrapper : public Filter
+{
+bool m_active;
+bool m_invert;
+EntityFilter& m_filter;
 public:
-    EntityFilterWrapper(EntityFilter &filter, bool invert) : m_invert(invert), m_filter(filter)
-    {
-    }
-
-    void setActive(bool active)
-    {
-        m_active = active;
-    }
-
-    bool active()
-    {
-        return m_active;
-    }
-
-    bool filter(const Entity &entity)
-    {
-        return m_invert ^ m_filter.filter(entity);
-    }
+EntityFilterWrapper( EntityFilter& filter, bool invert ) : m_invert( invert ), m_filter( filter ){
+}
+void setActive( bool active ){
+	m_active = active;
+}
+bool active(){
+	return m_active;
+}
+bool filter( const Entity& entity ){
+	return m_invert ^ m_filter.filter( entity );
+}
 };
 
 
 typedef std::list<EntityFilterWrapper> EntityFilters;
 EntityFilters g_entityFilters;
 
-void add_entity_filter(EntityFilter &filter, int mask, bool invert)
-{
-    g_entityFilters.push_back(EntityFilterWrapper(filter, invert));
-    GlobalFilterSystem().addFilter(g_entityFilters.back(), mask);
+void add_entity_filter( EntityFilter& filter, int mask, bool invert ){
+	g_entityFilters.push_back( EntityFilterWrapper( filter, invert ) );
+	GlobalFilterSystem().addFilter( g_entityFilters.back(), mask );
 }
 
-bool entity_filtered(Entity &entity)
-{
-    for (EntityFilters::iterator i = g_entityFilters.begin(); i != g_entityFilters.end(); ++i) {
-        if ((*i).active() && (*i).filter(entity)) {
-            return true;
-        }
-    }
-    return false;
+bool entity_filtered( Entity& entity ){
+	for ( EntityFilters::iterator i = g_entityFilters.begin(); i != g_entityFilters.end(); ++i )
+	{
+		if ( ( *i ).active() && ( *i ).filter( entity ) ) {
+			return true;
+		}
+	}
+	return false;
 }

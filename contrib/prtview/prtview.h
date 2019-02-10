@@ -23,15 +23,13 @@
 #define MSG_PREFIX "Portal Viewer plugin: "
 
 void InitInstance();
-
 void SaveConfig();
 
-int INIGetInt(const char *key, int def);
+int INIGetInt( const char *key, int def );
+void INISetInt( const char *key, int val, const char *comment = 0 );
 
-void INISetInt(const char *key, int val, const char *comment = 0);
-
-const int IDOK = 1;
-const int IDCANCEL = 2;
+const int IDOK                = 1;
+const int IDCANCEL            = 2;
 
 
 #endif

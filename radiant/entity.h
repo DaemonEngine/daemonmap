@@ -24,24 +24,19 @@
 
 #include <uilib/uilib.h>
 
-template<typename Element>
-class BasicVector3;
-
+template<typename Element> class BasicVector3;
 typedef BasicVector3<float> Vector3;
+void Entity_createFromSelection( const char* name, const Vector3& origin );
 
-void Entity_createFromSelection(const char *name, const Vector3 &origin);
-
-void Scene_EntitySetKeyValue_Selected(const char *key, const char *value);
-
-void Scene_EntitySetClassname_Selected(const char *classname);
+void Scene_EntitySetKeyValue_Selected( const char* key, const char* value );
+void Scene_EntitySetClassname_Selected( const char* classname );
 
 
-const char *misc_model_dialog(ui::Widget parent);
+const char* misc_model_dialog( ui::Widget parent );
 
-void Entity_constructMenu(ui::Menu menu);
+void Entity_constructMenu( ui::Menu menu );
 
 void Entity_Construct();
-
 void Entity_Destroy();
 
 #endif

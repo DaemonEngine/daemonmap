@@ -116,110 +116,96 @@ _QERShadersTable g_ShadersTable;
 #include "synapse.h"
 
 
-char *supportedmodelformats[] = {"spr", "bmp", "tga", "jpg", "hlw", NULL}; // NULL is list delimiter
+char *supportedmodelformats[] = {"spr","bmp","tga","jpg","hlw",NULL}; // NULL is list delimiter
 
-static void add_model_apis(CSynapseClient &client)
-{
-    char **ext;
-    for (ext = supportedmodelformats; *ext != NULL; ext++) {
-        client.AddAPI(MODEL_MAJOR, *ext, sizeof(_QERPlugModelTable));
-    }
+static void add_model_apis( CSynapseClient& client ){
+	char **ext;
+	for ( ext = supportedmodelformats; *ext != NULL; ext++ )
+	{
+		client.AddAPI( MODEL_MAJOR, *ext, sizeof( _QERPlugModelTable ) );
+	}
 }
 
-static bool model_is_supported(const char *extension)
-{
-    char **ext;
-    for (ext = supportedmodelformats; *ext != NULL; ext++) {
-        if (stricmp(extension, *ext) == 0) {
-            return true;
-        }
-    }
-    return false;
+static bool model_is_supported( const char* extension ){
+	char **ext;
+	for ( ext = supportedmodelformats; *ext != NULL; ext++ )
+	{
+		if ( stricmp( extension,*ext ) == 0 ) {
+			return true;
+		}
+	}
+	return false;
 }
 
-void init_filetypes()
-{
-    char **ext;
-    for (ext = supportedmodelformats; *ext != NULL; ext++) {
-        GetFileTypeRegistry()->addType(MODEL_MAJOR, filetype_t("sprite", *ext));
-    }
+void init_filetypes(){
+	char **ext;
+	for ( ext = supportedmodelformats; *ext != NULL; ext++ )
+	{
+		GetFileTypeRegistry()->addType( MODEL_MAJOR, filetype_t( "sprite", *ext ) );
+	}
 }
 
-extern CSynapseServer *g_pSynapseServer;
+extern CSynapseServer* g_pSynapseServer;
 
-class CSynapseClientModel : public CSynapseClient {
+class CSynapseClientModel : public CSynapseClient
+{
 public:
 // CSynapseClient API
-    bool RequestAPI(APIDescriptor_t *pAPI);
+bool RequestAPI( APIDescriptor_t *pAPI );
+const char* GetInfo();
+const char* GetName();
 
-    const char *GetInfo();
+CSynapseClientModel() { }
+virtual ~CSynapseClientModel() { }
 
-    const char *GetName();
-
-    CSynapseClientModel()
-    {}
-
-    virtual ~CSynapseClientModel()
-    {}
-
-    bool OnActivate()
-    {
-        init_filetypes(); // see todo list above.
-        return true;
-    }
+bool OnActivate(){
+	init_filetypes(); // see todo list above.
+	return true;
+}
 };
 
-CSynapseServer *g_pSynapseServer = NULL;
+CSynapseServer* g_pSynapseServer = NULL;
 CSynapseClientModel g_SynapseClient;
 
-extern "C" CSynapseClient *SYNAPSE_DLL_EXPORT
+extern "C" CSynapseClient * SYNAPSE_DLL_EXPORT Synapse_EnumerateInterfaces( const char *version, CSynapseServer *pServer ){
+	if ( strcmp( version, SYNAPSE_VERSION ) ) {
+		Syn_Printf( "ERROR: synapse API version mismatch: should be '" SYNAPSE_VERSION "', got '%s'\n", version );
+		return NULL;
+	}
+	g_pSynapseServer = pServer;
+	g_pSynapseServer->IncRef();
+	Set_Syn_Printf( g_pSynapseServer->Get_Syn_Printf() );
 
-Synapse_EnumerateInterfaces(const char *version, CSynapseServer *pServer)
-{
-    if (strcmp(version, SYNAPSE_VERSION)) {
-        Syn_Printf("ERROR: synapse API version mismatch: should be '"
-        SYNAPSE_VERSION
-        "', got '%s'\n", version );
-        return NULL;
-    }
-    g_pSynapseServer = pServer;
-    g_pSynapseServer->IncRef();
-    Set_Syn_Printf(g_pSynapseServer->Get_Syn_Printf());
+	add_model_apis( g_SynapseClient ); // see todo list above.
 
-    add_model_apis(g_SynapseClient); // see todo list above.
+	g_SynapseClient.AddAPI( PLUGIN_MAJOR, "sprite", sizeof( _QERPluginTable ) );
+	g_SynapseClient.AddAPI( RADIANT_MAJOR, NULL, sizeof( g_FuncTable ), SYN_REQUIRE, &g_FuncTable );
+	g_SynapseClient.AddAPI( QGL_MAJOR, NULL, sizeof( g_QglTable ), SYN_REQUIRE, &g_QglTable );
+	g_SynapseClient.AddAPI( SHADERS_MAJOR, "*", sizeof( g_ShadersTable ), SYN_REQUIRE, &g_ShadersTable );
 
-    g_SynapseClient.AddAPI(PLUGIN_MAJOR, "sprite", sizeof(_QERPluginTable));
-    g_SynapseClient.AddAPI(RADIANT_MAJOR, NULL, sizeof(g_FuncTable), SYN_REQUIRE, &g_FuncTable);
-    g_SynapseClient.AddAPI(QGL_MAJOR, NULL, sizeof(g_QglTable), SYN_REQUIRE, &g_QglTable);
-    g_SynapseClient.AddAPI(SHADERS_MAJOR, "*", sizeof(g_ShadersTable), SYN_REQUIRE, &g_ShadersTable);
-
-    return &g_SynapseClient;
+	return &g_SynapseClient;
 }
 
-bool CSynapseClientModel::RequestAPI(APIDescriptor_t *pAPI)
-{
-    if (!strcmp(pAPI->major_name, MODEL_MAJOR)) {
-        _QERPlugModelTable *pTable = static_cast<_QERPlugModelTable *>( pAPI->mpTable );
+bool CSynapseClientModel::RequestAPI( APIDescriptor_t *pAPI ){
+	if ( !strcmp( pAPI->major_name, MODEL_MAJOR ) ) {
+		_QERPlugModelTable* pTable = static_cast<_QERPlugModelTable*>( pAPI->mpTable );
 
-        if (!strcmp(pAPI->minor_name, "sprite")) {
-            pTable->m_pfnLoadModel = &LoadSpriteModel;
-            return true;
-        }
-    }
+		if ( !strcmp( pAPI->minor_name, "sprite" ) ) {
+			pTable->m_pfnLoadModel = &LoadSpriteModel;
+			return true;
+		}
+	}
 
-    Syn_Printf("ERROR: RequestAPI( '%s' ) not found in '%s'\n", pAPI->major_name, GetInfo());
-    return false;
+	Syn_Printf( "ERROR: RequestAPI( '%s' ) not found in '%s'\n", pAPI->major_name, GetInfo() );
+	return false;
 }
 
 #include "version.h"
 
-const char *CSynapseClientModel::GetInfo()
-{
-    return "Sprite Model module built " __DATE__ " "
-    RADIANT_VERSION;
+const char* CSynapseClientModel::GetInfo(){
+	return "Sprite Model module built " __DATE__ " " RADIANT_VERSION;
 }
 
-const char *CSynapseClientModel::GetName()
-{
-    return "sprite";
+const char* CSynapseClientModel::GetName(){
+	return "sprite";
 }

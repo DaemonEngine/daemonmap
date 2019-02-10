@@ -24,12 +24,9 @@
 #if !defined( INCLUDED_ENTITYINSPECTOR_H )
 #define INCLUDED_ENTITYINSPECTOR_H
 
-ui::Widget EntityInspector_constructWindow(ui::Window parent);
-
+ui::Widget EntityInspector_constructWindow( ui::Window parent );
 void EntityInspector_construct();
-
 void EntityInspector_destroy();
-
 const char *EntityInspector_getCurrentKey();
 
 #endif

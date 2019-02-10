@@ -32,25 +32,23 @@
 
 #include "modulesystem/singletonmodule.h"
 
-class ImageDependencies : public GlobalFileSystemModuleRef {
+class ImageDependencies : public GlobalFileSystemModuleRef
+{
 };
 
-class ImageTGAAPI {
-    _QERPlugImageTable m_imagetga;
+class ImageTGAAPI
+{
+_QERPlugImageTable m_imagetga;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "tga" );
 
-    STRING_CONSTANT(Name, "tga");
-
-    ImageTGAAPI()
-    {
-        m_imagetga.loadImage = LoadTGA;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagetga;
-    }
+ImageTGAAPI(){
+	m_imagetga.loadImage = LoadTGA;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagetga;
+}
 };
 
 typedef SingletonModule<ImageTGAAPI> ImageTGAModule;
@@ -58,22 +56,19 @@ typedef SingletonModule<ImageTGAAPI> ImageTGAModule;
 ImageTGAModule g_ImageTGAModule;
 
 
-class ImageJPGAPI {
-    _QERPlugImageTable m_imagejpg;
+class ImageJPGAPI
+{
+_QERPlugImageTable m_imagejpg;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "jpg" );
 
-    STRING_CONSTANT(Name, "jpg");
-
-    ImageJPGAPI()
-    {
-        m_imagejpg.loadImage = LoadJPG;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagejpg;
-    }
+ImageJPGAPI(){
+	m_imagejpg.loadImage = LoadJPG;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagejpg;
+}
 };
 
 typedef SingletonModule<ImageJPGAPI, ImageDependencies> ImageJPGModule;
@@ -81,22 +76,19 @@ typedef SingletonModule<ImageJPGAPI, ImageDependencies> ImageJPGModule;
 ImageJPGModule g_ImageJPGModule;
 
 
-class ImageBMPAPI {
-    _QERPlugImageTable m_imagebmp;
+class ImageBMPAPI
+{
+_QERPlugImageTable m_imagebmp;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "bmp" );
 
-    STRING_CONSTANT(Name, "bmp");
-
-    ImageBMPAPI()
-    {
-        m_imagebmp.loadImage = LoadBMP;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagebmp;
-    }
+ImageBMPAPI(){
+	m_imagebmp.loadImage = LoadBMP;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagebmp;
+}
 };
 
 typedef SingletonModule<ImageBMPAPI, ImageDependencies> ImageBMPModule;
@@ -104,22 +96,19 @@ typedef SingletonModule<ImageBMPAPI, ImageDependencies> ImageBMPModule;
 ImageBMPModule g_ImageBMPModule;
 
 
-class ImagePCXAPI {
-    _QERPlugImageTable m_imagepcx;
+class ImagePCXAPI
+{
+_QERPlugImageTable m_imagepcx;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "pcx" );
 
-    STRING_CONSTANT(Name, "pcx");
-
-    ImagePCXAPI()
-    {
-        m_imagepcx.loadImage = LoadPCX32;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagepcx;
-    }
+ImagePCXAPI(){
+	m_imagepcx.loadImage = LoadPCX32;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagepcx;
+}
 };
 
 typedef SingletonModule<ImagePCXAPI, ImageDependencies> ImagePCXModule;
@@ -127,22 +116,19 @@ typedef SingletonModule<ImagePCXAPI, ImageDependencies> ImagePCXModule;
 ImagePCXModule g_ImagePCXModule;
 
 
-class ImageDDSAPI {
-    _QERPlugImageTable m_imagedds;
+class ImageDDSAPI
+{
+_QERPlugImageTable m_imagedds;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "dds" );
 
-    STRING_CONSTANT(Name, "dds");
-
-    ImageDDSAPI()
-    {
-        m_imagedds.loadImage = LoadDDS;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagedds;
-    }
+ImageDDSAPI(){
+	m_imagedds.loadImage = LoadDDS;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagedds;
+}
 };
 
 typedef SingletonModule<ImageDDSAPI, ImageDependencies> ImageDDSModule;
@@ -150,22 +136,19 @@ typedef SingletonModule<ImageDDSAPI, ImageDependencies> ImageDDSModule;
 ImageDDSModule g_ImageDDSModule;
 
 
-class ImageKTXAPI {
-    _QERPlugImageTable m_imagektx;
+class ImageKTXAPI
+{
+_QERPlugImageTable m_imagektx;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "ktx" );
 
-    STRING_CONSTANT(Name, "ktx");
-
-    ImageKTXAPI()
-    {
-        m_imagektx.loadImage = LoadKTX;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagektx;
-    }
+ImageKTXAPI(){
+	m_imagektx.loadImage = LoadKTX;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagektx;
+}
 };
 
 typedef SingletonModule<ImageKTXAPI, ImageDependencies> ImageKTXModule;
@@ -173,14 +156,13 @@ typedef SingletonModule<ImageKTXAPI, ImageDependencies> ImageKTXModule;
 ImageKTXModule g_ImageKTXModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ImageTGAModule.selfRegister();
-    g_ImageJPGModule.selfRegister();
-    g_ImageBMPModule.selfRegister();
-    g_ImagePCXModule.selfRegister();
-    g_ImageDDSModule.selfRegister();
-    g_ImageKTXModule.selfRegister();
+	g_ImageTGAModule.selfRegister();
+	g_ImageJPGModule.selfRegister();
+	g_ImageBMPModule.selfRegister();
+	g_ImagePCXModule.selfRegister();
+	g_ImageDDSModule.selfRegister();
+	g_ImageKTXModule.selfRegister();
 }

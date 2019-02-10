@@ -28,14 +28,11 @@
 #include <stdio.h>
 
 #define USE_QERTABLE_DEFINE
-
 #include "iscenegraph.h"
 #include "qerplugin.h"
 
 #include "ifilesystem.h"
-
 #define USE_ENTITYTABLE_DEFINE
-
 #include "ientity.h"
 
 #include <stdio.h>
@@ -45,18 +42,15 @@
 
 #include "synapse.h"
 
-class CSynapseClientHydraToolz : public CSynapseClient {
+class CSynapseClientHydraToolz : public CSynapseClient
+{
 public:
 // CSynapseClient API
-    bool RequestAPI(APIDescriptor_t *pAPI);
+bool RequestAPI( APIDescriptor_t *pAPI );
+const char* GetInfo();
 
-    const char *GetInfo();
-
-    CSynapseClientHydraToolz()
-    {}
-
-    virtual ~CSynapseClientHydraToolz()
-    {}
+CSynapseClientHydraToolz() { }
+virtual ~CSynapseClientHydraToolz() { }
 };
 
 #endif // _PLUGIN_H_

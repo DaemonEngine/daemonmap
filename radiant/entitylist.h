@@ -25,13 +25,10 @@
 #define INCLUDED_ENTITYLIST_H
 
 void EntityList_Construct();
-
 void EntityList_Destroy();
 
-void EntityList_constructWindow(ui::Window main_window);
-
+void EntityList_constructWindow( ui::Window main_window );
 void EntityList_destroyWindow();
-
 void EntityList_toggleShown();
 
 #endif

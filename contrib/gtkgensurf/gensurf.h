@@ -27,32 +27,23 @@
 
 #include "mathlib.h"
 #include "iscenegraph.h"
-
 #define USE_QERTABLE_DEFINE
-
 #include "qerplugin.h"
-
 extern _QERFuncTable_1 g_FuncTable;
 
 #include "irender.h"
 #include "iselection.h"
 
 #define USE_ENTITYTABLE_DEFINE
-
 #include "ientity.h"
-
 extern _QEREntityTable __ENTITYTABLENAME;
 
 #define USE_PATCHTABLE_DEFINE
-
 #include "ipatch.h"
-
 extern _QERPatchTable __PATCHTABLENAME;
 
 #define USE_BRUSHTABLE_DEFINE
-
 #include "ibrush.h"
-
 extern _QERBrushTable __BRUSHTABLENAME;
 
 #include "igl.h"
@@ -68,9 +59,7 @@ extern _QERBrushTable __BRUSHTABLENAME;
 
 //#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #if 1
-
 #include <algorithm>
-
 #else
 template <class T>
 inline T min( T x, T y ) { return ( x < y ) ? x : y; }
@@ -83,25 +72,24 @@ typedef struct { long left, top, right, bottom; } Rect;
 
 #define NAME_MAX 255
 
-typedef void *LPVOID;
-typedef char *LPSTR;
+typedef void* LPVOID;
+typedef char* LPSTR;
 
 //#endif
-inline bool PtInRect(Rect *rc, Point pt)
-{
-    if (pt.x < rc->left) {
-        return false;
-    }
-    if (pt.x > rc->right) {
-        return false;
-    }
-    if (pt.y < rc->bottom) {
-        return false;
-    }
-    if (pt.y > rc->top) {
-        return false;
-    }
-    return true;
+inline bool PtInRect( Rect *rc, Point pt ){
+	if ( pt.x < rc->left ) {
+		return false;
+	}
+	if ( pt.x > rc->right ) {
+		return false;
+	}
+	if ( pt.y < rc->bottom ) {
+		return false;
+	}
+	if ( pt.y > rc->top ) {
+		return false;
+	}
+	return true;
 }
 
 #define NUMGAMES 7
@@ -114,8 +102,8 @@ inline bool PtInRect(Rect *rc, Point pt)
 #define HINT_OFFSET 96
 
 #define PI 3.14159265358979224
-#define RadiansToDegrees(a) ( floor( a * 57.2957795 - 0.5 ) + 1. )
-#define DegreesToRadians(a) ( a / 57.2957795 )
+#define RadiansToDegrees( a ) ( floor( a * 57.2957795 - 0.5 ) + 1. )
+#define DegreesToRadians( a ) ( a / 57.2957795 )
 
 #define BOGUS_RANGE 65536
 /*
@@ -126,8 +114,8 @@ inline bool PtInRect(Rect *rc, Point pt)
    #define VectorScale(a,b,c) {c[0]=b*a[0];c[1]=b*a[1];c[2]=b*a[2];}
    #define VectorSubtract(a,b,c) {c[0]=a[0]-b[0];c[1]=a[1]-b[1];c[2]=a[2]-b[2];}
  */
-#define XYZVectorSubtract(a, b, c) {c[0] = (float)a[0] - (float)b[0]; c[1] = (float)a[1] - (float)b[1]; c[2] = (float)a[2] - (float)b[2]; }
-#define side(u1, v1, u2, v2, u3, v3) ( v3 - v1 ) * ( u2 - u1 ) - ( u3 - u1 ) * ( v2 - v1 )
+#define XYZVectorSubtract( a,b,c ) {c[0] = (float)a[0] - (float)b[0]; c[1] = (float)a[1] - (float)b[1]; c[2] = (float)a[2] - (float)b[2]; }
+#define side( u1,v1,u2,v2,u3,v3 ) ( v3 - v1 ) * ( u2 - u1 ) - ( u3 - u1 ) * ( v2 - v1 )
 
 #define QUAKE2    0
 #define HALFLIFE  1
@@ -146,211 +134,189 @@ typedef float vec;
 typedef vec vec3[3];
 typedef vec vec2[2];
 
-typedef struct {
-    vec3 v[3];
-    char texture[64];
-    float Shift[2];
-    float Rotate;
-    float Scale[2];
-    int Contents;
-    int Surface;
-    int Value;
+typedef struct
+{
+	vec3 v[3];
+	char texture[64];
+	float Shift[2];
+	float Rotate;
+	float Scale[2];
+	int Contents;
+	int Surface;
+	int Value;
 } FACE;
 
-typedef struct {
-    vec3 normal;
-    vec dist;
+typedef struct
+{
+	vec3 normal;
+	vec dist;
 } PLANE;
 
-typedef struct {
-    int numpoints;
-    vec3 p[4];          // variable sized
+typedef struct
+{
+	int numpoints;
+	vec3 p[4];          // variable sized
 } MY_WINDING;
 
-typedef struct {
-    int Number;
-    int NumFaces;
-    FACE face[MAX_FACES_PER_BRUSH];
+typedef struct
+{
+	int Number;
+	int NumFaces;
+	FACE face[MAX_FACES_PER_BRUSH];
 } BRUSH;
 
-typedef struct tagXYZ {
-    int fixed;
-    int done;
-    double p[3];
-    double pp[3];    // these used only for general 3D projection (not isometric)
-    double fixed_value;
-    double range;
-    double rate;
+typedef struct tagXYZ
+{
+	int fixed;
+	int done;
+	double p[3];
+	double pp[3];    // these used only for general 3D projection (not isometric)
+	double fixed_value;
+	double range;
+	double rate;
 } XYZ;
 
 // Q2 PAK file structures
-typedef struct {
-    char id[4]; // Should be 'PACK'
-    int dstart; // Offest in the file to the directory
-    int dsize;  // Size in bytes of the directory, same as num_items*64
+typedef struct
+{
+	char id[4]; // Should be 'PACK'
+	int dstart; // Offest in the file to the directory
+	int dsize;  // Size in bytes of the directory, same as num_items*64
 } pak_header_t;
 
-typedef struct {
-    char name[56]; // The name of the item, normal C string
-    int start; // Offset in .pak file to start of item
-    int size; // Size of item in bytes
+typedef struct
+{
+	char name[56]; // The name of the item, normal C string
+	int start; // Offset in .pak file to start of item
+	int size; // Size of item in bytes
 } pak_item_t;
 
 // SiN .SIN structures
 #define SINPAKHEADER        ( ( 'K' << 24 ) + ( 'A' << 16 ) + ( 'P' << 8 ) + 'S' )
 #define MAX_PAK_FILENAME_LENGTH 120
 
-typedef struct {
-    char name[MAX_PAK_FILENAME_LENGTH];
-    int filepos, filelen;
+typedef struct
+{
+	char name[MAX_PAK_FILENAME_LENGTH];
+	int filepos, filelen;
 } dpackfile_t;
 
-typedef struct {
-    int ident;          // == IDPAKHEADER
-    int dirofs;
-    int dirlen;
+typedef struct
+{
+	int ident;          // == IDPAKHEADER
+	int dirofs;
+	int dirlen;
 } dpackheader_t;
 
 // Half-Life WAD file structures
-typedef struct {
-    char identification[4];             // should be WAD2 or 2DAW
-    int numlumps;
-    int infotableofs;
+typedef struct
+{
+	char identification[4];             // should be WAD2 or 2DAW
+	int numlumps;
+	int infotableofs;
 } wadinfo_t;
 
-typedef struct {
-    int filepos;
-    int disksize;
-    int size;                           // uncompressed
-    char type;
-    char compression;
-    char pad1, pad2;
-    char name[16];                      // must be null terminated
+typedef struct
+{
+	int filepos;
+	int disksize;
+	int size;                           // uncompressed
+	char type;
+	char compression;
+	char pad1, pad2;
+	char name[16];                      // must be null terminated
 } lumpinfo_t;
 
-typedef struct {
-    int signature;
-    short version;
-    short bitflag;
-    short compression_method;
-    short modfiletime;
-    short modfiledate;
-    int crc;
-    int compressed_size;
-    int uncompressed_size;
-    short filename_size;
-    short extra_size;
+typedef struct
+{
+	int signature;
+	short version;
+	short bitflag;
+	short compression_method;
+	short modfiletime;
+	short modfiledate;
+	int crc;
+	int compressed_size;
+	int uncompressed_size;
+	short filename_size;
+	short extra_size;
 } zipheader_t;
 
-typedef struct {
-    double x[2];
-    double y[2];
-    double z[2];
+typedef struct
+{
+	double x[2];
+	double y[2];
+	double z[2];
 } bounding_box;
 
-typedef struct {
-    float p[3];
-    int used;
-    int tri;
-    float error;
-    int fixed;
+typedef struct
+{
+	float p[3];
+	int used;
+	int tri;
+	float error;
+	int fixed;
 } NODE;
 
-typedef struct {
-    int v[3];
-    int n[3];      // indices of neighboring triangles
-    PLANE plane;
-    int flag;
-    float min[3];
-    float max[3];
+typedef struct
+{
+	int v[3];
+	int n[3];      // indices of neighboring triangles
+	PLANE plane;
+	int flag;
+	float min[3];
+	float max[3];
 } TRI;
 
 //--------------- bitmap.c -----------------------------
 bool OpenBitmap();
-
-double CalculateSnapValue(double value);
-
+double CalculateSnapValue( double value );
 void GenerateBitmapMapping();
-
 //--------------- face.c -------------------------------
-void PlaneFromPoints(float *, float *, float *, PLANE *);
-
+void PlaneFromPoints( float *, float *, float *, PLANE * );
 //void CrossProduct (vec3 v1, vec3 v2, vec3 cross);
 //vec VectorNormalize (vec3 in, vec3 out);
 //--------------- gendlg.c -----------------------------
-GtkWidget *create_main_dialog();
-
-void About(GtkWidget *parent);
-
+GtkWidget* create_main_dialog();
+void About( GtkWidget *parent );
 //--------------- genmap.c -----------------------------
-double AtLeast(double, double);
-
-bool CanEdit(int, int);
-
+double AtLeast( double,double );
+bool CanEdit( int, int );
 void CloseFuncGroup();
-
-bool FixedPoint(int, int);
-
+bool FixedPoint( int,int );
 void GenerateMap();
-
 void GenerateXYZ();
-
-double LessThan(double, double);
-
-void MakeBrush(BRUSH *);
-
-double MoreThan(double, double);
-
-double Nearest(double, double);
-
-double NoMoreThan(double, double);
-
+double LessThan( double,double );
+void MakeBrush( BRUSH * );
+double MoreThan( double,double );
+double Nearest( double,double );
+double NoMoreThan( double,double );
 void OpenFuncGroup();
-
 void PlasmaCloud();
-
-int PlayerStartZ(double, double);
-
-void SubdividePlasma(int, int, int, int);
-
+int PlayerStartZ( double,double );
+void SubdividePlasma( int,int,int,int );
 bool ValidSurface();
-
-void XYZtoV(XYZ *, vec3 *);
-
-scene::Node *MakePatch(void);
+void XYZtoV( XYZ *, vec3 * );
+scene::Node* MakePatch( void );
 
 //---------------- gensurf.c ---------------------------
 bool GenSurfInit();
-
-void ReadIniFile(const char *);
-
-void WriteIniFile(const char *);
-
-void OpenSetup(GtkWidget *, int);
-
-void SaveSetup(GtkWidget *);
-
+void ReadIniFile( const char * );
+void WriteIniFile( const char * );
+void OpenSetup( GtkWidget*,int );
+void SaveSetup( GtkWidget* );
 //---------------- heretic.c ---------------------------
-int GetDefSurfaceProps(char *);
-
+int GetDefSurfaceProps( char * );
 //---------------- view.c ------------------------------
 void CreateViewWindow();
-
-void DrawGrid(Rect);
-
-void DrawPreview(Rect);
-
+void DrawGrid( Rect );
+void DrawPreview( Rect );
 void evaluate();
-
-void GetScaleFactor(Rect);
-
-void project(XYZ *);
-
-void Scale(Rect, XYZ, Point *);
-
+void GetScaleFactor( Rect );
+void project( XYZ * );
+void Scale( Rect,XYZ,Point * );
 void ShowPreview();
-
-void UpdatePreview(bool);
+void UpdatePreview( bool );
 
 //---------------- plugin.c -----------------------------
 void UseFaceBounds();
@@ -381,18 +347,19 @@ extern _QEREntityTable g_EntityTable;
 
 #define MSG_VERTEX_SELECTED WM_USER + 1
 
-typedef struct tagMYBITMAP {
-    char name[NAME_MAX];
-    char defpath[NAME_MAX];
-    double black_value;
-    double white_value;
-    int width, height;
-    unsigned char *colors;
+typedef struct tagMYBITMAP
+{
+	char name[NAME_MAX];
+	char defpath[NAME_MAX];
+	double black_value;
+	double white_value;
+	int width, height;
+	unsigned char* colors;
 } MYBITMAP;
 
 typedef struct tagELEMENT {
-    int i;
-    int j;
+	int i;
+	int j;
 } ELEMENT;
 
 extern char gszAppDir[NAME_MAX];
@@ -409,7 +376,7 @@ extern double WaveLength;
 extern double Hll, Hur, Vll, Vur;
 extern double Z00, Z01, Z10, Z11;
 extern double yaw, pitch, roll;
-extern ELEMENT Vertex[(MAX_ROWS + 1) * (MAX_ROWS + 1)];
+extern ELEMENT Vertex[( MAX_ROWS + 1 ) * ( MAX_ROWS + 1 )];
 extern int AddHints;
 extern int ArghRad2;
 extern int AutoOverwrite;
@@ -449,11 +416,11 @@ extern ui::Window g_pRadiantWnd;
 extern ui::Window g_pWnd;
 /*extern HWND      ghwndAngles;
    extern HWND      ghwndFix;
- */extern GtkWidget *g_pWndPreview;
+ */extern GtkWidget     *g_pWndPreview;
 extern GtkWidget *g_pPreviewWidget;
 extern MYBITMAP gbmp;
-extern NODE *gNode;
-extern TRI *gTri;
+extern NODE      *gNode;
+extern TRI       *gTri;
 extern XYZ xyz[MAX_ROWS + 1][MAX_ROWS + 1];
 
 extern int Game;

@@ -22,10 +22,8 @@
 #if !defined( INCLUDED_MISCMODEL_H )
 #define INCLUDED_MISCMODEL_H
 
-scene::Node &New_MiscModel(EntityClass *eclass);
-
+scene::Node& New_MiscModel( EntityClass* eclass );
 void MiscModel_construct();
-
 void MiscModel_destroy();
 
 #endif

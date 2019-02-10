@@ -35,15 +35,11 @@
 #include <stdio.h>
 
 #define USE_QERTABLE_DEFINE
-
 #include "qerplugin.h"
-
 extern _QERFuncTable_1 __QERTABLENAME;
 
 #define USE_QGLTABLE_DEFINE
-
 #include "igl.h"
-
 extern OpenGLBinding __QGLTABLENAME;
 
 #include "imodel.h"

@@ -28,28 +28,24 @@
 // CAutoCaulkDialog dialog
 
 
-CAutoCaulkDialog::CAutoCaulkDialog(CWnd *pParent /*=NULL*/ )
-        : CDialog(CAutoCaulkDialog::IDD, pParent)
-{
-    //{{AFX_DATA_INIT(CAutoCaulkDialog)
-    // NOTE: the ClassWizard will add member initialization here
-    //}}AFX_DATA_INIT
+CAutoCaulkDialog::CAutoCaulkDialog( CWnd* pParent /*=NULL*/ )
+	: CDialog( CAutoCaulkDialog::IDD, pParent ){
+	//{{AFX_DATA_INIT(CAutoCaulkDialog)
+	// NOTE: the ClassWizard will add member initialization here
+	//}}AFX_DATA_INIT
 }
 
 
-void CAutoCaulkDialog::DoDataExchange(CDataExchange *pDX)
-{
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CAutoCaulkDialog)
-    DDX_Control(pDX, IDC_PROGRESS2, m_prog2);
-    DDX_Control(pDX, IDC_PROGRESS1, m_prog1);
-    //}}AFX_DATA_MAP
+void CAutoCaulkDialog::DoDataExchange( CDataExchange* pDX ){
+	CDialog::DoDataExchange( pDX );
+	//{{AFX_DATA_MAP(CAutoCaulkDialog)
+	DDX_Control( pDX, IDC_PROGRESS2, m_prog2 );
+	DDX_Control( pDX, IDC_PROGRESS1, m_prog1 );
+	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CAutoCaulkDialog, CDialog
-)
-
+BEGIN_MESSAGE_MAP( CAutoCaulkDialog, CDialog )
 //{{AFX_MSG_MAP(CAutoCaulkDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP

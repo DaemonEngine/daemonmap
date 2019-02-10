@@ -24,6 +24,6 @@
 
 #include "iarchive.h"
 
-const _QERArchiveTable *GetArchiveTable(ArchiveModules &archiveModules, const char *type);
+const _QERArchiveTable* GetArchiveTable( ArchiveModules& archiveModules, const char* type );
 
 #endif

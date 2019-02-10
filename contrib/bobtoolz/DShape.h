@@ -31,9 +31,7 @@
 #include <stdlib.h>
 #include "mathlib.h"
 #include "DMap.h"
-
 class DBrush;
-
 class DEntity;
 
 // defines for polygon stuff
@@ -41,32 +39,25 @@ const int MAX_POLYGON_FACES = 128;
 
 extern bool bFacesAll[];
 
-class DShape {
+class DShape
+{
 public:
-    bool BuildPit(vec3_t min, vec3_t max);
+bool BuildPit( vec3_t min, vec3_t max );
+void BuildBorderedPrism( vec3_t min, vec3_t max, int nSides, int nBorder, bool bAlignTop );
+void BuildInversePrism( vec3_t min, vec3_t max, int nSides, bool bAlignTop );
+void BuildRegularPrism( vec3_t min, vec3_t max, int nSides, bool bAlignTop );
 
-    void BuildBorderedPrism(vec3_t min, vec3_t max, int nSides, int nBorder, bool bAlignTop);
+int m_nNextBrush;
+static DBrush* GetBoundingCube_Ext( vec3_t min, vec3_t max, const char* textureName, bool* bUseFaces = bFacesAll, bool detail = false );
 
-    void BuildInversePrism(vec3_t min, vec3_t max, int nSides, bool bAlignTop);
+DShape();
+virtual ~DShape();
 
-    void BuildRegularPrism(vec3_t min, vec3_t max, int nSides, bool bAlignTop);
-
-    int m_nNextBrush;
-
-    static DBrush *GetBoundingCube_Ext(vec3_t min, vec3_t max, const char *textureName, bool *bUseFaces = bFacesAll,
-                                       bool detail = false);
-
-    DShape();
-
-    virtual ~DShape();
-
-    void Commit();
-
+void Commit();
 private:
-    DBrush *
-    GetBoundingCube(vec3_t min, vec3_t max, const char *textureName, DEntity *ent = NULL, bool *bUseFaces = bFacesAll);
+DBrush* GetBoundingCube( vec3_t min, vec3_t max, const char* textureName, DEntity* ent = NULL, bool* bUseFaces = bFacesAll );
 
-    DMap m_Container;
+DMap m_Container;
 };
 
 #endif // !defined(AFX_DSHAPE_H__0B30B302_9D21_4C2D_836A_61F3C8D4244D__INCLUDED_)

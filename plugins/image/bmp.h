@@ -23,9 +23,8 @@
 #define INCLUDED_BMP_H
 
 class Image;
-
 class ArchiveFile;
 
-Image *LoadBMP(ArchiveFile &file);
+Image* LoadBMP( ArchiveFile& file );
 
 #endif

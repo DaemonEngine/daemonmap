@@ -25,21 +25,12 @@
  */
 
 void DoNewFixedCamera();
-
 void DoNewInterpolatedCamera();
-
 void DoNewSplineCamera();
-
 void DoCameraInspector();
-
 void DoPreviewCamera();
-
 void DoLoadCamera();
-
 void DoSaveCamera();
-
 void DoUnloadCamera();
-
-void DoStartEdit(CCamera *cam);
-
-void DoStopEdit(void);
+void DoStartEdit( CCamera *cam );
+void DoStopEdit( void );

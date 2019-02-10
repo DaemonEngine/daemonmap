@@ -24,16 +24,14 @@
 
 struct GraphTreeModel;
 
-GraphTreeModel *graph_tree_model_new();
+GraphTreeModel* graph_tree_model_new();
+void graph_tree_model_delete( GraphTreeModel* model );
 
-void graph_tree_model_delete(GraphTreeModel *model);
-
-namespace scene {
-    class Instance;
+namespace scene
+{
+class Instance;
 }
-
-void graph_tree_model_insert(GraphTreeModel *model, const scene::Instance &instance);
-
-void graph_tree_model_erase(GraphTreeModel *model, const scene::Instance &instance);
+void graph_tree_model_insert( GraphTreeModel* model, const scene::Instance& instance );
+void graph_tree_model_erase( GraphTreeModel* model, const scene::Instance& instance );
 
 #endif

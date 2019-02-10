@@ -22,12 +22,13 @@
 #if !defined( INCLUDED_ECLASSMODEL_H )
 #define INCLUDED_ECLASSMODEL_H
 
-namespace scene {
-    class Node;
+namespace scene
+{
+class Node;
 }
 class EntityClass;
 
-scene::Node &New_EclassModel(EntityClass *eclass);
+scene::Node& New_EclassModel( EntityClass* eclass );
 
 #include "entity.h"
 

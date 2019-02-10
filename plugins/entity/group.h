@@ -22,6 +22,6 @@
 #if !defined( INCLUDED_GROUP_H )
 #define INCLUDED_GROUP_H
 
-scene::Node &New_Group(EntityClass *eclass);
+scene::Node& New_Group( EntityClass* eclass );
 
 #endif

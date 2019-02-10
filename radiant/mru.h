@@ -24,12 +24,11 @@
 #if !defined( INCLUDED_MRU_H )
 #define INCLUDED_MRU_H
 
-void MRU_AddFile(const char *str);
+void MRU_AddFile( const char *str );
 
-void MRU_constructMenu(ui::Menu menu);
+void MRU_constructMenu( ui::Menu menu );
 
 void MRU_Construct();
-
 void MRU_Destroy();
 
 #endif

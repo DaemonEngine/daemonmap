@@ -23,13 +23,9 @@
 #define INCLUDED_SERVER_H
 
 class ModuleServer;
-
-ModuleServer &GlobalModuleServer_get();
-
-void GlobalModuleServer_loadModule(const char *filename);
-
+ModuleServer& GlobalModuleServer_get();
+void GlobalModuleServer_loadModule( const char* filename );
 void GlobalModuleServer_Initialise();
-
 void GlobalModuleServer_Shutdown();
 
 #endif
