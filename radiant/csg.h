@@ -22,33 +22,32 @@
 #if !defined( INCLUDED_CSG_H )
 #define INCLUDED_CSG_H
 
-void CSG_MakeHollow(void);
+void CSG_MakeHollow( void );
 
-void CSG_MakeRoom(void);
+void CSG_MakeRoom( void );
 
-void CSG_Subtract(void);
+void CSG_Subtract( void );
 
-void CSG_Merge(void);
+void CSG_Merge( void );
 
-namespace scene {
-    class Graph;
+namespace scene
+{
+class Graph;
 }
-template<typename Element>
-class BasicVector3;
-
+template<typename Element> class BasicVector3;
 typedef BasicVector3<float> Vector3;
 
 class Plane3;
 
-void Scene_BrushSetClipPlane(scene::Graph &graph, const Plane3 &plane);
+void Scene_BrushSetClipPlane( scene::Graph& graph, const Plane3& plane );
 
-enum EBrushSplit {
-    eFront,
-    eBack,
-    eFrontAndBack,
+enum EBrushSplit
+{
+	eFront,
+	eBack,
+	eFrontAndBack,
 };
 
-void Scene_BrushSplitByPlane(scene::Graph &graph, const Vector3 &p0, const Vector3 &p1, const Vector3 &p2,
-                             const char *shader, EBrushSplit split);
+void Scene_BrushSplitByPlane( scene::Graph& graph, const Vector3& p0, const Vector3& p1, const Vector3& p2, const char* shader, EBrushSplit split );
 
 #endif

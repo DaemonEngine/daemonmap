@@ -33,63 +33,57 @@
 
 
 class MapXMLDependencies :
-        public GlobalRadiantModuleRef,
-        public GlobalBrushModuleRef,
-        public GlobalFiletypesModuleRef,
-        public GlobalEntityClassManagerModuleRef,
-        public GlobalSceneGraphModuleRef {
-    PatchModuleRef m_patchDef2Doom3Module;
-    PatchModuleRef m_patchDoom3Module;
+	public GlobalRadiantModuleRef,
+	public GlobalBrushModuleRef,
+	public GlobalFiletypesModuleRef,
+	public GlobalEntityClassManagerModuleRef,
+	public GlobalSceneGraphModuleRef
+{
+PatchModuleRef m_patchDef2Doom3Module;
+PatchModuleRef m_patchDoom3Module;
 public:
-    MapXMLDependencies() :
-            GlobalBrushModuleRef(GlobalRadiant().getRequiredGameDescriptionKeyValue("brushtypes")),
-            GlobalEntityClassManagerModuleRef(GlobalRadiant().getRequiredGameDescriptionKeyValue("entityclass")),
-            m_patchDef2Doom3Module("def2doom3"),
-            m_patchDoom3Module("doom3")
-    {
-    }
+MapXMLDependencies() :
+	GlobalBrushModuleRef( GlobalRadiant().getRequiredGameDescriptionKeyValue( "brushtypes" ) ),
+	GlobalEntityClassManagerModuleRef( GlobalRadiant().getRequiredGameDescriptionKeyValue( "entityclass" ) ),
+	m_patchDef2Doom3Module( "def2doom3" ),
+	m_patchDoom3Module( "doom3" ){
+}
 
-    BrushCreator &getBrushDoom3()
-    {
-        return GlobalBrushModule::getTable();
-    }
+BrushCreator& getBrushDoom3(){
+	return GlobalBrushModule::getTable();
+}
 
-    PatchCreator &getPatchDoom3()
-    {
-        return *m_patchDoom3Module.getTable();
-    }
+PatchCreator& getPatchDoom3(){
+	return *m_patchDoom3Module.getTable();
+}
 
-    PatchCreator &getPatchDef2Doom3()
-    {
-        return *m_patchDef2Doom3Module.getTable();
-    }
+PatchCreator& getPatchDef2Doom3(){
+	return *m_patchDef2Doom3Module.getTable();
+}
 };
 
-class MapXMLAPI : public TypeSystemRef, public MapFormat {
+class MapXMLAPI : public TypeSystemRef, public MapFormat
+{
 public:
-    typedef MapFormat Type;
+typedef MapFormat Type;
 
-    STRING_CONSTANT(Name, "xmldoom3");
+STRING_CONSTANT( Name, "xmldoom3" );
 
-    MapXMLAPI()
-    {
-        GlobalFiletypesModule::getTable().addType(Type::Name(), Name(), filetype_t("xml doom3 maps", "*.xmap"));
-    }
+MapXMLAPI(){
+	GlobalFiletypesModule::getTable().addType( Type::Name(), Name(), filetype_t( "xml doom3 maps", "*.xmap" ) );
+}
 
-    MapFormat *getTable()
-    {
-        return this;
-    }
+MapFormat* getTable(){
+	return this;
+}
 
-    void readGraph(scene::Node &root, TextInputStream &inputStream, EntityCreator &entityTable) const
-    {
-        Map_Read(root, inputStream, entityTable);
-    }
+void readGraph( scene::Node& root, TextInputStream& inputStream, EntityCreator& entityTable ) const {
+	Map_Read( root, inputStream, entityTable );
+}
 
-    void writeGraph(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &outputStream, bool writeComments) const
-    {
-        Map_Write(root, traverse, outputStream);
-    }
+void writeGraph( scene::Node& root, GraphTraversalFunc traverse, TextOutputStream& outputStream, bool writeComments ) const {
+	Map_Write( root, traverse, outputStream );
+}
 };
 
 typedef SingletonModule<MapXMLAPI, MapXMLDependencies> MapXMLModule;
@@ -97,12 +91,11 @@ typedef SingletonModule<MapXMLAPI, MapXMLDependencies> MapXMLModule;
 MapXMLModule g_MapXMLModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    GlobalErrorStream::instance().setOutputStream(server.getErrorStream());
-    GlobalOutputStream::instance().setOutputStream(server.getOutputStream());
-    GlobalDebugMessageHandler::instance().setHandler(server.getDebugMessageHandler());
-    GlobalModuleServer::instance().set(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	GlobalErrorStream::instance().setOutputStream( server.getErrorStream() );
+	GlobalOutputStream::instance().setOutputStream( server.getOutputStream() );
+	GlobalDebugMessageHandler::instance().setHandler( server.getDebugMessageHandler() );
+	GlobalModuleServer::instance().set( server );
 
-    g_MapXMLModule.selfRegister();
+	g_MapXMLModule.selfRegister();
 }
