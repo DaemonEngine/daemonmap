@@ -29,16 +29,17 @@
 /////////////////////////////////////////////////////////////////////////////
 // CAutoCaulkDialog dialog
 
-class CAutoCaulkDialog : public CDialog {
+class CAutoCaulkDialog : public CDialog
+{
 // Construction
 public:
-    CAutoCaulkDialog(CWnd *pParent = NULL);     // standard constructor
+CAutoCaulkDialog( CWnd* pParent = NULL );     // standard constructor
 
 // Dialog Data
 //{{AFX_DATA(CAutoCaulkDialog)
-    enum { IDD = IDD_AUTOCAULK_DIALOG };
-    CProgressCtrl m_prog2;
-    CProgressCtrl m_prog1;
+enum { IDD = IDD_AUTOCAULK_DIALOG };
+CProgressCtrl m_prog2;
+CProgressCtrl m_prog1;
 //}}AFX_DATA
 
 
@@ -46,7 +47,7 @@ public:
 // ClassWizard generated virtual function overrides
 //{{AFX_VIRTUAL(CAutoCaulkDialog)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX);      // DDX/DDV support
+virtual void DoDataExchange( CDataExchange* pDX );      // DDX/DDV support
 //}}AFX_VIRTUAL
 
 // Implementation
@@ -56,7 +57,7 @@ protected:
 //{{AFX_MSG(CAutoCaulkDialog)
 // NOTE: the ClassWizard will add member functions here
 //}}AFX_MSG
-    DECLARE_MESSAGE_MAP()
+DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

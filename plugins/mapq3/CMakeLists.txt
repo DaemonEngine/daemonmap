@@ -5,5 +5,5 @@ radiant_plugin(mapq3
         )
 
 target_include_directories(mapq3
-        PRIVATE $<TARGET_PROPERTY:uilib,INTERFACE_INCLUDE_DIRECTORIES>
-        )
+    PRIVATE $<TARGET_PROPERTY:uilib,INTERFACE_INCLUDE_DIRECTORIES>
+)

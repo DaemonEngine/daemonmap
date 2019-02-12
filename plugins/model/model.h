@@ -24,9 +24,7 @@
 
 namespace scene { class Node; }
 class ArchiveFile;
-
 typedef struct picoModule_s picoModule_t;
-
-scene::Node &loadPicoModel(const picoModule_t *module, ArchiveFile &file);
+scene::Node& loadPicoModel( const picoModule_t* module, ArchiveFile& file );
 
 #endif

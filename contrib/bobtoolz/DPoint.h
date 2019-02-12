@@ -30,16 +30,16 @@
 
 #include "mathlib.h"
 
-class DPoint {
+class DPoint
+{
 public:
-    DPoint();
+DPoint();
+virtual ~DPoint();
 
-    virtual ~DPoint();
+bool operator ==( vec3_t other );
 
-    bool operator==(vec3_t other);
-
-    vec3_t _pnt;
-    unsigned char m_uData;
+vec3_t _pnt;
+unsigned char m_uData;
 };
 
 //typedef CList<DPoint*, DPoint*> DPointList;

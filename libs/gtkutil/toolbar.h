@@ -26,19 +26,11 @@
 #include "generic/callback.h"
 
 class Command;
-
 class Toggle;
 
-ui::ToolButton
-toolbar_append_button(ui::Toolbar toolbar, const char *description, const char *icon, const Callback<void()> &callback);
-
-ui::ToolButton
-toolbar_append_button(ui::Toolbar toolbar, const char *description, const char *icon, const Command &command);
-
-ui::ToggleToolButton toolbar_append_toggle_button(ui::Toolbar toolbar, const char *description, const char *icon,
-                                                  const Callback<void()> &callback);
-
-ui::ToggleToolButton
-toolbar_append_toggle_button(ui::Toolbar toolbar, const char *description, const char *icon, const Toggle &toggle);
+ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* description, const char* icon, const Callback<void()>& callback );
+ui::ToolButton toolbar_append_button( ui::Toolbar toolbar, const char* description, const char* icon, const Command& command );
+ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const Callback<void()>& callback );
+ui::ToggleToolButton toolbar_append_toggle_button( ui::Toolbar toolbar, const char* description, const char* icon, const Toggle& toggle );
 
 #endif

@@ -25,11 +25,9 @@
 #define INCLUDED_PLUGINTOOLBAR_H
 
 ui::Toolbar create_plugin_toolbar();
-
 void PluginToolbar_populate();
-
 void PluginToolbar_clear();
 
-ui::Image new_plugin_image(const char *filename); // filename is relative to plugin bitmaps path
+ui::Image new_plugin_image( const char* filename ); // filename is relative to plugin bitmaps path
 
 #endif

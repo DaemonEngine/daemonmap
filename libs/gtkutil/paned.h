@@ -24,6 +24,6 @@
 #if !defined( INCLUDED_GTKUTIL_PANED_H )
 #define INCLUDED_GTKUTIL_PANED_H
 
-ui::HPaned create_split_views(ui::Widget topleft, ui::Widget topright, ui::Widget botleft, ui::Widget botright);
+ui::HPaned create_split_views( ui::Widget topleft, ui::Widget topright, ui::Widget botleft, ui::Widget botright );
 
 #endif

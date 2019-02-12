@@ -37,486 +37,397 @@
 
 #include "timer.h"
 
-class DebugScopeTimer {
-    Timer m_timer;
-    const char *m_operation;
+class DebugScopeTimer
+{
+Timer m_timer;
+const char* m_operation;
 public:
-    DebugScopeTimer(const char *operation)
-            : m_operation(operation)
-    {
-        m_timer.start();
-    }
-
-    ~DebugScopeTimer()
-    {
-        unsigned int elapsed = m_timer.elapsed_msec();
-        if (elapsed > 0) {
-            globalOutputStream() << m_operation << ": " << elapsed << " msec\n";
-        }
-    }
+DebugScopeTimer( const char* operation )
+	: m_operation( operation ){
+	m_timer.start();
+}
+~DebugScopeTimer(){
+	unsigned int elapsed = m_timer.elapsed_msec();
+	if ( elapsed > 0 ) {
+		globalOutputStream() << m_operation << ": " << elapsed << " msec\n";
+	}
+}
 };
 
 
-class RadiantUndoSystem : public UndoSystem {
-    UINT_CONSTANT(MAX_UNDO_LEVELS, 1024);
+class RadiantUndoSystem : public UndoSystem
+{
+UINT_CONSTANT( MAX_UNDO_LEVELS, 1024 );
 
-    class Snapshot {
-        class StateApplicator {
-        public:
-            Undoable *m_undoable;
-        private:
-            UndoMemento *m_data;
-        public:
+class Snapshot
+{
+class StateApplicator
+{
+public:
+Undoable* m_undoable;
+private:
+UndoMemento* m_data;
+public:
 
-            StateApplicator(Undoable *undoable, UndoMemento *data)
-                    : m_undoable(undoable), m_data(data)
-            {
-            }
+StateApplicator( Undoable* undoable, UndoMemento* data )
+	: m_undoable( undoable ), m_data( data ){
+}
+void restore(){
+	m_undoable->importState( m_data );
+}
+void release(){
+	m_data->release();
+}
+};
 
-            void restore()
-            {
-                m_undoable->importState(m_data);
-            }
+typedef std::list<StateApplicator> states_t;
+states_t m_states;
 
-            void release()
-            {
-                m_data->release();
-            }
-        };
+public:
+bool empty() const {
+	return m_states.empty();
+}
+std::size_t size() const {
+	return m_states.size();
+}
+void save( Undoable* undoable ){
+	m_states.push_front( StateApplicator( undoable, undoable->exportState() ) );
+}
+void restore(){
+	for ( states_t::iterator i = m_states.begin(); i != m_states.end(); ++i )
+	{
+		( *i ).restore();
+	}
+}
+void release(){
+	for ( states_t::iterator i = m_states.begin(); i != m_states.end(); ++i )
+	{
+		( *i ).release();
+	}
+}
+};
 
-        typedef std::list<StateApplicator> states_t;
-        states_t m_states;
+struct Operation
+{
+	Snapshot m_snapshot;
+	CopiedString m_command;
 
-    public:
-        bool empty() const
-        {
-            return m_states.empty();
-        }
-
-        std::size_t size() const
-        {
-            return m_states.size();
-        }
-
-        void save(Undoable *undoable)
-        {
-            m_states.push_front(StateApplicator(undoable, undoable->exportState()));
-        }
-
-        void restore()
-        {
-            for (states_t::iterator i = m_states.begin(); i != m_states.end(); ++i) {
-                (*i).restore();
-            }
-        }
-
-        void release()
-        {
-            for (states_t::iterator i = m_states.begin(); i != m_states.end(); ++i) {
-                (*i).release();
-            }
-        }
-    };
-
-    struct Operation {
-        Snapshot m_snapshot;
-        CopiedString m_command;
-
-        Operation(const char *command)
-                : m_command(command)
-        {
-        }
-
-        ~Operation()
-        {
-            m_snapshot.release();
-        }
-    };
+	Operation( const char* command )
+		: m_command( command ){
+	}
+	~Operation(){
+		m_snapshot.release();
+	}
+};
 
 
-    class UndoStack {
+class UndoStack
+{
 //! Note: using std::list instead of vector/deque, to avoid copying of undos
-        typedef std::list<Operation *> Operations;
+typedef std::list<Operation*> Operations;
 
-        Operations m_stack;
-        Operation *m_pending;
+Operations m_stack;
+Operation* m_pending;
 
-    public:
-        UndoStack() : m_pending(0)
-        {
-        }
-
-        ~UndoStack()
-        {
-            clear();
-        }
-
-        bool empty() const
-        {
-            return m_stack.empty();
-        }
-
-        std::size_t size() const
-        {
-            return m_stack.size();
-        }
-
-        Operation *back()
-        {
-            return m_stack.back();
-        }
-
-        const Operation *back() const
-        {
-            return m_stack.back();
-        }
-
-        Operation *front()
-        {
-            return m_stack.front();
-        }
-
-        const Operation *front() const
-        {
-            return m_stack.front();
-        }
-
-        void pop_front()
-        {
-            delete m_stack.front();
-            m_stack.pop_front();
-        }
-
-        void pop_back()
-        {
-            delete m_stack.back();
-            m_stack.pop_back();
-        }
-
-        void clear()
-        {
-            if (!m_stack.empty()) {
-                for (Operations::iterator i = m_stack.begin(); i != m_stack.end(); ++i) {
-                    delete *i;
-                }
-                m_stack.clear();
-            }
-        }
-
-        void start(const char *command)
-        {
-            if (m_pending != 0) {
-                delete m_pending;
-            }
-            m_pending = new Operation(command);
-        }
-
-        bool finish(const char *command)
-        {
-            if (m_pending != 0) {
-                delete m_pending;
-                m_pending = 0;
-                return false;
-            } else {
-                ASSERT_MESSAGE(!m_stack.empty(), "undo stack empty");
-                m_stack.back()->m_command = command;
-                return true;
-            }
-        }
-
-        void save(Undoable *undoable)
-        {
-            if (m_pending != 0) {
-                m_stack.push_back(m_pending);
-                m_pending = 0;
-            }
-            back()->m_snapshot.save(undoable);
-        }
-    };
-
-    UndoStack m_undo_stack;
-    UndoStack m_redo_stack;
-
-    class UndoStackFiller : public UndoObserver {
-        UndoStack *m_stack;
-    public:
-
-        UndoStackFiller()
-                : m_stack(0)
-        {
-        }
-
-        void save(Undoable *undoable)
-        {
-            ASSERT_NOTNULL(undoable);
-
-            if (m_stack != 0) {
-                m_stack->save(undoable);
-                m_stack = 0;
-            }
-        }
-
-        void setStack(UndoStack *stack)
-        {
-            m_stack = stack;
-        }
-    };
-
-    typedef std::map<Undoable *, UndoStackFiller> undoables_t;
-    undoables_t m_undoables;
-
-    void mark_undoables(UndoStack *stack)
-    {
-        for (undoables_t::iterator i = m_undoables.begin(); i != m_undoables.end(); ++i) {
-            (*i).second.setStack(stack);
-        }
-    }
-
-    std::size_t m_undo_levels;
-
-    typedef std::set<UndoTracker *> Trackers;
-    Trackers m_trackers;
 public:
-    RadiantUndoSystem()
-            : m_undo_levels(64)
-    {
-    }
+UndoStack() : m_pending( 0 ){
+}
+~UndoStack(){
+	clear();
+}
+bool empty() const {
+	return m_stack.empty();
+}
+std::size_t size() const {
+	return m_stack.size();
+}
+Operation* back(){
+	return m_stack.back();
+}
+const Operation* back() const {
+	return m_stack.back();
+}
+Operation* front(){
+	return m_stack.front();
+}
+const Operation* front() const {
+	return m_stack.front();
+}
+void pop_front(){
+	delete m_stack.front();
+	m_stack.pop_front();
+}
+void pop_back(){
+	delete m_stack.back();
+	m_stack.pop_back();
+}
+void clear(){
+	if ( !m_stack.empty() ) {
+		for ( Operations::iterator i = m_stack.begin(); i != m_stack.end(); ++i )
+		{
+			delete *i;
+		}
+		m_stack.clear();
+	}
+}
+void start( const char* command ){
+	if ( m_pending != 0 ) {
+		delete m_pending;
+	}
+	m_pending = new Operation( command );
+}
+bool finish( const char* command ){
+	if ( m_pending != 0 ) {
+		delete m_pending;
+		m_pending = 0;
+		return false;
+	}
+	else
+	{
+		ASSERT_MESSAGE( !m_stack.empty(), "undo stack empty" );
+		m_stack.back()->m_command = command;
+		return true;
+	}
+}
+void save( Undoable* undoable ){
+	if ( m_pending != 0 ) {
+		m_stack.push_back( m_pending );
+		m_pending = 0;
+	}
+	back()->m_snapshot.save( undoable );
+}
+};
 
-    ~RadiantUndoSystem()
-    {
-        clear();
-    }
+UndoStack m_undo_stack;
+UndoStack m_redo_stack;
 
-    UndoObserver *observer(Undoable *undoable)
-    {
-        ASSERT_NOTNULL(undoable);
+class UndoStackFiller : public UndoObserver
+{
+UndoStack* m_stack;
+public:
 
-        return &m_undoables[undoable];
-    }
+UndoStackFiller()
+	: m_stack( 0 ){
+}
+void save( Undoable* undoable ){
+	ASSERT_NOTNULL( undoable );
 
-    void release(Undoable *undoable)
-    {
-        ASSERT_NOTNULL(undoable);
+	if ( m_stack != 0 ) {
+		m_stack->save( undoable );
+		m_stack = 0;
+	}
+}
+void setStack( UndoStack* stack ){
+	m_stack = stack;
+}
+};
 
-        m_undoables.erase(undoable);
-    }
+typedef std::map<Undoable*, UndoStackFiller> undoables_t;
+undoables_t m_undoables;
 
-    void setLevels(std::size_t levels)
-    {
-        if (levels > MAX_UNDO_LEVELS()) {
-            levels = MAX_UNDO_LEVELS();
-        }
+void mark_undoables( UndoStack* stack ){
+	for ( undoables_t::iterator i = m_undoables.begin(); i != m_undoables.end(); ++i )
+	{
+		( *i ).second.setStack( stack );
+	}
+}
 
-        while (m_undo_stack.size() > levels) {
-            m_undo_stack.pop_front();
-        }
-        m_undo_levels = levels;
-    }
+std::size_t m_undo_levels;
 
-    std::size_t getLevels() const
-    {
-        return m_undo_levels;
-    }
+typedef std::set<UndoTracker*> Trackers;
+Trackers m_trackers;
+public:
+RadiantUndoSystem()
+	: m_undo_levels( 64 ){
+}
+~RadiantUndoSystem(){
+	clear();
+}
+UndoObserver* observer( Undoable* undoable ){
+	ASSERT_NOTNULL( undoable );
 
-    std::size_t size() const
-    {
-        return m_undo_stack.size();
-    }
+	return &m_undoables[undoable];
+}
+void release( Undoable* undoable ){
+	ASSERT_NOTNULL( undoable );
 
-    void startUndo()
-    {
-        m_undo_stack.start("unnamedCommand");
-        mark_undoables(&m_undo_stack);
-    }
+	m_undoables.erase( undoable );
+}
+void setLevels( std::size_t levels ){
+	if ( levels > MAX_UNDO_LEVELS() ) {
+		levels = MAX_UNDO_LEVELS();
+	}
 
-    bool finishUndo(const char *command)
-    {
-        bool changed = m_undo_stack.finish(command);
-        mark_undoables(0);
-        return changed;
-    }
+	while ( m_undo_stack.size() > levels )
+	{
+		m_undo_stack.pop_front();
+	}
+	m_undo_levels = levels;
+}
+std::size_t getLevels() const {
+	return m_undo_levels;
+}
+std::size_t size() const {
+	return m_undo_stack.size();
+}
+void startUndo(){
+	m_undo_stack.start( "unnamedCommand" );
+	mark_undoables( &m_undo_stack );
+}
+bool finishUndo( const char* command ){
+	bool changed = m_undo_stack.finish( command );
+	mark_undoables( 0 );
+	return changed;
+}
+void startRedo(){
+	m_redo_stack.start( "unnamedCommand" );
+	mark_undoables( &m_redo_stack );
+}
+bool finishRedo( const char* command ){
+	bool changed = m_redo_stack.finish( command );
+	mark_undoables( 0 );
+	return changed;
+}
+void start(){
+	m_redo_stack.clear();
+	if ( m_undo_stack.size() == m_undo_levels ) {
+		m_undo_stack.pop_front();
+	}
+	startUndo();
+	trackersBegin();
+}
+void finish( const char* command ){
+	if ( finishUndo( command ) ) {
+		globalOutputStream() << command << '\n';
+	}
+}
+void undo(){
+	if ( m_undo_stack.empty() ) {
+		globalOutputStream() << "Undo: no undo available\n";
+	}
+	else
+	{
+		Operation* operation = m_undo_stack.back();
+		globalOutputStream() << "Undo: " << operation->m_command.c_str() << "\n";
 
-    void startRedo()
-    {
-        m_redo_stack.start("unnamedCommand");
-        mark_undoables(&m_redo_stack);
-    }
+		startRedo();
+		trackersUndo();
+		operation->m_snapshot.restore();
+		finishRedo( operation->m_command.c_str() );
+		m_undo_stack.pop_back();
+	}
+}
+void redo(){
+	if ( m_redo_stack.empty() ) {
+		globalOutputStream() << "Redo: no redo available\n";
+	}
+	else
+	{
+		Operation* operation = m_redo_stack.back();
+		globalOutputStream() << "Redo: " << operation->m_command.c_str() << "\n";
 
-    bool finishRedo(const char *command)
-    {
-        bool changed = m_redo_stack.finish(command);
-        mark_undoables(0);
-        return changed;
-    }
-
-    void start()
-    {
-        m_redo_stack.clear();
-        if (m_undo_stack.size() == m_undo_levels) {
-            m_undo_stack.pop_front();
-        }
-        startUndo();
-        trackersBegin();
-    }
-
-    void finish(const char *command)
-    {
-        if (finishUndo(command)) {
-            globalOutputStream() << command << '\n';
-        }
-    }
-
-    void undo()
-    {
-        if (m_undo_stack.empty()) {
-            globalOutputStream() << "Undo: no undo available\n";
-        } else {
-            Operation *operation = m_undo_stack.back();
-            globalOutputStream() << "Undo: " << operation->m_command.c_str() << "\n";
-
-            startRedo();
-            trackersUndo();
-            operation->m_snapshot.restore();
-            finishRedo(operation->m_command.c_str());
-            m_undo_stack.pop_back();
-        }
-    }
-
-    void redo()
-    {
-        if (m_redo_stack.empty()) {
-            globalOutputStream() << "Redo: no redo available\n";
-        } else {
-            Operation *operation = m_redo_stack.back();
-            globalOutputStream() << "Redo: " << operation->m_command.c_str() << "\n";
-
-            startUndo();
-            trackersRedo();
-            operation->m_snapshot.restore();
-            finishUndo(operation->m_command.c_str());
-            m_redo_stack.pop_back();
-        }
-    }
-
-    void clear()
-    {
-        mark_undoables(0);
-        m_undo_stack.clear();
-        m_redo_stack.clear();
-        trackersClear();
-    }
-
-    void trackerAttach(UndoTracker &tracker)
-    {
-        ASSERT_MESSAGE(m_trackers.find(&tracker) == m_trackers.end(), "undo tracker already attached");
-        m_trackers.insert(&tracker);
-    }
-
-    void trackerDetach(UndoTracker &tracker)
-    {
-        ASSERT_MESSAGE(m_trackers.find(&tracker) != m_trackers.end(), "undo tracker cannot be detached");
-        m_trackers.erase(&tracker);
-    }
-
-    void trackersClear() const
-    {
-        for (Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i) {
-            (*i)->clear();
-        }
-    }
-
-    void trackersBegin() const
-    {
-        for (Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i) {
-            (*i)->begin();
-        }
-    }
-
-    void trackersUndo() const
-    {
-        for (Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i) {
-            (*i)->undo();
-        }
-    }
-
-    void trackersRedo() const
-    {
-        for (Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i) {
-            (*i)->redo();
-        }
-    }
+		startUndo();
+		trackersRedo();
+		operation->m_snapshot.restore();
+		finishUndo( operation->m_command.c_str() );
+		m_redo_stack.pop_back();
+	}
+}
+void clear(){
+	mark_undoables( 0 );
+	m_undo_stack.clear();
+	m_redo_stack.clear();
+	trackersClear();
+}
+void trackerAttach( UndoTracker& tracker ){
+	ASSERT_MESSAGE( m_trackers.find( &tracker ) == m_trackers.end(), "undo tracker already attached" );
+	m_trackers.insert( &tracker );
+}
+void trackerDetach( UndoTracker& tracker ){
+	ASSERT_MESSAGE( m_trackers.find( &tracker ) != m_trackers.end(), "undo tracker cannot be detached" );
+	m_trackers.erase( &tracker );
+}
+void trackersClear() const {
+	for ( Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i )
+	{
+		( *i )->clear();
+	}
+}
+void trackersBegin() const {
+	for ( Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i )
+	{
+		( *i )->begin();
+	}
+}
+void trackersUndo() const {
+	for ( Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i )
+	{
+		( *i )->undo();
+	}
+}
+void trackersRedo() const {
+	for ( Trackers::const_iterator i = m_trackers.begin(); i != m_trackers.end(); ++i )
+	{
+		( *i )->redo();
+	}
+}
 };
 
 
-void UndoLevels_importString(RadiantUndoSystem &undo, const char *value)
-{
-    int levels;
-    PropertyImpl<int, const char *>::Import(levels, value);
-    undo.setLevels(levels);
+
+void UndoLevels_importString( RadiantUndoSystem& undo, const char* value ){
+	int levels;
+	PropertyImpl<int, const char *>::Import( levels, value );
+	undo.setLevels( levels );
 }
-
-typedef ReferenceCaller<RadiantUndoSystem, void(const char *), UndoLevels_importString> UndoLevelsImportStringCaller;
-
-void UndoLevels_exportString(const RadiantUndoSystem &undo, const Callback<void(const char *)> &importer)
-{
-    PropertyImpl<int, const char *>::Export(static_cast<int>( undo.getLevels()), importer);
+typedef ReferenceCaller<RadiantUndoSystem, void(const char*), UndoLevels_importString> UndoLevelsImportStringCaller;
+void UndoLevels_exportString( const RadiantUndoSystem& undo, const Callback<void(const char *)> & importer ){
+	PropertyImpl<int, const char *>::Export( static_cast<int>( undo.getLevels() ), importer );
 }
-
-typedef ConstReferenceCaller<RadiantUndoSystem, void(
-        const Callback<void(const char *)> &), UndoLevels_exportString> UndoLevelsExportStringCaller;
+typedef ConstReferenceCaller<RadiantUndoSystem, void(const Callback<void(const char *)> &), UndoLevels_exportString> UndoLevelsExportStringCaller;
 
 #include "generic/callback.h"
 
 struct UndoLevels {
-    static void Export(const RadiantUndoSystem &self, const Callback<void(int)> &returnz)
-    {
+    static void Export(const RadiantUndoSystem &self, const Callback<void(int)> &returnz) {
         returnz(static_cast<int>(self.getLevels()));
     }
 
-    static void Import(RadiantUndoSystem &self, int value)
-    {
+    static void Import(RadiantUndoSystem &self, int value) {
         self.setLevels(value);
     }
 };
 
-void Undo_constructPreferences(RadiantUndoSystem &undo, PreferencesPage &page)
-{
+void Undo_constructPreferences( RadiantUndoSystem& undo, PreferencesPage& page ){
     page.appendSpinner("Undo Queue Size", 64, 0, 1024, make_property<UndoLevels>(undo));
 }
-
-void Undo_constructPage(RadiantUndoSystem &undo, PreferenceGroup &group)
-{
-    PreferencesPage page(group.createPage("Undo", "Undo Queue Settings"));
-    Undo_constructPreferences(undo, page);
+void Undo_constructPage( RadiantUndoSystem& undo, PreferenceGroup& group ){
+	PreferencesPage page( group.createPage( "Undo", "Undo Queue Settings" ) );
+	Undo_constructPreferences( undo, page );
+}
+void Undo_registerPreferencesPage( RadiantUndoSystem& undo ){
+	PreferencesDialog_addSettingsPage( ReferenceCaller<RadiantUndoSystem, void(PreferenceGroup&), Undo_constructPage>( undo ) );
 }
 
-void Undo_registerPreferencesPage(RadiantUndoSystem &undo)
+class UndoSystemDependencies : public GlobalPreferenceSystemModuleRef
 {
-    PreferencesDialog_addSettingsPage(
-            ReferenceCaller<RadiantUndoSystem, void(PreferenceGroup &), Undo_constructPage>(undo));
-}
-
-class UndoSystemDependencies : public GlobalPreferenceSystemModuleRef {
 };
 
-class UndoSystemAPI {
-    RadiantUndoSystem m_undosystem;
+class UndoSystemAPI
+{
+RadiantUndoSystem m_undosystem;
 public:
-    typedef UndoSystem Type;
+typedef UndoSystem Type;
+STRING_CONSTANT( Name, "*" );
 
-    STRING_CONSTANT(Name, "*");
+UndoSystemAPI(){
+    GlobalPreferenceSystem().registerPreference("UndoLevels", make_property_string<UndoLevels>(m_undosystem));
 
-    UndoSystemAPI()
-    {
-        GlobalPreferenceSystem().registerPreference("UndoLevels", make_property_string<UndoLevels>(m_undosystem));
-
-        Undo_registerPreferencesPage(m_undosystem);
-    }
-
-    UndoSystem *getTable()
-    {
-        return &m_undosystem;
-    }
+	Undo_registerPreferencesPage( m_undosystem );
+}
+UndoSystem* getTable(){
+	return &m_undosystem;
+}
 };
 
 #include "modulesystem/singletonmodule.h"
@@ -524,58 +435,54 @@ public:
 
 typedef SingletonModule<UndoSystemAPI, UndoSystemDependencies> UndoSystemModule;
 typedef Static<UndoSystemModule> StaticUndoSystemModule;
-StaticRegisterModule staticRegisterUndoSystem(StaticUndoSystemModule::instance());
+StaticRegisterModule staticRegisterUndoSystem( StaticUndoSystemModule::instance() );
 
 
-class undoable_test : public Undoable {
-    struct state_type : public UndoMemento {
-        state_type() : test_data(0)
-        {
-        }
 
-        state_type(const state_type &other) : UndoMemento(other), test_data(other.test_data)
-        {
-        }
 
-        void release()
-        {
-            delete this;
-        }
 
-        int test_data;
-    };
 
-    state_type m_state;
-    UndoObserver *m_observer;
+
+
+
+
+class undoable_test : public Undoable
+{
+struct state_type : public UndoMemento
+{
+	state_type() : test_data( 0 ){
+	}
+	state_type( const state_type& other ) : UndoMemento( other ), test_data( other.test_data ){
+	}
+	void release(){
+		delete this;
+	}
+
+	int test_data;
+};
+state_type m_state;
+UndoObserver* m_observer;
 public:
-    undoable_test()
-            : m_observer(GlobalUndoSystem().observer(this))
-    {
-    }
+undoable_test()
+	: m_observer( GlobalUndoSystem().observer( this ) ){
+}
+~undoable_test(){
+	GlobalUndoSystem().release( this );
+}
+UndoMemento* exportState() const {
+	return new state_type( m_state );
+}
+void importState( const UndoMemento* state ){
+	ASSERT_NOTNULL( state );
 
-    ~undoable_test()
-    {
-        GlobalUndoSystem().release(this);
-    }
+	m_observer->save( this );
+	m_state = *( static_cast<const state_type*>( state ) );
+}
 
-    UndoMemento *exportState() const
-    {
-        return new state_type(m_state);
-    }
-
-    void importState(const UndoMemento *state)
-    {
-        ASSERT_NOTNULL(state);
-
-        m_observer->save(this);
-        m_state = *(static_cast<const state_type *>( state ));
-    }
-
-    void mutate(unsigned int data)
-    {
-        m_observer->save(this);
-        m_state.test_data = data;
-    }
+void mutate( unsigned int data ){
+	m_observer->save( this );
+	m_state.test_data = data;
+}
 };
 
 #if 0
@@ -584,15 +491,15 @@ class TestUndo
 {
 public:
 TestUndo(){
-    undoable_test test;
-    GlobalUndoSystem().begin( "bleh" );
-    test.mutate( 3 );
-    GlobalUndoSystem().begin( "blah" );
-    test.mutate( 4 );
-    GlobalUndoSystem().undo();
-    GlobalUndoSystem().undo();
-    GlobalUndoSystem().redo();
-    GlobalUndoSystem().redo();
+	undoable_test test;
+	GlobalUndoSystem().begin( "bleh" );
+	test.mutate( 3 );
+	GlobalUndoSystem().begin( "blah" );
+	test.mutate( 4 );
+	GlobalUndoSystem().undo();
+	GlobalUndoSystem().undo();
+	GlobalUndoSystem().redo();
+	GlobalUndoSystem().redo();
 }
 };
 

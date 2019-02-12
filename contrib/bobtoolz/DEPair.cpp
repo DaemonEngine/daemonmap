@@ -27,13 +27,11 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DEPair::DEPair()
-{
+DEPair::DEPair(){
 
 }
 
-DEPair::~DEPair()
-{
+DEPair::~DEPair(){
 
 }
 
@@ -41,8 +39,7 @@ DEPair::~DEPair()
 // Implementation
 //////////////////////////////////////////////////////////////////////
 
-void DEPair::Build(const char *pKey, const char *pValue)
-{
-    key = pKey;
-    value = pValue;
+void DEPair::Build( const char *pKey, const char *pValue ){
+	key = pKey;
+	value = pValue;
 }

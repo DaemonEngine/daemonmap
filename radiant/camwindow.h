@@ -27,63 +27,56 @@
 #include "signal/signalfwd.h"
 
 class CamWnd;
+CamWnd* NewCamWnd();
+void DeleteCamWnd( CamWnd* camwnd );
 
-CamWnd *NewCamWnd();
+void AddCameraMovedCallback( const SignalHandler& handler );
 
-void DeleteCamWnd(CamWnd *camwnd);
+void CamWnd_Update( CamWnd& camwnd );
 
-void AddCameraMovedCallback(const SignalHandler &handler);
+ui::GLArea CamWnd_getWidget( CamWnd& camwnd );
+void CamWnd_setParent( CamWnd& camwnd, ui::Window parent );
 
-void CamWnd_Update(CamWnd &camwnd);
+void GlobalCamera_setCamWnd( CamWnd& camwnd );
 
-ui::GLArea CamWnd_getWidget(CamWnd &camwnd);
-
-void CamWnd_setParent(CamWnd &camwnd, ui::Window parent);
-
-void GlobalCamera_setCamWnd(CamWnd &camwnd);
-
-void fill_view_camera_menu(ui::Menu menu);
-
-void CamWnd_constructToolbar(ui::Toolbar toolbar);
-
+void fill_view_camera_menu( ui::Menu menu );
+void CamWnd_constructToolbar( ui::Toolbar toolbar );
 void CamWnd_registerShortcuts();
 
 void GlobalCamera_Benchmark();
 
-const Vector3 &Camera_getOrigin(CamWnd &camwnd);
+const Vector3& Camera_getOrigin( CamWnd& camwnd );
+void Camera_setOrigin( CamWnd& camwnd, const Vector3& origin );
 
-void Camera_setOrigin(CamWnd &camwnd, const Vector3 &origin);
-
-enum {
-    CAMERA_PITCH = 0, // up / down
-    CAMERA_YAW = 1, // left / right
-    CAMERA_ROLL = 2, // fall over
+enum
+{
+	CAMERA_PITCH = 0, // up / down
+	CAMERA_YAW = 1, // left / right
+	CAMERA_ROLL = 2, // fall over
 };
 
-const Vector3 &Camera_getAngles(CamWnd &camwnd);
+const Vector3& Camera_getAngles( CamWnd& camwnd );
+void Camera_setAngles( CamWnd& camwnd, const Vector3& angles );
 
-void Camera_setAngles(CamWnd &camwnd, const Vector3 &angles);
 
+struct camwindow_globals_t
+{
+	Vector3 color_cameraback;
+	Vector3 color_selbrushes3d;
 
-struct camwindow_globals_t {
-    Vector3 color_cameraback;
-    Vector3 color_selbrushes3d;
+	int m_nCubicScale;
 
-    int m_nCubicScale;
-
-    camwindow_globals_t() :
-            color_cameraback(0.25f, 0.25f, 0.25f),
-            color_selbrushes3d(1.0f, 0.f, 0.f),
-            m_nCubicScale(13)
-    {
-    }
+	camwindow_globals_t() :
+		color_cameraback( 0.25f, 0.25f, 0.25f ),
+		color_selbrushes3d( 1.0f, 0.f, 0.f ),
+		m_nCubicScale( 13 ){
+	}
 
 };
 
 extern camwindow_globals_t g_camwindow_globals;
 
 void CamWnd_Construct();
-
 void CamWnd_Destroy();
 
 #endif

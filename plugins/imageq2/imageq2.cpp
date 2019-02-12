@@ -29,25 +29,23 @@
 #include "modulesystem/singletonmodule.h"
 
 
-class ImageDependencies : public GlobalFileSystemModuleRef {
+class ImageDependencies : public GlobalFileSystemModuleRef
+{
 };
 
-class ImageWalAPI {
-    _QERPlugImageTable m_imagewal;
+class ImageWalAPI
+{
+_QERPlugImageTable m_imagewal;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "wal" );
 
-    STRING_CONSTANT(Name, "wal");
-
-    ImageWalAPI()
-    {
-        m_imagewal.loadImage = LoadWal;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagewal;
-    }
+ImageWalAPI(){
+	m_imagewal.loadImage = LoadWal;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagewal;
+}
 };
 
 typedef SingletonModule<ImageWalAPI, ImageDependencies> ImageWalModule;
@@ -56,22 +54,19 @@ ImageWalModule g_ImageWalModule;
 
 ////////////////////////////////////////////////////
 
-class ImageM8API {
-    _QERPlugImageTable m_imagem8;
+class ImageM8API
+{
+_QERPlugImageTable m_imagem8;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "m8" );
 
-    STRING_CONSTANT(Name, "m8");
-
-    ImageM8API()
-    {
-        m_imagem8.loadImage = LoadM8;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagem8;
-    }
+ImageM8API(){
+	m_imagem8.loadImage = LoadM8;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagem8;
+}
 };
 
 typedef SingletonModule<ImageM8API, ImageDependencies> ImageM8Module;
@@ -80,22 +75,19 @@ ImageM8Module g_ImageM8Module;
 
 ////////////////////////////////////////////////////////
 
-class ImageM32API {
-    _QERPlugImageTable m_imagem32;
+class ImageM32API
+{
+_QERPlugImageTable m_imagem32;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
+STRING_CONSTANT( Name, "m32" );
 
-    STRING_CONSTANT(Name, "m32");
-
-    ImageM32API()
-    {
-        m_imagem32.loadImage = LoadM32;
-    }
-
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagem32;
-    }
+ImageM32API(){
+	m_imagem32.loadImage = LoadM32;
+}
+_QERPlugImageTable* getTable(){
+	return &m_imagem32;
+}
 };
 
 typedef SingletonModule<ImageM32API, ImageDependencies> ImageM32Module;
@@ -104,11 +96,10 @@ ImageM32Module g_ImageM32Module;
 
 ////////////////////////////////////////////////////////
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ImageWalModule.selfRegister();
-    g_ImageM8Module.selfRegister();
-    g_ImageM32Module.selfRegister();
+	g_ImageWalModule.selfRegister();
+	g_ImageM8Module.selfRegister();
+	g_ImageM32Module.selfRegister();
 }

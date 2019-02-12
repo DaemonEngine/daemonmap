@@ -31,167 +31,165 @@
 #include "png.h"
 #include <stdlib.h>
 
-void user_warning_fn(png_structp png_ptr, png_const_charp warning_msg)
-{
-    globalErrorStream() << "libpng warning: " << warning_msg << "\n";
+void user_warning_fn( png_structp png_ptr, png_const_charp warning_msg ){
+	globalErrorStream() << "libpng warning: " << warning_msg << "\n";
 }
 
-void user_error_fn(png_structp png_ptr, png_const_charp error_msg)
-{
-    globalErrorStream() << "libpng error: " << error_msg << "\n";
-    longjmp(png_jmpbuf(png_ptr), 0);
+void user_error_fn( png_structp png_ptr, png_const_charp error_msg ){
+	globalErrorStream() << "libpng error: " << error_msg << "\n";
+	longjmp( png_jmpbuf(png_ptr), 0 );
 }
 
-void user_read_data(png_structp png_ptr, png_bytep data, png_uint_32 length)
-{
-    png_bytep *p_p_fbuffer = (png_bytep *) png_get_io_ptr(png_ptr);
-    memcpy(data, *p_p_fbuffer, length);
-    *p_p_fbuffer += length;
+void user_read_data( png_structp png_ptr, png_bytep data, png_uint_32 length ){
+	png_bytep *p_p_fbuffer = (png_bytep*)png_get_io_ptr( png_ptr );
+	memcpy( data, *p_p_fbuffer, length );
+	*p_p_fbuffer += length;
 }
 
-Image *LoadPNGBuff(unsigned char *fbuffer)
-{
-    png_byte **row_pointers;
-    png_bytep p_fbuffer;
+Image* LoadPNGBuff( unsigned char* fbuffer ){
+	png_byte** row_pointers;
+	png_bytep p_fbuffer;
 
-    p_fbuffer = fbuffer;
+	p_fbuffer = fbuffer;
 
-    // the reading glue
-    // http://www.libpng.org/pub/png/libpng-manual.html
+	// the reading glue
+	// http://www.libpng.org/pub/png/libpng-manual.html
 
-    png_structp png_ptr = png_create_read_struct
-            (PNG_LIBPNG_VER_STRING, (png_voidp) NULL,
-             user_error_fn, user_warning_fn);
-    if (!png_ptr) {
-        globalErrorStream() << "libpng error: png_create_read_struct\n";
-        return 0;
-    }
+	png_structp png_ptr = png_create_read_struct
+							  ( PNG_LIBPNG_VER_STRING, (png_voidp)NULL,
+							  user_error_fn, user_warning_fn );
+	if ( !png_ptr ) {
+		globalErrorStream() << "libpng error: png_create_read_struct\n";
+		return 0;
+	}
 
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) {
-        png_destroy_read_struct(&png_ptr,
-                                (png_infopp) NULL, (png_infopp) NULL);
-        globalErrorStream() << "libpng error: png_create_info_struct (info_ptr)\n";
-        return 0;
-    }
+	png_infop info_ptr = png_create_info_struct( png_ptr );
+	if ( !info_ptr ) {
+		png_destroy_read_struct( &png_ptr,
+								 (png_infopp)NULL, (png_infopp)NULL );
+		globalErrorStream() << "libpng error: png_create_info_struct (info_ptr)\n";
+		return 0;
+	}
 
-    png_infop end_info = png_create_info_struct(png_ptr);
-    if (!end_info) {
-        png_destroy_read_struct(&png_ptr, &info_ptr,
-                                (png_infopp) NULL);
-        globalErrorStream() << "libpng error: png_create_info_struct (end_info)\n";
-        return 0;
-    }
+	png_infop end_info = png_create_info_struct( png_ptr );
+	if ( !end_info ) {
+		png_destroy_read_struct( &png_ptr, &info_ptr,
+								 (png_infopp)NULL );
+		globalErrorStream() << "libpng error: png_create_info_struct (end_info)\n";
+		return 0;
+	}
 
-    // configure the read function
-    png_set_read_fn(png_ptr, (png_voidp) &p_fbuffer, (png_rw_ptr) &user_read_data);
+	// configure the read function
+	png_set_read_fn( png_ptr, ( png_voidp ) & p_fbuffer, ( png_rw_ptr ) & user_read_data );
 
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        png_destroy_read_struct(&png_ptr, &info_ptr,
-                                &end_info);
-        return 0;
-    }
+	if ( setjmp( png_jmpbuf(png_ptr) ) ) {
+		png_destroy_read_struct( &png_ptr, &info_ptr,
+								 &end_info );
+		return 0;
+	}
 
-    png_read_info(png_ptr, info_ptr);
+	png_read_info( png_ptr, info_ptr );
 
-    int bit_depth = png_get_bit_depth(png_ptr, info_ptr);
-    int color_type = png_get_color_type(png_ptr, info_ptr);
+	int bit_depth = png_get_bit_depth( png_ptr, info_ptr );
+	int color_type = png_get_color_type( png_ptr, info_ptr );
 
-    // we want to treat all images the same way
-    //   The following code transforms grayscale images of less than 8 to 8 bits,
-    //   changes paletted images to RGB, and adds a full alpha channel if there is
-    //   transparency information in a tRNS chunk.
+	// we want to treat all images the same way
+	//   The following code transforms grayscale images of less than 8 to 8 bits,
+	//   changes paletted images to RGB, and adds a full alpha channel if there is
+	//   transparency information in a tRNS chunk.
 
-    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
-        png_set_gray_to_rgb(png_ptr);
-    } else if (color_type == PNG_COLOR_TYPE_PALETTE) {
-        png_set_palette_to_rgb(png_ptr);
-    }
+	if ( color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA ) {
+		png_set_gray_to_rgb( png_ptr );
+	}
+	else if ( color_type == PNG_COLOR_TYPE_PALETTE ) {
+		png_set_palette_to_rgb( png_ptr );
+	}
 
-    if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
-        png_set_expand_gray_1_2_4_to_8(png_ptr);
-    }
+	if ( color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8 ) {
+		png_set_expand_gray_1_2_4_to_8( png_ptr );
+	}
 
-    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
-        png_set_tRNS_to_alpha(png_ptr);
-    } else if (!(color_type & PNG_COLOR_MASK_ALPHA)) {
-        // Set the background color to draw transparent and alpha images over.
-        png_color_16 my_background, *image_background;
+	if ( png_get_valid( png_ptr, info_ptr, PNG_INFO_tRNS ) ) {
+		png_set_tRNS_to_alpha( png_ptr );
+	}
 
-        if (png_get_bKGD(png_ptr, info_ptr, &image_background)) {
-            png_set_background(png_ptr, image_background,
-                               PNG_BACKGROUND_GAMMA_FILE, 1, 1.0);
-        } else {
-            png_set_background(png_ptr, &my_background,
-                               PNG_BACKGROUND_GAMMA_SCREEN, 0, 1.0);
-        }
+	if ( !( color_type & PNG_COLOR_MASK_ALPHA ) ) {
+		// Set the background color to draw transparent and alpha images over.
+		png_color_16 my_background, *image_background;
 
-        // Add alpha byte after each RGB triplet
-        png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-    }
+		if ( png_get_bKGD( png_ptr, info_ptr, &image_background ) ) {
+			png_set_background( png_ptr, image_background,
+								PNG_BACKGROUND_GAMMA_FILE, 1, 1.0 );
+		}
+		else{
+			png_set_background( png_ptr, &my_background,
+								PNG_BACKGROUND_GAMMA_SCREEN, 0, 1.0 );
+		}
 
-    // read the sucker in one chunk
-    png_read_update_info(png_ptr, info_ptr);
+		// Add alpha byte after each RGB triplet
+		png_set_filler( png_ptr, 0xff, PNG_FILLER_AFTER );
+	}
 
-    color_type = png_get_color_type(png_ptr, info_ptr);
-    bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+	// read the sucker in one chunk
+	png_read_update_info( png_ptr, info_ptr );
 
-    int width = png_get_image_width(png_ptr, info_ptr);
-    int height = png_get_image_height(png_ptr, info_ptr);
+	color_type = png_get_color_type( png_ptr, info_ptr );
+	bit_depth = png_get_bit_depth( png_ptr, info_ptr );
 
-    // allocate the pixel buffer, and the row pointers
-    RGBAImage *image = new RGBAImage(width, height);
+	int width = png_get_image_width( png_ptr, info_ptr );
+	int height = png_get_image_height( png_ptr, info_ptr );
 
-    row_pointers = (png_byte **) malloc((height) * sizeof(png_byte *));
+	// allocate the pixel buffer, and the row pointers
+	RGBAImage* image = new RGBAImage( width, height );
 
-    int i;
-    for (i = 0; i < (height); i++) {
-        row_pointers[i] = (png_byte *) (image->getRGBAPixels()) + i * 4 * (width);
-    }
+	row_pointers = (png_byte**) malloc( ( height ) * sizeof( png_byte* ) );
 
-    // actual read
-    png_read_image(png_ptr, row_pointers);
+	int i;
+	for ( i = 0; i < ( height ); i++ )
+		row_pointers[i] = (png_byte*)( image->getRGBAPixels() ) + i * 4 * ( width );
 
-    /* read rest of file, and get additional chunks in info_ptr - REQUIRED */
-    png_read_end(png_ptr, info_ptr);
+	// actual read
+	png_read_image( png_ptr, row_pointers );
 
-    /* free up the memory structure */
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	/* read rest of file, and get additional chunks in info_ptr - REQUIRED */
+	png_read_end( png_ptr, info_ptr );
 
-    free(row_pointers);
+	/* free up the memory structure */
+	png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
 
-    return image;
+	free( row_pointers );
+
+	return image;
 }
 
-Image *LoadPNG(ArchiveFile &file)
-{
-    ScopedArchiveBuffer buffer(file);
-    return LoadPNGBuff(buffer.buffer);
+Image* LoadPNG( ArchiveFile& file ){
+	ScopedArchiveBuffer buffer( file );
+	return LoadPNGBuff( buffer.buffer );
 }
 
 
 #include "modulesystem/singletonmodule.h"
 
 
-class ImageDependencies : public GlobalFileSystemModuleRef {
+class ImageDependencies : public GlobalFileSystemModuleRef
+{
 };
 
-class ImagePNGAPI {
-    _QERPlugImageTable m_imagepng;
+class ImagePNGAPI
+{
+_QERPlugImageTable m_imagepng;
 public:
-    typedef _QERPlugImageTable Type;
+typedef _QERPlugImageTable Type;
 
-    STRING_CONSTANT(Name, "png");
+STRING_CONSTANT( Name, "png" );
 
-    ImagePNGAPI()
-    {
-        m_imagepng.loadImage = LoadPNG;
-    }
+ImagePNGAPI(){
+	m_imagepng.loadImage = LoadPNG;
+}
 
-    _QERPlugImageTable *getTable()
-    {
-        return &m_imagepng;
-    }
+_QERPlugImageTable* getTable(){
+	return &m_imagepng;
+}
 };
 
 typedef SingletonModule<ImagePNGAPI, ImageDependencies> ImagePNGModule;
@@ -199,9 +197,8 @@ typedef SingletonModule<ImagePNGAPI, ImageDependencies> ImagePNGModule;
 ImagePNGModule g_ImagePNGModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ImagePNGModule.selfRegister();
+	g_ImagePNGModule.selfRegister();
 }

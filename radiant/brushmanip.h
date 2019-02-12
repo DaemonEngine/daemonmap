@@ -27,85 +27,56 @@
 #include "string/stringfwd.h"
 #include "generic/callback.h"
 
-enum EBrushPrefab {
-    eBrushCuboid,
-    eBrushPrism,
-    eBrushCone,
-    eBrushSphere,
-    eBrushRock,
+enum EBrushPrefab
+{
+	eBrushCuboid,
+	eBrushPrism,
+	eBrushCone,
+	eBrushSphere,
+	eBrushRock,
 };
 
 class TextureProjection;
-
 class ContentsFlagsValue;
-namespace scene {
-    class Graph;
+namespace scene
+{
+class Graph;
 }
-
-void Scene_BrushConstructPrefab(scene::Graph &graph, EBrushPrefab type, std::size_t sides, const char *shader);
-
+void Scene_BrushConstructPrefab( scene::Graph& graph, EBrushPrefab type, std::size_t sides, const char* shader );
 class AABB;
+void Scene_BrushResize_Selected( scene::Graph& graph, const AABB& bounds, const char* shader );
+void Scene_BrushSetTexdef_Selected( scene::Graph& graph, const TextureProjection& projection );
+void Scene_BrushSetTexdef_Component_Selected( scene::Graph& graph, const TextureProjection& projection );
+void Scene_BrushGetTexdef_Selected( scene::Graph& graph, TextureProjection& projection );
+void Scene_BrushGetTexdef_Component_Selected( scene::Graph& graph, TextureProjection& projection );
+void Scene_BrushGetShaderSize_Component_Selected( scene::Graph& graph, size_t& width, size_t& height );
+void Scene_BrushSetFlags_Selected( scene::Graph& graph, const ContentsFlagsValue& flags );
+void Scene_BrushSetFlags_Component_Selected( scene::Graph& graph, const ContentsFlagsValue& flags );
+void Scene_BrushGetFlags_Selected( scene::Graph& graph, ContentsFlagsValue& flags );
+void Scene_BrushGetFlags_Component_Selected( scene::Graph& graph, ContentsFlagsValue& flags );
+void Scene_BrushShiftTexdef_Selected( scene::Graph& graph, float s, float t );
+void Scene_BrushShiftTexdef_Component_Selected( scene::Graph& graph, float s, float t );
+void Scene_BrushScaleTexdef_Selected( scene::Graph& graph, float s, float t );
+void Scene_BrushScaleTexdef_Component_Selected( scene::Graph& graph, float s, float t );
+void Scene_BrushRotateTexdef_Selected( scene::Graph& graph, float angle );
+void Scene_BrushRotateTexdef_Component_Selected( scene::Graph& graph, float angle );
+void Scene_BrushSetShader_Selected( scene::Graph& graph, const char* name );
+void Scene_BrushSetShader_Component_Selected( scene::Graph& graph, const char* name );
+void Scene_BrushGetShader_Selected( scene::Graph& graph, CopiedString& shader );
+void Scene_BrushGetShader_Component_Selected( scene::Graph& graph, CopiedString& shader );
+void Scene_BrushFindReplaceShader( scene::Graph& graph, const char* find, const char* replace );
+void Scene_BrushFindReplaceShader_Selected( scene::Graph& graph, const char* find, const char* replace );
+void Scene_BrushFindReplaceShader_Component_Selected( scene::Graph& graph, const char* find, const char* replace );
+void Scene_BrushSelectByShader( scene::Graph& graph, const char* name );
+void Scene_BrushSelectByShader_Component( scene::Graph& graph, const char* name );
+void Scene_BrushFitTexture_Selected( scene::Graph& graph, float s_repeat, float t_repeat );
+void Scene_BrushFitTexture_Component_Selected( scene::Graph& graph, float s_repeat, float t_repeat );
 
-void Scene_BrushResize_Selected(scene::Graph &graph, const AABB &bounds, const char *shader);
-
-void Scene_BrushSetTexdef_Selected(scene::Graph &graph, const TextureProjection &projection);
-
-void Scene_BrushSetTexdef_Component_Selected(scene::Graph &graph, const TextureProjection &projection);
-
-void Scene_BrushGetTexdef_Selected(scene::Graph &graph, TextureProjection &projection);
-
-void Scene_BrushGetTexdef_Component_Selected(scene::Graph &graph, TextureProjection &projection);
-
-void Scene_BrushGetShaderSize_Component_Selected(scene::Graph &graph, size_t &width, size_t &height);
-
-void Scene_BrushSetFlags_Selected(scene::Graph &graph, const ContentsFlagsValue &flags);
-
-void Scene_BrushSetFlags_Component_Selected(scene::Graph &graph, const ContentsFlagsValue &flags);
-
-void Scene_BrushGetFlags_Selected(scene::Graph &graph, ContentsFlagsValue &flags);
-
-void Scene_BrushGetFlags_Component_Selected(scene::Graph &graph, ContentsFlagsValue &flags);
-
-void Scene_BrushShiftTexdef_Selected(scene::Graph &graph, float s, float t);
-
-void Scene_BrushShiftTexdef_Component_Selected(scene::Graph &graph, float s, float t);
-
-void Scene_BrushScaleTexdef_Selected(scene::Graph &graph, float s, float t);
-
-void Scene_BrushScaleTexdef_Component_Selected(scene::Graph &graph, float s, float t);
-
-void Scene_BrushRotateTexdef_Selected(scene::Graph &graph, float angle);
-
-void Scene_BrushRotateTexdef_Component_Selected(scene::Graph &graph, float angle);
-
-void Scene_BrushSetShader_Selected(scene::Graph &graph, const char *name);
-
-void Scene_BrushSetShader_Component_Selected(scene::Graph &graph, const char *name);
-
-void Scene_BrushGetShader_Selected(scene::Graph &graph, CopiedString &shader);
-
-void Scene_BrushGetShader_Component_Selected(scene::Graph &graph, CopiedString &shader);
-
-void Scene_BrushFindReplaceShader(scene::Graph &graph, const char *find, const char *replace);
-
-void Scene_BrushFindReplaceShader_Selected(scene::Graph &graph, const char *find, const char *replace);
-
-void Scene_BrushFindReplaceShader_Component_Selected(scene::Graph &graph, const char *find, const char *replace);
-
-void Scene_BrushSelectByShader(scene::Graph &graph, const char *name);
-
-void Scene_BrushSelectByShader_Component(scene::Graph &graph, const char *name);
-
-void Scene_BrushFitTexture_Selected(scene::Graph &graph, float s_repeat, float t_repeat);
-
-void Scene_BrushFitTexture_Component_Selected(scene::Graph &graph, float s_repeat, float t_repeat);
-
-void Brush_constructMenu(ui::Menu menu);
+void Brush_constructMenu( ui::Menu menu );
 
 extern Callback<void()> g_texture_lock_status_changed;
 
 void BrushFilters_construct();
-
 void Brush_registerCommands();
 
 #endif

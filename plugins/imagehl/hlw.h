@@ -23,9 +23,8 @@
 #define INCLUDED_HLW_H
 
 class Image;
-
 class ArchiveFile;
 
-Image *LoadHLW(ArchiveFile &file);
+Image* LoadHLW( ArchiveFile& file );
 
 #endif

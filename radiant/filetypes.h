@@ -23,9 +23,7 @@
 #define INCLUDED_FILETYPES_H
 
 class IFileTypeRegistry;
-
-IFileTypeRegistry *GetFileTypeRegistry();
-
-const char *findModuleName(IFileTypeRegistry *registry, const char *moduleType, const char *extension);
+IFileTypeRegistry* GetFileTypeRegistry();
+const char* findModuleName( IFileTypeRegistry* registry, const char* moduleType, const char* extension );
 
 #endif

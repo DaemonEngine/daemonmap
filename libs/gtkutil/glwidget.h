@@ -25,17 +25,12 @@
 #define INCLUDED_GTKUTIL_GLWIDGET_H
 
 extern void (*GLWidget_sharedContextCreated)();
-
 extern void (*GLWidget_sharedContextDestroyed)();
 
 ui::GLArea glwidget_new(bool zbuffer);
-
 void glwidget_create_context(ui::GLArea self);
-
 void glwidget_destroy_context(ui::GLArea self);
-
 bool glwidget_make_current(ui::GLArea self);
-
 void glwidget_swap_buffers(ui::GLArea self);
 
 #endif

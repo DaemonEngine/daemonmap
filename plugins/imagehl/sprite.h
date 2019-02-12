@@ -23,9 +23,8 @@
 #define INCLUDED_SPRITE_H
 
 class Image;
-
 class ArchiveFile;
 
-Image *LoadIDSP(ArchiveFile &file);
+Image* LoadIDSP( ArchiveFile& file );
 
 #endif

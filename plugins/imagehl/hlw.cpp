@@ -61,12 +61,13 @@ typedef unsigned char byte;
    ============================================================================
  */
 
-#define GET_MIP_DATA_SIZE(WIDTH, HEIGHT) ( sizeof( WAD3_MIP ) + ( WIDTH * HEIGHT ) + ( WIDTH * HEIGHT / 4 ) + ( WIDTH * HEIGHT / 16 ) + ( WIDTH * HEIGHT / 64 ) )
+#define GET_MIP_DATA_SIZE( WIDTH, HEIGHT ) ( sizeof( WAD3_MIP ) + ( WIDTH * HEIGHT ) + ( WIDTH * HEIGHT / 4 ) + ( WIDTH * HEIGHT / 16 ) + ( WIDTH * HEIGHT / 64 ) )
 
-typedef struct {
-    char name[16];
-    unsigned int width, height;
-    unsigned int offsets[4];            // four mip maps stored
+typedef struct
+{
+	char name[16];
+	unsigned int width, height;
+	unsigned int offsets[4];            // four mip maps stored
 } WAD3_MIP, *LPWAD3_MIP;
 
 /*
@@ -87,64 +88,66 @@ typedef struct {
    =============
  */
 
-Image *LoadHLWBuff(byte *buffer)
-{
-    byte *buf_p;
-    unsigned long mipdatasize;
-    int columns, rows;
-    byte *pixbuf;
-    int row, column;
-    byte *palette;
-    LPWAD3_MIP lpMip;
-    unsigned char red, green, blue, alphabyte;
+Image* LoadHLWBuff( byte* buffer ){
+	byte *buf_p;
+	unsigned long mipdatasize;
+	int columns, rows;
+	byte *pixbuf;
+	int row, column;
+	byte *palette;
+	LPWAD3_MIP lpMip;
+	unsigned char red, green, blue, alphabyte;
 
-    lpMip = (LPWAD3_MIP) buffer; //!\todo Make endian-safe.
+	lpMip = (LPWAD3_MIP)buffer; //!\todo Make endian-safe.
 
-    mipdatasize = GET_MIP_DATA_SIZE(lpMip->width, lpMip->height);
+	mipdatasize = GET_MIP_DATA_SIZE( lpMip->width,lpMip->height );
 
-    palette = buffer + mipdatasize + 2;
+	palette = buffer + mipdatasize + 2;
 
-    buf_p = buffer + lpMip->offsets[0];
+	buf_p = buffer + lpMip->offsets[0];
 
-    columns = lpMip->width;
-    rows = lpMip->height;
+	columns = lpMip->width;
+	rows = lpMip->height;
 
-    RGBAImage *image = new RGBAImage(columns, rows);
+	RGBAImage* image = new RGBAImage( columns, rows );
 
-    for (row = 0; row < rows; row++) {
-        pixbuf = image->getRGBAPixels() + row * columns * 4;
+	for ( row = 0; row < rows; row++ )
+	{
+		pixbuf = image->getRGBAPixels() + row * columns * 4;
 
-        for (column = 0; column < columns; column++) {
-            int palIndex;
+		for ( column = 0; column < columns; column++ )
+		{
+			int palIndex;
 
-            palIndex = *buf_p++;
+			palIndex = *buf_p++;
 
-            red = *(palette + (palIndex * 3));
-            green = *(palette + (palIndex * 3) + 1);
-            blue = *(palette + (palIndex * 3) + 2);
+			red = *( palette + ( palIndex * 3 ) );
+			green = *( palette + ( palIndex * 3 ) + 1 );
+			blue = *( palette + ( palIndex * 3 ) + 2 );
 
-            // HalfLife engine makes pixels that are BLUE transparent.
-            // So show them that way in the editor.
-            if (blue == 0xff && red == 0x00 && green == 0x00) {
-                alphabyte = 0x00;
-                blue = 0x00; // don't set the resulting pixel to blue
-            } else {
-                alphabyte = 0xff;
-            }
+			// HalfLife engine makes pixels that are BLUE transparent.
+			// So show them that way in the editor.
+			if ( blue == 0xff && red == 0x00 && green == 0x00 ) {
+				alphabyte = 0x00;
+				blue = 0x00; // don't set the resulting pixel to blue
+			}
+			else
+			{
+				alphabyte = 0xff;
+			}
 
-            *pixbuf++ = red;
-            *pixbuf++ = green;
-            *pixbuf++ = blue;
+			*pixbuf++ = red;
+			*pixbuf++ = green;
+			*pixbuf++ = blue;
 
-            *pixbuf++ = alphabyte;
-        }
-    }
+			*pixbuf++ = alphabyte;
+		}
+	}
 
-    return image;
+	return image;
 }
 
-Image *LoadHLW(ArchiveFile &file)
-{
-    ScopedArchiveBuffer buffer(file);
-    return LoadHLWBuff(buffer.buffer);
+Image* LoadHLW( ArchiveFile& file ){
+	ScopedArchiveBuffer buffer( file );
+	return LoadHLWBuff( buffer.buffer );
 }

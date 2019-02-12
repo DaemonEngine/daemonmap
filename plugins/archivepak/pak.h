@@ -22,16 +22,18 @@
 #if !defined( INCLUDED_PAK_H )
 #define INCLUDED_PAK_H
 
-struct pakheader_t {
-    char magic[4];       // Name of the new WAD format ("PACK")
-    unsigned int diroffset; // Position of WAD directory from start of file
-    unsigned int dirsize; // Number of entries * 0x40 (64 char)
+struct pakheader_t
+{
+	char magic[4];       // Name of the new WAD format ("PACK")
+	unsigned int diroffset; // Position of WAD directory from start of file
+	unsigned int dirsize; // Number of entries * 0x40 (64 char)
 };
 
-struct pakentry_t {
-    char filename[0x38]; // Name of the file, Unix style, with extension, 50 chars, padded with '\0'.
-    unsigned int offset; // Position of the entry in PACK file
-    unsigned int size;   // Size of the entry in PACK file
+struct pakentry_t
+{
+	char filename[0x38]; // Name of the file, Unix style, with extension, 50 chars, padded with '\0'.
+	unsigned int offset; // Position of the entry in PACK file
+	unsigned int size;   // Size of the entry in PACK file
 };
 
 #endif

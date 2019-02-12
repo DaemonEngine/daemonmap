@@ -29,19 +29,20 @@
 /////////////////////////////////////////////////////////////////////////////
 // CStairDialog dialog
 
-class CStairDialog : public CDialog {
+class CStairDialog : public CDialog
+{
 // Construction
 public:
-    CStairDialog(CWnd *pParent = NULL);     // standard constructor
+CStairDialog( CWnd* pParent = NULL );     // standard constructor
 
 // Dialog Data
 //{{AFX_DATA(CStairDialog)
-    enum { IDD = IDD_STAIR_DIALOG };
-    UINT m_nStairHeight;
-    int m_StairDir;
-    int m_StairStyle;
-    CString m_riserTexture;
-    BOOL m_bDetail;
+enum { IDD = IDD_STAIR_DIALOG };
+UINT m_nStairHeight;
+int m_StairDir;
+int m_StairStyle;
+CString m_riserTexture;
+BOOL m_bDetail;
 //}}AFX_DATA
 
 
@@ -49,7 +50,7 @@ public:
 // ClassWizard generated virtual function overrides
 //{{AFX_VIRTUAL(CStairDialog)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX);      // DDX/DDV support
+virtual void DoDataExchange( CDataExchange* pDX );      // DDX/DDV support
 //}}AFX_VIRTUAL
 
 // Implementation
@@ -57,19 +58,14 @@ protected:
 
 // Generated message map functions
 //{{AFX_MSG(CStairDialog)
-    afx_msg void OnStyleBobClicked();
-
-    afx_msg void OnStyleOrigClicked();
-
-    virtual BOOL OnInitDialog();
-
-    afx_msg void OnStyleCornerClicked();
-
+afx_msg void OnStyleBobClicked();
+afx_msg void OnStyleOrigClicked();
+virtual BOOL OnInitDialog();
+afx_msg void OnStyleCornerClicked();
 //}}AFX_MSG
-    DECLARE_MESSAGE_MAP()
-
+DECLARE_MESSAGE_MAP()
 private:
-    void EnableDetail(BOOL bEnable);
+void EnableDetail( BOOL bEnable );
 };
 
 //{{AFX_INSERT_LOCATION}}

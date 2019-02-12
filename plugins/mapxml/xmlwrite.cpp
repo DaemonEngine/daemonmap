@@ -29,59 +29,55 @@
 #include "scenelib.h"
 #include "entityxml.h"
 
-inline XMLExporter *Node_getXMLExporter(scene::Node &node)
-{
-    return NodeTypeCast<XMLExporter>::cast(node);
+inline XMLExporter* Node_getXMLExporter( scene::Node& node ){
+	return NodeTypeCast<XMLExporter>::cast( node );
 }
 
 
-class write_all : public scene::Traversable::Walker {
-    XMLImporter &m_importer;
+class write_all : public scene::Traversable::Walker
+{
+XMLImporter& m_importer;
 public:
-    write_all(XMLImporter &importer) : m_importer(importer)
-    {
-    }
-
-    bool pre(scene::Node &node) const
-    {
-        Entity *entity = Node_getEntity(node);
-        if (entity != 0) {
-            m_importer.write("\n", 1);
-            StaticElement element("entity");
-            m_importer.pushElement(element);
-            entity_export exporter(*entity);
-            exporter.exportXML(m_importer);
-        } else {
-            XMLExporter *exporter = Node_getXMLExporter(node);
-            if (exporter != 0) {
-                m_importer.write("\n", 1);
-                exporter->exportXML(m_importer);
-                m_importer.write("\n", 1);
-            }
-        }
-        return true;
-    }
-
-    void post(scene::Node &node) const
-    {
-        if (Node_getEntity(node) != 0) {
-            m_importer.write("\n", 1);
-            m_importer.popElement("entity");
-        }
-    }
+write_all( XMLImporter& importer ) : m_importer( importer ){
+}
+bool pre( scene::Node& node ) const {
+	Entity* entity = Node_getEntity( node );
+	if ( entity != 0 ) {
+		m_importer.write( "\n", 1 );
+		StaticElement element( "entity" );
+		m_importer.pushElement( element );
+		entity_export exporter( *entity );
+		exporter.exportXML( m_importer );
+	}
+	else
+	{
+		XMLExporter* exporter = Node_getXMLExporter( node );
+		if ( exporter != 0 ) {
+			m_importer.write( "\n", 1 );
+			exporter->exportXML( m_importer );
+			m_importer.write( "\n", 1 );
+		}
+	}
+	return true;
+}
+void post( scene::Node& node ) const {
+	if ( Node_getEntity( node ) != 0 ) {
+		m_importer.write( "\n", 1 );
+		m_importer.popElement( "entity" );
+	}
+}
 };
 
-void Map_Write(scene::Node &root, GraphTraversalFunc traverse, TextOutputStream &out)
-{
-    XMLStreamWriter writer(out);
-    writer.write("\n", 1);
-    {
-        StaticElement element("mapdoom3");
-        writer.pushElement(element);
+void Map_Write( scene::Node& root, GraphTraversalFunc traverse, TextOutputStream& out ){
+	XMLStreamWriter writer( out );
+	writer.write( "\n", 1 );
+	{
+		StaticElement element( "mapdoom3" );
+		writer.pushElement( element );
 
-        traverse(root, write_all(writer));
+		traverse( root, write_all( writer ) );
 
-        writer.write("\n", 1);
-        writer.popElement(element.name());
-    }
+		writer.write( "\n", 1 );
+		writer.popElement( element.name() );
+	}
 }

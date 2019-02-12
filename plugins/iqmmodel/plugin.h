@@ -21,5 +21,4 @@
 
 #if !defined( INCLUDED_SAMPLE_H )
 #define INCLUDED_SAMPLE_H
-
 #endif

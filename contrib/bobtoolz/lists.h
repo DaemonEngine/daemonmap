@@ -20,9 +20,7 @@
 #include <list>
 #include <uilib/uilib.h>
 #include "str.h"
-
 typedef struct _GList GList;
 
-bool LoadExclusionList(char *filename, std::list<Str> *exclusionList);
-
-bool LoadGList(char *filename, ui::ListStore loadlist);
+bool LoadExclusionList( char* filename, std::list<Str>* exclusionList );
+bool LoadGList( char* filename, ui::ListStore loadlist );

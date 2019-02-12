@@ -22,21 +22,20 @@
 #if !defined( INCLUDED_LIGHT_H )
 #define INCLUDED_LIGHT_H
 
-namespace scene {
-    class Node;
+namespace scene
+{
+class Node;
 }
 class EntityClass;
 
-scene::Node &New_Light(EntityClass *eclass);
-
-enum LightType {
-    LIGHTTYPE_DEFAULT,
-    LIGHTTYPE_RTCW,
-    LIGHTTYPE_DOOM3
+scene::Node& New_Light( EntityClass* eclass );
+enum LightType
+{
+	LIGHTTYPE_DEFAULT,
+	LIGHTTYPE_RTCW,
+	LIGHTTYPE_DOOM3
 };
-
-void Light_Construct(LightType lightType);
-
+void Light_Construct( LightType lightType );
 void Light_Destroy();
 
 #endif

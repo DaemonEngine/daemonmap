@@ -23,7 +23,6 @@
 #define INCLUDED_STACKTRACE_H
 
 class TextOutputStream;
-
-void write_stack_trace(TextOutputStream &outputStream);
+void write_stack_trace( TextOutputStream& outputStream );
 
 #endif

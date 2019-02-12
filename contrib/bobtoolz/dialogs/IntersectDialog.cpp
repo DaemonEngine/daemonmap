@@ -27,31 +27,27 @@
 // CIntersectDialog dialog
 
 
-CIntersectDialog::CIntersectDialog(CWnd *pParent /*=NULL*/ )
-        : CDialog(CIntersectDialog::IDD, pParent)
-{
-    //{{AFX_DATA_INIT(CIntersectDialog)
-    m_nBrushOptions = 1;
-    m_bUseDetail = FALSE;
-    m_bDuplicateOnly = FALSE;
-    //}}AFX_DATA_INIT
+CIntersectDialog::CIntersectDialog( CWnd* pParent /*=NULL*/ )
+	: CDialog( CIntersectDialog::IDD, pParent ){
+	//{{AFX_DATA_INIT(CIntersectDialog)
+	m_nBrushOptions = 1;
+	m_bUseDetail = FALSE;
+	m_bDuplicateOnly = FALSE;
+	//}}AFX_DATA_INIT
 }
 
 
-void CIntersectDialog::DoDataExchange(CDataExchange *pDX)
-{
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CIntersectDialog)
-    DDX_Radio(pDX, IDC_WHOLEMAP_RADIO, m_nBrushOptions);
-    DDX_Check(pDX, IDC_DETAIL_INCLUDE_CHECK, m_bUseDetail);
-    DDX_Check(pDX, IDC_DUPLICATEONLY_CHECK, m_bDuplicateOnly);
-    //}}AFX_DATA_MAP
+void CIntersectDialog::DoDataExchange( CDataExchange* pDX ){
+	CDialog::DoDataExchange( pDX );
+	//{{AFX_DATA_MAP(CIntersectDialog)
+	DDX_Radio( pDX, IDC_WHOLEMAP_RADIO, m_nBrushOptions );
+	DDX_Check( pDX, IDC_DETAIL_INCLUDE_CHECK, m_bUseDetail );
+	DDX_Check( pDX, IDC_DUPLICATEONLY_CHECK, m_bDuplicateOnly );
+	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CIntersectDialog, CDialog
-)
-
+BEGIN_MESSAGE_MAP( CIntersectDialog, CDialog )
 //{{AFX_MSG_MAP(CIntersectDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP

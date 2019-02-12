@@ -28,57 +28,49 @@
 
 #include "vfs.h"
 
-class FileSystemDependencies : public GlobalRadiantModuleRef {
-    ArchiveModulesRef m_archive_modules;
+class FileSystemDependencies : public GlobalRadiantModuleRef
+{
+ArchiveModulesRef m_archive_modules;
 public:
-    FileSystemDependencies() :
-            m_archive_modules(GlobalRadiant().getRequiredGameDescriptionKeyValue("archivetypes"))
-    {
-    }
-
-    ArchiveModules &getArchiveModules()
-    {
-        return m_archive_modules.get();
-    }
+FileSystemDependencies() :
+	m_archive_modules( GlobalRadiant().getRequiredGameDescriptionKeyValue( "archivetypes" ) ){
+}
+ArchiveModules& getArchiveModules(){
+	return m_archive_modules.get();
+}
 };
 
-class FileSystemQ3API {
-    VirtualFileSystem *m_filesystemq3;
+class FileSystemQ3API
+{
+VirtualFileSystem* m_filesystemq3;
 public:
-    typedef VirtualFileSystem Type;
+typedef VirtualFileSystem Type;
+STRING_CONSTANT( Name, "*" );
 
-    STRING_CONSTANT(Name, "*");
-
-    FileSystemQ3API()
-    {
-        FileSystem_Init();
-        m_filesystemq3 = &GetFileSystem();
-    }
-
-    ~FileSystemQ3API()
-    {
-        FileSystem_Shutdown();
-    }
-
-    VirtualFileSystem *getTable()
-    {
-        return m_filesystemq3;
-    }
+FileSystemQ3API(){
+	FileSystem_Init();
+	m_filesystemq3 = &GetFileSystem();
+}
+~FileSystemQ3API(){
+	FileSystem_Shutdown();
+}
+VirtualFileSystem* getTable(){
+	return m_filesystemq3;
+}
 };
 
 typedef SingletonModule<FileSystemQ3API, FileSystemDependencies> FileSystemQ3Module;
 
 FileSystemQ3Module g_FileSystemQ3Module;
 
-ArchiveModules &FileSystemQ3API_getArchiveModules()
-{
-    return g_FileSystemQ3Module.getDependencies().getArchiveModules();
+ArchiveModules& FileSystemQ3API_getArchiveModules(){
+	return g_FileSystemQ3Module.getDependencies().getArchiveModules();
 }
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
 
-    g_FileSystemQ3Module.selfRegister();
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
+
+	g_FileSystemQ3Module.selfRegister();
 }

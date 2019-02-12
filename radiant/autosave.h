@@ -25,13 +25,10 @@
 extern bool g_SnapShots_Enabled;
 
 void AutoSave_clear();
-
-void QE_CheckAutoSave(void);
-
+void QE_CheckAutoSave( void );
 void Map_Snapshot();
 
 void Autosave_Construct();
-
 void Autosave_Destroy();
 
 

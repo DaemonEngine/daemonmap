@@ -25,5 +25,5 @@ radiant_plugin(entity
         )
 
 target_include_directories(entity
-        PRIVATE $<TARGET_PROPERTY:uilib,INTERFACE_INCLUDE_DIRECTORIES>
-        )
+    PRIVATE $<TARGET_PROPERTY:uilib,INTERFACE_INCLUDE_DIRECTORIES>
+)

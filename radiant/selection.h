@@ -25,31 +25,31 @@
 #include "windowobserver.h"
 #include "generic/callback.h"
 
-struct rect_t {
-    float min[2];
-    float max[2];
+struct rect_t
+{
+	float min[2];
+	float max[2];
 };
 
 typedef Callback<void(rect_t)> RectangleCallback;
 
 class View;
 
-class SelectionSystemWindowObserver : public WindowObserver {
+class SelectionSystemWindowObserver : public WindowObserver
+{
 public:
-    virtual ~SelectionSystemWindowObserver() = default;
-
-    virtual void setView(const View &view) = 0;
-
-    virtual void setRectangleDrawCallback(const RectangleCallback &callback) = 0;
+virtual ~SelectionSystemWindowObserver() = default;
+virtual void setView( const View& view ) = 0;
+virtual void setRectangleDrawCallback( const RectangleCallback& callback ) = 0;
 };
 
-SelectionSystemWindowObserver *NewWindowObserver();
+SelectionSystemWindowObserver* NewWindowObserver();
 
 class AABB;
-namespace scene {
-    class Graph;
+namespace scene
+{
+class Graph;
 }
-
-void Scene_BoundsSelected(scene::Graph &graph, AABB &bounds);
+void Scene_BoundsSelected( scene::Graph& graph, AABB& bounds );
 
 #endif

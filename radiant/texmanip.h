@@ -34,9 +34,7 @@
 
 typedef unsigned char byte;
 
-void R_ResampleTexture(const void *indata, int inwidth, int inheight, void *outdata, int outwidth, int outheight,
-                       int bytesperpixel);
-
-void GL_MipReduce(byte *in, byte *out, int width, int height, int destwidth, int destheight);
+void R_ResampleTexture( const void *indata, int inwidth, int inheight, void *outdata,  int outwidth, int outheight, int bytesperpixel );
+void GL_MipReduce( byte *in, byte *out, int width, int height, int destwidth, int destheight );
 
 #endif

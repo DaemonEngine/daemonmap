@@ -27,22 +27,19 @@
 #include "archive.h"
 
 
-class ArchiveZipAPI {
-    _QERArchiveTable m_archivezip;
+class ArchiveZipAPI
+{
+_QERArchiveTable m_archivezip;
 public:
-    typedef _QERArchiveTable Type;
+typedef _QERArchiveTable Type;
+STRING_CONSTANT( Name, "pk3" );
 
-    STRING_CONSTANT(Name, "pk3");
-
-    ArchiveZipAPI()
-    {
-        m_archivezip.m_pfnOpenArchive = &OpenArchive;
-    }
-
-    _QERArchiveTable *getTable()
-    {
-        return &m_archivezip;
-    }
+ArchiveZipAPI(){
+	m_archivezip.m_pfnOpenArchive = &OpenArchive;
+}
+_QERArchiveTable* getTable(){
+	return &m_archivezip;
+}
 };
 
 typedef SingletonModule<ArchiveZipAPI> ArchiveZipModule;
@@ -50,22 +47,19 @@ typedef SingletonModule<ArchiveZipAPI> ArchiveZipModule;
 ArchiveZipModule g_ArchiveZipModule;
 
 
-class ArchivePK4API {
-    _QERArchiveTable m_archivepk4;
+class ArchivePK4API
+{
+_QERArchiveTable m_archivepk4;
 public:
-    typedef _QERArchiveTable Type;
+typedef _QERArchiveTable Type;
+STRING_CONSTANT( Name, "pk4" );
 
-    STRING_CONSTANT(Name, "pk4");
-
-    ArchivePK4API()
-    {
-        m_archivepk4.m_pfnOpenArchive = &OpenArchive;
-    }
-
-    _QERArchiveTable *getTable()
-    {
-        return &m_archivepk4;
-    }
+ArchivePK4API(){
+	m_archivepk4.m_pfnOpenArchive = &OpenArchive;
+}
+_QERArchiveTable* getTable(){
+	return &m_archivepk4;
+}
 };
 
 typedef SingletonModule<ArchivePK4API> ArchivePK4Module;
@@ -73,22 +67,19 @@ typedef SingletonModule<ArchivePK4API> ArchivePK4Module;
 ArchivePK4Module g_ArchivePK4Module;
 
 
-class ArchiveDPKAPI {
-    _QERArchiveTable m_archivedpk;
+class ArchiveDPKAPI
+{
+_QERArchiveTable m_archivedpk;
 public:
-    typedef _QERArchiveTable Type;
+typedef _QERArchiveTable Type;
+STRING_CONSTANT( Name, "dpk" );
 
-    STRING_CONSTANT(Name, "dpk");
-
-    ArchiveDPKAPI()
-    {
-        m_archivedpk.m_pfnOpenArchive = &OpenArchive;
-    }
-
-    _QERArchiveTable *getTable()
-    {
-        return &m_archivedpk;
-    }
+ArchiveDPKAPI(){
+	m_archivedpk.m_pfnOpenArchive = &OpenArchive;
+}
+_QERArchiveTable* getTable(){
+	return &m_archivedpk;
+}
 };
 
 typedef SingletonModule<ArchiveDPKAPI> ArchiveDPKModule;
@@ -96,11 +87,10 @@ typedef SingletonModule<ArchiveDPKAPI> ArchiveDPKModule;
 ArchiveDPKModule g_ArchiveDPKModule;
 
 
-extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules(ModuleServer &server)
-{
-    initialiseModule(server);
+extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server ){
+	initialiseModule( server );
 
-    g_ArchiveZipModule.selfRegister();
-    g_ArchivePK4Module.selfRegister();
-    g_ArchiveDPKModule.selfRegister();
+	g_ArchiveZipModule.selfRegister();
+	g_ArchivePK4Module.selfRegister();
+	g_ArchiveDPKModule.selfRegister();
 }

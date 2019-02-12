@@ -27,79 +27,67 @@
 // CStairDialog dialog
 
 
-CStairDialog::CStairDialog(CWnd *pParent /*=NULL*/ )
-        : CDialog(CStairDialog::IDD, pParent)
-{
-    //{{AFX_DATA_INIT(CStairDialog)
-    m_nStairHeight = 8;
-    m_StairDir = 0;
-    m_StairStyle = 0;
-    m_riserTexture = _T("");
-    m_bDetail = TRUE;
-    //}}AFX_DATA_INIT
+CStairDialog::CStairDialog( CWnd* pParent /*=NULL*/ )
+	: CDialog( CStairDialog::IDD, pParent ){
+	//{{AFX_DATA_INIT(CStairDialog)
+	m_nStairHeight = 8;
+	m_StairDir = 0;
+	m_StairStyle = 0;
+	m_riserTexture = _T( "" );
+	m_bDetail = TRUE;
+	//}}AFX_DATA_INIT
 }
 
-void CStairDialog::DoDataExchange(CDataExchange *pDX)
-{
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CStairDialog)
-    DDX_Text(pDX, IDC_EDIT1, m_nStairHeight);
-    DDV_MinMaxUInt(pDX, m_nStairHeight, 1, 256);
-    DDX_Radio(pDX, IDC_DIR_N_RADIO, m_StairDir);
-    DDX_Radio(pDX, IDC_STYLE_ORIG_RADIO, m_StairStyle);
-    DDX_Text(pDX, IDC_RISER_EDIT, m_riserTexture);
-    DDV_MaxChars(pDX, m_riserTexture, 256);
-    DDX_Check(pDX, IDC_DETAIL_CHK, m_bDetail);
-    //}}AFX_DATA_MAP
+void CStairDialog::DoDataExchange( CDataExchange* pDX ){
+	CDialog::DoDataExchange( pDX );
+	//{{AFX_DATA_MAP(CStairDialog)
+	DDX_Text( pDX, IDC_EDIT1, m_nStairHeight );
+	DDV_MinMaxUInt( pDX, m_nStairHeight, 1, 256 );
+	DDX_Radio( pDX, IDC_DIR_N_RADIO, m_StairDir );
+	DDX_Radio( pDX, IDC_STYLE_ORIG_RADIO, m_StairStyle );
+	DDX_Text( pDX, IDC_RISER_EDIT, m_riserTexture );
+	DDV_MaxChars( pDX, m_riserTexture, 256 );
+	DDX_Check( pDX, IDC_DETAIL_CHK, m_bDetail );
+	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CStairDialog, CDialog
-)
+BEGIN_MESSAGE_MAP( CStairDialog, CDialog )
 //{{AFX_MSG_MAP(CStairDialog)
-ON_BN_CLICKED( IDC_STYLE_BOB_RADIO, OnStyleBobClicked
-)
-ON_BN_CLICKED( IDC_STYLE_ORIG_RADIO, OnStyleOrigClicked
-)
-ON_BN_CLICKED( IDC_STYLE_CORNER_RADIO, OnStyleCornerClicked
-)
-
+ON_BN_CLICKED( IDC_STYLE_BOB_RADIO, OnStyleBobClicked )
+ON_BN_CLICKED( IDC_STYLE_ORIG_RADIO, OnStyleOrigClicked )
+ON_BN_CLICKED( IDC_STYLE_CORNER_RADIO, OnStyleCornerClicked )
 //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CStairDialog message handlers
 
-void CStairDialog::OnStyleBobClicked()
-{
-    EnableDetail(TRUE);
+void CStairDialog::OnStyleBobClicked(){
+	EnableDetail( TRUE );
 }
 
-void CStairDialog::OnStyleOrigClicked()
-{
-    EnableDetail(FALSE);
+void CStairDialog::OnStyleOrigClicked(){
+	EnableDetail( FALSE );
 }
 
-void CStairDialog::EnableDetail(BOOL bEnable)
-{
-    CWnd *dtlChk = GetDlgItem(IDC_DETAIL_CHK);
-    if (dtlChk) {
-        dtlChk->EnableWindow(bEnable);
-    }
+void CStairDialog::EnableDetail( BOOL bEnable ){
+	CWnd* dtlChk = GetDlgItem( IDC_DETAIL_CHK );
+	if ( dtlChk ) {
+		dtlChk->EnableWindow( bEnable );
+	}
 }
 
 
-BOOL CStairDialog::OnInitDialog()
-{
-    CDialog::OnInitDialog();
+BOOL CStairDialog::OnInitDialog(){
+	CDialog::OnInitDialog();
 
-    EnableDetail(m_StairStyle == 1);
+	EnableDetail( m_StairStyle == 1 );
 
-    return TRUE;  // return TRUE unless you set the focus to a control
-    // EXCEPTION: OCX Property Pages should return FALSE
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CStairDialog::OnStyleCornerClicked()
-{
-    EnableDetail(FALSE);
+void CStairDialog::OnStyleCornerClicked(){
+	EnableDetail( FALSE );
 }

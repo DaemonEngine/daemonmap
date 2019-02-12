@@ -26,30 +26,23 @@
 #include "string/stringfwd.h"
 
 void Patch_registerCommands();
+void Patch_constructToolbar( ui::Toolbar toolbar );
+void Patch_constructMenu( ui::Menu menu );
 
-void Patch_constructToolbar(ui::Toolbar toolbar);
-
-void Patch_constructMenu(ui::Menu menu);
-
-namespace scene {
-    class Graph;
+namespace scene
+{
+class Graph;
 }
 
-void Scene_PatchSetShader_Selected(scene::Graph &graph, const char *name);
+void Scene_PatchSetShader_Selected( scene::Graph& graph, const char* name );
+void Scene_PatchGetShader_Selected( scene::Graph& graph, CopiedString& name );
+void Scene_PatchSelectByShader( scene::Graph& graph, const char* name );
+void Scene_PatchFindReplaceShader( scene::Graph& graph, const char* find, const char* replace );
+void Scene_PatchFindReplaceShader_Selected( scene::Graph& graph, const char* find, const char* replace );
 
-void Scene_PatchGetShader_Selected(scene::Graph &graph, CopiedString &name);
-
-void Scene_PatchSelectByShader(scene::Graph &graph, const char *name);
-
-void Scene_PatchFindReplaceShader(scene::Graph &graph, const char *find, const char *replace);
-
-void Scene_PatchFindReplaceShader_Selected(scene::Graph &graph, const char *find, const char *replace);
-
-void Scene_PatchCapTexture_Selected(scene::Graph &graph);
-
-void Scene_PatchNaturalTexture_Selected(scene::Graph &graph);
-
-void Scene_PatchTileTexture_Selected(scene::Graph &graph, float s, float t);
+void Scene_PatchCapTexture_Selected( scene::Graph& graph );
+void Scene_PatchNaturalTexture_Selected( scene::Graph& graph );
+void Scene_PatchTileTexture_Selected( scene::Graph& graph, float s, float t );
 
 void PatchFilters_construct();
 
@@ -58,21 +51,14 @@ void PatchPreferences_construct();
 void Patch_registerPreferencesPage();
 
 void Patch_NaturalTexture();
-
 void Patch_CapTexture();
-
 void Patch_ResetTexture();
-
 void Patch_FitTexture();
-
 void Patch_FlipTextureX();
-
 void Patch_FlipTextureY();
-
 void Patch_AutoCapTexture();
 
 class PatchCreator;
-
-extern PatchCreator *g_patchCreator;
+extern PatchCreator* g_patchCreator;
 
 #endif

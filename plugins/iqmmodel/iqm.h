@@ -27,5 +27,4 @@ class ArchiveFile;
 
 scene::Node &loadIQMModel( ArchiveFile &file );
 
-
 #endif

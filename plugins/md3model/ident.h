@@ -25,9 +25,8 @@
 #include <string.h>
 
 // equality comparison for two 4-byte ident strings
-inline bool ident_equal(const unsigned char *ident, const unsigned char *other)
-{
-    return ident[0] == other[0] && ident[1] == other[1] && ident[2] == other[2] && ident[3] == other[3];
+inline bool ident_equal( const unsigned char* ident, const unsigned char* other ){
+	return ident[0] == other[0] && ident[1] == other[1] && ident[2] == other[2] && ident[3] == other[3];
 }
 
 #endif

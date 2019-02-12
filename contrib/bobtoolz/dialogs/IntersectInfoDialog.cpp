@@ -28,26 +28,22 @@
 // CIntersectInfoDialog dialog
 
 
-CIntersectInfoDialog::CIntersectInfoDialog(CWnd *pParent /*=NULL*/ )
-        : CDialog(CIntersectInfoDialog::IDD, pParent)
-{
-    //{{AFX_DATA_INIT(CIntersectInfoDialog)
-    //}}AFX_DATA_INIT
+CIntersectInfoDialog::CIntersectInfoDialog( CWnd* pParent /*=NULL*/ )
+	: CDialog( CIntersectInfoDialog::IDD, pParent ){
+	//{{AFX_DATA_INIT(CIntersectInfoDialog)
+	//}}AFX_DATA_INIT
 }
 
 
-void CIntersectInfoDialog::DoDataExchange(CDataExchange *pDX)
-{
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CIntersectInfoDialog)
-    DDX_Control(pDX, IDC_PROGRESS1, m_prog1);
-    //}}AFX_DATA_MAP
+void CIntersectInfoDialog::DoDataExchange( CDataExchange* pDX ){
+	CDialog::DoDataExchange( pDX );
+	//{{AFX_DATA_MAP(CIntersectInfoDialog)
+	DDX_Control( pDX, IDC_PROGRESS1, m_prog1 );
+	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP( CIntersectInfoDialog, CDialog
-)
-
+BEGIN_MESSAGE_MAP( CIntersectInfoDialog, CDialog )
 //{{AFX_MSG_MAP(CIntersectInfoDialog)
 // NOTE: the ClassWizard will add message map macros here
 //}}AFX_MSG_MAP
