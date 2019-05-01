@@ -2104,20 +2104,23 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 
 
 
-#ifdef SMOKINGUNS
-//added by spoon to get back the changed surfaceflags
-void LoadSurfaceFlags(char *filename){
+/*
+   LoadSurfaceFlags()
+   added by spoon to get back the changed surfaceflags
+   from tex file
+*/
+
+void LoadSurfaceFlags( char *filename ) {
 	int i;
 
-	for(i=0; i<numBSPShaders;i++){
-		shaderInfo_t	*si;
+	for( i = 0; i < numBSPShaders; i++ ) {
+		shaderInfo_t *si;
 
 		si = ShaderInfoForShader( bspShaders[i].shader );
 
-		bspShaders[i].surfaceFlags = si->surfaceFlags;
+		bspShaders[ i ].surfaceFlags = si->surfaceFlags;
 	}
 }
-#endif
 
 
 
