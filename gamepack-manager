@@ -66,6 +66,7 @@ OpenArena       GPL          git     https://github.com/NeonKnightOA/oagamepack.
 Osirion         GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/OsirionPack.zip
 Prey            proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/PreyPack/trunk/
 Q3              proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q3Pack/trunk/ 29
+Q3Rally         proprietary  svn     https://svn.code.sf.net/p/q3rallysa/code/tools/radiant-config/radiant15-netradiant/
 Quake2          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q2Pack/branches/1.5/
 Quake4          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q4Pack/branches/1.5/
 Quake           GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/Quake1Pack.zip
