@@ -426,7 +426,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    =======================================================================
  */
 
-#if GDEF_OS_LINUX || ( GDEF_OS_MACOS && !MAC_STATIC_HACK )
+#if GDEF_OS_LINUX || GDEF_OS_MACOS
 #define USED
 
 #include <unistd.h>

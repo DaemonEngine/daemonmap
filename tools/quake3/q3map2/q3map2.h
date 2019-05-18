@@ -93,13 +93,6 @@
 
    ------------------------------------------------------------------------------- */
 
-#define MAC_STATIC_HACK         0
-#if GDEF_OS_MACOS && MAC_STATIC_HACK
-	#define MAC_STATIC          static
-#else
-	#define MAC_STATIC
-#endif
-
 #if 1
 	#if GDEF_OS_WINDOWS
 		#define Q_stricmp           stricmp
