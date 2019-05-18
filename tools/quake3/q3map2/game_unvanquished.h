@@ -61,7 +61,7 @@ game_t struct
 {
 	"unvanquished",         /* -game x */
 	"pkg",                  /* default base game data dir */
-	".local/share/unvanquished", /* unix home sub-dir */
+	".unvanquished",        /* unix home sub-dir */
 	"unvanquished",         /* magic path word */
 	"scripts",              /* shader directory */
 	1048575,                /* max lightmapped surface verts */

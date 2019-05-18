@@ -48,11 +48,7 @@
    ------------------------------------------------------------------------------- */
 
 /* platform-specific */
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-	#define Q_UNIX
-#endif
-
-#ifdef Q_UNIX
+#if GDEF_OS_POSIX
 	#include <unistd.h>
 	#include <pwd.h>
 	#include <limits.h>

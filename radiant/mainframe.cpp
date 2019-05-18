@@ -187,7 +187,7 @@ void VFS_Destroy(){
 // Home Paths
 
 #if GDEF_OS_WINDOWS
-															#include <shlobj.h>
+#include <shlobj.h>
 #include <objbase.h>
 const GUID qFOLDERID_SavedGames = {0x4C5C32FF, 0xBB9D, 0x43b0, {0xB5, 0xB4, 0x2D, 0x72, 0xE5, 0x4E, 0xAA, 0xA4}};
 #define qREFKNOWNFOLDERID GUID
@@ -254,11 +254,19 @@ void HomePaths_Realise(){
 			}
 #endif
 
-#if GDEF_OS_POSIX
+#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
 			path.clear();
-			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
-			g_qeglobals.m_userEnginePath = path.c_str();
-			break;
+			path << DirectoryCleaned( g_get_user_data_dir() ) << ( prefix + 1 ) << "/";
+			if ( file_exists( path.c_str() ) && file_is_directory( path.c_str() ) ) {
+				g_qeglobals.m_userEnginePath = path.c_str();
+				break;
+			}
+			else {
+				path.clear();
+				path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
+				g_qeglobals.m_userEnginePath = path.c_str();
+				break;
+			}
 #endif
 		}
 
