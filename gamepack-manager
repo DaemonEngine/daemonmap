@@ -621,12 +621,24 @@ done
 # compatibility with legacy Makefile
 if [ "${DOWNLOAD_GAMEPACKS}" = 'yes' ]
 then
-	! [ -z "${DOWNLOADDIR}" ] && download_dir="${DOWNLOADDIR}"
-	! [ -z "${INSTALLDIR}" ] && install_dir="${INSTALDIR}"
+	if ! [ -z "${DOWNLOADDIR}" ]
+	then
+		download_dir="${DOWNLOADDIR}"
+	fi
+
+	if ! [ -z "${INSTALLDIR}" ]
+	then
+		install_dir="${INSTALLDIR}"
+	fi
+
 	license_list='free'
 	by_license='true'
+
 	download_packs='true'
+	mkdir_download='true'
+
 	install_packs='true'
+	mkdir_install='true'
 fi
 
 if [ -z "${download_dir}" ]
