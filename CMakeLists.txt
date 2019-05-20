@@ -178,6 +178,10 @@ if (BUILD_BINARIES)
         add_definitions(
                 -DPOSIX=1
         )
+
+        link_directories(
+                /usr/local/lib
+        )
     elseif (WIN32)
         add_definitions(
                 -DWIN32=1
