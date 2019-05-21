@@ -144,6 +144,12 @@ FunctionPointer findSymbol( const char* symbol ){
 
 #include <dlfcn.h>
 
+#if GDEF_OS_MACOS
+#ifndef RTLD_DEEPBIND
+#define RTLD_DEEPBIND 0
+#endif // RTLD_DEEPBIND
+#endif // GDEF_OS_MACOS
+
 class DynamicLibrary {
 	void *m_library;
 public:
