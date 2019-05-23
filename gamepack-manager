@@ -3,8 +3,8 @@
 # get usage help this way:
 # ./gamepack_manager -h
 
-: "${CP:=cp -v}"
-: "${CP_R:=cp -r --preserve=timestamps}"
+: "${CP:=cp -va}"
+: "${CP_R:=cp -Rva}"
 : "${GIT:=git}"
 : "${SVN:=svn}"
 : "${WGET:=wget}"
@@ -81,6 +81,17 @@ Xonotic         GPL          git     https://gitlab.com/xonotic/netradiant-xonot
 EOF
 }
 
+if command -v gsed >/dev/null
+then
+	SED=gsed
+elif sed --help >/dev/null 2>&1
+then
+	SED=sed
+else
+	printf 'ERROR: GNU sed is missing\n' >&2
+	exit 1
+fi
+
 printRealPath ()
 {
 	if command -v grealpath >/dev/null
@@ -105,21 +116,15 @@ printRealPath ()
 		else
 			if ! python -c "import os; print(os.path.realpath('${1}'))"
 			then
-				printf 'ERROR: no known way to compute real path of a file' >&2
-				return 1
+				printf 'ERROR: GNU realpath or other way to compute real path of a file is missing\n' >&2
+				exit 1
 			fi
 		fi
 	fi
 }
 
-if "${mkdir_download}"
-then
-	${MKDIR_P} "${download_dir}"
-	real_download_dir="$(printRealPath "${download_dir}")"
-fi
-
 sanitizeDB () {
-	sed -e 's/#.*//;s/[ \t][ \t][ \t]*/\t/g;s/^[ \t]*//;s/[ \t]*$//' \
+	${SED} -e 's/#.*//;s/[ \t][ \t][ \t]*/\t/g;s/^[ \t]*//;s/[ \t]*$//' \
 	| grep -v '^$'
 }
 
@@ -137,7 +142,7 @@ printList () {
 dedupeList () {
 	printList "${1}" \
 	| tr '\n' ' ' \
-	| sed -e 's/ $//'
+	| ${SED} -e 's/ $//'
 }
 
 printGamePackDB () {
@@ -499,13 +504,13 @@ printHelp () {
 	${tab}${tab}select games by name (default: none)
 	${tab}${tab}special keyword: all, none
 	${tab}${tab}available games:
-	$(printNameList | sed -e 's/^/\t\t\t/')
+	$(printNameList | ${SED} -e 's/^/\t\t\t/')
 
 	${tab}-l, --license LICENSES…
 	${tab}${tab}select games by license (default: none)
 	${tab}${tab}special keyword: free, all, none
 	${tab}${tab}available licenses:
-	$(printLicenseList | sed -e 's/^/\t\t\t/')
+	$(printLicenseList | ${SED} -e 's/^/\t\t\t/')
 
 	ACTIONS:
 	${tab}-ln, --list-names
@@ -699,6 +704,12 @@ then
 fi
 
 selected_list="$(dedupeList "${selected_list}")"
+
+if "${mkdir_download}"
+then
+	${MKDIR_P} "${download_dir}"
+	real_download_dir="$(printRealPath "${download_dir}")"
+fi
 
 if "${mkdir_install}"
 then
