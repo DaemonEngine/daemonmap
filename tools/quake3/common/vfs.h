@@ -40,11 +40,14 @@
 #include <wtypes.h>
 #include <io.h>
 #define S_ISDIR( mode ) ( mode & _S_IFDIR )
-#define PATH_MAX 260
 #else // !GDEF_OS_WINDOWS
 #include <dirent.h>
 #include <unistd.h>
 #endif // !GDEF_OS_WINDOWS
+
+#ifndef PATH_MAX
+#define PATH_MAX 260
+#endif // PATH_MAX
 
 #define VFS_MAXDIRS 64
 
