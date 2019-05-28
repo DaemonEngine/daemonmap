@@ -71,6 +71,7 @@ Quake2          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/
 Quake4          proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Q4Pack/branches/1.5/
 Quake           GPL          zip     http://ingar.intranifty.net/files/netradiant/gamepacks/Quake1Pack.zip
 Quetoo          GPL          svn     svn://svn.icculus.org/gtkradiant-gamepacks/QuetooPack/branches/1.5/
+SmokinGuns      unknown      git     https://github.com/smokin-guns/smokinguns-mapeditor-support.git
 Tremulous       proprietary  zip     http://ingar.intranifty.net/files/netradiant/gamepacks/TremulousPack.zip
 TurtleArena     proprietary  git     https://github.com/Turtle-Arena/turtle-arena-radiant-pack.git
 UFOAI           proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/UFOAIPack/branches/1.5/
