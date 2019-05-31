@@ -8,7 +8,7 @@ macro(radiant_plugin name)
     copy_dlls(${name})
     install(
             TARGETS ${name}
-            LIBRARY DESTINATION ${RADIANT_LIB_SUBDIR}/plugins
+            LIBRARY DESTINATION ${RADIANT_LIB_DIR}/plugins
     )
 endmacro()
 

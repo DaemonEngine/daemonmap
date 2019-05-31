@@ -25,14 +25,14 @@ endif ()
 set(RADIANT_BASENAME netradiant CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
-set(RADIANT_LIB_SUBDIR . CACHE INTERNAL "...")
-set(RADIANT_BIN_SUBDIR . CACHE INTERNAL "...")
-set(RADIANT_DATA_SUBDIR . CACHE INTERNAL "...")
+set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL)
-    set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_SUBDIR bin)
-    set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
+    set(RADIANT_LIB_DIR lib/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR bin)
+    set(RADIANT_DATA_DIR share/${RADIANT_BASENAME})
 endif ()
 
 #-----------------------------------------------------------------------
@@ -291,7 +291,7 @@ if (BUILD_BINARIES)
         add_executable(${name} ${ARGN})
         install(
                 TARGETS ${name}
-                RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}
+                RUNTIME DESTINATION ${RADIANT_BIN_DIR}
         )
     endmacro()
 
@@ -341,7 +341,7 @@ if (BUILD_BINARIES)
     install(DIRECTORY
             setup/data/tools
             docs
-            DESTINATION ${RADIANT_DATA_SUBDIR}
+            DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
 
@@ -357,7 +357,7 @@ if (DOWNLOAD_GAMEPACKS)
     install(DIRECTORY
             ${PROJECT_BINARY_DIR}/games
             ${GAME_DIRS}
-            DESTINATION ${RADIANT_DATA_SUBDIR}
+            DESTINATION ${RADIANT_DATA_DIR}
     )
 endif()
 
