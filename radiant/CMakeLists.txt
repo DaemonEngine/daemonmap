@@ -131,4 +131,4 @@ if (X11_LIBRARIES)
 endif ()
 
 copy_dlls(${RADIANT_BASENAME})
-bundle_gtkdeps(${RADIANT_BASENAME})
+bundle_stuff(${RADIANT_BASENAME})
