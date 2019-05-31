@@ -220,7 +220,7 @@ if (BUILD_BINARIES)
         if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
                     COMMAND bash
-                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do cp --preserve=timestamps \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
+                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
                     VERBATIM
             )
 
@@ -237,7 +237,7 @@ if (BUILD_BINARIES)
         if (BUNDLE_LIBRARIES AND WIN32)
                 add_custom_command(TARGET ${target} POST_BUILD
                         COMMAND bash
-                        ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
+                        ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; [ -d '${PROJECT_BINARY_DIR}/share/themes/MS-Windows' ] || cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; [ -d '${PROJECT_BINARY_DIR}/lib/gdk-pixbuf-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; [ -d '${PROJECT_BINARY_DIR}/lib/gtk-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
                         VERBATIM
                         )
 
