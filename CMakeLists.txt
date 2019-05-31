@@ -217,14 +217,37 @@ if (BUILD_BINARIES)
     option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
     macro(copy_dlls target)
-        if (BUNDLE_LIBRARIES)
+        if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
                     COMMAND bash
                     ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do cp --preserve=timestamps \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
                     VERBATIM
-                    )
+            )
+
+            file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
+
+            install(FILES
+                ${DLL_FILES}
+                DESTINATION ${CMAKE_INSTALL_PREFIX}
+            )
         endif ()
     endmacro()
+
+    macro(bundle_gtkdeps target)
+        if (BUNDLE_LIBRARIES AND WIN32)
+                add_custom_command(TARGET ${target} POST_BUILD
+                        COMMAND bash
+                        ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
+                        VERBATIM
+                        )
+
+                install(DIRECTORY
+                        ${PROJECT_BINARY_DIR}/lib
+                        ${PROJECT_BINARY_DIR}/share
+                        DESTINATION ${CMAKE_INSTALL_PREFIX}
+                )
+        endif ()
+    endmacro ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -268,7 +291,7 @@ if (BUILD_BINARIES)
         add_executable(${name} ${ARGN})
         install(
                 TARGETS ${name}
-                RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}/.
+                RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}
         )
     endmacro()
 
@@ -316,9 +339,9 @@ endif()
 
 if (BUILD_BINARIES)
     install(DIRECTORY
-            setup/data/tools/
+            setup/data/tools
             docs
-            DESTINATION ${RADIANT_DATA_SUBDIR}/.
+            DESTINATION ${RADIANT_DATA_SUBDIR}
     )
 endif ()
 
