@@ -36,19 +36,25 @@ See also https://gitlab.com/xonotic/netradiant/ for a source browser, issues and
 
 ## msys2
 
-Under MSYS2, the mingw shell must be used
+Under MSYS2, the mingw shell must be used.
 
-### 32 bit:
-
-```
-pacman -S --needed base-devel mingw-w64-i686-{toolchain,cmake,make,gtk2,gtkglexti,libwebp}
-```
-
-### 64 bit:
+If you use MSYS2 over SSH, add `mingw64` to the path this way (given you compile for 64 bit windows): 
 
 ```
-pacman -S --needed base-devel mingw-w64-x86_64-{toolchain,cmake,make,gtk2,gtkglext,libwebp}
+export PATH="/mingw64/bin:${PATH}"`
 ```
+
+Install the dependencies this way:
+
+
+```
+pacman -S --needed base-devel mingw-w64-$(uname -m)-{toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git} git
+```
+
+Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix if you need to target a non-default architecture.
+
+You may have to install `subversion` to fetch some non-default game packages.
+
 
 ## macOS:
 
