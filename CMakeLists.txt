@@ -216,7 +216,7 @@ if (BUILD_BINARIES)
         if (BUNDLE_LIBRARIES)
             add_custom_command(TARGET ${target} POST_BUILD
                     COMMAND bash
-                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | grep -v /c/Windows | awk '{ print $1 }' | while read dll; do cp \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
+                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do cp --preserve=timestamps \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
                     VERBATIM
                     )
         endif ()
