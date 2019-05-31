@@ -172,8 +172,8 @@ endif ()
 if (BUILD_BINARIES)
     if (APPLE)
         if (BUILD_RADIANT)
-            option(XWINDOWS "Build against X11" ON)
-        endif ()
+        option(XWINDOWS "Build against X11" ON)
+        endif()
 
         add_definitions(
                 -DPOSIX=1
@@ -189,8 +189,8 @@ if (BUILD_BINARIES)
         )
     else ()
         if (BUILD_RADIANT)
-        set(XWINDOWS ON)
-        endif()
+             set(XWINDOWS ON)
+        endif ()
 
         add_definitions(
                 -DPOSIX=1
@@ -351,9 +351,14 @@ if (DOWNLOAD_GAMEPACKS)
     else ()
        set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
     endif ()
-    install(CODE
-        "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${GAME_INSTALL_PREFIX}\" --install)"
-        )
+
+    file(GLOB GAME_DIRS ${PROJECT_BINARY_DIR}/*.game)
+
+    install(DIRECTORY
+            ${PROJECT_BINARY_DIR}/games
+            ${GAME_DIRS}
+            DESTINATION ${RADIANT_DATA_SUBDIR}
+    )
 endif()
 
 if(BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
