@@ -8,9 +8,11 @@ The open source, cross platform level editor for idtech games (Radiant fork).
 # Getting the sources
 
 The latest source is available from the git repository:
+
 https://gitlab.com/xonotic/netradiant.git
 
 The git client can be obtained from the Git website:
+
 http://git-scm.org
 
 To get a copy of the source using the command line git client:
@@ -34,7 +36,9 @@ See also https://gitlab.com/xonotic/netradiant/ for a source browser, issues and
 * Minizip
 * ZLib
 
-## msys2
+To fetch default game packages you'll need Git and to fetch some optional ones you'll need Subversion.
+
+## MSYS2
 
 Under MSYS2, the mingw shell must be used.
 
