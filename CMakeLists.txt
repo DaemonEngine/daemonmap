@@ -289,6 +289,9 @@ if (BUILD_BINARIES)
 
     macro(radiant_tool name)
         add_executable(${name} ${ARGN})
+
+        copy_dlls(${name})
+
         install(
                 TARGETS ${name}
                 RUNTIME DESTINATION ${RADIANT_BIN_DIR}
