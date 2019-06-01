@@ -146,7 +146,7 @@ Run `./gamepacks-manager -h` to know about available licenses and other availabl
 options:
 
 * `FHS_INSTALL=ON`  
-  Install files following the Filesystem Hierarchy Standard (bin, lib, share, etc.), also setup XDG mime and application support on POSIX systems (default: `OFF`, install like in 1999)
+  Available for POSIX systems: install files following the Filesystem Hierarchy Standard (bin, lib, share, etc.), also setup XDG mime and application support on Linux-like systems (default: `OFF`, install like in 1999)
 * `CMAKE_INSTALL_PREFIX=/usr`  
   Install system-wide on Posix systems, always set `FHS_INSTALL` to `ON` when doing this (default: install in `install/` directory within source tree)
 
@@ -154,6 +154,12 @@ target:
 
 * `install`  
   Install files
+
+Note that because of both the way NetRadiant works and the way bundled library loading works CMake has to do some globbing to detect some of the produced/copied files it has to install. So you have to run cmake again before installing:
+
+```
+cmake -H. -Bbuild && cmake --build build -- install
+```
 
 ## Note about Crunch
 
