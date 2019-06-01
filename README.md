@@ -8,9 +8,11 @@ The open source, cross platform level editor for idtech games (Radiant fork).
 # Getting the sources
 
 The latest source is available from the git repository:
+
 https://gitlab.com/xonotic/netradiant.git
 
 The git client can be obtained from the Git website:
+
 http://git-scm.org
 
 To get a copy of the source using the command line git client:
@@ -34,21 +36,29 @@ See also https://gitlab.com/xonotic/netradiant/ for a source browser, issues and
 * Minizip
 * ZLib
 
-## msys2
+To fetch default game packages you'll need Git and to fetch some optional ones you'll need Subversion.
 
-Under MSYS2, the mingw shell must be used
+## MSYS2
 
-### 32 bit:
+Under MSYS2, the mingw shell must be used.
 
-```
-pacman -S --needed base-devel mingw-w64-i686-{toolchain,cmake,make,gtk2,gtkglexti,libwebp}
-```
-
-### 64 bit:
+If you use MSYS2 over SSH, add `mingw64` to the path this way (given you compile for 64 bit windows): 
 
 ```
-pacman -S --needed base-devel mingw-w64-x86_64-{toolchain,cmake,make,gtk2,gtkglext,libwebp}
+export PATH="/mingw64/bin:${PATH}"`
 ```
+
+Install the dependencies this way:
+
+
+```
+pacman -S --needed base-devel mingw-w64-$(uname -m)-{toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git} git
+```
+
+Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix if you need to target a non-default architecture.
+
+You may have to install `subversion` to fetch some non-default game packages.
+
 
 ## macOS:
 
@@ -136,7 +146,7 @@ Run `./gamepacks-manager -h` to know about available licenses and other availabl
 options:
 
 * `FHS_INSTALL=ON`  
-  Install files following the Filesystem Hierarchy Standard (bin, lib, share, etc.), also setup XDG mime and application support on POSIX systems (default: `OFF`, install like in 1999)
+  Available for POSIX systems: install files following the Filesystem Hierarchy Standard (bin, lib, share, etc.), also setup XDG mime and application support on Linux-like systems (default: `OFF`, install like in 1999)
 * `CMAKE_INSTALL_PREFIX=/usr`  
   Install system-wide on Posix systems, always set `FHS_INSTALL` to `ON` when doing this (default: install in `install/` directory within source tree)
 
@@ -144,6 +154,12 @@ target:
 
 * `install`  
   Install files
+
+Note that because of both the way NetRadiant works and the way bundled library loading works CMake has to do some globbing to detect some of the produced/copied files it has to install. So you have to run cmake again before installing:
+
+```
+cmake -H. -Bbuild && cmake --build build -- install
+```
 
 ## Note about Crunch
 

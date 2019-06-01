@@ -25,14 +25,14 @@ endif ()
 set(RADIANT_BASENAME netradiant CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
-set(RADIANT_LIB_SUBDIR . CACHE INTERNAL "...")
-set(RADIANT_BIN_SUBDIR . CACHE INTERNAL "...")
-set(RADIANT_DATA_SUBDIR . CACHE INTERNAL "...")
+set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL)
-    set(RADIANT_LIB_SUBDIR lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_SUBDIR bin)
-    set(RADIANT_DATA_SUBDIR share/${RADIANT_BASENAME})
+    set(RADIANT_LIB_DIR lib/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR bin)
+    set(RADIANT_DATA_DIR share/${RADIANT_BASENAME})
 endif ()
 
 #-----------------------------------------------------------------------
@@ -172,8 +172,8 @@ endif ()
 if (BUILD_BINARIES)
     if (APPLE)
         if (BUILD_RADIANT)
-            option(XWINDOWS "Build against X11" ON)
-        endif ()
+        option(XWINDOWS "Build against X11" ON)
+        endif()
 
         add_definitions(
                 -DPOSIX=1
@@ -189,8 +189,8 @@ if (BUILD_BINARIES)
         )
     else ()
         if (BUILD_RADIANT)
-        set(XWINDOWS ON)
-        endif()
+             set(XWINDOWS ON)
+        endif ()
 
         add_definitions(
                 -DPOSIX=1
@@ -217,14 +217,37 @@ if (BUILD_BINARIES)
     option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
     macro(copy_dlls target)
-        if (BUNDLE_LIBRARIES)
+        if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
                     COMMAND bash
-                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do cp --preserve=timestamps \"$(which $dll)\" '${PROJECT_BINARY_DIR}'; done"
+                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
                     VERBATIM
-                    )
+            )
         endif ()
     endmacro()
+
+    macro(bundle_stuff target)
+        if (BUNDLE_LIBRARIES AND WIN32)
+                add_custom_command(TARGET ${target} POST_BUILD
+                        COMMAND bash
+                        ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; [ -d '${PROJECT_BINARY_DIR}/share/themes/MS-Windows' ] || cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; [ -d '${PROJECT_BINARY_DIR}/lib/gdk-pixbuf-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; [ -d '${PROJECT_BINARY_DIR}/lib/gtk-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
+                        VERBATIM
+                        )
+
+                file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
+
+                install(FILES
+                    ${DLL_FILES}
+                    DESTINATION ${CMAKE_INSTALL_PREFIX}
+                )
+
+                install(DIRECTORY
+                        ${PROJECT_BINARY_DIR}/lib
+                        ${PROJECT_BINARY_DIR}/share
+                        DESTINATION ${CMAKE_INSTALL_PREFIX}
+                )
+        endif ()
+    endmacro ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -266,9 +289,12 @@ if (BUILD_BINARIES)
 
     macro(radiant_tool name)
         add_executable(${name} ${ARGN})
+
+        copy_dlls(${name})
+
         install(
                 TARGETS ${name}
-                RUNTIME DESTINATION ${RADIANT_BIN_SUBDIR}/.
+                RUNTIME DESTINATION ${RADIANT_BIN_DIR}
         )
     endmacro()
 
@@ -316,9 +342,9 @@ endif()
 
 if (BUILD_BINARIES)
     install(DIRECTORY
-            setup/data/tools/
+            setup/data/tools
             docs
-            DESTINATION ${RADIANT_DATA_SUBDIR}/.
+            DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
 
@@ -328,9 +354,14 @@ if (DOWNLOAD_GAMEPACKS)
     else ()
        set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
     endif ()
-    install(CODE
-        "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${GAME_INSTALL_PREFIX}\" --install)"
-        )
+
+    file(GLOB GAME_DIRS ${PROJECT_BINARY_DIR}/*.game)
+
+    install(DIRECTORY
+            ${PROJECT_BINARY_DIR}/games
+            ${GAME_DIRS}
+            DESTINATION ${RADIANT_DATA_DIR}
+    )
 endif()
 
 if(BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)

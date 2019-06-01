@@ -59,6 +59,8 @@ set(q3map2_games
         )
 
 radiant_tool(q3map2
+        WIN32 q3map2/q3map2.rc
+
         common/cmdlib.c common/cmdlib.h
         common/imagelib.c common/imagelib.h
         common/inout.c common/inout.h
@@ -152,6 +154,8 @@ target_link_libraries(q3map2
         )
 
 radiant_tool(q3data
+        WIN32 q3data/q3data.rc
+
         common/aselib.c common/aselib.h
         common/bspfile.c common/bspfile.h
         common/cmdlib.c common/cmdlib.h
