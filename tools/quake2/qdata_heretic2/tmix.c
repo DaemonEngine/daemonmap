@@ -24,6 +24,10 @@
 
 #define     MAXFILES    2048
 
+#if !GDEF_OS_WINDOWS
+#define strlwr strlower
+#endif // !GDEF_OS_WINDOWS
+
 typedef struct
 {
 	int x;

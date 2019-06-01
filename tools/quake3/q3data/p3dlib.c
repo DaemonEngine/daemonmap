@@ -24,21 +24,23 @@
 
 #if GDEF_OS_WINDOWS
 #include <io.h>
-#endif
+#endif // GDEF_OS_WINDOWS
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_POLYSETS 64
 
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#if GDEF_OS_WINDOWS
+	#define filelength(f) filelength(fileno(f))
+#else // !GDEF_OS_WINDOWS
 	#include "cmdlib.h"
 	#define _strcmpi Q_stricmp
 	#define strlwr strlower
 	#define filelength(f) Q_filelength(f)
-#else
-	#define filelength(f) filelength(fileno(f))
-#endif
+#endif // !GDEF_OS_WINDOWS
+
 typedef struct
 {
 	long len;

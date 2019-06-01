@@ -49,7 +49,6 @@
 #define GDEF_OS_LINUX 0
 #endif
 
-
 #define GDEF_OS_BSD 0
 
 #if defined(__FreeBSD__)
@@ -82,6 +81,30 @@
 #define GDEF_OS_BSD_DRAGONFLY 1
 #else
 #define GDEF_OS_BSD_DRAGONFLY 0
+#endif
+
+#if defined(__osf) || defined(__osf__) || defined(__OSF__)
+#define GDEF_OS_OSF1 1
+#else
+#define GDEF_OS_OSF1 0
+#endif
+
+#if defined(_MIPS_ISA)
+#define GDEF_OS_IRIX 1
+#else
+#define GDEF_OS_IRIX 0
+#endif
+
+#if defined(NeXT)
+#define GDEF_OS_NEXT 1
+#else
+#define GDEF_OS_NEXT 0
+#endif
+
+#if GDEF_OS_LINUX || GDEF_OS_BSD
+#define GDEF_OS_XDG 1
+#else
+#define GDEF_OS_XDG 0
 #endif
 
 // COMPILER
@@ -122,4 +145,4 @@
 #endif
 #endif
 
-#endif
+#endif // !INCLUDED_LIBS_GLOBALDEFS

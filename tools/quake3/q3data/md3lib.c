@@ -21,16 +21,18 @@
 
 #include "globaldefs.h"
 #include <assert.h>
+
 #if GDEF_OS_WINDOWS
 #include <io.h>
-#endif
+#endif // GDEF_OS_WINDOWS
+
 #include "md3lib.h"
 
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-#define filelength(f) Q_filelength(f)
-#else
+#if GDEF_OS_WINDOWS
 #define filelength(f) filelength(fileno(f))
-#endif
+#else // !GDEF_OS_WINDOWS
+#define filelength(f) Q_filelength(f)
+#endif // ! GDEF_OS_WINDOWS
 
 /*
 ** MD3_ComputeTagFromTri

@@ -26,17 +26,11 @@
 
    ------------------------------------------------------------------------------- */
 
-
-
 /* marker */
 #define PATH_INIT_C
 
-
-
 /* dependencies */
 #include "q3map2.h"
-
-
 
 /* path support */
 #define MAX_BASE_PATHS  10
@@ -48,11 +42,9 @@ char                    *homePath;
 
 #if GDEF_OS_MACOS
 char					*macLibraryApplicationSupportPath;
-#endif
-
-#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+#elif GDEF_OS_XDG
 char                    *xdgDataHomePath;
-#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+#endif // GDEF_OS_XDG
 
 char installPath[ MAX_OS_PATH ];
 
@@ -96,7 +88,7 @@ char *LokiGetHomeDir( void ){
 
 	/* return it */
 	return home;
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -124,12 +116,10 @@ void LokiInitPaths( char *argv0 ){
 	}
 
 	#if GDEF_OS_MACOS
-		char *subPath = "/Library/Application Support";
-		macLibraryApplicationSupportPath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
-		sprintf( macLibraryApplicationSupportPath, "%s%s", home, subPath );
-	#endif // GDEF_OS_MACOS
-
-	#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+	char *subPath = "/Library/Application Support";
+	macLibraryApplicationSupportPath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
+	sprintf( macLibraryApplicationSupportPath, "%s%s", home, subPath );
+	#elif GDEF_OS_XDG
 	xdgDataHomePath = getenv( "XDG_DATA_HOME" );
 
 	if ( xdgDataHomePath == NULL ) {
@@ -137,7 +127,7 @@ void LokiInitPaths( char *argv0 ){
 		xdgDataHomePath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
 		sprintf( xdgDataHomePath, "%s%s", home, subPath );
 	}
-	#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+	#endif // GDEF_OS_XDG
 
 	#if GDEF_OS_WINDOWS
 	/* this is kinda crap, but hey */
@@ -350,9 +340,7 @@ void AddHomeBasePath( char *path ){
 		*/
 		tempHomePath = macLibraryApplicationSupportPath;
 		path = path + 1;
-		#endif // GDEF_OS_MACOS
-
-		#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+		#elif GDEF_OS_XDG
 		/*
 		   on Linux, check if game uses ${XDG_DATA_HOME}/prefix instead of ${HOME}/.prefix
 		   if yes and home path is not user supplied
@@ -375,7 +363,7 @@ void AddHomeBasePath( char *path ){
 			}
 			path = path + 1;
 		}
-		#endif // (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+		#endif // GDEF_OS_XDG
 
 		/* concatenate home dir and path */
 		sprintf( temp, "%s/%s", tempHomePath, path );

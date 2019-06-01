@@ -178,9 +178,9 @@ FunctionPointer findSymbol( const char* symbol ){
 }
 };
 
-#else
+#else // !GDEF_OS_POSIX
 #error "unsupported platform"
-#endif
+#endif // !GDEF_OS_POSIX
 
 class DynamicLibraryModule
 {

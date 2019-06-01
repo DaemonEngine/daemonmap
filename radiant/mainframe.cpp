@@ -213,9 +213,7 @@ void HomePaths_Realise(){
 			}
 			path.clear();
 			path << DirectoryCleaned( g_get_home_dir() ) << prefix << "/";
-#endif
-
-#if GDEF_OS_WINDOWS
+#elif GDEF_OS_WINDOWS
 			TCHAR mydocsdir[MAX_PATH + 1];
 			wchar_t *mydocsdirw;
 			HMODULE shfolder = LoadLibrary( "shfolder.dll" );
@@ -252,9 +250,7 @@ void HomePaths_Realise(){
 					break;
 				}
 			}
-#endif
-
-#if (GDEF_OS_POSIX && !GDEF_OS_MACOS)
+#elif GDEF_OS_XDG
 			path.clear();
 			path << DirectoryCleaned( g_get_user_data_dir() ) << ( prefix + 1 ) << "/";
 			if ( file_exists( path.c_str() ) && file_is_directory( path.c_str() ) ) {

@@ -57,7 +57,7 @@ extern _QERBrushTable __BRUSHTABLENAME;
 #define PLUGIN
 #define Q3RADIANT
 
-//#if GDEF_OS_LINUX || GDEF_OS_MACOS
+//#if !GDEF_OS_WINDOWS
 #if 1
 #include <algorithm>
 #else

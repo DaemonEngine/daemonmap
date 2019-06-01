@@ -18,29 +18,23 @@
    You should have received a copy of the GNU General Public License
    along with GtkRadiant; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
+/*
    Nurail: Swiped from Q3Map2
-
  */
 
 #include "globaldefs.h"
 
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-	#define Q_UNIX
-#endif
-
-#ifdef Q_UNIX
+#if !GDEF_OS_WINDOWS
 	#include <unistd.h>
 	#include <pwd.h>
 	#include <limits.h>
-#endif
-
+#endif // !GDEF_OS_WINDOWS
 
 /* dependencies */
 #include "cmdlib.h"
 #include "inout.h"
-
-
 
 /* path support */
 #define MAX_BASE_PATHS  10
@@ -65,9 +59,9 @@ char                    *gamePaths[ MAX_GAME_PATHS ];
  */
 
 char *LokiGetHomeDir( void ){
-	#ifndef Q_UNIX
+	#if GDEF_OS_WINDOWS
 	return NULL;
-	#else
+	#else // !GDEF_OS_WINDOWS
 	char            *home;
 	uid_t id;
 	struct passwd   *pwd;
@@ -91,7 +85,7 @@ char *LokiGetHomeDir( void ){
 
 	/* return it */
 	return home;
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -102,10 +96,10 @@ char *LokiGetHomeDir( void ){
  */
 
 void LokiInitPaths( char *argv0 ){
-	#ifndef Q_UNIX
+	#if GDEF_OS_WINDOWS
 	/* this is kinda crap, but hey */
 	strcpy( installPath, "../" );
-	#else
+	#else // !GDEF_OS_WINDOWS
 	char temp[ MAX_OS_PATH ];
 	char        *home;
 	char        *path;
@@ -177,7 +171,7 @@ void LokiInitPaths( char *argv0 ){
 
 	/* set home path */
 	homePath = home;
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -223,7 +217,7 @@ void AddBasePath( char *path ){
  */
 
 void AddHomeBasePath( char *path ){
-	#ifdef Q_UNIX
+	#if !GDEF_OS_WINDOWS
 	int i;
 	char temp[ MAX_OS_PATH ];
 
@@ -245,7 +239,7 @@ void AddHomeBasePath( char *path ){
 	strcpy( basePaths[ 0 ], temp );
 	CleanPath( basePaths[ 0 ] );
 	numBasePaths++;
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
