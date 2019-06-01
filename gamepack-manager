@@ -3,8 +3,8 @@
 # get usage help this way:
 # ./gamepack_manager -h
 
-: "${CP:=cp -v}"
-: "${CP_R:=cp -r --preserve=timestamps}"
+: "${CP:=cp -va}"
+: "${CP_R:=cp -Rva}"
 : "${GIT:=git}"
 : "${SVN:=svn}"
 : "${WGET:=wget}"
@@ -81,8 +81,50 @@ Xonotic         GPL          git     https://gitlab.com/xonotic/netradiant-xonot
 EOF
 }
 
+if command -v gsed >/dev/null
+then
+	SED=gsed
+elif sed --help >/dev/null 2>&1
+then
+	SED=sed
+else
+	printf 'ERROR: GNU sed is missing\n' >&2
+	exit 1
+fi
+
+printRealPath ()
+{
+	if command -v grealpath >/dev/null
+	then
+		grealpath "${1}"
+	elif command -v realpath >/dev/null
+	then
+		realpath "${1}"
+	elif command -v greadlink >/dev/null
+	then
+		# test greadlink first as greadlink has the feature on macos
+		# but readlink only has it on linux, note that it's probably
+		# the same on bsd
+		# note: (g)readlink requires the file to be create first
+		greadlink -f "${1}"
+	elif command -v readlink >/dev/null
+	then
+		# --help and -f options are GNU readlink things
+		if readlink --help >/dev/null 2>&1
+		then
+			readlink -f "${1}"
+		else
+			if ! python -c "import os; print(os.path.realpath('${1}'))"
+			then
+				printf 'ERROR: GNU realpath or other way to compute real path of a file is missing\n' >&2
+				exit 1
+			fi
+		fi
+	fi
+}
+
 sanitizeDB () {
-	sed -e 's/#.*//;s/[ \t][ \t][ \t]*/\t/g;s/^[ \t]*//;s/[ \t]*$//' \
+	${SED} -e 's/#.*//;s/[ \t][ \t][ \t]*/\t/g;s/^[ \t]*//;s/[ \t]*$//' \
 	| grep -v '^$'
 }
 
@@ -100,7 +142,7 @@ printList () {
 dedupeList () {
 	printList "${1}" \
 	| tr '\n' ' ' \
-	| sed -e 's/ $//'
+	| ${SED} -e 's/ $//'
 }
 
 printGamePackDB () {
@@ -462,13 +504,13 @@ printHelp () {
 	${tab}${tab}select games by name (default: none)
 	${tab}${tab}special keyword: all, none
 	${tab}${tab}available games:
-	$(printNameList | sed -e 's/^/\t\t\t/')
+	$(printNameList | ${SED} -e 's/^/\t\t\t/')
 
 	${tab}-l, --license LICENSES…
 	${tab}${tab}select games by license (default: none)
 	${tab}${tab}special keyword: free, all, none
 	${tab}${tab}available licenses:
-	$(printLicenseList | sed -e 's/^/\t\t\t/')
+	$(printLicenseList | ${SED} -e 's/^/\t\t\t/')
 
 	ACTIONS:
 	${tab}-ln, --list-names
@@ -621,12 +663,24 @@ done
 # compatibility with legacy Makefile
 if [ "${DOWNLOAD_GAMEPACKS}" = 'yes' ]
 then
-	! [ -z "${DOWNLOADDIR}" ] && download_dir="${DOWNLOADDIR}"
-	! [ -z "${INSTALLDIR}" ] && install_dir="${INSTALDIR}"
+	if ! [ -z "${DOWNLOADDIR}" ]
+	then
+		download_dir="${DOWNLOADDIR}"
+	fi
+
+	if ! [ -z "${INSTALLDIR}" ]
+	then
+		install_dir="${INSTALLDIR}"
+	fi
+
 	license_list='free'
 	by_license='true'
+
 	download_packs='true'
+	mkdir_download='true'
+
 	install_packs='true'
+	mkdir_install='true'
 fi
 
 if [ -z "${download_dir}" ]
@@ -654,13 +708,13 @@ selected_list="$(dedupeList "${selected_list}")"
 if "${mkdir_download}"
 then
 	${MKDIR_P} "${download_dir}"
-	real_download_dir="$(readlink -f "${download_dir}")"
+	real_download_dir="$(printRealPath "${download_dir}")"
 fi
 
 if "${mkdir_install}"
 then
 	${MKDIR_P} "${install_dir}"
-	real_install_dir="$(readlink -f "${install_dir}")"
+	real_install_dir="$(printRealPath "${install_dir}")"
 fi
 
 if "${list_licenses}"
