@@ -57,7 +57,7 @@ pacman -S --needed base-devel mingw-w64-$(uname -m)-{toolchain,cmake,make,gtk2,g
 
 Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix if you need to target a non-default architecture.
 
-You may have to install `subversion` to fetch some non-default game packages.
+You may have to install `subversion` and `unzip` to fetch or extract some non-default game packages.
 
 
 ## macOS:
@@ -131,7 +131,7 @@ options:
 * `DOWNLOAD_GAMEPACKS=OFF`  
    Do not automatically download the gamepack data during the first compilation (default: `ON`)
 * `GAMEPACKS_LICENSE_LIST=all`  
-   Download all gamepacks whatever the license (default: `free`, download free gamepacks)
+   Download all gamepacks whatever the license (default: `free`, download free gamepacks, can be set to `none` to only filter by name)
 * `GAMEPACKS_NAME_LIST=Xonotic Unvanquished`  
    Download gamepacks for the given games (default: `none`, do not select more gamepacks to download)
 
