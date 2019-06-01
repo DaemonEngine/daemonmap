@@ -63,7 +63,7 @@ You may have to install `subversion` and `unzip` to fetch or extract some non-de
 ## macOS:
 
 ```
-brew install gcc cmake Caskroom/cask/xquartz gtkglext pkgconfig minizip webp coreutils gnu-sed
+brew install gcc cmake gtkglext pkgconfig minizip webp coreutils gnu-sed
 brew link --force gettext
 ```
 

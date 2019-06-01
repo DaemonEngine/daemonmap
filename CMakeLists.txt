@@ -177,10 +177,6 @@ endif ()
 
 if (BUILD_BINARIES)
     if (APPLE)
-        if (BUILD_RADIANT)
-        option(XWINDOWS "Build against X11" ON)
-        endif()
-
         add_definitions(
                 -DPOSIX=1
         )
