@@ -38,6 +38,61 @@
 
 
 
+//prefixInfo-stats
+typedef struct {
+	char	*name;
+	int		surfaceFlags;
+} prefixInfo_t;
+
+static prefixInfo_t prefixInfo[] = {
+	{ "metal",	TEX_SURF_METAL},
+	{ "wood",	TEX_SURF_WOOD},
+	{ "cloth",	TEX_SURF_CLOTH},
+	{ "dirt",	TEX_SURF_DIRT},
+	{ "glass",	TEX_SURF_GLASS},
+	{ "plant",	TEX_SURF_PLANT},
+	{ "sand",	TEX_SURF_SAND},
+	{ "snow",	TEX_SURF_SNOW},
+	{ "stone",	TEX_SURF_STONE},
+	{ "water",	TEX_SURF_WATER},
+	{ "grass",	TEX_SURF_GRASS},
+};
+
+#define NUM_PREFIXINFO 11 /* very important */
+
+//Added by Spoon to recognize surfaceparms by shadernames
+int GetSurfaceParm(const char *tex){
+	char surf[MAX_QPATH], tex2[MAX_QPATH];
+	int	i, j = 0;
+
+	strcpy(tex2, tex);
+
+	/* find last dir */
+	for(i = 0; i < 64 && tex2[i] != '\0'; i++){
+		if(tex2[i] == '\\' || tex2[i] == '/')
+			j=i+1;
+	}
+
+	strcpy(surf, tex2+j);
+
+	for(i=0; i<10; i++){
+		if(surf[i] == '_')
+			break;
+	}
+	surf[i] = '\0';
+
+	/* Sys_Printf("%s\n", surf); */
+
+	for(i=0; i < NUM_PREFIXINFO; i++){
+		if(!Q_stricmp(surf, prefixInfo[i].name)){
+			return prefixInfo[i].surfaceFlags;
+		}
+	}
+	return 0;
+}
+
+
+
 /*
    EmitShader()
    emits a bsp shader entry
@@ -56,12 +111,16 @@ int EmitShader( const char *shader, int *contentFlags, int *surfaceFlags ){
 	/* try to find an existing shader */
 	for ( i = 0; i < numBSPShaders; i++ )
 	{
-		/* ydnar: handle custom surface/content flags */
-		if ( surfaceFlags != NULL && bspShaders[ i ].surfaceFlags != *surfaceFlags ) {
-			continue;
-		}
-		if ( contentFlags != NULL && bspShaders[ i ].contentFlags != *contentFlags ) {
-			continue;
+		/* if not Smokin'Guns like tex file */
+		if ( !game->texFile )
+		{
+			/* ydnar: handle custom surface/content flags */
+			if ( surfaceFlags != NULL && bspShaders[ i ].surfaceFlags != *surfaceFlags ) {
+				continue;
+			}
+			if ( contentFlags != NULL && bspShaders[ i ].contentFlags != *contentFlags ) {
+				continue;
+			}
 		}
 
 		/* compare name */
@@ -79,14 +138,25 @@ int EmitShader( const char *shader, int *contentFlags, int *surfaceFlags ){
 	numBSPShaders++;
 	strcpy( bspShaders[ i ].shader, shader );
 	bspShaders[ i ].surfaceFlags = si->surfaceFlags;
+
+	if ( game->texFile )
+	{
+		/* Smokin'Guns like tex file */
+		bspShaders[ i ].surfaceFlags |= GetSurfaceParm(si->shader);
+	}
+
 	bspShaders[ i ].contentFlags = si->contentFlags;
 
-	/* handle custom content/surface flags */
-	if ( surfaceFlags != NULL ) {
-		bspShaders[ i ].surfaceFlags = *surfaceFlags;
-	}
-	if ( contentFlags != NULL ) {
-		bspShaders[ i ].contentFlags = *contentFlags;
+	/* if not Smokin'Guns like tex file */
+	if ( !game->texFile )
+	{
+		/* handle custom content/surface flags */
+		if ( surfaceFlags != NULL ) {
+			bspShaders[ i ].surfaceFlags = *surfaceFlags;
+		}
+		if ( contentFlags != NULL ) {
+			bspShaders[ i ].contentFlags = *contentFlags;
+		}
 	}
 
 	/* recursively emit any damage shaders */
@@ -396,6 +466,79 @@ void BeginBSPFile( void ){
 
 
 /*
+   RestoreSurfaceFlags()
+   read Smokin'Guns like tex file
+   added by spoon to get back the changed surfaceflags
+ */
+
+void RestoreSurfaceFlags( char *filename ) {
+	int i;
+	FILE *texfile;
+	int surfaceFlags[ MAX_MAP_DRAW_SURFS ];
+	int numTexInfos;
+
+	/* first parse the tex file */
+	texfile = fopen( filename, "r" );
+
+	if ( texfile ) {
+		fscanf( texfile, "TEXFILE\n%i\n", &numTexInfos );
+
+		/* Sys_Printf( "%i\n", numTexInfos ); */
+
+		for ( i = 0; i < numTexInfos; i++ ) {
+			vec3_t color;
+
+			fscanf( texfile, "%i %f %f %f\n", &surfaceFlags[ i ],
+				&color[ 0 ], &color[ 1 ], &color[ 2 ]);
+
+			bspShaders[ i ].surfaceFlags = surfaceFlags[ i ];
+
+			/* Sys_Printf( "%i\n", surfaceFlags[ i ] ); */
+		}
+	} else {
+		Sys_Printf("couldn't find %s not tex-file is now writed without surfaceFlags!\n", filename);
+	}
+}
+
+
+
+/*
+   WriteTexFile()
+   write Smokin'Guns like tex file
+   added by spoon
+ */
+
+void WriteTexFile( char* filename ) {
+	FILE *texfile;
+	int i;
+
+	if ( !compile_map ) {
+		RestoreSurfaceFlags( filename );
+	}
+
+	Sys_Printf( "Writing %s ...\n", filename );
+
+	texfile = fopen ( filename, "w" );
+
+	fprintf( texfile, "TEXFILE\n" );
+
+	fprintf( texfile, "%i\n", numBSPShaders );
+
+	for ( i = 0 ; i < numBSPShaders ; i++ ) {
+		shaderInfo_t *se = ShaderInfoForShader( bspShaders[ i ].shader );
+
+		fprintf( texfile, "\n%i %f %f %f", bspShaders[ i ].surfaceFlags,
+			se->color[ 0 ], se->color[ 1 ], se->color[ 2 ] );
+
+		bspShaders[ i ].surfaceFlags = i;
+	}
+
+	fclose( texfile );
+}
+
+
+
+/*
    EndBSPFile()
    finishes a new bsp and writes to disk
  */
@@ -412,6 +555,17 @@ void EndBSPFile( qboolean do_write, const char *BSPFilePath, const char *surface
 	if ( do_write ) {
 		/* write the surface extra file */
 		WriteSurfaceExtraFile( surfaceFilePath );
+
+		if ( game->texFile )
+		{
+			char basename[ 1024 ];	
+			char filename[ 1024 ];
+			strncpy( basename, BSPFilePath, sizeof(basename) );
+			sprintf( filename, "%s.tex", basename );
+
+			/* only create tex file if it is the first compile */
+			WriteTexFile( filename );
+		}
 
 		/* write the bsp */
 		Sys_Printf( "Writing %s\n", BSPFilePath );

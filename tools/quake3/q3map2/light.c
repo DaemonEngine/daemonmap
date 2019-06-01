@@ -2105,6 +2105,26 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 
 
 /*
+   LoadSurfaceFlags()
+   added by spoon to get back the changed surfaceflags
+   from tex file
+*/
+
+void LoadSurfaceFlags( char *filename ) {
+	int i;
+
+	for( i = 0; i < numBSPShaders; i++ ) {
+		shaderInfo_t *si;
+
+		si = ShaderInfoForShader( bspShaders[i].shader );
+
+		bspShaders[ i ].surfaceFlags = si->surfaceFlags;
+	}
+}
+
+
+
+/*
    LightMain()
    main routine for light processing
  */

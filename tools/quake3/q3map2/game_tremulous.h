@@ -65,6 +65,7 @@
 	64,                 /* max lightmapped surface verts */
 	999,                /* max surface verts */
 	6000,               /* max surface indexes */
+	qfalse,             /* enable per shader prefix surface flags and .tex file */
 	qfalse,             /* flares */
 	"flareshader",      /* default flare shader */
 	qfalse,             /* wolf lighting model? */

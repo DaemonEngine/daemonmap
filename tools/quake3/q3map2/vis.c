@@ -1181,6 +1181,16 @@ int VisMain( int argc, char **argv ){
 	Sys_Printf( "Loading %s\n", source );
 	LoadBSPFile( source );
 
+	if ( game->texFile )
+	{
+		// smokinguns-like tex file
+		StripExtension( source );
+		strcat( source, ".tex" );
+		LoadSurfaceFlags( source );
+		StripExtension( source );
+		strcat( source, ".bsp" );
+	}
+
 	/* load the portal file */
 	if (!portalFilePath[0]) {
 		sprintf( portalFilePath, "%s%s", inbase, ExpandArg( argv[ i ] ) );
@@ -1221,6 +1231,14 @@ int VisMain( int argc, char **argv ){
 	/* delete the prt file */
 	if ( !saveprt ) {
 		remove( portalFilePath );
+	}
+
+	if ( game->texFile )
+	{
+		// smokinguns-like tex file
+		StripExtension( source );
+		WriteTexFile( source );
+		DefaultExtension( source, ".bsp" );
 	}
 
 	/* write the bsp file */

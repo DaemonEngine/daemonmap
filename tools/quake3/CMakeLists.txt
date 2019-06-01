@@ -49,6 +49,7 @@ set(q3map2_games
         q3map2/game_quake3.h
         q3map2/game_quakelive.h
         q3map2/game_reaction.h
+        q3map2/game_smokinguns.h
         q3map2/game_sof2.h
         q3map2/game_tenebrae.h
         q3map2/game_tremulous.h

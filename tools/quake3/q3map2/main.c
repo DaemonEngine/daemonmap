@@ -276,7 +276,10 @@ int main( int argc, char **argv ){
 	}
 
 	/* ydnar: otherwise create a bsp */
-	else{
+	else {
+		/* used to write Smokin'Guns like tex file */
+		compile_map = qtrue;
+
 		r = BSPMain( argc, argv );
 	}
 
