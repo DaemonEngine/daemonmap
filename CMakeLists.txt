@@ -172,11 +172,15 @@ endif ()
 if (BUILD_BINARIES)
     if (APPLE)
         if (BUILD_RADIANT)
-        option(XWINDOWS "Build against X11" ON)
-        endif()
+            option(XWINDOWS "Build against X11" ON)
+        endif ()
 
         add_definitions(
                 -DPOSIX=1
+        )
+
+        link_directories(
+                /usr/local/lib
         )
     elseif (WIN32)
         add_definitions(
@@ -325,7 +329,7 @@ if (DOWNLOAD_GAMEPACKS)
        set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
     endif ()
     install(CODE
-	    "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${GAME_INSTALL_PREFIX}\" --install)"
+        "execute_process(COMMAND \"${PROJECT_SOURCE_DIR}/gamepack-manager\" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir \"${PROJECT_BINARY_DIR}/download\" --install-dir \"${GAME_INSTALL_PREFIX}\" --install)"
         )
 endif()
 

@@ -50,12 +50,10 @@ pacman -S --needed base-devel mingw-w64-i686-{toolchain,cmake,make,gtk2,gtkglext
 pacman -S --needed base-devel mingw-w64-x86_64-{toolchain,cmake,make,gtk2,gtkglext,libwebp}
 ```
 
-## OS X:
+## macOS:
 
 ```
-brew install gtkglext
-brew install webp
-brew install Caskroom/cask/xquartz
+brew install gcc cmake Caskroom/cask/xquartz gtkglext pkgconfig minizip webp coreutils gnu-sed
 brew link --force gettext
 ```
 
@@ -84,6 +82,12 @@ cmake -G "Unix Makefiles" -H. -Bbuild && cmake --build build -- -j$(nproc)
 
 ```
 cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)
+```
+
+On Mac you have to add this to the first cmake call:
+
+```
+-DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -DOPENGL_INCLUDE_DIR=/opt/X11/include -DOPENGL_gl_LIBRARY=/opt/X11/lib/libGL.dylib
 ```
 
 ## Build and installation details
