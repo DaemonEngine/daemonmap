@@ -100,6 +100,12 @@ On macOS you have to add this to the first cmake call:
 -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -DOPENGL_INCLUDE_DIR=/opt/X11/include -DOPENGL_gl_LIBRARY=/opt/X11/lib/libGL.dylib
 ```
 
+On FreeBSD you have to add this to the first cmake call:
+
+```
+cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8
+```
+
 ## Build and installation details
 
 ### Compilation details

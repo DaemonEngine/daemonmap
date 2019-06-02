@@ -49,6 +49,11 @@
 #define PATH_MAX 260
 #endif // PATH_MAX
 
+// PATH_MAX
+#if defined( __FreeBSD__ )
+#include <sys/syslimits.h>
+#endif
+
 #define VFS_MAXDIRS 64
 
 void vfsInitDirectory( const char *path );
