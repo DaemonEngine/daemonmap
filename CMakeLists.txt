@@ -342,7 +342,10 @@ endif()
 
 if (BUILD_BINARIES)
     install(DIRECTORY
-            setup/data/tools
+            setup/data/tools/base
+            setup/data/tools/bitmaps
+            setup/data/tools/gl
+            setup/data/tools/plugins
             docs
             DESTINATION ${RADIANT_DATA_DIR}
     )
