@@ -33,6 +33,10 @@
 
 #define VERBOSE( x ) { if ( ase.verbose ) { Sys_Printf x ; } }
 
+#if !GDEF_OS_WINDOWS
+#define strlwr strlower
+#endif // !GDEF_OS_WINDOWS
+
 typedef struct
 {
 	float x, y, z;
@@ -112,22 +116,6 @@ static char gl_filename[1024];
 
 static void ASE_Process( void );
 static void ASE_FreeGeomObject( int ndx );
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-
-static char* strlwr( char* string ){
-	char *cp;
-	for ( cp = string; *cp; ++cp )
-	{
-		if ( 'A' <= *cp && *cp <= 'Z' ) {
-			*cp += 'a' - 'A';
-		}
-	}
-
-	return string;
-}
-
-#endif
 
 /*
 ** ASE_Load
@@ -881,7 +869,7 @@ static void ASE_Process( void ){
 			}
 		}
 		else if ( s_token[0] ) {
-			Sys_Printf( "Unknown token '%s'\n", s_token );
+			Error( "Unknown token '%s'\n", s_token );
 		}
 	}
 

@@ -114,6 +114,7 @@ static void ExitQ3Map( void ){
 int main( int argc, char **argv ){
 	int i, r;
 	double start, end;
+	extern qboolean werror;
 
 
 	/* we want consistent 'randomness' */
@@ -157,6 +158,12 @@ int main( int argc, char **argv ){
 		/* force */
 		else if ( !strcmp( argv[ i ], "-force" ) ) {
 			force = qtrue;
+			argv[ i ] = NULL;
+		}
+
+		/* make all warnings into errors */
+		else if ( !strcmp( argv[ i ], "-werror" ) ) {
+			werror = qtrue;
 			argv[ i ] = NULL;
 		}
 
@@ -217,7 +224,10 @@ int main( int argc, char **argv ){
 	}
 
 	/* otherwise print an error */
-	else{
+	else {
+		/* used to write Smokin'Guns like tex file */
+		compile_map = qtrue;
+
 		Error( "Usage: %s [stage] [common options...] [stage options...] [stage source file]", argv[ 0 ] );
 	}
 

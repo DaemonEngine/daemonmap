@@ -34,10 +34,13 @@ include_directories(${Minizip_INCLUDE_DIRS})
 set(q3map2_games
         q3map2/game_quake3.h
         q3map2/game_unvanquished.h
+        q3map2/game_smokinguns.h
         q3map2/game_xonotic.h
         )
 
 radiant_tool(daemonmap
+        WIN32 q3map2/q3map2.rc
+
         common/cmdlib.c common/cmdlib.h
         common/inout.c common/inout.h
         common/mutex.c common/mutex.h

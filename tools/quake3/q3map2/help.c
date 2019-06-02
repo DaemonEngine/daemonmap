@@ -113,7 +113,8 @@ void HelpCommon()
 		{"-game <gamename>", "Load settings for the given game (default: unvanquished)"},
 		{"-subdivisions <F>", "multiplier for patch subdivisions quality"},
 		{"-threads <N>", "number of threads to use"},
-		{"-v", "Verbose mode"}
+		{"-v", "Verbose mode"},
+		{"-werror", "Make all warnings into errors"}
 	};
 
 	HelpOptions("Common Options", 0, 80, common, sizeof(common)/sizeof(struct HelpOption));

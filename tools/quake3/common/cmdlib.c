@@ -38,17 +38,14 @@
 #if GDEF_OS_WINDOWS
 #include <direct.h>
 #include <windows.h>
-#endif
-
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-#include <unistd.h>
-#endif
-
-#ifdef NeXT
+#elif GDEF_OS_NEXT
 #include <libc.h>
-#endif
+#else // OTHER OS
+#include <unistd.h>
+#endif // OTHER OS
 
-#define BASEDIRNAME "quake"     // assumed to have a 2 or 3 following
+#define BASEDIRNAME "quake" // assumed to have a 2 or 3 following
+#define PATHSEPERATOR '/'
 
 #ifdef SAFE_MALLOC
 void *safe_malloc( size_t size ){
@@ -72,7 +69,7 @@ void *safe_malloc_info( size_t size, char* info ){
 
 	return p;
 }
-#endif
+#endif // !SAFE_MALLOC
 
 // set these before calling CheckParm
 int myargc;
@@ -95,6 +92,7 @@ char archivedir[1024];
 #define MAX_EX_ARGC 1024
 int ex_argc;
 char    *ex_argv[MAX_EX_ARGC];
+
 #if GDEF_OS_WINDOWS
 #include "io.h"
 void ExpandWildcards( int *argc, char ***argv ){
@@ -134,10 +132,10 @@ void ExpandWildcards( int *argc, char ***argv ){
 	*argc = ex_argc;
 	*argv = ex_argv;
 }
-#else
+#else // !GDEF_OS_WINDOWS
 void ExpandWildcards( int *argc, char ***argv ){
 }
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 /*
 
@@ -295,13 +293,13 @@ void Q_getwd( char *out ){
 #if GDEF_OS_WINDOWS
 	_getcwd( out, 256 );
 	strcat( out, "\\" );
-#else
+#else // !GDEF_OS_WINDOWS
 	// Gef: Changed from getwd() to getcwd() to avoid potential buffer overflow
 	if ( !getcwd( out, 256 ) ) {
 		*out = 0;
 	}
 	strcat( out, "/" );
-#endif
+#endif // !GDEF_OS_WINDOWS
 	while ( out[i] != 0 )
 	{
 		if ( out[i] == '\\' ) {
@@ -330,14 +328,14 @@ void Q_mkdir( const char *path ){
 				p = q;
 			}
 		}
-#else
+#else // !GDEF_OS_WINDOWS
 		if ( mkdir( path, 0777 ) != -1 ) {
 			return;
 		}
 		if ( errno == ENOENT ) {
 			p = strrchr( path, '/' );
 		}
-#endif
+#endif // !GDEF_OS_WINDOWS
 		if ( p ) {
 			strncpy( parentbuf, path, sizeof( parentbuf ) );
 			if ( (int) ( p - path ) < (int) sizeof( parentbuf ) ) {
@@ -930,9 +928,7 @@ float   BigFloat( float l ){
 	return l;
 }
 
-
-#else
-
+#else // !GDEF_ARCH_ENDIAN_BIG
 
 short   BigShort( short l ){
 	byte b1,b2;
@@ -979,8 +975,7 @@ float   LittleFloat( float l ){
 	return l;
 }
 
-
-#endif
+#endif // !GDEF_ARCH_ENDIAN_BIG
 
 
 //=======================================================
@@ -1061,7 +1056,7 @@ void    CreatePath( const char *path ){
 		olddrive = _getdrive();
 		_chdrive( toupper( path[0] ) - 'A' + 1 );
 	}
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 	if ( path[1] == ':' ) {
 		path += 2;
@@ -1081,7 +1076,7 @@ void    CreatePath( const char *path ){
 	if ( olddrive != -1 ) {
 		_chdrive( olddrive );
 	}
-#endif
+#endif // !>GDEF_OS_WINDOWS
 }
 
 
@@ -1105,8 +1100,7 @@ void QCopyFile( const char *from, const char *to ){
 void Sys_Sleep( int n ){
 #if GDEF_OS_WINDOWS
 	Sleep( n );
-#endif
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
+#else // !GDEF_OS_WINDOWS
 	usleep( n * 1000 );
-#endif
+#endif // !GDEF_OS_WINDOWS
 }

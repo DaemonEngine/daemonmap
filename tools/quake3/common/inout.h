@@ -54,6 +54,7 @@ extern "C"
 #endif
 
 extern qboolean verbose;
+extern qboolean werror;
 void Sys_Printf( const char *text, ... );
 void Sys_FPrintf( int flag, const char *text, ... );
 

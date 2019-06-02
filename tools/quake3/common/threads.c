@@ -21,12 +21,12 @@
 
 #include "globaldefs.h"
 #include <stdint.h>
+
 #if !GDEF_OS_WINDOWS
 // The below define is necessary to use
 // pthreads extensions like pthread_mutexattr_settype
 #define _GNU_SOURCE
-#include <pthread.h>
-#endif
+#endif // !GDEF_OS_WINDOWS
 
 #include "cmdlib.h"
 #include "mathlib.h"
@@ -61,7 +61,7 @@ int GetThreadWork( void ){
 
 	f = 40 * dispatch / workcount;
 	if ( f < oldf ) {
-		Sys_Printf( "warning: progress went backwards (should never happen)\n" );
+		Sys_FPrintf( SYS_WRN, "WARNING: progress went backwards (should never happen)\n" );
 		oldf = f;
 	}
 	while ( f > oldf )
@@ -111,6 +111,8 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 }
 
 
+#if GDEF_OS_WINDOWS
+
 /*
    ===================================================================
 
@@ -118,9 +120,6 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 
    ===================================================================
  */
-#if GDEF_OS_WINDOWS
-
-#define USED
 
 #include <windows.h>
 
@@ -221,7 +220,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
+#elif GDEF_OS_OSF1
 
 /*
    ===================================================================
@@ -231,9 +230,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    ===================================================================
  */
 
-#ifdef __osf__
-#define USED
-
 int numthreads = 4;
 
 void ThreadSetDefault( void ){
@@ -241,7 +237,6 @@ void ThreadSetDefault( void ){
 		numthreads = 4;
 	}
 }
-
 
 #include <pthread.h>
 
@@ -328,7 +323,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
+#elif GDEF_OS_IRIX
 
 /*
    ===================================================================
@@ -338,14 +333,12 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    ===================================================================
  */
 
-#ifdef _MIPS_ISA
 #define USED
 
 #include <task.h>
 #include <abi_mutex.h>
 #include <sys/types.h>
 #include <sys/prctl.h>
-
 
 int numthreads = -1;
 abilock_t lck;
@@ -415,8 +408,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 }
 
 
-#endif
-
+#elif GDEF_OS_LINUX || GDEF_OS_BSD || GDEF_OS_MACOS
 
 /*
    =======================================================================
@@ -425,9 +417,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 
    =======================================================================
  */
-
-#if GDEF_OS_LINUX || ( GDEF_OS_MACOS && !MAC_STATIC_HACK )
-#define USED
 
 #include <unistd.h>
 
@@ -597,8 +586,9 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 		Sys_Printf( " (%i)\n", end - start );
 	}
 }
-#endif // ifdef __linux__
 
+
+#else // UNKNOWN OS
 
 /*
    =======================================================================
@@ -607,8 +597,6 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 
    =======================================================================
  */
-
-#ifndef USED
 
 int numthreads = 1;
 
@@ -643,4 +631,4 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 	}
 }
 
-#endif
+#endif // UNKNOWN OS

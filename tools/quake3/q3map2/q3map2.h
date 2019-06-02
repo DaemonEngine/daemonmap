@@ -53,11 +53,7 @@ extern "C"
    ------------------------------------------------------------------------------- */
 
 /* platform-specific */
-#if GDEF_OS_LINUX || GDEF_OS_MACOS
-	#define Q_UNIX
-#endif
-
-#ifdef Q_UNIX
+#if GDEF_OS_POSIX
 	#include <unistd.h>
 	#include <pwd.h>
 	#include <limits.h>
@@ -100,21 +96,12 @@ extern "C"
 
    ------------------------------------------------------------------------------- */
 
-#define MAC_STATIC_HACK         0
-#if GDEF_OS_MACOS && MAC_STATIC_HACK
-	#define MAC_STATIC          static
+#if GDEF_OS_WINDOWS
+	#define Q_stricmp           stricmp
+	#define Q_strncasecmp       strnicmp
 #else
-	#define MAC_STATIC
-#endif
-
-#if 1
-	#if GDEF_OS_WINDOWS
-		#define Q_stricmp           stricmp
-		#define Q_strncasecmp       strnicmp
-	#else
-		#define Q_stricmp           strcasecmp
-		#define Q_strncasecmp       strncasecmp
-	#endif
+	#define Q_stricmp           strcasecmp
+	#define Q_strncasecmp       strncasecmp
 #endif
 
 /* macro version */
@@ -170,6 +157,21 @@ extern "C"
 #define C_SKIP                  0x00008000  /* like hint, but skips this face (doesn't split bsp) */
 #define C_NOMARKS               0x00010000  /* no decals */
 #define C_DETAIL                0x08000000  /* THIS MUST BE THE SAME AS IN RADIANT! */
+
+
+/* new tex surface flags, like Smokin'Guns */
+#define TEX_SURF_METAL             0x00001000
+#define TEX_SURF_WOOD              0x00080000
+#define TEX_SURF_CLOTH             0x00100000
+#define TEX_SURF_DIRT              0x00200000
+#define TEX_SURF_GLASS             0x00400000
+#define TEX_SURF_PLANT             0x00800000
+#define TEX_SURF_SAND              0x01000000
+#define TEX_SURF_SNOW              0x02000000
+#define TEX_SURF_STONE             0x04000000
+#define TEX_SURF_WATER             0x08000000
+#define TEX_SURF_GRASS             0x10000000
+#define TEX_SURF_BREAKABLE         0x20000000
 
 
 /* bsp */
@@ -441,6 +443,7 @@ typedef struct game_s
 	int maxLMSurfaceVerts;                              /* default maximum meta surface verts */
 	int maxSurfaceVerts;                                /* default maximum surface verts */
 	int maxSurfaceIndexes;                              /* default maximum surface indexes (tris * 3) */
+	qboolean texFile;                                   /* enable per shader prefix surface flags and .tex file */
 	qboolean emitFlares;                                /* when true, emit flare surfaces */
 	char                *flareShader;                   /* default flare shader (MUST BE SET) */
 	qboolean wolfLight;                                 /* when true, lights work like wolf q3map  */
@@ -1099,6 +1102,11 @@ void                        LoadBSPFile( const char *filename );
 void                        WriteBSPFile( const char *filename );
 void                        PrintBSPFileSizes( void );
 
+void                        WriteTexFile( char *name );
+void                        LoadSurfaceFlags( char *filename );
+int                         GetSurfaceParm( const char *tex );
+void                        RestoreSurfaceFlags( char *filename );
+
 epair_t                     *ParseEPair( void );
 void                        ParseEntities( void );
 void                        UnparseEntities( void );
@@ -1146,6 +1154,8 @@ Q_EXTERN game_t games[]
 								#include "game_unvanquished.h" /* must be after game_quake3.h as they share defines! */
 	,
 								#include "game_xonotic.h" /* must be after game_quake3.h as they share defines! */
+	,
+								#include "game_smokinguns.h" /* must be after game_quake3.h */
 	,
 								#include "game__null.h" /* null game (must be last item) */
 	};
@@ -1356,6 +1366,9 @@ Q_EXTERN bspFog_t bspFogs[ MAX_MAP_FOGS ];
 
 Q_EXTERN int numBSPAds Q_ASSIGN( 0 );
 Q_EXTERN bspAdvertisement_t bspAds[ MAX_MAP_ADVERTISEMENTS ];
+
+// Used for tex file support, Smokin'Guns globals
+Q_EXTERN qboolean compile_map;
 
 #define AUTOEXPAND_BY_REALLOC( ptr, reqitem, allocated, def ) \
 	do \

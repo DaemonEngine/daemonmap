@@ -26,24 +26,26 @@
 
    ------------------------------------------------------------------------------- */
 
-
-
 /* marker */
 #define PATH_INIT_C
 
-
-
 /* dependencies */
 #include "q3map2.h"
-
-
 
 /* path support */
 #define MAX_BASE_PATHS  10
 #define MAX_GAME_PATHS  10
 #define MAX_PAK_PATHS  200
 
+qboolean				customHomePath = qfalse;
 char                    *homePath;
+
+#if GDEF_OS_MACOS
+char					*macLibraryApplicationSupportPath;
+#elif GDEF_OS_XDG
+char                    *xdgDataHomePath;
+#endif // GDEF_OS_XDG
+
 char installPath[ MAX_OS_PATH ];
 
 int numBasePaths;
@@ -66,31 +68,27 @@ char                    *homeBasePath = NULL;
  */
 
 char *LokiGetHomeDir( void ){
-	#ifndef Q_UNIX
+	#if GDEF_OS_WINDOWS
 	return NULL;
-	#else
+	#else // !GDEF_OS_WINDOWS
 	static char	buf[ 4096 ];
 	struct passwd   pw, *pwp;
 	char            *home;
-	static char homeBuf[MAX_OS_PATH];
-
 
 	/* get the home environment variable */
 	home = getenv( "HOME" );
 
 	/* look up home dir in password database */
-	if(!home)
+	if( home == NULL )
 	{
 		if ( getpwuid_r( getuid(), &pw, buf, sizeof( buf ), &pwp ) == 0 ) {
 			return pw.pw_dir;
 		}
 	}
 
-	snprintf( homeBuf, sizeof( homeBuf ), "%s/.", home );
-
 	/* return it */
-	return homeBuf;
-	#endif
+	return home;
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -103,7 +101,7 @@ char *LokiGetHomeDir( void ){
 void LokiInitPaths( char *argv0 ){
 	char *home;
 
-	if ( !homePath ) {
+	if ( homePath == NULL ) {
 		/* get home dir */
 		home = LokiGetHomeDir();
 		if ( home == NULL ) {
@@ -113,14 +111,28 @@ void LokiInitPaths( char *argv0 ){
 		/* set home path */
 		homePath = home;
 	}
-	else{
+	else {
 		home = homePath;
 	}
 
-	#ifndef Q_UNIX
+	#if GDEF_OS_MACOS
+	char *subPath = "/Library/Application Support";
+	macLibraryApplicationSupportPath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
+	sprintf( macLibraryApplicationSupportPath, "%s%s", home, subPath );
+	#elif GDEF_OS_XDG
+	xdgDataHomePath = getenv( "XDG_DATA_HOME" );
+
+	if ( xdgDataHomePath == NULL ) {
+		char *subPath = "/.local/share";
+		xdgDataHomePath = safe_malloc( sizeof( char ) * ( strlen( home ) + strlen( subPath ) ) );
+		sprintf( xdgDataHomePath, "%s%s", home, subPath );
+	}
+	#endif // GDEF_OS_XDG
+
+	#if GDEF_OS_WINDOWS
 	/* this is kinda crap, but hey */
 	strcpy( installPath, "../" );
-	#else
+	#else // !GDEF_OS_WINDOWS
 
 	char temp[ MAX_OS_PATH ];
 	char *path;
@@ -135,7 +147,7 @@ void LokiInitPaths( char *argv0 ){
 	if ( strrchr( temp, '/' ) ) {
 		argv0 = strrchr( argv0, '/' ) + 1;
 	}
-	else if ( path ) {
+	else if ( path != NULL ) {
 
 		/*
 		   This code has a special behavior when q3map2 is a symbolic link.
@@ -203,7 +215,7 @@ void LokiInitPaths( char *argv0 ){
 		*( strrchr( installPath, '/' ) ) = '\0';
 		*( strrchr( installPath, '/' ) ) = '\0';
 	}
-	#endif
+	#endif // !GDEF_OS_WINDOWS
 }
 
 
@@ -290,15 +302,14 @@ void AddBasePath( char *path ){
 
 /*
    AddHomeBasePath() - ydnar
-   adds a base path to the beginning of the list, prefixed by ~/
+   adds a base path to the beginning of the list
  */
 
 void AddHomeBasePath( char *path ){
 	int i;
 	char temp[ MAX_OS_PATH ];
-	int homePathLen;
 
-	if ( !homePath ) {
+	if ( homePath == NULL ) {
 		return;
 	}
 
@@ -307,28 +318,55 @@ void AddHomeBasePath( char *path ){
 		return;
 	}
 
-	/* strip leading dot, if homePath does not end in /. */
-	homePathLen = strlen( homePath );
-	if ( !strcmp( path, "." ) ) {
+	if ( strcmp( path, "." ) == 0 ) {
 		/* -fs_homebase . means that -fs_home is to be used as is */
 		strcpy( temp, homePath );
 	}
-	else if ( homePathLen >= 2 && !strcmp( homePath + homePathLen - 2, "/." ) ) {
-		/* remove trailing /. of homePath */
-		homePathLen -= 2;
+	else {
+		char *tempHomePath;
+		tempHomePath = homePath;
 
-		/* concatenate home dir and path */
-		sprintf( temp, "%.*s/%s", homePathLen, homePath, path );
-	}
-	else
-	{
-		/* remove leading . of path */
-		if ( path[0] == '.' ) {
-			++path;
+		/* homePath is . on Windows if not user supplied */
+
+		#if GDEF_OS_MACOS
+		/*
+		   use ${HOME}/Library/Application as ${HOME}
+		   if home path is not user supplied
+		   and strip the leading dot from prefix in any case
+		  
+		   basically it produces
+		   ${HOME}/Library/Application/unvanquished
+		   /user/supplied/home/path/unvanquished
+		*/
+		tempHomePath = macLibraryApplicationSupportPath;
+		path = path + 1;
+		#elif GDEF_OS_XDG
+		/*
+		   on Linux, check if game uses ${XDG_DATA_HOME}/prefix instead of ${HOME}/.prefix
+		   if yes and home path is not user supplied
+		   use XDG_DATA_HOME instead of HOME
+		   and strip the leading dot
+		  
+		   basically it produces
+		   ${XDG_DATA_HOME}/unvanquished
+		   /user/supplied/home/path/unvanquished
+		   
+		   or
+		   ${HOME}/.q3a
+		   /user/supplied/home/path/.q3a
+		 */
+
+		sprintf( temp, "%s/%s", xdgDataHomePath, ( path + 1 ) );
+		if ( access( temp, X_OK ) == 0 ) {
+			if ( customHomePath == qfalse ) {
+				tempHomePath = xdgDataHomePath;
+			}
+			path = path + 1;
 		}
+		#endif // GDEF_OS_XDG
 
 		/* concatenate home dir and path */
-		sprintf( temp, "%s/%s", homePath, path );
+		sprintf( temp, "%s/%s", tempHomePath, path );
 	}
 
 	/* make a hole */
@@ -497,6 +535,7 @@ void InitPaths( int *argc, char **argv ){
 				Error( "Out of arguments: No path specified after %s.", argv[ i - 1 ] );
 			}
 			argv[ i - 1 ] = NULL;
+			customHomePath = qtrue;
 			homePath = argv[i];
 			argv[ i ] = NULL;
 		}
