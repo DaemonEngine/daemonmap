@@ -3,7 +3,7 @@ NetRadiant
 
 ![NetRadiant logo](setup/data/tools/bitmaps/splash.png)
 
-The open source, cross platform level editor for idtech games (Radiant fork).
+The open source, cross platform level editor for id Tech-derivated games (Radiant fork).
 
 # Getting the sources
 
@@ -71,7 +71,7 @@ brew link --force gettext
 
  * Crunch (optional, disabled by default, only supported with CMake build)
 
-If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run it within the NetRadiant repository):
+If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run it within the `netradiant` repository):
 
 
 ```
@@ -94,7 +94,7 @@ cmake -G "Unix Makefiles" -H. -Bbuild && cmake --build build -- -j$(nproc)
 cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)
 ```
 
-On Mac you have to add this to the first cmake call:
+On macOS you have to add this to the first cmake call:
 
 ```
 -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -DOPENGL_INCLUDE_DIR=/opt/X11/include -DOPENGL_gl_LIBRARY=/opt/X11/lib/libGL.dylib
@@ -132,7 +132,7 @@ options:
    Do not automatically download the gamepack data during the first compilation (default: `ON`)
 * `GAMEPACKS_LICENSE_LIST=all`  
    Download all gamepacks whatever the license (default: `free`, download free gamepacks, can be set to `none` to only filter by name)
-* `GAMEPACKS_NAME_LIST=Xonotic Unvanquished`  
+* `GAMEPACKS_NAME_LIST="Xonotic Unvanquished"`  
    Download gamepacks for the given games (default: `none`, do not select more gamepacks to download)
 
 target:
