@@ -323,7 +323,7 @@ set(GAMEPACKS_NAME_LIST none CACHE STRING "Download game packs by name")
 if (DOWNLOAD_GAMEPACKS)
     add_custom_target(game_packs ALL
        COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${PROJECT_BINARY_DIR}/download" --install-dir "${PROJECT_BINARY_DIR}" --download --install
-       COMMENT "Downloading ${GAMEPACKS_LICENSE_LIST} game packs"
+       COMMENT "Downloading game packs"
     )
 endif ()
 
