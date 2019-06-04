@@ -169,38 +169,27 @@ if (BUILD_RADIANT)
     disable_deprecated(PANGO 0)
 endif ()
 
-IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-    link_directories(
-            /usr/local/lib
-    )
-endif ()
-
 if (BUILD_BINARIES)
-    if (APPLE)
-        add_definitions(
-                -DPOSIX=1
-        )
-
+    if(APPLE OR ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
         link_directories(
-                /usr/local/lib
+            /usr/local/lib
         )
-    elseif (WIN32)
+    endif ()
+
+    if (WIN32)
         add_definitions(
-                -DWIN32=1
-                -D_WIN32=1
+            -DWIN32=1
+            -D_WIN32=1
         )
     else ()
-        if (BUILD_RADIANT)
-             set(XWINDOWS ON)
-        endif ()
-
         add_definitions(
-                -DPOSIX=1
+            -DPOSIX=1
         )
     endif ()
 endif ()
 
-if (BUILD_RADIANT AND XWINDOWS)
+if (BUILD_RADIANT AND NOT APPLE AND NOT WIN32)
+    set(XWINDOWS ON)
     find_package(X11 REQUIRED)
     include_directories(${X11_INCLUDE_DIR})
     add_definitions(-DXWINDOWS=1)
