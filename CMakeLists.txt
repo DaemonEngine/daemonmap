@@ -146,14 +146,14 @@ if (BUILD_BINARIES)
     add_definitions(-DRADIANT_MINOR_VERSION="${RADIANT_VERSION_MINOR}")
     add_definitions(-DRADIANT_PATCH_VERSION="${RADIANT_VERSION_PATCH}")
 
-    add_definitions(-DRADIANT_ABOUTMSG="${RADIANT_ABOUTMSG}")
-
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
         add_definitions(-D_DEBUG=1)
     endif ()
 endif ()
 
 if (BUILD_RADIANT)
+    add_definitions(-DRADIANT_ABOUTMSG="${RADIANT_ABOUTMSG}")
+
     macro (disable_deprecated name gtk2only)
         add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
         if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
