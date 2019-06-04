@@ -146,7 +146,7 @@ if (BUILD_BINARIES)
     add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
     add_definitions(-DRADIANT_PATCH_VERSION="${NetRadiant_VERSION_PATCH}")
 
-    add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
+    add_definitions(-DRADIANT_ABOUTMSG="${RADIANT_ABOUTMSG}")
 
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
         add_definitions(-D_DEBUG=1)
