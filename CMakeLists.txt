@@ -144,6 +144,7 @@ endif ()
 
 if (BUILD_BINARIES)
     add_definitions(-DRADIANT_VERSION="${RADIANT_VERSION}")
+    add_definitions(-DRADIANT_VERSION_STRING="${RADIANT_VERSION_STRING}")
 
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
         add_definitions(-D_DEBUG=1)
