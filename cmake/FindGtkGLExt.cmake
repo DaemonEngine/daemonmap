@@ -4,9 +4,6 @@ if (PKG_CONFIG_FOUND)
         set(_pkgconfig_REQUIRED REQUIRED)
     endif ()
     if (APPLE)
-        # libffi is provided by base system so brew does not take the risk to override it
-        # hence then need for an explicit look-up
-        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig")
         pkg_check_modules(GtkGLExt ${_pkgconfig_REQUIRED} gtkglext-1.0 gtkglext-quartz-1.0)
     elseif (XWINDOWS)
         pkg_check_modules(GtkGLExt ${_pkgconfig_REQUIRED} gtkglext-x11-1.0)
