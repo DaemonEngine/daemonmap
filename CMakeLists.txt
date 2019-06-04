@@ -40,10 +40,10 @@ endif ()
 #-----------------------------------------------------------------------
 
 # CMake 3.0+ would allow this in project()
-set(NetRadiant_VERSION_MAJOR 1)
-set(NetRadiant_VERSION_MINOR 5)
-set(NetRadiant_VERSION_PATCH 0)
-set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.${NetRadiant_VERSION_PATCH}")
+set(RADIANT_VERSION_MAJOR 1)
+set(RADIANT_VERSION_MINOR 5)
+set(RADIANT_VERSION_PATCH 0)
+set(RADIANT_VERSION "${RADIANT_VERSION_MAJOR}.${RADIANT_VERSION_MINOR}.${RADIANT_VERSION_PATCH}")
 
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
@@ -56,7 +56,7 @@ execute_process(
      OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set(RADIANT_VERSION_STRING "${NetRadiant_VERSION}n")
+set(RADIANT_VERSION_STRING "${RADIANT_VERSION}n")
 
 if (GIT_VERSION)
     set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
@@ -141,10 +141,10 @@ endif ()
 #-----------------------------------------------------------------------
 
 if (BUILD_BINARIES)
-    add_definitions(-DRADIANT_VERSION="${NetRadiant_VERSION}")
-    add_definitions(-DRADIANT_MAJOR_VERSION="${NetRadiant_VERSION_MAJOR}")
-    add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
-    add_definitions(-DRADIANT_PATCH_VERSION="${NetRadiant_VERSION_PATCH}")
+    add_definitions(-DRADIANT_VERSION="${RADIANT_VERSION}")
+    add_definitions(-DRADIANT_MAJOR_VERSION="${RADIANT_VERSION_MAJOR}")
+    add_definitions(-DRADIANT_MINOR_VERSION="${RADIANT_VERSION_MINOR}")
+    add_definitions(-DRADIANT_PATCH_VERSION="${RADIANT_VERSION_PATCH}")
 
     add_definitions(-DRADIANT_ABOUTMSG="${RADIANT_ABOUTMSG}")
 
