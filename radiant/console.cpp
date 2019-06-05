@@ -64,7 +64,7 @@ void Sys_LogFile( bool enable ){
 			time_t localtime;
 			time( &localtime );
 			globalOutputStream() << "Today is: " << ctime( &localtime )
-								 << "This is " RADIANT_NAME " '" RADIANT_VERSION "' compiled " __DATE__ "\n" RADIANT_ABOUTMSG "\n";
+								 << "This is " RADIANT_NAME " " RADIANT_VERSION " compiled " __DATE__ "\n" RADIANT_ABOUTMSG "\n";
 		}
 		else{
 			ui::alert( ui::root, "Failed to create log file, check write permissions in " RADIANT_NAME " directory.\n",
