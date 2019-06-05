@@ -27,6 +27,9 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
+#define PLUGIN_NAME "Camera"
+#define PLUGIN_VERSION "1.0"
+
 typedef unsigned char byte;
 
 #include "mathlib.h"

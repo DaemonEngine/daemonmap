@@ -19,7 +19,9 @@
  */
 
 #ifndef _PLUGIN_SUNPLUG_
-  #define _PLUGIN_SUNPLUG_
+#define _PLUGIN_SUNPLUG_
 
+#define PLUGIN_NAME "SunPlug"
+#define PLUGIN_VERSION "1.0"
 
 #endif // _PLUGIN_SUNPLUG_

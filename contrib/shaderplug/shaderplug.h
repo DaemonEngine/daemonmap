@@ -24,4 +24,7 @@
 
 #include "xml/xmltextags.h"
 
+#define PLUGIN_NAME "ShaderPlug"
+#define PLUGIN_VERSION "1.0"
+
 #endif

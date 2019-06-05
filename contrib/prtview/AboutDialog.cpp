@@ -49,7 +49,7 @@ void DoAboutDlg(){
 	int loop = 1, ret = IDCANCEL;
 
 	auto dlg = ui::Window(ui::window_type::TOP);
-	gtk_window_set_title(dlg, "About Portal Viewer");
+	gtk_window_set_title(dlg, "About " PLUGIN_NAME);
 	dlg.connect("delete_event", G_CALLBACK(dialog_delete_callback), NULL);
 	dlg.connect("destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 	g_object_set_data(G_OBJECT(dlg), "loop", &loop);
@@ -60,11 +60,15 @@ void DoAboutDlg(){
 	dlg.add(hbox);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 10);
 
-	char const *label_text = "Version 1.000\n\n"
-			"Gtk port by Leonardo Zide\nleo@lokigames.com\n\n"
-			"Written by Geoffrey DeWan\ngdewan@prairienet.org\n\n"
-			"Built against " RADIANT_NAME " " RADIANT_VERSION "\n"
+	const char *label_text =
+			PLUGIN_NAME " " PLUGIN_VERSION " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"Gtk port by Leonardo Zide <leo@lokigames.com>\n"
+			"Written by Geoffrey DeWan <gdewan@prairienet.org>\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;
+
 	auto label = ui::Label(label_text);
 	label.show();
 	hbox.pack_start( label, TRUE, TRUE, 0);

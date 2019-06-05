@@ -32,8 +32,6 @@
 
 #include <gtk/gtk.h>
 
-#define PLUGIN_VERSION "0.4"
-
 #include "ifilter.h"
 #include "ibrush.h"
 #include "iundo.h"       // declaration of undo system
@@ -42,6 +40,8 @@
 #include "scenelib.h"    // declaration of datastructure of the map
 #include "qerplugin.h"   // declaration to use other interfaces as a plugin
 #include "ieclass.h"
+
+#define CMD_ABOUT "About..."
 
 class UFOAIPluginDependencies :
 	public GlobalRadiantModuleRef,  // basic class for all other module refs
@@ -66,24 +66,29 @@ const char* init( void* hApp, void* pMainWidget ){
 	return "Initializing GTKRadiant UFOAI plugin";
 }
 const char* getName(){
-	return "UFO:AI";
+	return PLUGIN_NAME;
 }
 const char* getCommandList(){
 	/*GlobalRadiant().getGameName()*/
-	return "About;-;Worldspawn reset;Worldspawn;Perform check;-;Level 1;Level 2;Level 3;Level 4;Level 5;Level 6;Level 7;Level 8;-;StepOn;ActorClip;WeaponClip;Nodraw";
+	return CMD_ABOUT ";-;Worldspawn reset;Worldspawn;Perform check;-;Level 1;Level 2;Level 3;Level 4;Level 5;Level 6;Level 7;Level 8;-;StepOn;ActorClip;WeaponClip;Nodraw";
 }
 const char* getCommandTitleList(){
 	return "";
 }
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
 	char const *message = NULL;
-	if ( string_equal( command, "About" ) ) {
-		char const *version_string = "UFO:AI Plugin (http://ufoai.sf.net)\nBuild: " __DATE__
-			"\nRadiant version: " RADIANT_VERSION
-			"\nPlugin version: " PLUGIN_VERSION
-			"\nAuthor: Martin Gerhardy (tlh2000/mattn)\n";
+	if ( string_equal( command, CMD_ABOUT ) ) {
+		const char *label_text = 
+			PLUGIN_NAME " " PLUGIN_VERSION " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"Written by Martin Gerhardy (tlh2000/mattn)\n"
+			"for the UFO:AI project (http://ufoai.sf.net)\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+			__DATE__;
+
 		GlobalRadiant().m_pfnMessageBox( g_mainwnd,
-										 version_string, "About",
+										 label_text, "About" PLUGIN_NAME,
 										 eMB_OK, eMB_ICONDEFAULT );
 	}
 	else if ( string_equal( command, "Level 1" ) ) {

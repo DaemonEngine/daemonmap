@@ -37,6 +37,8 @@
 
 #include <gtk/gtk.h>     // to display something with gtk (windows, buttons etc.), the whole package might not be necessary
 
+#define CMD_ABOUT "About..."
+
 void about_plugin_window();
 void MapCoordinator();
 
@@ -190,13 +192,13 @@ char MenuList[100] = "";
 
 const char* init( void* hApp, void* pMainWidget ){
 	main_window = ui::Window::from(pMainWidget);
-	return "Initializing SunPlug for GTKRadiant";
+	return "Initializing " PLUGIN_NAME " for " RADIANT_NAME;
 }
 const char* getName(){
-	return "SunPlug"; // name that is shown in the menue
+	return PLUGIN_NAME; // name that is shown in the menue
 }
 const char* getCommandList(){
-	const char about[] = "About...";
+	const char about[] = CMD_ABOUT;
 	const char etMapCoordinator[] = ";ET-MapCoordinator";
 
 	strcat( MenuList, about );
@@ -209,7 +211,7 @@ const char* getCommandTitleList(){
 	return "";
 }
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){ // message processing
-	if ( string_equal( command, "About..." ) ) {
+	if ( string_equal( command, CMD_ABOUT ) ) {
 		about_plugin_window();
 	}
 	if ( string_equal( command, "ET-MapCoordinator" ) ) {
@@ -223,7 +225,7 @@ class SunPlugModule : public TypeSystemRef
 _QERPluginTable m_plugin;
 public:
 typedef _QERPluginTable Type;
-STRING_CONSTANT( Name, "SunPlug" );
+STRING_CONSTANT( Name, PLUGIN_NAME );
 
 SunPlugModule(){
 	m_plugin.m_pfnQERPlug_Init = &SunPlug::init;
@@ -258,7 +260,7 @@ void about_plugin_window(){
 	gtk_window_set_transient_for( window, SunPlug::main_window ); // make the window to stay in front of the main window
 	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
 	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
-	gtk_window_set_title( window, "About SunPlug" ); // set the title of the window for the window
+	gtk_window_set_title( window, "About " PLUGIN_NAME ); // set the title of the window for the window
 	gtk_window_set_resizable( window, FALSE ); // don't let the user resize the window
 	gtk_window_set_modal( window, TRUE ); // force the user not to do something with the other windows
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
@@ -266,7 +268,15 @@ void about_plugin_window(){
 	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
 	window.add(vbox);
 
-	auto label = ui::Label( "SunPlug v1.0 for " RADIANT_NAME " 1.5\nby Topsun" ); // create a label
+	char const *label_text = 
+	PLUGIN_NAME " " PLUGIN_VERSION " for "
+	RADIANT_NAME " " RADIANT_VERSION "\n\n"
+	"Written by Topsun\n\n"
+	"Built against "
+	RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+	__DATE__;
+
+	auto label = ui::Label( label_text ); // create a label
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
 	vbox.pack_start( label, FALSE, FALSE, 2 ); // insert the label in the box
 

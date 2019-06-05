@@ -43,6 +43,8 @@
 
 #include "typesystem.h"
 
+#define CMD_ABOUT "About..."
+
 void CreateWindow( void );
 void DestroyWindow( void );
 bool IsWindowOpen( void );
@@ -60,18 +62,26 @@ const char* getName(){
 	return "Brush export Plugin";
 }
 const char* getCommandList(){
-	return "Export selected as Wavefront Object;About";
+	return CMD_ABOUT ";-;Export selected as Wavefront Object";
 }
 const char* getCommandTitleList(){
 	return "";
 }
 
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){
-	if ( string_equal( command, "About" ) ) {
-		GlobalRadiant().m_pfnMessageBox( g_mainwnd, "Brushexport plugin v 2.0 by namespace (www.codecreator.net)\n"
-																  "Enjoy!\n\nSend feedback to spam@codecreator.net", "About me...",
-										 eMB_OK,
-										 eMB_ICONDEFAULT );
+	if ( string_equal( command, CMD_ABOUT ) ) {
+		const char *label_text =
+			PLUGIN_NAME " " PLUGIN_VERSION " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"Written by namespace <spam@codecreator.net> (www.codecreator.net)\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+			__DATE__;
+
+		GlobalRadiant().m_pfnMessageBox( g_mainwnd, label_text,
+										"About " PLUGIN_NAME,
+										eMB_OK,
+										eMB_ICONDEFAULT );
 	}
 	else if ( string_equal( command, "Export selected as Wavefront Object" ) ) {
 		if ( IsWindowOpen() ) {
@@ -101,7 +111,7 @@ class BrushExportModule : public TypeSystemRef
 _QERPluginTable m_plugin;
 public:
 typedef _QERPluginTable Type;
-STRING_CONSTANT( Name, "brushexport2" );
+STRING_CONSTANT( Name, PLUGIN_NAME );
 
 BrushExportModule(){
 	m_plugin.m_pfnQERPlug_Init = &BrushExport::init;

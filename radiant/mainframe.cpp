@@ -2378,7 +2378,7 @@ ui::MenuItem create_help_menu(){
 
 	create_menu_item_with_mnemonic( menu, "Bug report", makeCallbackF(OpenBugReportURL) );
 	create_menu_item_with_mnemonic( menu, "Shortcuts list", makeCallbackF(DoCommandListDlg) );
-	create_menu_item_with_mnemonic( menu, "_About", makeCallbackF(DoAbout) );
+	create_menu_item_with_mnemonic( menu, "_About...", makeCallbackF(DoAbout) );
 
 	return help_menu_item;
 }

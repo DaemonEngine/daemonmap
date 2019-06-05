@@ -19,4 +19,7 @@
 #if !defined( INCLUDED_UFOAI_H )
 #define INCLUDED_UFOAI_H
 
+#define PLUGIN_NAME "UFO:AI"
+#define PLUGIN_VERSION "0.4"
+
 #endif

@@ -24,24 +24,30 @@
 
 #include "dialogs/dialogs-gtk.h"
 
+#define PLUGIN_NAME "ctfTools"
+#define CMD_ABOUT = "About..."
+
 // Radiant function table
 _QERFuncTable_1 g_FuncTable;
 _QERAppBSPFrontendTable g_BSPTable;             // for map name
 
 BOOL g_bBSPInitDone                 = FALSE;
 
-// plugin name
-static const char *PLUGIN_NAME = "ctfToolz";
-
 // commands in the menu
-static const char *PLUGIN_COMMANDS = "About...,Colour Changer...,Swap Light Colours,Change Angles 180,Swap Spawn Points";
+static const char *PLUGIN_COMMANDS = ABOUT_CMD ",Colour Changer...,Swap Light Colours,Change Angles 180,Swap Spawn Points";
 
 // globals
 GtkWidget *g_pRadiantWnd = NULL;
 
-static const char *PLUGIN_ABOUT = "ctfToolz for " RADIANT_NAME "\n"
-								  "by djbob\n"
-								  "http://www.planetquake.com/toolz\n\n";
+static const char *PLUGIN_ABOUT =
+			PLUGIN_NAME for " RADIANT_NAME "\n\n"
+			"Written by djbob\n\n"
+//			20190605 dead link
+//			"http://www.planetquake.com/toolz\n\n"
+//			http://web.archive.org/web/20140109083123/http://planetquake.gamespy.com/toolz
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION "\n"
+			__DATE__;
 
 extern "C" LPVOID WINAPI QERPlug_GetFuncTable(){
 	return &g_FuncTable;
@@ -79,7 +85,7 @@ extern "C" void WINAPI QERPlug_Dispatch( LPCSTR p, vec3_t vMin, vec3_t vMax, boo
 		}
 	}
 
-	if ( !strcmp( p, "About..." ) ) {
+	if ( !strcmp( p, CMD_ABOUT ) ) {
 		DoMessageBox( PLUGIN_ABOUT, "About", IDOK );
 	}
 	else if ( !strcmp( p, "Colour Changer..." ) ) {
