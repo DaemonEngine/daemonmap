@@ -452,7 +452,7 @@ void DoAbout(){
 			{
 				char const *label_text = "NetRadiant " RADIANT_VERSION_STRING "\n"
 										__DATE__ "\n\n"
-                                        RADIANT_ABOUTMSG "\n\n"
+										RADIANT_ABOUTMSG "\n\n"
 										"This program is free software\n"
 										"licensed under the GNU GPL.\n\n"
 										"NetRadiant is unsupported, however\n"

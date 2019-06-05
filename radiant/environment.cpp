@@ -167,8 +167,8 @@ void gamedetect(){
 
 namespace
 {
-CopiedString home_path;
-CopiedString app_path;
+	CopiedString home_path;
+	CopiedString app_path;
 	CopiedString lib_path;
 	CopiedString data_path;
 }
