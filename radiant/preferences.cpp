@@ -475,8 +475,8 @@ CGameDialog g_GamesDialog;
 
 static void OnButtonClean( ui::Widget widget, gpointer data ){
 	// make sure this is what the user wants
-	if ( ui::alert( g_Preferences.GetWidget(), "This will close Radiant and clean the corresponding registry entries.\n"
-																  "Next time you start Radiant it will be good as new. Do you wish to continue?",
+	if ( ui::alert( g_Preferences.GetWidget(), "This will close " RADIANT_NAME " and clean the corresponding registry entries.\n"
+																  "Next time you start " RADIANT_NAME " it will be good as new. Do you wish to continue?",
 						 "Reset Registry", ui::alert_type::YESNO, ui::alert_icon::Asterisk ) == ui::alert_response::YES ) {
 		PrefsDlg *dlg = (PrefsDlg*)data;
 		dlg->EndModal( eIDCANCEL );
@@ -676,7 +676,7 @@ ui::Window PrefsDlg::BuildDialog(){
 	PreferencesDialog_addInterfacePreferences( makeCallbackF(Interface_constructPreferences) );
 	Mouse_registerPreferencesPage();
 
-	ui::Window dialog = ui::Window(create_floating_window( "NetRadiant Preferences", m_parent ));
+	ui::Window dialog = ui::Window(create_floating_window( RADIANT_NAME " Preferences", m_parent ));
 
 	{
 		auto mainvbox = ui::VBox( FALSE, 5 );

@@ -266,7 +266,7 @@ void about_plugin_window(){
 	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
 	window.add(vbox);
 
-	auto label = ui::Label( "SunPlug v1.0 for NetRadiant 1.5\nby Topsun" ); // create a label
+	auto label = ui::Label( "SunPlug v1.0 for " RADIANT_NAME " 1.5\nby Topsun" ); // create a label
 	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
 	vbox.pack_start( label, FALSE, FALSE, 2 ); // insert the label in the box
 

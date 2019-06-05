@@ -39,7 +39,7 @@ static const char *PLUGIN_COMMANDS = "About...,Colour Changer...,Swap Light Colo
 // globals
 GtkWidget *g_pRadiantWnd = NULL;
 
-static const char *PLUGIN_ABOUT = "ctfToolz for NetRadiant\n"
+static const char *PLUGIN_ABOUT = "ctfToolz for " RADIANT_NAME "\n"
 								  "by djbob\n"
 								  "http://www.planetquake.com/toolz\n\n";
 

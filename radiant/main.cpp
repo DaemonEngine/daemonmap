@@ -304,12 +304,12 @@ bool handleMessage(){
 		ScopedLock lock( m_lock );
         if (GDEF_DEBUG) {
             m_buffer << "Break into the debugger?\n";
-            bool handled = ui::alert(ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error) == ui::alert_response::NO;
+            bool handled = ui::alert(ui::root, m_buffer.c_str(), RADIANT_NAME " - Runtime Error", ui::alert_type::YESNO, ui::alert_icon::Error) == ui::alert_response::NO;
             m_buffer.clear();
             return handled;
         } else {
             m_buffer << "Please report this error to the developers\n";
-            ui::alert(ui::root, m_buffer.c_str(), "Radiant - Runtime Error", ui::alert_type::OK, ui::alert_icon::Error);
+            ui::alert(ui::root, m_buffer.c_str(), RADIANT_NAME " - Runtime Error", ui::alert_type::OK, ui::alert_icon::Error);
             m_buffer.clear();
         }
 	}
@@ -384,25 +384,25 @@ void create_global_pid(){
 		if ( remove( g_pidFile.c_str() ) == -1 ) {
 			StringOutputStream msg( 256 );
 			msg << "WARNING: Could not delete " << g_pidFile.c_str();
-			ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+			ui::alert( ui::root, msg.c_str(), RADIANT_NAME, ui::alert_type::OK, ui::alert_icon::Error );
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
 		if (!GDEF_DEBUG) {
 			StringOutputStream msg(256);
-			msg << "Radiant failed to start properly the last time it was run.\n"
+			msg << RADIANT_NAME " failed to start properly the last time it was run.\n"
 					"The failure may be related to current global preferences.\n"
 					"Do you want to reset global preferences to defaults?";
 
-			if (ui::alert(ui::root, msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
+			if (ui::alert(ui::root, msg.c_str(), RADIANT_NAME " - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
 				g_GamesDialog.Reset();
 			}
 
 			msg.clear();
 			msg << "Logging console output to " << SettingsPath_get()
-				<< "radiant.log\nRefer to the log if Radiant fails to start again.";
+				<< "radiant.log\nRefer to the log if " RADIANT_NAME " fails to start again.";
 
-			ui::alert(ui::root, msg.c_str(), "Radiant - Console Log", ui::alert_type::OK);
+			ui::alert(ui::root, msg.c_str(), RADIANT_NAME " - Console Log", ui::alert_type::OK);
 		}
 
 		// set without saving, the class is not in a coherent state yet
@@ -426,7 +426,7 @@ void remove_global_pid(){
 	if ( remove( g_pidFile.c_str() ) == -1 ) {
 		StringOutputStream msg( 256 );
 		msg << "WARNING: Could not delete " << g_pidFile.c_str();
-		ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+		ui::alert( ui::root, msg.c_str(), RADIANT_NAME, ui::alert_type::OK, ui::alert_icon::Error );
 	}
 }
 
@@ -444,25 +444,25 @@ void create_local_pid(){
 		if ( remove( g_pidGameFile.c_str() ) == -1 ) {
 			StringOutputStream msg;
 			msg << "WARNING: Could not delete " << g_pidGameFile.c_str();
-			ui::alert( ui::root, msg.c_str(), "Radiant", ui::alert_type::OK, ui::alert_icon::Error );
+			ui::alert( ui::root, msg.c_str(), RADIANT_NAME, ui::alert_type::OK, ui::alert_icon::Error );
 		}
 
 		// in debug, never prompt to clean registry, turn console logging auto after a failed start
 		if (!GDEF_DEBUG) {
 			StringOutputStream msg;
-			msg << "Radiant failed to start properly the last time it was run.\n"
+			msg << RADIANT_NAME " failed to start properly the last time it was run.\n"
 					"The failure may be caused by current preferences.\n"
 					"Do you want to reset all preferences to defaults?";
 
-			if (ui::alert(ui::root, msg.c_str(), "Radiant - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
+			if (ui::alert(ui::root, msg.c_str(), RADIANT_NAME " - Startup Failure", ui::alert_type::YESNO, ui::alert_icon::Question) == ui::alert_response::YES) {
 				Preferences_Reset();
 			}
 
 			msg.clear();
 			msg << "Logging console output to " << SettingsPath_get()
-				<< "radiant.log\nRefer to the log if Radiant fails to start again.";
+				<< "radiant.log\nRefer to the log if " RADIANT_NAME " fails to start again.";
 
-			ui::alert(ui::root, msg.c_str(), "Radiant - Console Log", ui::alert_type::OK);
+			ui::alert(ui::root, msg.c_str(), RADIANT_NAME " - Console Log", ui::alert_type::OK);
 		}
 
 		// force console logging on! (will go in prefs too)

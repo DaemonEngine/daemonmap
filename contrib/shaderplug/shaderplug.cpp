@@ -172,7 +172,7 @@ void CreateTagFile(){
 		char message[256];
 		strcpy( message, "Tag file saved to\n" );
 		strcat( message, tagFile );
-		strcat( message, "\nPlease restart Radiant now.\n" );
+		strcat( message, "\nPlease restart " RADIANT_NAME " now.\n" );
 
 		if ( file_exists( tagFile ) ) {
 			EMessageBoxReturn result = GlobalRadiant().m_pfnMessageBox( g_window ,
