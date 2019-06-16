@@ -85,7 +85,7 @@ This project uses the usual CMake workflow:
 ## Debug
 
 ```
-cmake -G "Unix Makefiles" -H. -Bbuild && cmake --build build -- -j$(nproc)
+cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Debug && cmake --build build -- -j$(nproc)
 ```
 
 ## Release
@@ -97,13 +97,13 @@ cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --buil
 On macOS you have to add this to the first cmake call:
 
 ```
--DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -DOPENGL_INCLUDE_DIR=/opt/X11/include -DOPENGL_gl_LIBRARY=/opt/X11/lib/libGL.dylib
+-DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
 ```
 
 On FreeBSD you have to add this to the first cmake call:
 
 ```
-cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8
+-DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8
 ```
 
 ## Build and installation details
