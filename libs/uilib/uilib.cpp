@@ -87,6 +87,16 @@ namespace ui {
     void IWidget::visible(bool shown)
     {
         if (shown) {
+
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+            /* workaround for gtk 2.24 issue: not displayed glwidget after toggle */
+            GtkWidget* glwidget = GTK_WIDGET( g_object_get_data( G_OBJECT( this ), "glwidget" ) );
+            if ( glwidget ){
+                gtk_widget_hide( glwidget );
+                gtk_widget_show( glwidget );
+            }
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
+
             this.show();
         } else {
             this.hide();

@@ -138,6 +138,10 @@ endif ()
 if (BUILD_RADIANT)
     set(GTK_TARGET 2 CACHE STRING "GTK target")
     add_definitions(-DGTK_TARGET=${GTK_TARGET})
+
+    if (GTK_TARGET EQUAL 2 AND WIN32)
+        add_definitions(-DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1)
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------

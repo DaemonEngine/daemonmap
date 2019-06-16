@@ -28,6 +28,16 @@
 
 inline void CHECK_RESTORE( ui::Widget w ){
 	if ( gpointer_to_int( g_object_get_data( G_OBJECT( w ), "was_mapped" ) ) != 0 ) {
+
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+		/* workaround for gtk 2.24 issue: not displayed glwidget after toggle */
+		GtkWidget* glwidget = GTK_WIDGET( g_object_get_data( G_OBJECT( w ), "glwidget" ) );
+		if ( glwidget ){
+			gtk_widget_hide( glwidget );
+			gtk_widget_show( glwidget );
+		}
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
+
 		w.show();
 	}
 }

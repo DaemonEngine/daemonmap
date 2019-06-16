@@ -56,4 +56,8 @@ void TextureBrowser_addShadersRealiseCallback( const SignalHandler& handler );
 
 void TextureBrowser_RefreshShaders();
 
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+ui::GLArea TextureBrowser_getGLWidget();
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
+
 #endif
