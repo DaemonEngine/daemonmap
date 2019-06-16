@@ -22,7 +22,9 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
 
-set(RADIANT_BASENAME netradiant CACHE INTERNAL "...")
+set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
+add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
+set(RADIANT_BASENAME "netradiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
 set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
@@ -30,9 +32,9 @@ set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL)
-    set(RADIANT_LIB_DIR lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_DIR bin)
-    set(RADIANT_DATA_DIR share/${RADIANT_BASENAME})
+    set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+    set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/${RADIANT_BASENAME})
 endif ()
 
 #-----------------------------------------------------------------------
@@ -40,23 +42,23 @@ endif ()
 #-----------------------------------------------------------------------
 
 # CMake 3.0+ would allow this in project()
-set(NetRadiant_VERSION_MAJOR 1)
-set(NetRadiant_VERSION_MINOR 5)
-set(NetRadiant_VERSION_PATCH 0)
-set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.${NetRadiant_VERSION_PATCH}")
+set(RADIANT_VERSION_MAJOR 1)
+set(RADIANT_VERSION_MINOR 5)
+set(RADIANT_VERSION_PATCH 0)
+set(RADIANT_VERSION "${RADIANT_VERSION_MAJOR}.${RADIANT_VERSION_MINOR}.${RADIANT_VERSION_PATCH}")
 
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
 find_package(Git REQUIRED)
 
 execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE
+     COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+     OUTPUT_VARIABLE GIT_VERSION
+     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set(RADIANT_VERSION_STRING "${NetRadiant_VERSION}n")
+set(RADIANT_VERSION_STRING "${RADIANT_VERSION}n")
 
 if (GIT_VERSION)
     set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
@@ -95,18 +97,18 @@ endif ()
 if (BUILD_BINARIES)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
 
-    macro(addflags_c args)
+    macro (addflags_c args)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${args}")
-    endmacro()
+    endmacro ()
 
-    macro(addflags_cxx args)
+    macro (addflags_cxx args)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${args}")
-    endmacro()
+    endmacro ()
 
-    macro(addflags args)
+    macro (addflags args)
         addflags_c("${args}")
         addflags_cxx("${args}")
-    endmacro()
+    endmacro ()
 
     addflags("-fno-strict-aliasing")
     if (NOT WIN32)
@@ -134,19 +136,15 @@ endif ()
 if (BUILD_RADIANT)
     set(GTK_TARGET 2 CACHE STRING "GTK target")
     add_definitions(-DGTK_TARGET=${GTK_TARGET})
-endif()
+endif ()
 
 #-----------------------------------------------------------------------
 # Defs
 #-----------------------------------------------------------------------
 
 if (BUILD_BINARIES)
-    add_definitions(-DRADIANT_VERSION="${NetRadiant_VERSION}")
-    add_definitions(-DRADIANT_MAJOR_VERSION="${NetRadiant_VERSION_MAJOR}")
-    add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
-    add_definitions(-DRADIANT_PATCH_VERSION="${NetRadiant_VERSION_PATCH}")
-
-    add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
+    add_definitions(-DRADIANT_VERSION="${RADIANT_VERSION}")
+    add_definitions(-DRADIANT_VERSION_STRING="${RADIANT_VERSION_STRING}")
 
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
         add_definitions(-D_DEBUG=1)
@@ -154,12 +152,14 @@ if (BUILD_BINARIES)
 endif ()
 
 if (BUILD_RADIANT)
-    macro(disable_deprecated name gtk2only)
+    add_definitions(-DRADIANT_ABOUTMSG="${RADIANT_ABOUTMSG}")
+
+    macro (disable_deprecated name gtk2only)
         add_definitions(-D${name}_DISABLE_SINGLE_INCLUDES)
         if ((${gtk2only} EQUAL 0) OR (GTK_TARGET EQUAL 2))
             add_definitions(-D${name}_DISABLE_DEPRECATED)
         endif ()
-    endmacro()
+    endmacro ()
 
     disable_deprecated(ATK 0)
     disable_deprecated(G 0)
@@ -169,38 +169,27 @@ if (BUILD_RADIANT)
     disable_deprecated(PANGO 0)
 endif ()
 
-IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-    link_directories(
-            /usr/local/lib
-    )
-endif ()
-
 if (BUILD_BINARIES)
-    if (APPLE)
-        add_definitions(
-                -DPOSIX=1
-        )
-
+    if(APPLE OR ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
         link_directories(
-                /usr/local/lib
+            /usr/local/lib
         )
-    elseif (WIN32)
+    endif ()
+
+    if (WIN32)
         add_definitions(
-                -DWIN32=1
-                -D_WIN32=1
+            -DWIN32=1
+            -D_WIN32=1
         )
     else ()
-        if (BUILD_RADIANT)
-             set(XWINDOWS ON)
-        endif ()
-
         add_definitions(
-                -DPOSIX=1
+            -DPOSIX=1
         )
     endif ()
 endif ()
 
-if (BUILD_RADIANT AND XWINDOWS)
+if (BUILD_RADIANT AND NOT APPLE AND NOT WIN32)
+    set(XWINDOWS ON)
     find_package(X11 REQUIRED)
     include_directories(${X11_INCLUDE_DIR})
     add_definitions(-DXWINDOWS=1)
@@ -218,36 +207,36 @@ if (BUILD_BINARIES)
 
     option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
-    macro(copy_dlls target)
+    macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
-                    COMMAND bash
-                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
-                    VERBATIM
-            )
+                COMMAND bash
+                ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
+                VERBATIM
+        )
         endif ()
-    endmacro()
+    endmacro ()
 
-    macro(bundle_stuff target)
+    macro (bundle_stuff target)
         if (BUNDLE_LIBRARIES AND WIN32)
-                add_custom_command(TARGET ${target} POST_BUILD
-                        COMMAND bash
-                        ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; [ -d '${PROJECT_BINARY_DIR}/share/themes/MS-Windows' ] || cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; [ -d '${PROJECT_BINARY_DIR}/lib/gdk-pixbuf-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; [ -d '${PROJECT_BINARY_DIR}/lib/gtk-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
-                        VERBATIM
-                        )
+            add_custom_command(TARGET ${target} POST_BUILD
+                COMMAND bash
+                ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; [ -d '${PROJECT_BINARY_DIR}/share/themes/MS-Windows' ] || cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; [ -d '${PROJECT_BINARY_DIR}/lib/gdk-pixbuf-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; [ -d '${PROJECT_BINARY_DIR}/lib/gtk-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
+                VERBATIM
+        )
 
-                file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
+        file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
 
-                install(FILES
-                    ${DLL_FILES}
-                    DESTINATION ${CMAKE_INSTALL_PREFIX}
-                )
+        install(FILES
+            ${DLL_FILES}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
 
-                install(DIRECTORY
-                        ${PROJECT_BINARY_DIR}/lib
-                        ${PROJECT_BINARY_DIR}/share
-                        DESTINATION ${CMAKE_INSTALL_PREFIX}
-                )
+        install(DIRECTORY
+            ${PROJECT_BINARY_DIR}/lib
+            ${PROJECT_BINARY_DIR}/share
+            DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
         endif ()
     endmacro ()
 endif ()
@@ -289,22 +278,22 @@ if (BUILD_BINARIES)
         string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
     endif ()
 
-    macro(radiant_tool name)
+    macro (radiant_tool name)
         add_executable(${name} ${ARGN})
 
         copy_dlls(${name})
 
         install(
-                TARGETS ${name}
-                RUNTIME DESTINATION ${RADIANT_BIN_DIR}
+            TARGETS ${name}
+            RUNTIME DESTINATION ${RADIANT_BIN_DIR}
         )
-    endmacro()
+    endmacro ()
 
     if (BUILD_RADIANT)
-        add_subdirectory(radiant _radiant)
+        add_subdirectory(radiant)
         set_target_properties(${RADIANT_BASENAME} PROPERTIES
-                COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
-                )
+        COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
+    )
     endif ()
 endif ()
 
@@ -332,11 +321,11 @@ set(GAMEPACKS_LICENSE_LIST free CACHE STRING "Download game packs by license")
 set(GAMEPACKS_NAME_LIST none CACHE STRING "Download game packs by name")
 
 if (DOWNLOAD_GAMEPACKS)
-   add_custom_target(game_packs ALL
-      COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${PROJECT_BINARY_DIR}/download" --install-dir "${PROJECT_BINARY_DIR}" --download --install
-      COMMENT "Downloading ${GAMEPACKS_LICENSE_LIST} game packs"
-   )
-endif()
+    add_custom_target(game_packs ALL
+       COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${PROJECT_BINARY_DIR}/download" --install-dir "${PROJECT_BINARY_DIR}" --download --install
+       COMMENT "Downloading game packs"
+    )
+endif ()
 
 #-----------------------------------------------------------------------
 # Install
@@ -344,12 +333,12 @@ endif()
 
 if (BUILD_BINARIES)
     install(DIRECTORY
-            setup/data/tools/base
-            setup/data/tools/bitmaps
-            setup/data/tools/gl
-            setup/data/tools/plugins
-            docs
-            DESTINATION ${RADIANT_DATA_DIR}
+        setup/data/tools/base
+        setup/data/tools/bitmaps
+        setup/data/tools/gl
+        setup/data/tools/plugins
+        docs
+        DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
 
@@ -363,25 +352,25 @@ if (DOWNLOAD_GAMEPACKS)
     file(GLOB GAME_DIRS ${PROJECT_BINARY_DIR}/*.game)
 
     install(DIRECTORY
-            ${PROJECT_BINARY_DIR}/games
-            ${GAME_DIRS}
-            DESTINATION ${RADIANT_DATA_DIR}
+        ${PROJECT_BINARY_DIR}/games
+        ${GAME_DIRS}
+        DESTINATION ${RADIANT_DATA_DIR}
     )
-endif()
+endif ()
 
 if(BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
     install(FILES
-            ${PROJECT_SOURCE_DIR}/icons/netradiant.png
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
+        ${PROJECT_SOURCE_DIR}/icons/netradiant.png
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
     )
     install(FILES
-            ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+        ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
     )
     install(FILES
-            ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
+        ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
     )
-endif()
+endif ()
 
 include(cmake/scripts/package.cmake)

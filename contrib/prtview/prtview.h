@@ -20,7 +20,10 @@
 #if !defined( INCLUDED_PRTVIEW_H )
 #define INCLUDED_PRTVIEW_H
 
-#define MSG_PREFIX "Portal Viewer plugin: "
+#define PLUGIN_NAME "Portal Viewer"
+#define PLUGIN_VERSION "1.0"
+
+#define MSG_PREFIX PLUGIN_NAME " plugin: "
 
 void InitInstance();
 void SaveConfig();
@@ -30,6 +33,5 @@ void INISetInt( const char *key, int val, const char *comment = 0 );
 
 const int IDOK                = 1;
 const int IDCANCEL            = 2;
-
 
 #endif

@@ -36,12 +36,12 @@
 #include "LoadPortalFileDialog.h"
 
 #define Q3R_CMD_SPLITTER "-"
-#define Q3R_CMD_ABOUT "About Portal Viewer"
+#define Q3R_CMD_ABOUT "About..."
 #define Q3R_CMD_LOAD "Load .prt file"
 #define Q3R_CMD_RELEASE "Unload .prt file"
 #define Q3R_CMD_SHOW_3D "Toggle portals (3D)"
 #define Q3R_CMD_SHOW_2D "Toggle portals (2D)"
-#define Q3R_CMD_OPTIONS "Configure Portal Viewer"
+#define Q3R_CMD_OPTIONS "Configure..."
 
 CopiedString INIfn;
 
@@ -185,9 +185,6 @@ void INISetInt( const char *key, int val, const char *comment /* = NULL */ ){
 	save_var( INIfn.c_str(), CONFIG_SECTION, key, s );
 }
 
-
-// plugin name
-static const char *PLUGIN_NAME = "Portal Viewer";
 // commands in the menu
 static const char *PLUGIN_COMMANDS =
 	Q3R_CMD_ABOUT ";"
@@ -203,7 +200,7 @@ static const char *PLUGIN_COMMANDS =
 
 
 const char* QERPlug_Init( void *hApp, void* pMainWidget ){
-	return "Portal Viewer for Q3Radiant";
+	return PLUGIN_NAME " for " RADIANT_NAME;
 }
 
 const char* QERPlug_GetName(){
@@ -294,7 +291,7 @@ class PrtViewPluginModule
 _QERPluginTable m_plugin;
 public:
 typedef _QERPluginTable Type;
-STRING_CONSTANT( Name, "prtview" );
+STRING_CONSTANT( Name, PLUGIN_NAME );
 
 PrtViewPluginModule(){
 	m_plugin.m_pfnQERPlug_Init = QERPlug_Init;

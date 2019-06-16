@@ -425,7 +425,7 @@ void DoAbout(){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
 
-	auto window = MainFrame_getWindow().create_modal_dialog_window("About NetRadiant", dialog );
+	auto window = MainFrame_getWindow().create_modal_dialog_window("About " RADIANT_NAME, dialog );
 
 	{
 		auto vbox = create_dialog_vbox( 4, 4 );
@@ -450,12 +450,12 @@ void DoAbout(){
 			}
 
 			{
-				char const *label_text = "NetRadiant " RADIANT_VERSION "\n"
+				char const *label_text = RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 										__DATE__ "\n\n"
-                                        RADIANT_ABOUTMSG "\n\n"
+										RADIANT_ABOUTMSG "\n\n"
 										"This program is free software\n"
 										"licensed under the GNU GPL.\n\n"
-										"NetRadiant is unsupported, however\n"
+										RADIANT_NAME " is unsupported, however\n"
 										"you may report your problems at\n"
 										"https://gitlab.com/xonotic/netradiant/issues";
 

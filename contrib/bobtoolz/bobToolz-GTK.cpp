@@ -34,6 +34,8 @@
 #include "dialogs/dialogs-gtk.h"
 #include "../../libs/cmdlib.h"
 
+#define PLUGIN_NAME "bobToolz"
+
 void BobToolz_construct(){
 }
 
@@ -56,25 +58,25 @@ void BobToolz_destroy(){
 	}
 }
 
-// plugin name
-const char* PLUGIN_NAME = "bobToolz";
-
 // commands in the menu
 static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,Vis Viewer,Brush Cleanup,Polygon Builder,Caulk Selection,-,Tree Planter,Drop Entity,Plot Splines,-,Merge Patches,Split patches,Split patches cols,Split patches rows,Turn edge";
 
 // globals
 ui::Window g_pRadiantWnd{ui::null};
 
-static const char *PLUGIN_ABOUT =   "bobToolz for SDRadiant\n"
-									"by digibob (digibob@splashdamage.com)\n"
-									"http://www.splashdamage.com\n\n"
-									"Additional Contributors:\n"
-									"MarsMattel, RR2DO2\n";
+static const char *PLUGIN_ABOUT =
+			PLUGIN_NAME " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"by digibob <digibob@splashdamage.com> (http://www.splashdamage.com)\n\n"
+			"Additional Contributors: MarsMattel, RR2DO2\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+			__DATE__;
 
 extern "C" const char* QERPlug_Init( void* hApp, void* pMainWidget ) {
 	g_pRadiantWnd = ui::Window::from(pMainWidget);
 
-	return "bobToolz for GTKradiant";
+	return PLUGIN_NAME " for " RADIANT_NAME;
 }
 
 extern "C" const char* QERPlug_GetName() {

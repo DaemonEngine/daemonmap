@@ -49,12 +49,17 @@ int g_iEditMode = 0;                    // 0: editting points 1: adding points
 int g_iActiveTarget = -1;
 int g_iPreviewRunning = 0;              // 0: no preview 1: start preview 2: preview in progress
 
-static const char *PLUGIN_ABOUT = "Camera v1.0 for NetRadiant\n"
-								  "by Arnout van Meer (rr2do2@splashdamage.com)\n\n"
-								  "This product contains software technology\n"
-								  "from id Software, Inc. ('id Technology').\n"
-								  "id Technology (c) 2001, 2002 id Software, Inc.";
-
+static const char *PLUGIN_ABOUT =
+			PLUGIN_NAME " " PLUGIN_VERSION " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"Written by Arnout van Meer <rr2do2@splashdamage.com)\n\n"
+			"Written by Geoffrey DeWan <gdewan@prairienet.org>\n\n"
+			"This product contains software technology\n"
+			"from id Software, Inc. ('id Technology').\n"
+			"id Technology (c) 2001, 2002 id Software, Inc.\n\n";
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION "\n"
+			__DATE__;
 
 #include "iplugin.h"
 
@@ -84,7 +89,7 @@ const char* QERPlug_Init( void* hApp, void* pMainWidget ){
 
 	GetFileTypeRegistry()->addType( "camera", "", filetype_t( "Camera file", "*.camera" ) );
 
-	return "Camera for NetRadiant";
+	return "Camera for " RADIANT_NAME;
 }
 
 const char* QERPlug_GetName(){

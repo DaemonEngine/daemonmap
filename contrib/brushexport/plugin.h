@@ -22,4 +22,7 @@
 #if !defined( INCLUDED_BRUSH_EXPORT_H )
 #define INCLUDED_BRUSH_EXPORT_H
 
+#define PLUGIN_NAME "BrushExport"
+#define PLUGIN_VERSION "2.0"
+
 #endif
