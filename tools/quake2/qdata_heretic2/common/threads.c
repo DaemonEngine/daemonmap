@@ -86,7 +86,7 @@ void ThreadWorkerFunction( int threadnum ){
 		if ( work == -1 ) {
 			break;
 		}
-//Sys_Printf ("thread %i, work %i\n", threadnum, work);
+		//Sys_Printf ("thread %i, work %i\n", threadnum, work);
 		workfunction( work );
 	}
 }
@@ -112,7 +112,8 @@ void RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )(
 
 #include <windows.h>
 
-int numthreads = -1;
+// Setting default Threads to 1
+int numthreads = 1;
 CRITICAL_SECTION crit;
 static int enter;
 
@@ -226,6 +227,7 @@ void ThreadSetDefault( void ){
 		numthreads = 4;
 	}
 }
+
 
 #include <pthread.h>
 
@@ -405,7 +407,8 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
    =======================================================================
  */
 
-int numthreads = 4;
+// Setting default Threads to 1
+int numthreads = 1;
 
 void ThreadSetDefault( void ){
 	if ( numthreads == -1 ) { // not set manually
@@ -527,12 +530,9 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) ){
 		if ( pthread_mutexattr_init( &mattrib ) != 0 ) {
 			Error( "pthread_mutexattr_init failed" );
 		}
-#if __GLIBC_MINOR__ == 1
-		if ( pthread_mutexattr_settype( &mattrib, PTHREAD_MUTEX_FAST_NP ) != 0 )
-#else
-		if ( pthread_mutexattr_settype( &mattrib, PTHREAD_MUTEX_ADAPTIVE_NP ) != 0 )
-#endif
-		{ Error( "pthread_mutexattr_settype failed" ); }
+		if ( pthread_mutexattr_settype( &mattrib, PTHREAD_MUTEX_ERRORCHECK ) != 0 ) {
+			Error( "pthread_mutexattr_settype failed" );
+		}
 		recursive_mutex_init( mattrib );
 
 		for ( i = 0 ; i < numthreads ; i++ )

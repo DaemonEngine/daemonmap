@@ -25,7 +25,11 @@
  #include <windows.h>
 #endif
 
+#if GDEF_OS_MACOS && !defined( XWINDOWS )
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 #if 1
 extern char     *g_outputDir;
