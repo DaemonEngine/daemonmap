@@ -289,8 +289,14 @@ void environment_init( int argc, char const* argv[] ){
 	}
 
 	if ( !portable_app_setup() ) {
+		// this is used on both Linux and macOS
+		// but a macOS specific code may be written instead
 		StringOutputStream home( 256 );
 		home << DirectoryCleaned(g_get_user_config_dir()) << "/" << RADIANT_BASENAME << "/";
+		// first create ~/.config
+		// since it may be missing on brand new home directory
+		Q_mkdir( g_get_user_config_dir() );
+		// then create ~/.config/netradiant
 		Q_mkdir( home.c_str() );
 		home_path = home.c_str();
 	}
