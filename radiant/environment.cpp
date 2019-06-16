@@ -213,7 +213,7 @@ bool portable_app_setup(){
 const char* LINK_NAME =
 #if GDEF_OS_LINUX
 	"/proc/self/exe"
-#else // FreeBSD and OSX
+#else // FreeBSD and macOS
 	"/proc/curproc/file"
 #endif
 ;
