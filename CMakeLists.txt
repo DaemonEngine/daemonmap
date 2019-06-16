@@ -37,6 +37,8 @@ if (FHS_INSTALL)
     set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/${RADIANT_BASENAME})
 endif ()
 
+set(GAMEPACKS_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download CACHE PATH "Where to store downloaded game packs")
+
 #-----------------------------------------------------------------------
 # Version
 #-----------------------------------------------------------------------
@@ -322,7 +324,7 @@ set(GAMEPACKS_NAME_LIST none CACHE STRING "Download game packs by name")
 
 if (DOWNLOAD_GAMEPACKS)
     add_custom_target(game_packs ALL
-       COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${PROJECT_BINARY_DIR}/download" --install-dir "${PROJECT_BINARY_DIR}" --download --install
+       COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${GAMEPACKS_DOWNLOAD_DIR}" --install-dir "${PROJECT_BINARY_DIR}" --download --install
        COMMENT "Downloading game packs"
     )
 endif ()
