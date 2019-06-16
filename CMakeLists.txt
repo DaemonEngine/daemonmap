@@ -24,7 +24,7 @@ endif ()
 
 set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
-set(RADIANT_BASENAME netradiant CACHE INTERNAL "...")
+set(RADIANT_BASENAME "netradiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
 set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
