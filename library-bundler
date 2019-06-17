@@ -8,9 +8,10 @@ case "${system_name}" in
 	'windows')
 		bundle_dir="$(cygpath --unix "${bundle_dir}")"
 		exe_file="$(cygpath --unix "${exe_file}")"
-		ldd "${exe_file}" \
-		| egrep -i '\.dll => /mingw64/' \
+		ntldd --recursive "${exe_file}" \
+		| egrep -i '\.dll => [A-Z]:\\msys64\\' \
 		| sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //' \
+		| cygpath --unix --file - \
 		| while read dll_file
 		do
 			dll_basename="$(basename "${dll_file}")"
