@@ -216,10 +216,10 @@ if (BUILD_BINARIES)
     macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
-                COMMAND bash
-                ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
+                COMMAND "${PROJECT_SOURCE_DIR}/library-bundler"
+                ARGS "windows" "$<TARGET_FILE:${target}>" "${PROJECT_BINARY_DIR}"
                 VERBATIM
-        )
+            )
         endif ()
     endmacro ()
 
