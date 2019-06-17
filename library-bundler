@@ -15,7 +15,35 @@ case "${system_name}" in
 		| while read dll_file
 		do
 			dll_basename="$(basename "${dll_file}")"
-			cp -n --preserve=timestamps "${dll_file}" "${bundle_dir}/${dll_basename}"
+
+			if [ -f "${bundle_dir}/${dll_basename}" ]
+			then
+				continue
+			fi
+
+			cp --preserve=timestamps "${dll_file}" "${bundle_dir}/${dll_basename}"
+
+			if [ "${dll_basename}" = 'libgtk-win32-2.0-0.dll' ]
+			then
+				mingw="$(which 'libgtk-win32-2.0-0.dll' | cut -f2 -d'/')"
+
+				for component_dir in \
+					'share/themes/MS-Windows' \
+					'lib/gdk-pixbuf-2.0' \
+					'lib/gtk-2.0'
+				do
+					if ! [ -d "${bundle_dir}/${component_dir}" ]
+					then
+						mkdir --parents "${bundle_dir}/$(dirname "${component_dir}")"
+						cp -r --preserve=timestamps "/${mingw}/${component_dir}" \
+							"${bundle_dir}/${component_dir}"
+					fi
+				done
+
+				find "${bundle_dir}/lib" -type f -name '*.a' -exec rm {} \;
+				find "${bundle_dir}/lib" -type f -name '*.h' -exec rm {} \;
+				find "${bundle_dir}/lib" -type d -exec rmdir --ignore-fail-on-non-empty {} \;
+			fi
 		done
 		;;
 	*)

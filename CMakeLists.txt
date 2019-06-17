@@ -225,24 +225,18 @@ if (BUILD_BINARIES)
 
     macro (bundle_stuff target)
         if (BUNDLE_LIBRARIES AND WIN32)
-            add_custom_command(TARGET ${target} POST_BUILD
-                COMMAND bash
-                ARGS -c "mkdir -p '${PROJECT_BINARY_DIR}/share/themes'; mkdir -p '${PROJECT_BINARY_DIR}/lib'; mingw=\"$(echo '${CMAKE_C_COMPILER}' | sed -e 's|/bin/.*||')\"; [ -d '${PROJECT_BINARY_DIR}/share/themes/MS-Windows' ] || cp -r --preserve=timestamps \"$mingw/share/themes/MS-Windows\" '${PROJECT_BINARY_DIR}/share/themes/'; [ -d '${PROJECT_BINARY_DIR}/lib/gdk-pixbuf-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gdk-pixbuf-2.0\" '${PROJECT_BINARY_DIR}/lib/'; [ -d '${PROJECT_BINARY_DIR}/lib/gtk-2.0' ] || cp -r --preserve=timestamps \"$mingw/lib/gtk-2.0\" '${PROJECT_BINARY_DIR}/lib/'"
-                VERBATIM
-        )
+            file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
 
-        file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
+            install(FILES
+                ${DLL_FILES}
+                DESTINATION ${CMAKE_INSTALL_PREFIX}
+            )
 
-        install(FILES
-            ${DLL_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}
-        )
-
-        install(DIRECTORY
-            ${PROJECT_BINARY_DIR}/lib
-            ${PROJECT_BINARY_DIR}/share
-            DESTINATION ${CMAKE_INSTALL_PREFIX}
-        )
+            install(DIRECTORY
+                ${PROJECT_BINARY_DIR}/lib
+                ${PROJECT_BINARY_DIR}/share
+                DESTINATION ${CMAKE_INSTALL_PREFIX}
+            )
         endif ()
     endmacro ()
 endif ()
