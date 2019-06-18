@@ -101,6 +101,12 @@
 #include "referencecache.h"
 #include "texwindow.h"
 
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+/* workaround for gtk 2.24 issue: not displayed glwidget after toggle */
+#define WORKAROUND_GOBJECT_SET_GLWIDGET(window, widget) g_object_set_data( G_OBJECT( window ), "glwidget", G_OBJECT( widget ) )
+#else
+#define WORKAROUND_GOBJECT_SET_GLWIDGET(window, widget)
+#endif
 
 struct layout_globals_t
 {
@@ -3091,6 +3097,8 @@ void MainFrame::Create(){
 			}
 			CamWnd_setParent( *m_pCamWnd, window );
 
+			WORKAROUND_GOBJECT_SET_GLWIDGET( window, CamWnd_getWidget( *m_pCamWnd ) );
+
 			g_floating_windows.push_back( window );
 		}
 
@@ -3109,6 +3117,8 @@ void MainFrame::Create(){
 				window.add(frame);
 			}
 			XY_Top_Shown_Construct( window );
+
+			WORKAROUND_GOBJECT_SET_GLWIDGET( window, m_pXYWnd->GetWidget() );
 
 			g_floating_windows.push_back( window );
 		}
@@ -3129,6 +3139,8 @@ void MainFrame::Create(){
 
 			XZ_Front_Shown_Construct( window );
 
+			WORKAROUND_GOBJECT_SET_GLWIDGET( window, m_pXZWnd->GetWidget() );
+
 			g_floating_windows.push_back( window );
 		}
 
@@ -3148,12 +3160,16 @@ void MainFrame::Create(){
 
 			YZ_Side_Shown_Construct( window );
 
+			WORKAROUND_GOBJECT_SET_GLWIDGET( window, m_pYZWnd->GetWidget() );
+
 			g_floating_windows.push_back( window );
 		}
 
 		{
 			auto frame = create_framed_widget( TextureBrowser_constructWindow( GroupDialog_getWindow() ) );
 			g_page_textures = GroupDialog_addPage( "Textures", frame, TextureBrowserExportTitleCaller() );
+
+			WORKAROUND_GOBJECT_SET_GLWIDGET( GroupDialog_getWindow(), TextureBrowser_getGLWidget() );
 		}
 
 		GroupDialog_show();
@@ -3187,6 +3203,8 @@ void MainFrame::Create(){
 		{
             auto frame = create_framed_widget( TextureBrowser_constructWindow( window ) );
 			g_page_textures = GroupDialog_addPage( "Textures", frame, TextureBrowserExportTitleCaller() );
+
+			WORKAROUND_GOBJECT_SET_GLWIDGET( window, TextureBrowser_getGLWidget() );
 		}
 	}
 

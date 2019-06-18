@@ -169,9 +169,24 @@ void GroupDialog_setPage( ui::Widget page ){
 	gtk_notebook_set_current_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) );
 }
 
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+void GroupDialog_cycle();
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
+
 void GroupDialog_showPage( ui::Widget page ){
 	if ( GroupDialog_getPage() == page ) {
 		GroupDialog_ToggleShow();
+
+#ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
+		/* workaround for gtk 2.24 issue: not displayed glwidget after toggle */
+		/* this is very ugly: cycle to next tab then return to current tab immediately to force the refresh
+		 * this fixes the drawing of texture tab when window is restored and current tab is texture tab
+		 * this is called for nothing when windows is minimized and called for nothing when current tab
+		 * is not texture tab, hopefully it's a workaround that would disappear with gtk 3 */
+		GroupDialog_cycle();
+		GroupDialog_setPage( page );
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
+
 	}
 	else
 	{
