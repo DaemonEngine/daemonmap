@@ -29,6 +29,7 @@ case "${system_name}" in
 
 				for component_dir in \
 					'share/themes/MS-Windows' \
+					'share/icons/hicolor' \
 					'lib/gdk-pixbuf-2.0' \
 					'lib/gtk-2.0'
 				do
