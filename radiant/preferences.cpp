@@ -121,7 +121,7 @@ CGameDescription::CGameDescription( xmlDocPtr pDoc, const CopiedString& gameFile
 
 	{
 		StringOutputStream path( 256 );
-		path << DataPath_get() << gameFile.c_str() << "/";
+		path << DataPath_get() << "gamepacks/" << gameFile.c_str() << "/";
 		mGameToolsPath = path.c_str();
 	}
 
@@ -341,7 +341,7 @@ ui::Window CGameDialog::BuildDialog(){
 
 void CGameDialog::ScanForGames(){
 	StringOutputStream strGamesPath( 256 );
-	strGamesPath << DataPath_get() << "games/";
+	strGamesPath << DataPath_get() << "gamepacks/games/";
 	const char *path = strGamesPath.c_str();
 
 	globalOutputStream() << "Scanning for game description files: " << path << '\n';

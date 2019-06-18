@@ -324,7 +324,7 @@ set(GAMEPACKS_NAME_LIST none CACHE STRING "Download game packs by name")
 
 if (DOWNLOAD_GAMEPACKS)
     add_custom_target(game_packs ALL
-       COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${GAMEPACKS_DOWNLOAD_DIR}" --install-dir "${PROJECT_BINARY_DIR}" --download --install
+       COMMAND "${PROJECT_SOURCE_DIR}/gamepack-manager" --license ${GAMEPACKS_LICENSE_LIST} --name ${GAMEPACKS_NAME_LIST} --download-dir "${GAMEPACKS_DOWNLOAD_DIR}" --install-dir "${PROJECT_BINARY_DIR}/gamepacks" --download --install
        COMMENT "Downloading game packs"
     )
 endif ()
@@ -351,11 +351,8 @@ if (DOWNLOAD_GAMEPACKS)
        set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
     endif ()
 
-    file(GLOB GAME_DIRS ${PROJECT_BINARY_DIR}/*.game)
-
     install(DIRECTORY
-        ${PROJECT_BINARY_DIR}/games
-        ${GAME_DIRS}
+        ${PROJECT_BINARY_DIR}/gamepacks
         DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
