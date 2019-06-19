@@ -213,30 +213,18 @@ if (BUILD_BINARIES)
 
     option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
+    if (BUNDLE_LIBRARIES)
+        add_subdirectory(bundle)
+    endif ()
+
     macro (copy_dlls target)
-        if (BUNDLE_LIBRARIES AND WIN32)
+        if (BUNDLE_LIBRARIES)
             add_custom_command(TARGET ${target} POST_BUILD
                 COMMAND "${PROJECT_SOURCE_DIR}/library-bundler"
-                ARGS "windows" "$<TARGET_FILE:${target}>" "${PROJECT_BINARY_DIR}"
+                "register" "${PROJECT_BINARY_DIR}" "$<TARGET_FILE:${target}>"
                 VERBATIM
             )
-        endif ()
-    endmacro ()
-
-    macro (bundle_stuff target)
-        if (BUNDLE_LIBRARIES AND WIN32)
-            file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
-
-            install(FILES
-                ${DLL_FILES}
-                DESTINATION ${CMAKE_INSTALL_PREFIX}
-            )
-
-            install(DIRECTORY
-                ${PROJECT_BINARY_DIR}/lib
-                ${PROJECT_BINARY_DIR}/share
-                DESTINATION ${CMAKE_INSTALL_PREFIX}
-            )
+            add_dependencies(bundle ${target})
         endif ()
     endmacro ()
 endif ()
@@ -279,7 +267,11 @@ if (BUILD_BINARIES)
     endif ()
 
     macro (radiant_tool name)
-        add_executable(${name} ${ARGN})
+        if (BUNDLE_LIBRARIES AND WIN32)
+            add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
+        else ()
+            add_executable(${name} ${ARGN})
+        endif ()
 
         copy_dlls(${name})
 

@@ -161,12 +161,6 @@ target:
 * `install`  
   Install files
 
-Note that because of both the way NetRadiant works and the way bundled library loading works CMake has to do some globbing to detect some of the produced/copied files it has to install. So you have to run cmake again before installing:
-
-```
-cmake -H. -Bbuild && cmake --build build -- install
-```
-
 ## Note about Crunch
 
 The crnlib used to decode `.crn` files is the one from [Dæmon](http://github.com/DaemonEngine/Daemon) which is the one by [Unity](https://github.com/Unity-Technologies/crunch/tree/unity) made cross-platform and slightly improved. Since Unity brokes compatibility with [BinomialLLC's legacy tree](https://github.com/BinomialLLC/crunch) it's required to use either the `crunch` tool from Dæmon or the one from Unity to compress textures that have to be read by radiant or q3map2.
