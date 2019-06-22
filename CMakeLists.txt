@@ -157,13 +157,6 @@ if (BUILD_BINARIES)
     endif ()
 endif ()
 
-if (NOT APPLE AND NOT WIN32)
-    set(XWINDOWS ON)
-    find_package(X11 REQUIRED)
-    include_directories(${X11_INCLUDE_DIR})
-    add_definitions(-DXWINDOWS=1)
-endif ()
-
 if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
