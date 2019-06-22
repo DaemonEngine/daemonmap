@@ -346,11 +346,11 @@ void AddHomeBasePath( char *path ){
 		   if yes and home path is not user supplied
 		   use XDG_DATA_HOME instead of HOME
 		   and strip the leading dot
-		  
+
 		   basically it produces
 		   ${XDG_DATA_HOME}/unvanquished
 		   /user/supplied/home/path/unvanquished
-		   
+
 		   or
 		   ${HOME}/.q3a
 		   /user/supplied/home/path/.q3a

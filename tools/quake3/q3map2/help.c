@@ -100,7 +100,7 @@ void HelpNavMesh()
 void HelpCommon()
 {
 	struct HelpOption common[] = {
-		{"-connect <address>", "Talk to a NetRadiant instance using a specific XML based protocol"},
+		{"-connect <address>", "Talk to a " RADIANT_NAME " instance using a specific XML based protocol"},
 		{"-force", "Allow reading some broken/unsupported BSP files e.g. when decompiling, may also crash"},
 		{"-fs_basepath <path>", "Sets the given path as main directory of the game (can be used more than once to look in multiple paths)"},
 		{"-fs_game <gamename>", "Sets a different game directory name (default for Q3A: baseq3, can be used more than once)"},

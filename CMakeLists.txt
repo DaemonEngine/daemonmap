@@ -11,6 +11,13 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
     set(BUILD_BINARIES ON)
 endif ()
 
+#-----------------------------------------------------------------------
+# Paths
+#-----------------------------------------------------------------------
+
+set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
+add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
+
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
@@ -19,29 +26,31 @@ set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL)
-    set(RADIANT_LIB_DIR lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_DIR bin)
+    set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 endif ()
+
+set(GAMEPACKS_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download CACHE PATH "Where to store downloaded game packs")
 
 #-----------------------------------------------------------------------
 # Version
 #-----------------------------------------------------------------------
 
 # CMake 3.0+ would allow this in project()
-set(NetRadiant_VERSION_MAJOR 1)
-set(NetRadiant_VERSION_MINOR 5)
-set(NetRadiant_VERSION_PATCH 0)
-set(NetRadiant_VERSION "${NetRadiant_VERSION_MAJOR}.${NetRadiant_VERSION_MINOR}.${NetRadiant_VERSION_PATCH}")
+set(RADIANT_VERSION_MAJOR 1)
+set(RADIANT_VERSION_MINOR 5)
+set(RADIANT_VERSION_PATCH 0)
+set(RADIANT_VERSION "${RADIANT_VERSION_MAJOR}.${RADIANT_VERSION_MINOR}.${RADIANT_VERSION_PATCH}")
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
 find_package(Git REQUIRED)
 execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE
+     COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+     OUTPUT_VARIABLE GIT_VERSION
+     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-set(RADIANT_VERSION_STRING "${NetRadiant_VERSION}n")
+set(RADIANT_VERSION_STRING "${RADIANT_VERSION}n")
 if (GIT_VERSION)
     set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
 endif ()
@@ -80,18 +89,18 @@ endif ()
 if (BUILD_BINARIES)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
 
-    macro(addflags_c args)
+    macro (addflags_c args)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${args}")
-    endmacro()
+    endmacro ()
 
-    macro(addflags_cxx args)
+    macro (addflags_cxx args)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${args}")
-    endmacro()
+    endmacro ()
 
-    macro(addflags args)
+    macro (addflags args)
         addflags_c("${args}")
         addflags_cxx("${args}")
-    endmacro()
+    endmacro ()
 
     addflags("-fno-strict-aliasing")
     if (NOT WIN32)
@@ -121,12 +130,8 @@ endif ()
 #-----------------------------------------------------------------------
 
 if (BUILD_BINARIES)
-    add_definitions(-DRADIANT_VERSION="${NetRadiant_VERSION}")
-    add_definitions(-DRADIANT_MAJOR_VERSION="${NetRadiant_VERSION_MAJOR}")
-    add_definitions(-DRADIANT_MINOR_VERSION="${NetRadiant_VERSION_MINOR}")
-    add_definitions(-DRADIANT_PATCH_VERSION="${NetRadiant_VERSION_PATCH}")
-
-    add_definitions(-DRADIANT_ABOUTMSG="${NetRadiant_ABOUT}")
+    add_definitions(-DRADIANT_VERSION="${RADIANT_VERSION}")
+    add_definitions(-DRADIANT_VERSION_STRING="${RADIANT_VERSION_STRING}")
 
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
         add_definitions(-D_DEBUG=1)
@@ -134,35 +139,26 @@ if (BUILD_BINARIES)
 endif ()
 
 if (BUILD_BINARIES)
-    if (APPLE)
-        if (BUILD_RADIANT)
-        option(XWINDOWS "Build against X11" ON)
-        endif()
-
-        add_definitions(
-                -DPOSIX=1
-        )
-
+    if(APPLE OR ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
         link_directories(
-                /usr/local/lib
+            /usr/local/lib
         )
-    elseif (WIN32)
+    endif ()
+
+    if (WIN32)
         add_definitions(
-                -DWIN32=1
-                -D_WIN32=1
+            -DWIN32=1
+            -D_WIN32=1
         )
     else ()
-        if (BUILD_RADIANT)
-             set(XWINDOWS ON)
-        endif ()
-
         add_definitions(
-                -DPOSIX=1
+            -DPOSIX=1
         )
     endif ()
 endif ()
 
-if (XWINDOWS)
+if (NOT APPLE AND NOT WIN32)
+    set(XWINDOWS ON)
     find_package(X11 REQUIRED)
     include_directories(${X11_INCLUDE_DIR})
     add_definitions(-DXWINDOWS=1)
@@ -180,25 +176,24 @@ if (BUILD_BINARIES)
 
     option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
 
-    macro(copy_dlls target)
+    macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND WIN32)
             add_custom_command(TARGET ${target} POST_BUILD
-                    COMMAND bash
-                    ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
-                    VERBATIM
-            )
+                COMMAND bash
+                ARGS -c "ldd '$<TARGET_FILE:${target}>' | egrep -i '\\.dll ' | grep -iv '/c/Windows' | awk '{ print $1 }' | while read dll; do dllbasename=\"$(which \"$dll\")\"; [ -f \"${PROJECT_BINARY_DIR}/$dllbasename\" ] || cp --preserve=timestamps \"$dllbasename\" '${PROJECT_BINARY_DIR}'; done"
+                VERBATIM
+        )
         endif ()
-    endmacro()
+    endmacro ()
 
-    macro(bundle_stuff target)
+    macro (bundle_stuff target)
         if (BUNDLE_LIBRARIES AND WIN32)
-                file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
+        file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
 
-                install(FILES
-                    ${DLL_FILES}
-                    DESTINATION ${CMAKE_INSTALL_PREFIX}
-                )
-
+        install(FILES
+            ${DLL_FILES}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
         endif ()
     endmacro ()
 endif ()
@@ -220,7 +215,7 @@ if (BUILD_BINARIES)
         string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
     endif ()
 
-    macro(radiant_tool name)
+    macro (radiant_tool name)
         add_executable(${name} ${ARGN})
 
         copy_dlls(${name})
@@ -228,8 +223,8 @@ if (BUILD_BINARIES)
 		bundle_stuff(${name})
 
         install(
-                TARGETS ${name}
-                RUNTIME DESTINATION ${RADIANT_BIN_DIR}
+            TARGETS ${name}
+            RUNTIME DESTINATION ${RADIANT_BIN_DIR}
         )
     endmacro()
 endif ()

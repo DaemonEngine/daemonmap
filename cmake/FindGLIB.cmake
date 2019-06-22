@@ -1,5 +1,10 @@
 find_package(PkgConfig)
 if (PKG_CONFIG_FOUND)
+    if (APPLE)
+        # libffi is provided by base system so brew does not take the risk to override it
+        # hence then need for an explicit look-up
+        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig")
+    endif ()
     if (GLIB_FIND_REQUIRED)
         set(_pkgconfig_REQUIRED REQUIRED)
     endif ()
