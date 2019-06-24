@@ -1,0 +1,108 @@
+#! /usr/bin/env bash
+
+Windows::listLibForManifest () {
+	local lib_dir="${1}"
+
+	find "${lib_dir}" \
+		-maxdepth 1 \
+		-type f \
+		-name '*.dll' \
+		-exec basename {} \; \
+	| xargs -I {} \
+		printf '  <file name="{}"/>\n'
+}
+
+Windows::printManifest () {
+	local lib_dir="${1}"
+
+	cat <<-EOF
+	<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+	  <assemblyIdentity type="win32" name="lib" version="1.0.0.0"/>
+	$(Windows::listLibForManifest "${lib_dir}")
+	</assembly>
+	EOF
+}
+
+Windows::bundleLibFromFile () {
+	local exe_file="${1}"
+
+	exe_file="$(cygpath --unix "${exe_file}")"
+
+	ntldd --recursive "${exe_file}" \
+	| egrep -i '\.dll => [A-Z]:\\msys64\\' \
+	| sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //' \
+	| cygpath --unix --file - \
+	| while read dll_file
+	do
+		dll_basename="$(basename "${dll_file}")"
+
+		if [ -f "${bundle_dir}/${dll_basename}" ]
+		then
+			continue
+		fi
+
+		cp --preserve=timestamps "${dll_file}" "${lib_dir}/${dll_basename}"
+
+		if [ "${dll_basename}" = 'libgtk-win32-2.0-0.dll' ]
+		then
+			mingw="$(which 'libgtk-win32-2.0-0.dll' | cut -f2 -d'/')"
+
+			for component_dir in \
+				'share/themes/MS-Windows' \
+				'share/icons/hicolor' \
+				'lib/gdk-pixbuf-2.0' \
+				'lib/gtk-2.0'
+			do
+				if ! [ -d "${bundle_dir}/${component_dir}" ]
+				then
+					mkdir --parents "${bundle_dir}/$(dirname "${component_dir}")"
+					cp -r --preserve=timestamps "/${mingw}/${component_dir}" \
+						"${bundle_dir}/${component_dir}"
+				fi
+			done
+
+			find "${bundle_dir}/lib" -type f -name '*.a' -exec rm {} \;
+			find "${bundle_dir}/lib" -type f -name '*.h' -exec rm {} \;
+			find "${bundle_dir}/lib" -type d -exec rmdir --ignore-fail-on-non-empty {} \;
+		fi
+	done
+}
+
+system_name="${1}"; shift
+bundle_dir="${1}"; shift
+exe_file="${1}"; shift
+
+registry_dir="${bundle_dir}/registry"
+
+case "${system_name}" in
+	'register')
+		mkdir --parents "${registry_dir}"
+		printf '%s\n' "${exe_file}" > "${registry_dir}/$(uuidgen)"
+		;;
+	'windows')
+		bundle_dir="$(cygpath --unix "${bundle_dir}")"
+		
+		lib_dir="${bundle_dir}/lib"
+		mkdir --parents "${lib_dir}"
+
+		if [ -d "${registry_dir}" ]
+		then
+			for registry_entry in "${registry_dir}"/*
+			do
+				exe_file="$(cat "${registry_entry}")"
+
+				Windows::bundleLibFromFile "${exe_file}"
+
+				rm "${registry_entry}"
+				rmdir --ignore-fail-on-non-empty "${registry_dir}"
+			done
+			
+			manifest_file="${lib_dir}/lib.manifest"
+			Windows::printManifest "${lib_dir}" > "${manifest_file}"
+		fi
+		;;
+	*)
+		printf 'ERROR: unsupported system: %s\n' "${system_name}" >&2
+		exit 1
+		;;
+esac
