@@ -52,7 +52,7 @@ Install the dependencies this way:
 
 
 ```
-pacman -S --needed base-devel mingw-w64-$(uname -m)-{toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git} git
+pacman -S --needed base-devel mingw-w64-$(uname -m)-{ntldd-git,toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git} git
 ```
 
 Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix if you need to target a non-default architecture.
@@ -160,12 +160,6 @@ target:
 
 * `install`  
   Install files
-
-Note that because of both the way NetRadiant works and the way bundled library loading works CMake has to do some globbing to detect some of the produced/copied files it has to install. So you have to run cmake again before installing:
-
-```
-cmake -H. -Bbuild && cmake --build build -- install
-```
 
 ## Note about Crunch
 
