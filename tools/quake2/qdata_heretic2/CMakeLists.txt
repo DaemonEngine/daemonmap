@@ -56,6 +56,8 @@ radiant_tool(h2data
     video.c
 )
 
+console_app(h2data)
+
 target_compile_definitions(h2data
     PRIVATE
 )

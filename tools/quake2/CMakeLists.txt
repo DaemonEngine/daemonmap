@@ -46,6 +46,9 @@ radiant_tool(q2map
     q2map/writebsp.c
 )
 
+console_app(q2map)
+window_app(q2map)
+
 target_compile_definitions(q2map
     PRIVATE
 )
@@ -80,6 +83,8 @@ radiant_tool(qdata3
     qdata/tables.c
     qdata/video.c
 )
+
+console_app(qdata3)
 
 target_compile_definitions(qdata3
     PRIVATE

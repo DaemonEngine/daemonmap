@@ -127,6 +127,8 @@ radiant_tool(q3map2
         q3map2/writebsp.c
         )
 
+console_app(q3map2)
+
 if (BUILD_CRUNCH)
         set(OPTIONAL_IMAGE_LIBRARIES crnrgba)
         set(OPTIONAL_IMAGE_DEFINES BUILD_CRUNCH=1)
@@ -178,6 +180,8 @@ radiant_tool(q3data
         q3data/stripper.c
         q3data/video.c
         )
+
+console_app(q3data)
 
 target_link_libraries(q3data
         ${GLIB_LIBRARIES}
