@@ -4,7 +4,7 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 radiant_tool(q2map
-    WIN32 q2map/q2map.rc
+    q2map/q2map.rc
 
     common/bspfile.c common/bspfile.h
     common/cmdlib.c common/cmdlib.h
@@ -46,9 +46,6 @@ radiant_tool(q2map
     q2map/writebsp.c
 )
 
-console_app(q2map)
-window_app(q2map)
-
 target_compile_definitions(q2map
     PRIVATE
 )
@@ -59,7 +56,7 @@ target_link_libraries(q2map
 )
 
 radiant_tool(qdata3
-    WIN32 qdata/qdata.rc
+    qdata/qdata.rc
 
     common/bspfile.c common/bspfile.h
     common/cmdlib.c common/cmdlib.h
@@ -83,8 +80,6 @@ radiant_tool(qdata3
     qdata/tables.c
     qdata/video.c
 )
-
-console_app(qdata3)
 
 target_compile_definitions(qdata3
     PRIVATE

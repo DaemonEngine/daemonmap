@@ -128,8 +128,6 @@ target_link_libraries(${RADIANT_BASENAME}
     xmllib
 )
 
-window_app(${RADIANT_BASENAME})
-
 if (X11_LIBRARIES)
     target_link_libraries(${RADIANT_BASENAME} ${X11_LIBRARIES})
 endif ()

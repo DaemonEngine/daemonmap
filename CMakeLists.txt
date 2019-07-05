@@ -266,18 +266,6 @@ if (BUILD_BINARIES)
         string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
     endif ()
 
-    macro (console_app name)
-        if (WIN32)
-            target_link_libraries(${name} -mconsole)
-        endif ()
-    endmacro ()
-
-    macro (window_app name)
-        if (WIN32)
-            target_link_libraries(${name} -mwindows)
-        endif ()
-    endmacro ()
-
     macro (radiant_tool name)
         if (BUNDLE_LIBRARIES AND WIN32)
             add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
