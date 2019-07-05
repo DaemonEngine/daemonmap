@@ -434,8 +434,8 @@ binaries-qdata3: \
 
 .PHONY: binaries-h2data
 binaries-h2data: \
-	$(INSTALLDIR)/heretic2/h2data.$(EXE) \
-	$(INSTALLDIR)/heretic2/h2data \
+	$(INSTALLDIR)/h2data.$(EXE) \
+	$(INSTALLDIR)/h2data \
 
 .PHONY: binaries-tools-quake3
 binaries-tools-quake3: \
@@ -1018,9 +1018,9 @@ $(INSTALLDIR)/plugins/bkgrnd2d.$(DLL): \
 	contrib/bkgrnd2d/dialog.o \
 	contrib/bkgrnd2d/plugin.o \
 
-$(INSTALLDIR)/heretic2/h2data.$(EXE): LIBS_EXTRA := $(LIBS_XML)
-$(INSTALLDIR)/heretic2/h2data.$(EXE): CPPFLAGS_EXTRA := $(CPPFLAGS_XML) -Itools/heretic2/common -Itools/heretic2/qcommon -Itools/heretic2/h2data -Itools/quake2/common -Ilibs -Iinclude
-$(INSTALLDIR)/heretic2/h2data.$(EXE): \
+$(INSTALLDIR)/h2data.$(EXE): LIBS_EXTRA := $(LIBS_XML)
+$(INSTALLDIR)/h2data.$(EXE): CPPFLAGS_EXTRA := $(CPPFLAGS_XML) -Itools/heretic2/common -Itools/heretic2/qcommon -Itools/heretic2/h2data -Itools/quake2/common -Ilibs -Iinclude
+$(INSTALLDIR)/h2data.$(EXE): \
 	tools/heretic2/common/bspfile.o \
 	tools/heretic2/common/cmdlib.o \
 	tools/heretic2/common/inout.o \
