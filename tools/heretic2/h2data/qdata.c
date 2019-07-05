@@ -632,7 +632,7 @@ int main( int argc, char **argv ){
             }
             else
             {
-                printf("qdata -newskin <base.hrc> <skin.pcx> width height\n");
+                printf("h2data -newskin <base.hrc> <skin.pcx> width height\n");
             }
             return 0;
         }
@@ -643,7 +643,7 @@ int main( int argc, char **argv ){
 			}
 			else
 			{
-				printf( "qdata -genskin <base.hrc> <skin.pcx> <desired width> <desired height>\n" );
+				printf( "h2data -genskin <base.hrc> <skin.pcx> <desired width> <desired height>\n" );
 			}
 			return 0;
 
@@ -682,7 +682,7 @@ int main( int argc, char **argv ){
 	}
 
 	if ( i >= argc ) {
-		Error( "usage: qdata [-archive <directory>]\n"
+		Error( "usage: h2data [-archive <directory>]\n"
 			   "             [-release <directory>]\n"
 			   "             [-base <directory>]\n"
 			   "             [-compress]\n"
@@ -701,7 +701,7 @@ int main( int argc, char **argv ){
 			   "             [-nomkdir]\n"
 			   "             file.qdt\n"
 			   "or\n"
-			   "       qdata -genskin <base.hrc> <skin.pcx> <desired width> <desired height>" );
+			   "       h2data -genskin <base.hrc> <skin.pcx> <desired width> <desired height>" );
 	}
 
 	if ( do3ds ) {
