@@ -6,7 +6,7 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 radiant_tool(h2data
-    WIN32 h2data.rc
+    h2data.rc
 
     common/bspfile.c common/bspfile.h
     common/cmdlib.c common/cmdlib.h

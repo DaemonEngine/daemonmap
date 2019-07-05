@@ -90,6 +90,7 @@ set(RADIANTLIST
     xmlstuff.cpp xmlstuff.h
     xywindow.cpp xywindow.h
 )
+
 if (WIN32)
     list(APPEND RADIANTLIST multimon.cpp multimon.h)
 endif ()
@@ -126,6 +127,7 @@ target_link_libraries(${RADIANT_BASENAME}
     uilib
     xmllib
 )
+
 if (X11_LIBRARIES)
     target_link_libraries(${RADIANT_BASENAME} ${X11_LIBRARIES})
 endif ()
