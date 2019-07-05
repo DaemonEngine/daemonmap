@@ -1,3 +1,10 @@
+ifeq ($(I_KNOW_MAKEFILE_IS_DEPRECATED),)
+    $(shell printf 'ERROR: Makefile build is deprecated, use CMake instead, see README.md\n\n' >&2)
+    $(error I_KNOW_MAKEFILE_IS_DEPRECATED is not set)
+else
+    $(shell printf 'WARNING: deprecated Makefile build enforced\n\n' >&2)
+endif
+
 MAKEFILE_CONF      ?= Makefile.conf
 -include $(MAKEFILE_CONF)
 
