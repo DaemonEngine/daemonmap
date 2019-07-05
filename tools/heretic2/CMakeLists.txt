@@ -1,4 +1,4 @@
-include_directories(BEFORE . common qcommon)
+include_directories(BEFORE h2data common qcommon)
 
 find_package(OpenGL REQUIRED)
 
@@ -6,7 +6,7 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 radiant_tool(h2data
-    h2data.rc
+    h2data/h2data.rc
 
     common/bspfile.c common/bspfile.h
     common/cmdlib.c common/cmdlib.h
@@ -35,25 +35,25 @@ radiant_tool(h2data
     qcommon/resourcemanager.c qcommon/resourcemanager.h
     qcommon/skeletons.c qcommon/skeletons.h
 
-    adpcm.h
-    animcomp.c animcomp.h 
-    anorms.h
-    book.c
-    fmodels.c qd_fmodel.h
-    images.c
-    jointed.c
-    jointed.h
-    joints.h
-    models.c
-    pics.c
-    qdata.c qdata.h
-    qd_skeletons.c qd_skeletons.h
-    resource.h
-    sprites.c
-    svdcmp.c
-    tables.c
-    tmix.c
-    video.c
+    h2data/adpcm.h
+    h2data/animcomp.c h2data/animcomp.h 
+    h2data/anorms.h
+    h2data/book.c
+    h2data/fmodels.c h2data/qd_fmodel.h
+    h2data/images.c
+    h2data/jointed.c
+    h2data/jointed.h
+    h2data/joints.h
+    h2data/models.c
+    h2data/pics.c
+    h2data/qdata.c h2data/qdata.h
+    h2data/qd_skeletons.c h2data/qd_skeletons.h
+    h2data/resource.h
+    h2data/sprites.c
+    h2data/svdcmp.c
+    h2data/tables.c
+    h2data/tmix.c
+    h2data/video.c
 )
 
 target_compile_definitions(h2data

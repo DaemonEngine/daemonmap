@@ -1019,38 +1019,38 @@ $(INSTALLDIR)/plugins/bkgrnd2d.$(DLL): \
 	contrib/bkgrnd2d/plugin.o \
 
 $(INSTALLDIR)/heretic2/h2data.$(EXE): LIBS_EXTRA := $(LIBS_XML)
-$(INSTALLDIR)/heretic2/h2data.$(EXE): CPPFLAGS_EXTRA := $(CPPFLAGS_XML) -Itools/quake2/qdata_heretic2/common -Itools/quake2/qdata_heretic2/qcommon -Itools/quake2/qdata_heretic2 -Itools/quake2/common -Ilibs -Iinclude
+$(INSTALLDIR)/heretic2/h2data.$(EXE): CPPFLAGS_EXTRA := $(CPPFLAGS_XML) -Itools/heretic2/common -Itools/heretic2/qcommon -Itools/heretic2/h2data -Itools/quake2/common -Ilibs -Iinclude
 $(INSTALLDIR)/heretic2/h2data.$(EXE): \
-	tools/quake2/qdata_heretic2/common/bspfile.o \
-	tools/quake2/qdata_heretic2/common/cmdlib.o \
-	tools/quake2/qdata_heretic2/common/inout.o \
-	tools/quake2/qdata_heretic2/common/l3dslib.o \
-	tools/quake2/qdata_heretic2/common/lbmlib.o \
-	tools/quake2/qdata_heretic2/common/mathlib.o \
-	tools/quake2/qdata_heretic2/common/md4.o \
-	tools/quake2/qdata_heretic2/common/path_init.o \
-	tools/quake2/qdata_heretic2/common/qfiles.o \
-	tools/quake2/qdata_heretic2/common/scriplib.o \
-	tools/quake2/qdata_heretic2/common/threads.o \
-	tools/quake2/qdata_heretic2/common/token.o \
-	tools/quake2/qdata_heretic2/common/trilib.o \
-	tools/quake2/qdata_heretic2/qcommon/reference.o \
-	tools/quake2/qdata_heretic2/qcommon/resourcemanager.o \
-	tools/quake2/qdata_heretic2/qcommon/skeletons.o \
-	tools/quake2/qdata_heretic2/animcomp.o \
-	tools/quake2/qdata_heretic2/book.o \
-	tools/quake2/qdata_heretic2/fmodels.o \
-	tools/quake2/qdata_heretic2/images.o \
-	tools/quake2/qdata_heretic2/jointed.o \
-	tools/quake2/qdata_heretic2/models.o \
-	tools/quake2/qdata_heretic2/pics.o \
-	tools/quake2/qdata_heretic2/qdata.o \
-	tools/quake2/qdata_heretic2/qd_skeletons.o \
-	tools/quake2/qdata_heretic2/sprites.o \
-	tools/quake2/qdata_heretic2/svdcmp.o \
-	tools/quake2/qdata_heretic2/tables.o \
-	tools/quake2/qdata_heretic2/tmix.o \
-	tools/quake2/qdata_heretic2/video.o \
+	tools/heretic2/common/bspfile.o \
+	tools/heretic2/common/cmdlib.o \
+	tools/heretic2/common/inout.o \
+	tools/heretic2/common/l3dslib.o \
+	tools/heretic2/common/lbmlib.o \
+	tools/heretic2/common/mathlib.o \
+	tools/heretic2/common/md4.o \
+	tools/heretic2/common/path_init.o \
+	tools/heretic2/common/qfiles.o \
+	tools/heretic2/common/scriplib.o \
+	tools/heretic2/common/threads.o \
+	tools/heretic2/common/token.o \
+	tools/heretic2/common/trilib.o \
+	tools/heretic2/qcommon/reference.o \
+	tools/heretic2/qcommon/resourcemanager.o \
+	tools/heretic2/qcommon/skeletons.o \
+	tools/heretic2/h2data/animcomp.o \
+	tools/heretic2/h2data/book.o \
+	tools/heretic2/h2data/fmodels.o \
+	tools/heretic2/h2data/images.o \
+	tools/heretic2/h2data/jointed.o \
+	tools/heretic2/h2data/models.o \
+	tools/heretic2/h2data/pics.o \
+	tools/heretic2/h2data/qdata.o \
+	tools/heretic2/h2data/qd_skeletons.o \
+	tools/heretic2/h2data/sprites.o \
+	tools/heretic2/h2data/svdcmp.o \
+	tools/heretic2/h2data/tables.o \
+	tools/heretic2/h2data/tmix.o \
+	tools/heretic2/h2data/video.o \
 	libl_net.$(A) \
 	$(if $(findstring $(OS),Win32),icons/h2data.o,) \
 
