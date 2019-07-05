@@ -42,7 +42,7 @@ To fetch default game packages you'll need Git and to fetch some optional ones y
 
 Under MSYS2, the mingw shell must be used.
 
-If you use MSYS2 over SSH, add `mingw64` to the path this way (given you compile for 64 bit windows): 
+If you use MSYS2 over SSH, add `mingw64` to the path this way (given you compile for 64 bit Windows): 
 
 ```
 export PATH="/mingw64/bin:${PATH}"`
@@ -126,9 +126,14 @@ targets:
 * `radiant`    Compiles the radiant core binary
 * `modules`    Compiles all modules (each module has its own target as well)
 * `plugins`    Compiles all plugins (each plugin has its own target as well)
-* `quake3`     Compiles all the Quake3 tools
-  - `q3map2`   Compiles the quake3 map compiler
-  - `q3data`   Compiles the q3data tool
+* `tools`      Compiles all tools (each tool has its own target as well)
+  - `quake2`   Compiles all the Quake2 tools: `q2map`, `qdata3`
+  - `heretic2` Compiles all the Heretic2 tools: `q2map`, `h2data`
+  - `quake3`   Compiles all the Quake3 tools:
+     * `q3map2` Compiles the quake3 map compiler
+     * `q3data` Compiles the q3data tool
+
+Type `make help` to get an exhaustive list of targets.
 
 ### Download details
 
