@@ -66,7 +66,7 @@ target_link_libraries(h2data
 )
 
 add_custom_target(heretic2)
-add_dependencies(heretic2 h2data)
+add_dependencies(heretic2 h2data q2map)
 
 if (UNIX)
     target_link_libraries(h2data pthread m)
