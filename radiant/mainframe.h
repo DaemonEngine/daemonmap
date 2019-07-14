@@ -271,6 +271,8 @@ void Radiant_detachHomePathsObserver( ModuleObserver& observer );
 void MainFrame_Construct();
 void MainFrame_Destroy();
 
+extern char **environ;
+void Radiant_Restart();
 
 extern float ( *GridStatus_getGridSize )();
 extern int ( *GridStatus_getRotateIncrement )();

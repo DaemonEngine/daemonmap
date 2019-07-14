@@ -909,10 +909,12 @@ void PreferencesDialog_showDialog(){
 		if ( !g_restart_required.empty() ) {
 			StringOutputStream message( 256 );
 			message << "Preference changes require a restart:\n";
+
 			for ( std::vector<const char*>::iterator i = g_restart_required.begin(); i != g_restart_required.end(); ++i )
 			{
 				message << ( *i ) << '\n';
 			}
+
 			ui::alert( MainFrame_getWindow(), message.c_str() );
 			g_restart_required.clear();
 		}
