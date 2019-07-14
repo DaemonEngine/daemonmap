@@ -329,6 +329,7 @@ void paths_init(){
 
 	Q_mkdir( g_strSettingsPath.c_str() );
 
+	g_strAppFilePath = environment_get_app_filepath();
 	g_strAppPath = environment_get_app_path();
 	g_strLibPath = environment_get_lib_path();
 	g_strDataPath = environment_get_data_path();

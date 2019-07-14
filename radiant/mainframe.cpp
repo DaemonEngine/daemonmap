@@ -444,11 +444,17 @@ void setPakPath( int num, const char* path ){
 }
 
 
-// App Path
+// executable file path (full path)
+CopiedString g_strAppFilePath;
 
-CopiedString g_strAppPath;                 ///< holds the full path of the executable
+// directory paths
+CopiedString g_strAppPath; 
 CopiedString g_strLibPath;
 CopiedString g_strDataPath;
+
+const char* AppFilePath_get(){
+	return g_strAppFilePath.c_str();
+}
 
 const char* AppPath_get(){
 	return g_strAppPath.c_str();
