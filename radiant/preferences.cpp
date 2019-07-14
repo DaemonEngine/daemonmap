@@ -917,6 +917,8 @@ void PreferencesDialog_showDialog(){
 
 			ui::alert( MainFrame_getWindow(), message.c_str() );
 			g_restart_required.clear();
+
+			Radiant_Restart();
 		}
 	}
 }
