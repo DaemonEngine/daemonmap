@@ -281,7 +281,11 @@ void CGameDialog::GameFileImport( int value ){
 	{
 		++iGame;
 	}
-	m_sGameFile = ( *iGame )->mGameFile;
+
+	if ( ( *iGame )->mGameFile != m_sGameFile ) {
+		m_sGameFile = ( *iGame )->mGameFile;
+		PreferencesDialog_restartRequired( "Selected Game" );
+	}
 }
 
 void CGameDialog::GameFileExport( const Callback<void(int)> & importCallback ) const {
