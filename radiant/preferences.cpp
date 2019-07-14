@@ -919,10 +919,15 @@ void PreferencesDialog_showDialog(){
 				message << ( *i ) << '\n';
 			}
 
-			ui::alert( MainFrame_getWindow(), message.c_str() );
+			message << "\nRestart now?";
+
+			auto ret = ui::alert( MainFrame_getWindow(), message.c_str(), "Restart " RADIANT_NAME "?", ui::alert_type::YESNO, ui::alert_icon::Question );
+
 			g_restart_required.clear();
 
-			Radiant_Restart();
+			if ( ret == ui::alert_response::YES ) {
+				Radiant_Restart();
+			}
 		}
 	}
 }
