@@ -881,6 +881,7 @@ void Preferences_Save(){
 		return;
 	}
 
+	// save global preferences
 	g_GamesDialog.SavePrefs();
 
 	globalOutputStream() << "saving local preferences to " << g_Preferences.m_inipath->str << "\n";
@@ -912,7 +913,7 @@ void PreferencesDialog_showDialog(){
 	if ( ConfirmModified( "Edit Preferences" ) && g_Preferences.DoModal() == eIDOK ) {
 		if ( !g_restart_required.empty() ) {
 			StringOutputStream message( 256 );
-			message << "Preference changes require a restart:\n";
+			message << "Preference changes require a restart:\n\n";
 
 			for ( std::vector<const char*>::iterator i = g_restart_required.begin(); i != g_restart_required.end(); ++i )
 			{

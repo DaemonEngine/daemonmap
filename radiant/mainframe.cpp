@@ -816,7 +816,7 @@ void Radiant_Shutdown(){
 }
 
 void Exit(){
-	if ( ConfirmModified( "Exit Radiant" ) ) {
+	if ( ConfirmModified( "Exit " RADIANT_NAME ) ) {
 		gtk_main_quit();
 	}
 }
@@ -2935,7 +2935,7 @@ WindowPositionTracker g_posXZWnd;
 WindowPositionTracker g_posYZWnd;
 
 static gint mainframe_delete( ui::Widget widget, GdkEvent *event, gpointer data ){
-	if ( ConfirmModified( "Exit Radiant" ) ) {
+	if ( ConfirmModified( "Exit " RADIANT_NAME ) ) {
 		gtk_main_quit();
 	}
 
