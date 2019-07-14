@@ -521,29 +521,39 @@ int main( int argc, char* argv[] ){
 #endif
 
 	const char* mapname = NULL;
+
+#if GDEF_OS_WINDOWS
+	StringOutputStream mapname_buffer( 256 );
+#endif
+
     char const *error = NULL;
+
 	if ( !ui::init( &argc, &argv, "<filename.map>", &error) ) {
 		g_print( "%s\n", error );
 		return -1;
 	}
 
 	// Gtk already removed parsed `--options`
-	if (argc == 2) {
-		if ( strlen( argv[1] ) > 1 ) {
-			if ( g_str_has_suffix( argv[1], ".map" ) ) {
-				if ( g_path_is_absolute( argv[1] ) ) {
-					mapname = argv[1];
+	if ( argc == 2 ) {
+		if ( strlen( argv[ 1 ] ) > 1 ) {
+			if ( g_str_has_suffix( argv[ 1 ], ".map" ) ) {
+				mapname = argv[ 1 ];
+
+				if ( !g_path_is_absolute( mapname ) ) {
+					mapname = g_build_filename( g_get_current_dir(), mapname, NULL );
 				}
-				else {
-					mapname = g_build_filename( g_get_current_dir(), argv[1], NULL );
-				}
+
+#if GDEF_OS_WINDOWS
+				mapname_buffer << PathCleaned( mapname );
+				mapname = mapname_buffer.c_str();
+#endif
 			}
 			else {
-				g_print( "bad file name, will not load: %s\n", argv[1] );
+				g_print( "bad file name, will not load: %s\n", mapname );
 			}
 		}
 	}
-	else if (argc > 2) {
+	else if ( argc > 2 ) {
 		g_print ( "%s\n", "too many arguments" );
 		return -1;
 	}
