@@ -95,6 +95,19 @@ ui::Window create_floating_window( const char* title, ui::Window parent ){
 	ui::Window window = ui::Window( ui::window_type::TOP );
 	gtk_window_set_title( window, title );
 
+	/* Workaround: Windows minimizes the whole application including all the floating windows when
+	 * one floating windows is minimized, this leads to an infinite loop of minimize/restore events,
+	 * probably because of some race condition betwen all floating windows not having the same state
+	 * at the same time, some being minimized while being restored at the same time, triggering the
+	 * minimization and the restoration of the others, and so on.
+	 * It's difficult to say such bug will never happen on other OS or with some window manager.
+	 * Design choice: those floating windows are made to be displayed/hidden using menu or shortcuts,
+	 * then the OS-specific way to minimize/restore them is superfluous and less efficient.
+	 * The mainframe is not a floating window and is not created using this function so the user
+	 * minimizes the application by minimizing the mainframe.
+	 */
+	gtk_window_set_type_hint( window, GDK_WINDOW_TYPE_HINT_MENU );
+
 	if ( parent ) {
 		gtk_window_set_transient_for( window, parent );
 		connect_floating_window_destroy_present( window, parent );
