@@ -585,7 +585,7 @@ namespace ui {
     alert_response alert(
             Window parent,
             std::string text,
-            std::string title = "NetRadiant",
+            std::string title = RADIANT_NAME,
             alert_type type = alert_type::OK,
             alert_icon icon = alert_icon::Default
     );

@@ -101,6 +101,12 @@
 #include "referencecache.h"
 #include "texwindow.h"
 
+#if GDEF_OS_WINDOWS
+#include <process.h>
+#else
+#include <spawn.h>
+#endif
+
 #ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
 /* workaround for gtk 2.24 issue: not displayed glwidget after toggle */
 #define WORKAROUND_GOBJECT_SET_GLWIDGET(window, widget) g_object_set_data( G_OBJECT( window ), "glwidget", G_OBJECT( widget ) )
@@ -444,11 +450,17 @@ void setPakPath( int num, const char* path ){
 }
 
 
-// App Path
+// executable file path (full path)
+CopiedString g_strAppFilePath;
 
-CopiedString g_strAppPath;                 ///< holds the full path of the executable
+// directory paths
+CopiedString g_strAppPath; 
 CopiedString g_strLibPath;
 CopiedString g_strDataPath;
+
+const char* AppFilePath_get(){
+	return g_strAppFilePath.c_str();
+}
 
 const char* AppPath_get(){
 	return g_strAppPath.c_str();
@@ -804,7 +816,7 @@ void Radiant_Shutdown(){
 }
 
 void Exit(){
-	if ( ConfirmModified( "Exit Radiant" ) ) {
+	if ( ConfirmModified( "Exit " RADIANT_NAME ) ) {
 		gtk_main_quit();
 	}
 }
@@ -2923,7 +2935,7 @@ WindowPositionTracker g_posXZWnd;
 WindowPositionTracker g_posYZWnd;
 
 static gint mainframe_delete( ui::Widget widget, GdkEvent *event, gpointer data ){
-	if ( ConfirmModified( "Exit Radiant" ) ) {
+	if ( ConfirmModified( "Exit " RADIANT_NAME ) ) {
 		gtk_main_quit();
 	}
 
@@ -3609,4 +3621,45 @@ void GLWindow_Construct(){
 }
 
 void GLWindow_Destroy(){
+}
+
+void Radiant_Restart(){
+	// preferences are expected to be already saved in any way
+	// this is just to be sure and be future proof
+	Preferences_Save();
+
+	// this asks user for saving if map is modified
+	// user can chose to not save, it's ok
+	ConfirmModified( "Restart " RADIANT_NAME );
+
+	int status;
+
+	char *argv[ 3 ];
+	char exe_file[ 256 ];
+	char map_file[ 256 ];
+	bool with_map = false;
+
+	strncpy( exe_file, g_strAppFilePath.c_str(), 256 );
+
+	if ( !Map_Unnamed( g_map ) ) {
+		strncpy( map_file, Map_Name( g_map ), 256 );
+		with_map = true;
+	}
+
+	argv[ 0 ] = exe_file;
+	argv[ 1 ] = with_map ? map_file : NULL;
+	argv[ 2 ] = NULL;
+
+#if GDEF_OS_WINDOWS
+	status = !_spawnvpe( P_NOWAIT, exe_file, argv, environ );
+#else
+	pid_t pid;
+
+	status = posix_spawn( &pid, exe_file, NULL, NULL, argv, environ );
+#endif
+
+	// quit if radiant successfully started
+	if ( status == 0 ) {
+		gtk_main_quit();
+	}
 }

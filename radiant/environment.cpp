@@ -167,10 +167,17 @@ void gamedetect(){
 
 namespace
 {
+	// executable file path
+	CopiedString app_filepath;
+	// directory paths
 	CopiedString home_path;
 	CopiedString app_path;
 	CopiedString lib_path;
 	CopiedString data_path;
+}
+
+const char* environment_get_app_filepath(){
+	return app_filepath.c_str();
 }
 
 const char* environment_get_home_path(){
@@ -180,7 +187,6 @@ const char* environment_get_home_path(){
 const char* environment_get_app_path(){
 	return app_path.c_str();
 }
-
 
 const char *environment_get_lib_path()
 {
@@ -234,7 +240,10 @@ char const* getexename( char *buf ){
 
 	/* Ensure proper NUL termination */
 	buf[ret] = 0;
+	return buf;
+}
 
+char const* getexepath( char *buf ) {
 	/* delete the program name */
 	*( strrchr( buf, '/' ) ) = '\0';
 
@@ -262,8 +271,11 @@ void environment_init( int argc, char const* argv[] ){
 
 	{
 		char real[PATH_MAX];
-		app_path = getexename( real );
-		ASSERT_MESSAGE( !string_empty( app_path.c_str() ), "failed to deduce app path" );
+		app_filepath = getexename( real );
+		ASSERT_MESSAGE( !string_empty( app_filepath.c_str() ), "failed to deduce app path" );
+
+		strncpy( real, app_filepath.c_str(), strlen( app_filepath.c_str() ) );
+		app_path = getexepath( real );
 	}
 
 	{
@@ -313,7 +325,14 @@ void environment_init( int argc, char const* argv[] ){
 	{
 		// get path to the editor
 		char filename[MAX_PATH + 1];
+		StringOutputStream app_filepath_stream( 256 );
+		StringOutputStream app_path_stream( 256 );
+
 		GetModuleFileName( 0, filename, MAX_PATH );
+		
+		app_filepath_stream << PathCleaned( filename );
+		app_filepath = app_filepath_stream.c_str();
+
 		char* last_separator = strrchr( filename, '\\' );
 		if ( last_separator != 0 ) {
 			*( last_separator + 1 ) = '\0';
@@ -322,9 +341,9 @@ void environment_init( int argc, char const* argv[] ){
 		{
 			filename[0] = '\0';
 		}
-		StringOutputStream app( 256 );
-		app << PathCleaned( filename );
-		app_path = app.c_str();
+
+		app_path_stream << PathCleaned( filename );
+		app_path = app_path_stream.c_str();
 
 		lib_path = app_path;
 		data_path = app_path;

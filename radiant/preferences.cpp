@@ -281,7 +281,11 @@ void CGameDialog::GameFileImport( int value ){
 	{
 		++iGame;
 	}
-	m_sGameFile = ( *iGame )->mGameFile;
+
+	if ( ( *iGame )->mGameFile != m_sGameFile ) {
+		m_sGameFile = ( *iGame )->mGameFile;
+		PreferencesDialog_restartRequired( "Selected Game" );
+	}
 }
 
 void CGameDialog::GameFileExport( const Callback<void(int)> & importCallback ) const {
@@ -877,6 +881,7 @@ void Preferences_Save(){
 		return;
 	}
 
+	// save global preferences
 	g_GamesDialog.SavePrefs();
 
 	globalOutputStream() << "saving local preferences to " << g_Preferences.m_inipath->str << "\n";
@@ -908,13 +913,22 @@ void PreferencesDialog_showDialog(){
 	if ( ConfirmModified( "Edit Preferences" ) && g_Preferences.DoModal() == eIDOK ) {
 		if ( !g_restart_required.empty() ) {
 			StringOutputStream message( 256 );
-			message << "Preference changes require a restart:\n";
+			message << "Preference changes require a restart:\n\n";
+
 			for ( std::vector<const char*>::iterator i = g_restart_required.begin(); i != g_restart_required.end(); ++i )
 			{
 				message << ( *i ) << '\n';
 			}
-			ui::alert( MainFrame_getWindow(), message.c_str() );
+
+			message << "\nRestart now?";
+
+			auto ret = ui::alert( MainFrame_getWindow(), message.c_str(), "Restart " RADIANT_NAME "?", ui::alert_type::YESNO, ui::alert_icon::Question );
+
 			g_restart_required.clear();
+
+			if ( ret == ui::alert_response::YES ) {
+				Radiant_Restart();
+			}
 		}
 	}
 }

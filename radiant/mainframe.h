@@ -212,10 +212,12 @@ const int g_pakPathCount = 5;
 extern CopiedString g_strPakPath[g_pakPathCount];
 const char* PakPath_get( int num );
 
+extern CopiedString g_strAppFilePath;
 extern CopiedString g_strAppPath;
 extern CopiedString g_strLibPath;
 extern CopiedString g_strDataPath;
 
+const char* AppFilePath_get();
 const char* AppPath_get();
 const char *LibPath_get();
 const char *DataPath_get();
@@ -269,6 +271,8 @@ void Radiant_detachHomePathsObserver( ModuleObserver& observer );
 void MainFrame_Construct();
 void MainFrame_Destroy();
 
+extern char **environ;
+void Radiant_Restart();
 
 extern float ( *GridStatus_getGridSize )();
 extern int ( *GridStatus_getRotateIncrement )();
