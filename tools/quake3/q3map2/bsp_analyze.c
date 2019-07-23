@@ -83,7 +83,7 @@ int AnalyzeBSPMain( int argc, char **argv ){
 
 
 	/* arg checking */
-	if ( argc < 1 ) {
+	if ( argc < 2 ) {
 		Sys_Printf( "Usage: q3map -analyze [-lumpswap] [-v] <mapname>\n" );
 		return 0;
 	}
