@@ -537,9 +537,9 @@ int main( int argc, char* argv[] ){
 	// Gtk already removed parsed `--options`
 	if ( argc == 2 ) {
 		if ( strlen( argv[ 1 ] ) > 1 ) {
-			if ( g_str_has_suffix( argv[ 1 ], ".map" ) ) {
-				mapname = argv[ 1 ];
+			mapname = argv[ 1 ];
 
+			if ( g_str_has_suffix( mapname, ".map" ) ) {
 				if ( !g_path_is_absolute( mapname ) ) {
 					mapname = g_build_filename( g_get_current_dir(), mapname, NULL );
 				}
@@ -551,6 +551,7 @@ int main( int argc, char* argv[] ){
 			}
 			else {
 				g_print( "bad file name, will not load: %s\n", mapname );
+				mapname = NULL;
 			}
 		}
 	}
