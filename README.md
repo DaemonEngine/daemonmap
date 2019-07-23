@@ -150,7 +150,7 @@ options:
 
 target:
 
-* `game_packs` Downloads the game pack data
+* `gamepacks` Downloads the game pack data
 
 Run `./gamepacks-manager -h` to know about available licenses and other available games. Both lists are merged, for example setting `GAMEPACKS_LICENSE_LIST=GPL` and `GAMEPACKS_NAME_LIST=Q3` will install both GPL gamepacks and proprietary Quake 3 one.
 
