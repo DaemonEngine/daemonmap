@@ -80,15 +80,17 @@ git submodule update --init --recursive
 
 # Compiling
 
+## Initial build
+
 This project uses the usual CMake workflow:
 
-## Debug
+### Debug
 
 ```
 cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Debug && cmake --build build -- -j$(nproc)
 ```
 
-## Release
+### Release
 
 ```
 cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)
@@ -106,16 +108,30 @@ On FreeBSD you have to add this to the first cmake call:
 -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8
 ```
 
+## Subsequent builds
+
+The initial build will download the gamepacks and build NetRadiant and tools. If you frequently recompile you can skip downloading the gamepacks:
+
+```
+cmake --build build --target binaries -- -j$(nproc)
+```
+
+You should still periodically update gamepacks:
+
+```
+cmake --build build --target gamepacks
+```
+
 ## Build and installation details
 
 ### Compilation details
 
 options:
 
-* `BUNDLE_LIBRARIES`
+* `BUNDLE_LIBRARIES=ON`
    Bundle libraries (only MSYS2 is supported at this time)
 * `BUILD_RADIANT=OFF`  
-   Do not build NetRadiant (default: `ON`, build notradiant graphical editor)
+   Do not build NetRadiant (default: `ON`, build netradiant graphical editor)
 * `BUILD_TOOLS=OFF`  
    Do not build q3map2 and other tools (default: `ON`, build command line tools)
 * `BUILD_CRUNCH=ON`  
@@ -143,7 +159,7 @@ Type `make help` to get an exhaustive list of targets.
 options:
 
 * `DOWNLOAD_GAMEPACKS=OFF`  
-   Do not automatically download the gamepack data during the first compilation (default: `ON`)
+   Do not automatically download the gamepack data on each compilation and do not install game packs already downloaded (default: `ON`)
 * `GAMEPACKS_LICENSE_LIST=all`  
    Download all gamepacks whatever the license (default: `free`, download free gamepacks, can be set to `none` to only filter by name)
 * `GAMEPACKS_NAME_LIST="Xonotic Unvanquished"`  
