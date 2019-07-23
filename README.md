@@ -112,8 +112,10 @@ On FreeBSD you have to add this to the first cmake call:
 
 options:
 
+* `BUNDLE_LIBRARIES`
+   Bundle libraries (only MSYS2 is supported at this time)
 * `BUILD_RADIANT=OFF`  
-   Do not build NetRadiant (default: `ON`, build radiant graphical editor)
+   Do not build NetRadiant (default: `ON`, build notradiant graphical editor)
 * `BUILD_TOOLS=OFF`  
    Do not build q3map2 and other tools (default: `ON`, build command line tools)
 * `BUILD_CRUNCH=ON`  
@@ -123,7 +125,7 @@ options:
 
 targets:
 
-* `radiant`    Compiles the radiant core binary
+* `netradiant` Compiles the netradiant core binary
 * `modules`    Compiles all modules (each module has its own target as well)
 * `plugins`    Compiles all plugins (each plugin has its own target as well)
 * `tools`      Compiles all tools (each tool has its own target as well)
@@ -148,7 +150,7 @@ options:
 
 target:
 
-* `game_packs` Downloads the game pack data
+* `gamepacks` Downloads the game pack data
 
 Run `./gamepacks-manager -h` to know about available licenses and other available games. Both lists are merged, for example setting `GAMEPACKS_LICENSE_LIST=GPL` and `GAMEPACKS_NAME_LIST=Q3` will install both GPL gamepacks and proprietary Quake 3 one.
 
