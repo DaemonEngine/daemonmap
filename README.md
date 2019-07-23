@@ -125,15 +125,16 @@ options:
 
 targets:
 
-* `netradiant` Compiles the netradiant core binary
-* `modules`    Compiles all modules (each module has its own target as well)
-* `plugins`    Compiles all plugins (each plugin has its own target as well)
-* `tools`      Compiles all tools (each tool has its own target as well)
-  - `quake2`   Compiles all the Quake2 tools: `q2map`, `qdata3`
-  - `heretic2` Compiles all the Heretic2 tools: `q2map`, `h2data`
-  - `quake3`   Compiles all the Quake3 tools:
-     * `q3map2` Compiles the quake3 map compiler
-     * `q3data` Compiles the q3data tool
+* `binaries`          Compiles all binaries
+  - `netradiant`      Compiles the netradiant editor
+  - `modules`         Compiles all modules (each module has its own target as well)
+  - `plugins`         Compiles all plugins (each plugin has its own target as well)
+  - `tools`           Compiles all tools (each tool has its own target as well)
+     * `quake2`       Compiles all the Quake2 tools: `q2map`, `qdata3`
+     * `heretic2`     Compiles all the Heretic2 tools: `q2map`, `h2data`
+     * `quake3`       Compiles all the Quake3 tools:
+         - `q3map2`   Compiles the quake3 map compiler
+         - `q3data`   Compiles the q3data tool
 
 Type `make help` to get an exhaustive list of targets.
 

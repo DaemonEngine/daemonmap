@@ -176,6 +176,8 @@ if (BUILD_RADIANT)
 endif ()
 
 if (BUILD_BINARIES)
+    add_custom_target(binaries ALL)
+
     if(APPLE OR ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
         link_directories(
             /usr/local/lib
@@ -267,6 +269,8 @@ if (BUILD_BINARIES)
     endif ()
 
     macro (radiant_tool name)
+        add_dependencies(binaries ${name})
+
         if (BUNDLE_LIBRARIES AND WIN32)
             add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
         else ()
