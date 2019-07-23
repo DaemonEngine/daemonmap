@@ -106,7 +106,7 @@ ui::Window create_floating_window( const char* title, ui::Window parent ){
 	 * The mainframe is not a floating window and is not created using this function so the user
 	 * minimizes the application by minimizing the mainframe.
 	 */
-	gtk_window_set_type_hint( window, GDK_WINDOW_TYPE_HINT_MENU );
+	gtk_window_set_type_hint( window, GDK_WINDOW_TYPE_HINT_UTILITY );
 
 	if ( parent ) {
 		gtk_window_set_transient_for( window, parent );
