@@ -153,7 +153,7 @@ void ExportLightmaps( void ){
 
 int ExportLightmapsMain( int argc, char **argv ){
 	/* arg checking */
-	if ( argc < 1 ) {
+	if ( argc < 2 ) {
 		Sys_Printf( "Usage: q3map -export [-v] <mapname>\n" );
 		return 0;
 	}
@@ -188,7 +188,7 @@ int ImportLightmapsMain( int argc, char **argv ){
 
 
 	/* arg checking */
-	if ( argc < 1 ) {
+	if ( argc < 2 ) {
 		Sys_Printf( "Usage: q3map -import [-v] <mapname>\n" );
 		return 0;
 	}

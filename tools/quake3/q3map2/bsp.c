@@ -709,6 +709,11 @@ int BSPMain( int argc, char **argv ){
 	portalFilePath[0] = 0;
 	surfaceFilePath[0] = 0;
 
+	if ( argc >= 2 && !strcmp( argv[ 1 ], "-bsp" ) ) {
+		Sys_Printf( "-bsp argument unnecessary\n" );
+		argv++;
+		argc--;
+	}
 
 	/* note it */
 	Sys_Printf( "--- BSP ---\n" );
@@ -1009,9 +1014,6 @@ int BSPMain( int argc, char **argv ){
 			strcpy( surfaceFilePath, argv[i + 1] );
 			i++;
 			Sys_Printf( "Use %s as surface file\n", surfaceFilePath );
-		}
-		else if ( !strcmp( argv[ i ], "-bsp" ) ) {
-			Sys_Printf( "-bsp argument unnecessary\n" );
 		}
 		else{
 			Sys_FPrintf( SYS_WRN, "WARNING: Unknown option \"%s\"\n", argv[ i ] );
