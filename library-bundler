@@ -81,7 +81,7 @@ case "${system_name}" in
 		;;
 	'windows')
 		bundle_dir="$(cygpath --unix "${bundle_dir}")"
-		
+
 		lib_dir="${bundle_dir}/lib"
 		mkdir --parents "${lib_dir}"
 
@@ -96,7 +96,7 @@ case "${system_name}" in
 				rm "${registry_entry}"
 				rmdir --ignore-fail-on-non-empty "${registry_dir}"
 			done
-			
+
 			manifest_file="${lib_dir}/lib.manifest"
 			Windows::printManifest "${lib_dir}" > "${manifest_file}"
 		fi
