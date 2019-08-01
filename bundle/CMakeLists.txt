@@ -1,5 +1,7 @@
 if (WIN32)
     set(BUNDLE_OS_NAME "windows")
+elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    set(BUNDLE_OS_NAME "linux")
 else ()
     set(BUNDLE_OS_NAME "unsupported")
 endif ()
