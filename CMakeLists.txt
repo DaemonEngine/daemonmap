@@ -211,22 +211,28 @@ if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
 
-    if (WIN32 AND NOT CMAKE_CROSSCOMPILING)
-        set(BUNDLE_LIBRARIES_DEFAULT ON)
-    else ()
-        set(BUNDLE_LIBRARIES_DEFAULT OFF)
+    if (WIN32 OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        set(BUNDLING_SUPPORTED ON)
+    endif()
+
+    if (BUNDLING_SUPPORTED)
+        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+            set(BUNDLE_LIBRARIES_DEFAULT ON)
+        else ()
+            set(BUNDLE_LIBRARIES_DEFAULT OFF)
+        endif ()
+
+        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
     endif ()
 
-    option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
-
-    if (BUNDLE_LIBRARIES)
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
         add_subdirectory(bundle)
 
         set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
     endif ()
 
     macro (copy_dlls target)
-        if (BUNDLE_LIBRARIES)
+        if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
             add_custom_command(TARGET ${target} POST_BUILD
                 COMMAND "${PROJECT_SOURCE_DIR}/library-bundler"
                 "register" "${PROJECT_BINARY_DIR}" "$<TARGET_FILE:${target}>"
@@ -277,10 +283,12 @@ if (BUILD_BINARIES)
     macro (radiant_tool name)
         add_dependencies(binaries ${name})
 
-        if (BUNDLE_LIBRARIES AND WIN32)
-            add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
-        else ()
-            add_executable(${name} ${ARGN})
+        if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+            if (WIN32)
+                add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
+            else ()
+                add_executable(${name} ${ARGN})
+            endif()
         endif ()
 
         copy_dlls(${name})
