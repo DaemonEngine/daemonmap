@@ -101,12 +101,18 @@ ui::Window create_floating_window( const char* title, ui::Window parent ){
 	 * at the same time, some being minimized while being restored at the same time, triggering the
 	 * minimization and the restoration of the others, and so on.
 	 * It's difficult to say such bug will never happen on other OS or with some window manager.
-	 * Design choice: those floating windows are made to be displayed/hidden using menu or shortcuts,
-	 * then the OS-specific way to minimize/restore them is superfluous and less efficient.
-	 * The mainframe is not a floating window and is not created using this function so the user
-	 * minimizes the application by minimizing the mainframe.
+	 * While it's possible to decide this can be a design choihce since those floating windows are made
+	 * to be displayed/hidden using menu or shortcuts, meaning the OS-specific way to minimize/restore
+	 * them is superfluous and less efficient, the floating window mode that fixes issues on Windows
+	 * is also known to be broken on KDE (the floating window does not get focus), this is likely to be
+	 * a bug in kwin.
+	 * In any way the mainframe is not a floating window and is not created using this function so the
+	 * user minimizes the whole application including floating windows by minimizing the mainframe
 	 */
+
+#ifdef WORKAROUND_WINDOWS_FLOATING_WINDOW
 	gtk_window_set_type_hint( window, GDK_WINDOW_TYPE_HINT_UTILITY );
+#endif // WORKAROUND_WINDOWS_FLOATING_WINDOW
 
 	if ( parent ) {
 		gtk_window_set_transient_for( window, parent );

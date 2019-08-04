@@ -200,7 +200,7 @@ ifeq ($(OS),Linux)
 else
 
 ifeq ($(OS),Win32)
-	CPPFLAGS_COMMON += -DWIN32 -D_WIN32 -D_inline=inline -DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1
+	CPPFLAGS_COMMON += -DWIN32 -D_WIN32 -D_inline=inline -DWORKAROUND_WINDOWS_FLOATING_WINDOW=1 -DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1
 	CFLAGS_COMMON += -mms-bitfields
 	LDFLAGS_DLL = -Wl,--add-stdcall-alias
 	LIBS_COMMON = -lws2_32 -luser32 -lgdi32 -lole32
