@@ -45,9 +45,9 @@ Multi::excludeLdd () {
 			# - since we ask user to instal gtk, we can also ask them to install gtkglext,
 			#   which is likely to pull gtk itself, x11 and gl dependencies
 			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
-			# - if gtk and fontconfig is installed, freetype is
-			egrep -v '/libc\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL' \
-			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libfontconfig|/libfreetype'
+			# - if gtk and fontconfig is installed, pango and freetype are
+			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.' \
+			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libpango|/libfontconfig|/libfreetype'
 			;;
 		'windows')
 			egrep -i '\.dll => [A-Z]:\\msys64\\' \
