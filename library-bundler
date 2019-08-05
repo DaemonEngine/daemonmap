@@ -38,7 +38,16 @@ Common::stripLdd () {
 Multi::excludeLdd () {
 	case "${system_name}" in
 		'linux')
-			egrep -v '/libc\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL'
+			# - always rely on up-to-date x11 and gl libraries, bundling them will break on future distros
+			# - gtk is not easily bundlable on linux because it looks for harcoded system path to optional
+			#   shared libraries like image codecs, theme engines, sound notification system, etc.
+			#   so expect user to install gtk first
+			# - since we ask user to instal gtk, we can also ask them to install gtkglext,
+			#   which is likely to pull gtk itself, x11 and gl dependencies
+			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
+			# - if gtk and fontconfig is installed, freetype is
+			egrep -v '/libc\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL' \
+			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libfontconfig|/libfreetype'
 			;;
 		'windows')
 			egrep -i '\.dll => [A-Z]:\\msys64\\' \

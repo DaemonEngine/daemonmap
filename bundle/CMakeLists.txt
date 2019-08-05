@@ -1,5 +1,6 @@
 if (WIN32)
     set(BUNDLE_OS_NAME "windows")
+	set(BUNDLE_SHARE ON)
 elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     set(BUNDLE_OS_NAME "linux")
 else ()
@@ -15,6 +16,12 @@ add_custom_target(bundle ALL
 
 install(DIRECTORY
     ${PROJECT_BINARY_DIR}/lib
-    ${PROJECT_BINARY_DIR}/share
     DESTINATION ${CMAKE_INSTALL_PREFIX}
 )
+
+if (BUNDLE_SHARE)
+    install(DIRECTORY
+        ${PROJECT_BINARY_DIR}/share
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
+endif ()
