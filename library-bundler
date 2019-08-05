@@ -38,8 +38,7 @@ Common::stripLdd () {
 Multi::excludeLdd () {
 	case "${system_name}" in
 		'linux')
-			egrep -v '/libc\./|/libX|/libxcb|/libGL' \
-			| egrep -v '/libbsd\.|/libICE\.|/libselinux\.|/libSM.\.'
+			egrep -v '/libc\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL'
 			;;
 		'windows')
 			egrep -i '\.dll => [A-Z]:\\msys64\\' \
@@ -119,6 +118,29 @@ Multi::getLibPrefix () {
 	esac
 }
 
+Multi::getGtkDeps () {
+	local lib_prefix="${1}"
+	local gtk_theme_name="${2}"
+
+	cat <<-EOF
+	share/themes/${gtk_theme_name}/gtk-2.0
+	share/icons/hicolor
+	${lib_prefix}/gdk-pixbuf-2.0
+	${lib_prefix}/gtk-2.0
+	EOF
+
+	case "${system_name}" in
+		'linux')
+			cat <<-EOF
+			${lib_prefix}/libatk-bridge-2.0.so.0
+			${lib_prefix}/libcanberra-0.30
+			${lib_prefix}/libcanberra.so.0
+			${lib_prefix}/libcanberra-gtk.so.0
+			EOF
+			;;
+	esac
+}
+
 Multi::bundleGtkDepsFromFile () {
 	local lib_file="${1}"
 
@@ -131,19 +153,16 @@ Multi::bundleGtkDepsFromFile () {
 		lib_prefix="$(Multi::getLibPrefix "${lib_file}")"
 		gtk_theme_name="$(Multi::getGtkThemeName)"
 
-		for component_dir in \
-			'share/themes/'"${gtk_theme_name}"'/gtk-2.0' \
-			'share/icons/hicolor' \
-			"${lib_prefix}"'/gdk-pixbuf-2.0' \
-			"${lib_prefix}"'/gtk-2.0'
+		for component_dir in $(Multi::getGtkDeps "${lib_prefix}" "${gtk_theme_name}")
 		do
-			if ! [ -d "${bundle_dir}/${component_dir}" ]
+			bundle_component_dir="$(echo "${component_dir}" | sed -e 's|^'"${lib_prefix}"'|lib|')"
+			if ! [ -e "${bundle_dir}/${bundle_component_dir}" ]
 			then
-				mkdir --parents "${bundle_dir}/$(dirname "${component_dir}")"
+				mkdir --parents "${bundle_dir}/$(dirname "${bundle_component_dir}")"
 
-				cp -r --preserve=timestamps \
+				cp -H -r --preserve=timestamps \
 					"/${root_prefix}/${component_dir}" \
-					"${bundle_dir}/${component_dir}"
+					"${bundle_dir}/${bundle_component_dir}"
 			fi
 		done
 	fi
