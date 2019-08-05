@@ -283,13 +283,11 @@ if (BUILD_BINARIES)
     macro (radiant_tool name)
         add_dependencies(binaries ${name})
 
-        if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
-            if (WIN32)
-                add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
-            else ()
-                add_executable(${name} ${ARGN})
-            endif()
-        endif ()
+        if (WIN32)
+            add_executable(${name} ${ARGN} ${PROJECT_SOURCE_DIR}/include/lib.rc)
+        else ()
+            add_executable(${name} ${ARGN})
+        endif()
 
         copy_dlls(${name})
 
