@@ -24,7 +24,8 @@ Common::getPath () {
 		else
 			printf '%s\n' "${file_path}"
 		fi
-	fi
+	fi \
+	| sed -e 's|/*$||'
 }
 
 Common::grepLdd () {
@@ -46,8 +47,8 @@ Multi::excludeLdd () {
 			#   which is likely to pull gtk itself, x11 and gl dependencies
 			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
 			# - if gtk and fontconfig is installed, pango and freetype are
-			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.' \
-			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libpango|/libfontconfig|/libfreetype'
+			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.' \
+			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
 			;;
 		'windows')
 			egrep -i '\.dll => [A-Z]:\\msys64\\' \
@@ -216,19 +217,56 @@ Multi::cleanUp () {
 		-exec rmdir --ignore-fail-on-non-empty {} \;
 }
 
+Linux::getRpath () {
+	local exe_file="${1}"
+
+	local exe_dir="$(dirname "${exe_file}")"
+	local path_start="$(printf '%s' "${bundle_dir}" | wc -c)"
+	path_start="$((${path_start} + 1))"
+
+	local exe_subdir="$(echo "${exe_dir}" | cut -c "${path_start}-" | sed -e 's|//*|/|;s|^/||')"
+
+	local rpath_origin='$ORIGIN'
+
+	if [ "${exe_subdir}" = '' ]
+	then
+		printf '%s/lib\n' "${rpath_origin}"
+	else
+		if [ "${exe_subdir}" = 'lib' ]
+		then
+			printf '%s\n' "${rpath_origin}"
+		else
+			local num_parent_dir="$(echo "${exe_subdir}" | tr '/' '\n' | wc -l)"
+			local rpath_subdir
+			local i=0
+			while [ "${i}" -lt "${num_parent_dir}" ]
+			do
+				rpath_subdir="${rpath_subdir}/.."
+				i="$((${i} + 1))"
+			done
+			printf '%s%s/lib\n' "${rpath_origin}" "${rpath_subdir}"
+		fi
+	fi
+}
+
 Linux::patchExe () {
 	local exe_file="${1}"
 
-	patchelf --set-rpath "${rpath_string}" "${exe_file}"
+	local linux_rpath_string=$"$(Linux::getRpath "${exe_file}")"
+	patchelf --set-rpath "${linux_rpath_string}" "${exe_file}"
 }
 
 Linux::patchLib () {
 	local lib_dir="${1}"
+	local exe_file
 
 	find "${lib_dir}" \
 		-type f \
 		-name '*.so*' \
-		-exec patchelf --set-rpath "${rpath_string}" {} \;
+	| while read exe_file
+	do
+		Linux::patchExe "${exe_file}"
+	done
 }
 
 Windows::listLibForManifest () {
@@ -264,8 +302,6 @@ registry_dir="${bundle_dir}/registry"
 lib_dir="${bundle_dir}/lib"
 
 manifest_file="${lib_dir}/lib.manifest"
-
-rpath_string='@executable_path:lib'
 
 exe_action='Common::noOp'
 lib_action='Common::noOp'
