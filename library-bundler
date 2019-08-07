@@ -186,7 +186,7 @@ Multi::bundleLibFromFile () {
 	do
 		lib_basename="$(basename "${lib_file}")"
 
-		if [ -f "${bundle_dir}/${lib_basename}" ]
+		if [ -f "${lib_dir}/${lib_basename}" ]
 		then
 			continue
 		fi
@@ -211,8 +211,8 @@ Multi::cleanUp () {
 		-exec rm {} \;
 
 	find "${bundle_dir}/lib" \
-		-type d \
 		-depth \
+		-type d \
 		-exec rmdir --ignore-fail-on-non-empty {} \;
 }
 
