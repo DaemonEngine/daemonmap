@@ -1,5 +1,274 @@
 #! /usr/bin/env bash
 
+Common::noOp () {
+	printf ''
+}
+
+Common::getPath () {
+	local file_path="${1}"
+
+	if command -v cygpath >/dev/null
+	then
+		if [ "${file_path}" = '-' ]
+		then
+			tr '\n' '\0' \
+			| xargs -0 -n1 -P1 -I{} \
+				cygpath --unix '{}'
+		else
+			cygpath --unix "${file_path}"
+		fi
+	else
+		if [ "${file_path}" = '-' ]
+		then
+			cat
+		else
+			printf '%s\n' "${file_path}"
+		fi
+	fi \
+	| sed -e 's|/*$||'
+}
+
+Common::grepLdd () {
+	egrep ' => '
+}
+
+Common::stripLdd () {
+	sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //'
+}
+
+Multi::excludeLdd () {
+	case "${system_name}" in
+		'linux')
+			# - always rely on up-to-date x11 and gl libraries, bundling them will break on future distros
+			# - gtk is not easily bundlable on linux because it looks for harcoded system path to optional
+			#   shared libraries like image codecs, theme engines, sound notification system, etc.
+			#   so expect user to install gtk first
+			# - since we ask user to instal gtk, we can also ask them to install gtkglext,
+			#   which is likely to pull gtk itself, x11 and gl dependencies
+			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
+			# - if gtk and fontconfig is installed, pango and freetype are
+			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.' \
+			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+			;;
+		'windows')
+			egrep -i '\.dll => [A-Z]:\\msys64\\' \
+			;;
+	esac
+}
+
+Multi::filterLib () {
+	Common::grepLdd \
+	| Multi::excludeLdd \
+	| Common::stripLdd \
+	| Common::getPath -
+}
+
+Multi::printLdd () {
+	local exe_file="${1}"
+
+	case "${system_name}" in
+		'linux')
+			ldd "${exe_file}"
+			;;
+		'windows')
+			ntldd --recursive "${exe_file}"
+			;;
+	esac
+}
+
+Multi::getGtkThemeName () {
+	case "${system_name}" in
+		'linux')
+			echo 'Adwaita'
+			;;
+		'windows')
+			echo 'MS-Windows'
+			;;
+	esac
+}
+
+Multi::getGtkLibName () {
+	case "${system_name}" in
+		'linux')
+			echo 'libgtk-x11-2.0.so.0'
+			;;
+		'windows')
+			echo 'libgtk-win32-2.0-0.dll'
+			;;
+	esac
+}
+
+Multi::getRootPrefix () {
+	local lib_file="${1}"
+
+	case "${system_name}" in
+		'linux')
+			echo "${lib_file}" \
+			| cut -f2 -d'/'
+			;;
+		'windows')
+			basename "${lib_file}" \
+			| xargs -n1 -P 1 which \
+			| cut -f2 -d'/'
+			;;
+	esac
+}
+
+Multi::getLibPrefix () {
+	local lib_file="${1}"
+
+	case "${system_name}" in
+		'linux')
+			dirname "${lib_file}" \
+			| cut -f3- -d'/'
+			;;
+		'windows')
+			echo 'lib'
+			;;
+	esac
+}
+
+Multi::getGtkDeps () {
+	local lib_prefix="${1}"
+	local gtk_theme_name="${2}"
+
+	cat <<-EOF
+	share/themes/${gtk_theme_name}/gtk-2.0
+	share/icons/hicolor
+	${lib_prefix}/gdk-pixbuf-2.0
+	${lib_prefix}/gtk-2.0
+	EOF
+
+	case "${system_name}" in
+		'linux')
+			cat <<-EOF
+			${lib_prefix}/libatk-bridge-2.0.so.0
+			${lib_prefix}/libcanberra-0.30
+			${lib_prefix}/libcanberra.so.0
+			${lib_prefix}/libcanberra-gtk.so.0
+			EOF
+			;;
+	esac
+}
+
+Multi::bundleGtkDepsFromFile () {
+	local lib_file="${1}"
+
+	lib_basename="$(basename "${lib_file}")"
+
+	gtk_lib_name="$(Multi::getGtkLibName)"
+	if [ "${lib_basename}" = "${gtk_lib_name}" ]
+	then
+		root_prefix="$(Multi::getRootPrefix "${lib_file}")"
+		lib_prefix="$(Multi::getLibPrefix "${lib_file}")"
+		gtk_theme_name="$(Multi::getGtkThemeName)"
+
+		for component_dir in $(Multi::getGtkDeps "${lib_prefix}" "${gtk_theme_name}")
+		do
+			bundle_component_dir="$(echo "${component_dir}" | sed -e 's|^'"${lib_prefix}"'|lib|')"
+			if ! [ -e "${bundle_dir}/${bundle_component_dir}" ]
+			then
+				mkdir --parents "${bundle_dir}/$(dirname "${bundle_component_dir}")"
+
+				cp -H -r --preserve=timestamps \
+					"/${root_prefix}/${component_dir}" \
+					"${bundle_dir}/${bundle_component_dir}"
+			fi
+		done
+	fi
+}
+
+Multi::bundleLibFromFile () {
+	local exe_file="${1}"
+
+	Multi::printLdd "${exe_file}" \
+	| Multi::filterLib \
+	| while read lib_file
+	do
+		lib_basename="$(basename "${lib_file}")"
+
+		if [ -f "${lib_dir}/${lib_basename}" ]
+		then
+			continue
+		fi
+
+		cp --preserve=timestamps \
+			"${lib_file}" \
+			"${lib_dir}/${lib_basename}"
+
+		Multi::bundleGtkDepsFromFile "${lib_file}"
+	done
+}
+
+Multi::cleanUp () {
+	find "${bundle_dir}/lib" \
+		-type f \
+		-name '*.a' \
+		-exec rm {} \;
+
+	find "${bundle_dir}/lib" \
+		-type f \
+		-name '*.h' \
+		-exec rm {} \;
+
+	find "${bundle_dir}/lib" \
+		-depth \
+		-type d \
+		-exec rmdir --ignore-fail-on-non-empty {} \;
+}
+
+Linux::getRpath () {
+	local exe_file="${1}"
+
+	local exe_dir="$(dirname "${exe_file}")"
+	local path_start="$(printf '%s' "${bundle_dir}" | wc -c)"
+	path_start="$((${path_start} + 1))"
+
+	local exe_subdir="$(echo "${exe_dir}" | cut -c "${path_start}-" | sed -e 's|//*|/|;s|^/||')"
+
+	local rpath_origin='$ORIGIN'
+
+	if [ "${exe_subdir}" = '' ]
+	then
+		printf '%s/lib\n' "${rpath_origin}"
+	else
+		if [ "${exe_subdir}" = 'lib' ]
+		then
+			printf '%s\n' "${rpath_origin}"
+		else
+			local num_parent_dir="$(echo "${exe_subdir}" | tr '/' '\n' | wc -l)"
+			local rpath_subdir
+			local i=0
+			while [ "${i}" -lt "${num_parent_dir}" ]
+			do
+				rpath_subdir="${rpath_subdir}/.."
+				i="$((${i} + 1))"
+			done
+			printf '%s%s/lib\n' "${rpath_origin}" "${rpath_subdir}"
+		fi
+	fi
+}
+
+Linux::patchExe () {
+	local exe_file="${1}"
+
+	local linux_rpath_string=$"$(Linux::getRpath "${exe_file}")"
+	patchelf --set-rpath "${linux_rpath_string}" "${exe_file}"
+}
+
+Linux::patchLib () {
+	local lib_dir="${1}"
+	local exe_file
+
+	find "${lib_dir}" \
+		-type f \
+		-name '*.so*' \
+	| while read exe_file
+	do
+		Linux::patchExe "${exe_file}"
+	done
+}
+
 Windows::listLibForManifest () {
 	local lib_dir="${1}"
 
@@ -8,14 +277,15 @@ Windows::listLibForManifest () {
 		-type f \
 		-name '*.dll' \
 		-exec basename {} \; \
-	| xargs -I {} \
+	| tr '\n' '\0' \
+	| xargs -0 -n1 -P1 -I{} \
 		printf '  <file name="{}"/>\n'
 }
 
-Windows::printManifest () {
+Windows::writeManifest () {
 	local lib_dir="${1}"
 
-	cat <<-EOF
+	cat > "${manifest_file}" <<-EOF
 	<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
 	  <assemblyIdentity type="win32" name="lib" version="1.0.0.0"/>
 	$(Windows::listLibForManifest "${lib_dir}")
@@ -23,86 +293,58 @@ Windows::printManifest () {
 	EOF
 }
 
-Windows::bundleLibFromFile () {
-	local exe_file="${1}"
-
-	exe_file="$(cygpath --unix "${exe_file}")"
-
-	ntldd --recursive "${exe_file}" \
-	| egrep -i '\.dll => [A-Z]:\\msys64\\' \
-	| sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //' \
-	| cygpath --unix --file - \
-	| while read dll_file
-	do
-		dll_basename="$(basename "${dll_file}")"
-
-		if [ -f "${bundle_dir}/${dll_basename}" ]
-		then
-			continue
-		fi
-
-		cp --preserve=timestamps "${dll_file}" "${lib_dir}/${dll_basename}"
-
-		if [ "${dll_basename}" = 'libgtk-win32-2.0-0.dll' ]
-		then
-			mingw="$(which 'libgtk-win32-2.0-0.dll' | cut -f2 -d'/')"
-
-			for component_dir in \
-				'share/themes/MS-Windows' \
-				'share/icons/hicolor' \
-				'lib/gdk-pixbuf-2.0' \
-				'lib/gtk-2.0'
-			do
-				if ! [ -d "${bundle_dir}/${component_dir}" ]
-				then
-					mkdir --parents "${bundle_dir}/$(dirname "${component_dir}")"
-					cp -r --preserve=timestamps "/${mingw}/${component_dir}" \
-						"${bundle_dir}/${component_dir}"
-				fi
-			done
-
-			find "${bundle_dir}/lib" -type f -name '*.a' -exec rm {} \;
-			find "${bundle_dir}/lib" -type f -name '*.h' -exec rm {} \;
-			find "${bundle_dir}/lib" -type d -exec rmdir --ignore-fail-on-non-empty {} \;
-		fi
-	done
-}
-
 system_name="${1}"; shift
 bundle_dir="${1}"; shift
 exe_file="${1}"; shift
 
+bundle_dir="$(Common::getPath "${bundle_dir}")"
 registry_dir="${bundle_dir}/registry"
+lib_dir="${bundle_dir}/lib"
+
+manifest_file="${lib_dir}/lib.manifest"
+
+exe_action='Common::noOp'
+lib_action='Common::noOp'
 
 case "${system_name}" in
 	'register')
 		mkdir --parents "${registry_dir}"
-		printf '%s\n' "${exe_file}" > "${registry_dir}/$(uuidgen)"
+		Common::getPath "${exe_file}" > "${registry_dir}/$(uuidgen)"
+		exit
+		;;
+	'linux')
+		exe_action='Linux::patchExe'
+		lib_action='Linux::patchLib'
 		;;
 	'windows')
-		bundle_dir="$(cygpath --unix "${bundle_dir}")"
-		
-		lib_dir="${bundle_dir}/lib"
-		mkdir --parents "${lib_dir}"
-
-		if [ -d "${registry_dir}" ]
-		then
-			for registry_entry in "${registry_dir}"/*
-			do
-				exe_file="$(cat "${registry_entry}")"
-
-				Windows::bundleLibFromFile "${exe_file}"
-
-				rm "${registry_entry}"
-				rmdir --ignore-fail-on-non-empty "${registry_dir}"
-			done
-			
-			manifest_file="${lib_dir}/lib.manifest"
-			Windows::printManifest "${lib_dir}" > "${manifest_file}"
-		fi
+		lib_action='Windows::writeManifest'
 		;;
 	*)
 		printf 'ERROR: unsupported system: %s\n' "${system_name}" >&2
 		exit 1
 		;;
 esac
+
+mkdir --parents "${lib_dir}"
+
+if [ -d "${registry_dir}" ]
+then
+	for registry_entry in "${registry_dir}"/*
+	do
+		exe_file="$(cat "${registry_entry}")"
+
+		Multi::bundleLibFromFile "${exe_file}"
+
+		"${exe_action}" "${exe_file}"
+
+		rm "${registry_entry}"
+
+		"${exe_action}" "${exe_file}"
+	done
+
+	rmdir "${registry_dir}"
+fi
+
+"${lib_action}" "${lib_dir}"
+
+Multi::cleanUp

@@ -39,7 +39,7 @@ set(q3map2_games
         )
 
 radiant_tool(daemonmap
-        WIN32 q3map2/q3map2.rc
+        q3map2/q3map2.rc
 
         common/cmdlib.c common/cmdlib.h
         common/inout.c common/inout.h
