@@ -30,8 +30,6 @@ if (FHS_INSTALL AND NOT BUNDLE_LIBRARIES)
     set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 endif ()
 
-set(GAMEPACKS_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download CACHE PATH "Where to store downloaded game packs")
-
 #-----------------------------------------------------------------------
 # Version
 #-----------------------------------------------------------------------
