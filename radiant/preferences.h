@@ -239,6 +239,12 @@ CopiedString m_sGameFile;
  */
 bool m_bGamePrompt;
 /*!
+   when if m_bGamePrompt is true
+   do not prompt at startup which game to load this time, but prompt the next times
+   this is used to not uselessly prompt game after having restarted because user switched game
+ */
+bool m_bSkipGamePromptOnce;
+/*!
    log console to radiant.log
    m_bForceLogConsole is an obscure forced latching situation
  */
@@ -253,6 +259,7 @@ std::list<CGameDescription*> mGames;
 CGameDialog() :
 	m_sGameFile( "" ),
 	m_bGamePrompt( true ),
+	m_bSkipGamePromptOnce( false ),
 	m_bForceLogConsole( false ){
 }
 virtual ~CGameDialog();
