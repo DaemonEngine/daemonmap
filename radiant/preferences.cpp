@@ -285,8 +285,15 @@ void CGameDialog::GameFileImport( int value ){
 
 	if ( ( *iGame )->mGameFile != m_sGameFile ) {
 		m_sGameFile = ( *iGame )->mGameFile;
-		PreferencesDialog_restartRequired( "Selected Game" );
+
+		// do not trigger radiant restart when switching game on startup using Global Preferences dialog
+		if ( !onStartup ) {
+			PreferencesDialog_restartRequired( "Selected Game" );
+		}
 	}
+
+	// onStartup can only be true once, when Global Preferences are displayed at startup
+	onStartup = false;
 }
 
 void CGameDialog::GameFileExport( const Callback<void(int)> & importCallback ) const {
@@ -451,11 +458,15 @@ void CGameDialog::Init(){
 	}
 
 	if ( gamePrompt || !currentGameDescription ) {
+		onStartup = true;
 		Create();
 		DoGameDialog();
 		// use m_nComboSelect to identify the game to run as and set the globals
 		currentGameDescription = GameDescriptionForComboItem();
 		ASSERT_NOTNULL( currentGameDescription );
+	}
+	else {
+		onStartup = false;
 	}
 
 	g_pGameDescription = currentGameDescription;

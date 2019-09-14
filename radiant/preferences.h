@@ -223,6 +223,11 @@ mutable int m_nComboSelect;   ///< intermediate int value for combo in dialog bo
 public:
 
 /*!
+  used to no ask for restart when switching game from Gobal Preferences window displayed on startup
+*/
+
+bool onStartup;
+/*!
    those settings are saved in the global prefs file
    I'm too lazy to wrap behind protected access, not sure this needs to be public
    NOTE: those are preference settings. if you change them it is likely that you would
