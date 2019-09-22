@@ -1890,13 +1890,12 @@ void SetupGrid( void ){
    does what it says...
  */
 
-void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch ){
+void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch, qboolean noBounceStore ){
 	vec3_t color;
 	float f;
 	int b, bt;
 	qboolean minVertex, minGrid;
 	const char  *value;
-
 
 	/* ydnar: smooth normals */
 	if ( shade ) {
@@ -2031,13 +2030,19 @@ void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch ){
 	/* radiosity */
 	b = 1;
 	bt = bounce;
+
 	while ( bounce > 0 )
 	{
+		qboolean storeForReal = !noBounceStore;
+
 		/* store off the bsp between bounces */
-		StoreSurfaceLightmaps( fastLightmapSearch );
+		StoreSurfaceLightmaps( fastLightmapSearch, storeForReal );
 		UnparseEntities();
-		Sys_Printf( "Writing %s\n", BSPFilePath );
-		WriteBSPFile( BSPFilePath );
+
+		if ( storeForReal ) {
+			Sys_Printf( "Writing %s\n", BSPFilePath );
+			WriteBSPFile( BSPFilePath );
+		}
 
 		/* note it */
 		Sys_Printf( "\n--- Radiosity (bounce %d of %d) ---\n", b, bt );
@@ -2055,6 +2060,9 @@ void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch ){
 		SetupEnvelopes( qfalse, fastbounce );
 		if ( numLights == 0 ) {
 			Sys_Printf( "No diffuse light to calculate, ending radiosity.\n" );
+			if ( noBounceStore ) {
+				break;
+			}
 			return;
 		}
 
@@ -2098,8 +2106,9 @@ void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch ){
 		bounce--;
 		b++;
 	}
+
 	/* ydnar: store off lightmaps */
-	StoreSurfaceLightmaps( fastLightmapSearch );
+	StoreSurfaceLightmaps( fastLightmapSearch, qtrue );
 }
 
 
@@ -2140,6 +2149,7 @@ int LightMain( int argc, char **argv ){
 	int lightmapMergeSize = 0;
 	qboolean lightSamplesInsist = qfalse;
 	qboolean fastLightmapSearch = qfalse;
+	qboolean noBounceStore = qfalse;
 
 	/* note it */
 	Sys_Printf( "--- Light ---\n" );
@@ -2601,6 +2611,11 @@ int LightMain( int argc, char **argv ){
 			Sys_Printf( "Storing bounced light (radiosity) only\n" );
 		}
 
+		else if ( !strcmp( argv[ i ], "-nobouncestore" ) ) {
+			noBounceStore = qtrue;
+			Sys_Printf( "Do not store BSP, lightmap and shader files between bounces\n" );
+		}
+
 		else if ( !strcmp( argv[ i ], "-nocollapse" ) ) {
 			noCollapse = qtrue;
 			Sys_Printf( "Identical lightmap collapsing disabled\n" );
@@ -3028,7 +3043,7 @@ int LightMain( int argc, char **argv ){
 	SetupTraceNodes();
 
 	/* light the world */
-	LightWorld( BSPFilePath, fastLightmapSearch );
+	LightWorld( BSPFilePath, fastLightmapSearch, noBounceStore );
 
 	/* write out the bsp */
 	UnparseEntities();
