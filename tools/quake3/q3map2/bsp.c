@@ -828,6 +828,14 @@ int BSPMain( int argc, char **argv ){
 			i++;
 			Sys_Printf( "Distance epsilon set to %f\n", distanceEpsilon );
 		}
+		else if ( !strcmp( argv[ i ], "-fastmeta" ) ) {
+			maxLMSurfaceVerts = 64;
+			maxSurfaceVerts = 999;
+			maxSurfaceIndexes = 6000;
+			Sys_Printf( "Maximum per-surface vertex count set to %d\n", maxSurfaceVerts );
+			Sys_Printf( "Maximum per-surface index count set to %d\n", maxSurfaceIndexes );
+			Sys_Printf( "Maximum lightmapped surface vertex count set to %d\n", maxLMSurfaceVerts );
+		}
 		else if ( !strcmp( argv[ i ], "-maxsurfacevertices" ) ) {
 			maxSurfaceVerts = atoi( argv[ i + 1 ] );
 			if ( maxSurfaceVerts < 3 ) {

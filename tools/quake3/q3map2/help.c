@@ -97,6 +97,7 @@ void HelpBsp()
 		{"-deep", "Use detail brushes in the BSP tree, but at lowest priority (should give more fps)"},
 		{"-de <F>", "Distance epsilon for plane snapping etc."},
 		{"-fakemap", "Write fakemap.map containing all world brushes"},
+		{"-fastmeta", "Use small lightmap/surface verts/number maximum numbers (like Q3A), to be used with `-meta`"},
 		{"-flares", "Turn on support for flares"},
 		{"-flat", "Enable flat shading (good for combining with -celshader)"},
 		{"-fulldetail", "Treat detail brushes as structural ones"},
