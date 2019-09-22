@@ -1890,7 +1890,7 @@ void SetupGrid( void ){
    does what it says...
  */
 
-void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
+void LightWorld( const char *BSPFilePath, qboolean fastLightmapSearch ){
 	vec3_t color;
 	float f;
 	int b, bt;
@@ -2034,7 +2034,7 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 	while ( bounce > 0 )
 	{
 		/* store off the bsp between bounces */
-		StoreSurfaceLightmaps( fastAllocate );
+		StoreSurfaceLightmaps( fastLightmapSearch );
 		UnparseEntities();
 		Sys_Printf( "Writing %s\n", BSPFilePath );
 		WriteBSPFile( BSPFilePath );
@@ -2099,7 +2099,7 @@ void LightWorld( const char *BSPFilePath, qboolean fastAllocate ){
 		b++;
 	}
 	/* ydnar: store off lightmaps */
-	StoreSurfaceLightmaps( fastAllocate );
+	StoreSurfaceLightmaps( fastLightmapSearch );
 }
 
 
@@ -2139,7 +2139,7 @@ int LightMain( int argc, char **argv ){
 	const char  *value;
 	int lightmapMergeSize = 0;
 	qboolean lightSamplesInsist = qfalse;
-	qboolean fastAllocate = qfalse;
+	qboolean fastLightmapSearch = qfalse;
 
 	/* note it */
 	Sys_Printf( "--- Light ---\n" );
@@ -2660,9 +2660,15 @@ int LightMain( int argc, char **argv ){
 			Sys_Printf( "Faster mode enabled\n" );
 		}
 
-		else if ( !strcmp( argv[ i ], "-fastallocate" ) ) {
-			fastAllocate = qtrue;
-			Sys_Printf( "Fast allocation mode enabled\n" );
+		else if ( !strcmp( argv[ i ], "-fastlightmapsearch" ) || !strcmp( argv[ i ], "-fastallocate") ) {
+			fastLightmapSearch = qtrue;
+
+			if ( !strcmp( argv[ i ], "-fastallocate" ) ) {
+				Sys_Printf( "The -fastallocate argument is deprecated, use \"-fastlightmapsearch\" instead\n" );
+			}
+			else {
+				Sys_Printf( "Fast lightmap search enabled\n" );
+			}
 		}
 
 		else if ( !strcmp( argv[ i ], "-fastgrid" ) ) {
@@ -3022,7 +3028,7 @@ int LightMain( int argc, char **argv ){
 	SetupTraceNodes();
 
 	/* light the world */
-	LightWorld( BSPFilePath, fastAllocate );
+	LightWorld( BSPFilePath, fastLightmapSearch );
 
 	/* write out the bsp */
 	UnparseEntities();
