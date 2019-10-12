@@ -224,22 +224,23 @@ const char* LINK_NAME =
 #endif
 ;
 
-/// brief Returns the filename of the executable belonging to the current process, or 0 if not found.
+/// brief Returns the filename of the executable belonging to the current process, or empty string if not found.
 char const* getexename( char *buf ){
 	/* Now read the symbolic link */
-	int ret = readlink( LINK_NAME, buf, PATH_MAX );
+	const int ret = readlink( LINK_NAME, buf, PATH_MAX );
 
 	if ( ret == -1 ) {
 		globalOutputStream() << "getexename: falling back to argv[0]: " << makeQuoted( g_argv[0] );
-		const char* path = realpath( g_argv[0], buf );
-		if ( path == 0 ) {
+		if( realpath( g_argv[0], buf ) == 0 ) {
 			/* In case of an error, leave the handling up to the caller */
-			return "";
+			*buf = '\0';
 		}
 	}
+	else {
+		/* Ensure proper NUL termination */
+		buf[ret] = 0;
+	}
 
-	/* Ensure proper NUL termination */
-	buf[ret] = 0;
 	return buf;
 }
 
