@@ -223,6 +223,11 @@ mutable int m_nComboSelect;   ///< intermediate int value for combo in dialog bo
 public:
 
 /*!
+  used to no ask for restart when switching game from Gobal Preferences window displayed on startup
+*/
+
+bool onStartup;
+/*!
    those settings are saved in the global prefs file
    I'm too lazy to wrap behind protected access, not sure this needs to be public
    NOTE: those are preference settings. if you change them it is likely that you would
@@ -239,6 +244,12 @@ CopiedString m_sGameFile;
  */
 bool m_bGamePrompt;
 /*!
+   when if m_bGamePrompt is true
+   do not prompt at startup which game to load this time, but prompt the next times
+   this is used to not uselessly prompt game after having restarted because user switched game
+ */
+bool m_bSkipGamePromptOnce;
+/*!
    log console to radiant.log
    m_bForceLogConsole is an obscure forced latching situation
  */
@@ -253,6 +264,7 @@ std::list<CGameDescription*> mGames;
 CGameDialog() :
 	m_sGameFile( "" ),
 	m_bGamePrompt( true ),
+	m_bSkipGamePromptOnce( false ),
 	m_bForceLogConsole( false ){
 }
 virtual ~CGameDialog();

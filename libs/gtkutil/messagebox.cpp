@@ -125,7 +125,7 @@ EMessageBoxReturn gtk_MessageBox( ui::Window parentWindow, const char* text, con
 		}
 
 		{
-			auto button = create_modal_dialog_button( "OK", cancel_button );
+			auto button = create_modal_dialog_button( "Cancel", cancel_button );
 			hbox.pack_start( button, TRUE, FALSE, 0 );
 			gtk_widget_add_accelerator( button , "clicked", accel, GDK_KEY_Escape, (GdkModifierType)0, (GtkAccelFlags)0 );
 			button.show();

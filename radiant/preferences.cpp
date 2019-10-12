@@ -231,6 +231,7 @@ struct LogConsole {
 void RegisterGlobalPreferences( PreferenceSystem& preferences ){
 	preferences.registerPreference( "gamefile", make_property_string( g_GamesDialog.m_sGameFile ) );
 	preferences.registerPreference( "gamePrompt", make_property_string( g_GamesDialog.m_bGamePrompt ) );
+	preferences.registerPreference( "skipGamePromptOnce", make_property_string( g_GamesDialog.m_bSkipGamePromptOnce ) );
 	preferences.registerPreference( "log console", make_property_string<LogConsole>() );
 }
 
@@ -284,8 +285,15 @@ void CGameDialog::GameFileImport( int value ){
 
 	if ( ( *iGame )->mGameFile != m_sGameFile ) {
 		m_sGameFile = ( *iGame )->mGameFile;
-		PreferencesDialog_restartRequired( "Selected Game" );
+
+		// do not trigger radiant restart when switching game on startup using Global Preferences dialog
+		if ( !onStartup ) {
+			PreferencesDialog_restartRequired( "Selected Game" );
+		}
 	}
+
+	// onStartup can only be true once, when Global Preferences are displayed at startup
+	onStartup = false;
 }
 
 void CGameDialog::GameFileExport( const Callback<void(int)> & importCallback ) const {
@@ -403,9 +411,12 @@ void CGameDialog::Reset(){
 }
 
 void CGameDialog::Init(){
+	bool gamePrompt = false;
+
 	InitGlobalPrefPath();
 	LoadPrefs();
 	ScanForGames();
+
 	if ( mGames.empty() ) {
 		Error( "Didn't find any valid game file descriptions, aborting\n" );
 	}
@@ -426,7 +437,15 @@ void CGameDialog::Init(){
 
 	CGameDescription* currentGameDescription = 0;
 
-	if ( !m_bGamePrompt ) {
+	// m_bSkipGamePromptOnce is used to not prompt for game on restart, only on fresh startup
+	if ( m_bGamePrompt && !m_bSkipGamePromptOnce ) {
+		gamePrompt = true;
+	}
+
+	m_bSkipGamePromptOnce = false;
+	g_GamesDialog.SavePrefs();
+
+	if ( !gamePrompt ) {
 		// search by .game name
 		std::list<CGameDescription *>::iterator iGame;
 		for ( iGame = mGames.begin(); iGame != mGames.end(); ++iGame )
@@ -437,13 +456,19 @@ void CGameDialog::Init(){
 			}
 		}
 	}
-	if ( m_bGamePrompt || !currentGameDescription ) {
+
+	if ( gamePrompt || !currentGameDescription ) {
+		onStartup = true;
 		Create();
 		DoGameDialog();
 		// use m_nComboSelect to identify the game to run as and set the globals
 		currentGameDescription = GameDescriptionForComboItem();
 		ASSERT_NOTNULL( currentGameDescription );
 	}
+	else {
+		onStartup = false;
+	}
+
 	g_pGameDescription = currentGameDescription;
 
 	g_pGameDescription->Dump();
@@ -927,6 +952,7 @@ void PreferencesDialog_showDialog(){
 			g_restart_required.clear();
 
 			if ( ret == ui::alert_response::YES ) {
+				g_GamesDialog.m_bSkipGamePromptOnce = true;
 				Radiant_Restart();
 			}
 		}
