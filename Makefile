@@ -1,3 +1,6 @@
+# TODO: when deleting this Makefile, don't forget to also delete conftest.cpp
+# which is only required by this Makefile
+
 ifeq ($(I_KNOW_MAKEFILE_IS_DEPRECATED),)
     $(shell printf 'ERROR: Makefile build is deprecated, use CMake instead, see README.md\n\n' >&2)
     $(error I_KNOW_MAKEFILE_IS_DEPRECATED is not set)
