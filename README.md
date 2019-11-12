@@ -88,7 +88,28 @@ git submodule update --init --recursive
 ```
 
 
-## Compiling
+## Simple compilation
+
+
+### Easy builder assistant
+
+If you have standard needs and use well-known platform and operating system, you may try the provided `easy-builder` script which may be enough for you:
+
+```sh
+./easy-builder
+```
+
+If anything goes right, you'll find your netradiant build in `install/` subdirectory.
+
+If you need to build a debug build (to get help from a developer, for example), you can do it that way:
+
+```sh
+./easy-builder --debug
+```
+
+By default, build tools and compilers use the `build/` directory as workspace.
+
+## Advanced compilation
 
 ### Initial build
 
