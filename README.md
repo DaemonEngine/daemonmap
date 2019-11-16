@@ -3,19 +3,22 @@ NetRadiant
 
 ![NetRadiant logo](setup/data/tools/bitmaps/splash.png)
 
-The open source, cross platform level editor for id Tech-derivated games (has lineage from GtkRadiant).
+The open source, cross platform level editor for id Tech-derivated games (has lineage to GtkRadiant).
 
-## Compatibility
 
-|System   |Build    |Bundle   |Run      |Build requirements         |
-|---------|---------|---------|---------|---------------------------|
-|Linux    |**Yes**  |**Yes**  |**Yes**  |_GCC or LLVM/clang_        |
-|FreeBSD  |**Yes**  |_not yet_|**Yes**  |_GCC_                      |
-|Windows  |**Yes**  |**Yes**  |**Yes**  |_MSYS2/Mingw64 or Mingw32_ |
-|Wine     |-        |-        |**Yes**  |-                          |
-|macOS    |**Yes**  |_not yet_|_mostly_ |_GCC and patched GtkGLext_ |
+## Compatibility matrix
 
-NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2. NetRadiant is known to build on macOS, but can't display things properly without a modified GtkGLExt which is yet to be upstreamed, and issues are known. Windows build is known to work well on wine, which can be used as a fallback on that system. At this time library bundling is only supported on Windows/MSYS2 and Linux. Linux bundles do not ship GTK (users are espected to have a working GTK with GtkGlExt environment).
+|System   |Build    |Bundle    |Run      |Build requirements                   |
+|---------|---------|----------|---------|-------------------------------------|
+|Linux    |**Yes**  |**Yes**   |**Yes**  |_GCC or Clang_                       |
+|FreeBSD  |**Yes**  |_not yet_ |**Yes**  |_GCC_                                |
+|Windows  |**Yes**  |**Yes**   |**Yes**  |_MSYS2/Mingw64 or Mingw32_           |
+|Wine     |-        |-         |**Yes**  |-                                    |
+|macOS    |**Yes**  |_not yet_ |_mostly_ |_Homebrew, GCC and patched GtkGLExt_ |
+
+NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2. NetRadiant is known to build on macOS using Homebrew, but can't display things properly without a modified GtkGLExt which is yet to be upstreamed, and issues are known. Windows build is known to work well on wine, which can be used as a fallback on macOS.
+
+At this time library bundling is only supported on Windows/MSYS2 and Linux. Since bundling copies things from the host, a clean build environment has to be used in order to get a clean bundle. Linux bundle does not ship GTK (users are expected to have a working GTK environment with GtkGlExt installed).
 
 
 ## Getting the sources
@@ -24,9 +27,9 @@ Source browser, issues and more can be found on the gitlab project: https://gitl
 
 The latest source is available from the git repository: `https://gitlab.com/xonotic/netradiant.git`
 
-The `git` client can be obtained from the Git website: http://git-scm.org
+The `git` client can be obtained from your distribution repository or from the Git website: http://git-scm.org
 
-A copy of the source tree can be fetched using the command line `git` client this way:
+A copy of the source tree can be obtained using the command line `git` client this way:
 
 ```sh
 git clone --recursive https://gitlab.com/xonotic/netradiant.git
@@ -40,15 +43,19 @@ cd netradiant
 
 To fetch default game packages you'll need Git, Subversion and `unzip`.
 
+
 ### Ubuntu:
 
 ```sh
-apt-get install --reinstall build-essential cmake lib{x11,gtk2.0,gtkglext1,xml2,jpeg,webp,minizip}-dev  git subversion unzip wget
+apt-get install --reinstall build-essential cmake \
+    lib{x11,gtk2.0,gtkglext1,xml2,jpeg,webp,minizip}-dev \
+    git subversion unzip wget
 ```
 
 If you plan to build a bundle, you also need to install `uuid-runtime patchelf`
 
 This is enough to build NetRadiant but you may also install those extra packages to get proper GTK2 graphical and sound themes: `gnome-themes-extra gtk2-engines-murrine libcanberra-gtk-module`
+
 
 ### MSYS2:
 
@@ -63,7 +70,8 @@ export PATH="/mingw64/bin:${PATH}"`
 Install the dependencies this way:
 
 ```sh
-pacman -S --needed base-devel mingw-w64-$(uname -m)-{ntldd-git,subversion,unzip,toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git} git
+pacman -S --needed base-devel git \
+    mingw-w64-$(uname -m)-{ntldd-git,subversion,unzip,toolchain,cmake,make,gtk2,gtkglext,libwebp,minizip-git}
 ```
 
 Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix instead of `mingw-w64-$(uname -m)` if you need to target a non-default architecture.
@@ -79,9 +87,9 @@ brew link --force gettext
 
 ## Submodules
 
- * Crunch (optional, disabled by default, only supported with CMake build)
+ * Crunch (optional, not built if submodule is not present)
 
-If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run it within the `netradiant` repository):
+If you have not used `--recursive` option at `git clone` time, you can fetch Crunch this way (run this within the `netradiant` repository):
 
 ```sh
 git submodule update --init --recursive
@@ -89,7 +97,6 @@ git submodule update --init --recursive
 
 
 ## Simple compilation
-
 
 ### Easy builder assistant
 
@@ -107,7 +114,8 @@ If you need to build a debug build (to get help from a developer, for example), 
 ./easy-builder --debug
 ```
 
-By default, build tools and compilers use the `build/` directory as workspace.
+By default, build tools and compilers are using the `build/` directory as workspace.
+
 
 ## Advanced compilation
 
@@ -188,6 +196,7 @@ Targets:
          - `q3data`   Compiles the q3data tool.
 
 Type `make help` to get an exhaustive list of targets.
+
 
 #### Download details
 
