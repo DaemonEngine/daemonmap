@@ -25,7 +25,7 @@
 #include <string.h>
 
 #include <memory>
-
+#include <algorithm>
 
 #include "ddslib.h"
 #include "../crunch/inc/crn_decomp.h"
