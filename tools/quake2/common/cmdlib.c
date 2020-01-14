@@ -46,7 +46,6 @@
 
 // qboolean verbose = false;
 
-#ifdef SAFE_MALLOC
 void *safe_malloc( size_t size ){
 	void *p;
 
@@ -70,7 +69,6 @@ void *safe_malloc_info( size_t size, char* info ){
 	memset( p, 0, size );
 	return p;
 }
-#endif
 
 // set these before calling CheckParm
 int myargc;
