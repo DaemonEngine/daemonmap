@@ -66,6 +66,8 @@
 
 void *safe_malloc( size_t size );
 void *safe_malloc_info( size_t size, char* info );
+void *safe_malloc0( size_t size );
+void *safe_malloc0_info( size_t size, char* info );
 
 // set these before calling CheckParm
 extern int myargc;

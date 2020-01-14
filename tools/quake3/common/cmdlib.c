@@ -69,6 +69,28 @@ void *safe_malloc_info( size_t size, char* info ){
 	return p;
 }
 
+void *safe_malloc0( size_t size ){
+	void *p;
+
+	p = calloc( 1, size );
+	if ( !p ) {
+		Error( "safe_malloc0 failed on allocation of %i bytes", size );
+	}
+
+	return p;
+}
+
+void *safe_malloc0_info( size_t size, char* info ){
+	void *p;
+
+	p = calloc( 1, size );
+	if ( !p ) {
+		Error( "%s: safe_malloc0 failed on allocation of %i bytes", info, size );
+	}
+
+	return p;
+}
+
 // set these before calling CheckParm
 int myargc;
 char **myargv;
