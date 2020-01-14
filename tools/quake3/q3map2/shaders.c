@@ -1272,8 +1272,7 @@ static void ParseShaderFile( const char *filename ){
 			else if ( !Q_stricmp( token, "sun" ) /* sof2 */ || !Q_stricmp( token, "q3map_sun" ) || !Q_stricmp( token, "q3map_sunExt" ) ) {
 				float a, b;
 				sun_t       *sun;
-				qboolean ext;
-
+				qboolean ext = qfalse;
 
 				/* ydnar: extended sun directive? */
 				if ( !Q_stricmp( token, "q3map_sunext" ) ) {
