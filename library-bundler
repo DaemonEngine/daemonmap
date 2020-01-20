@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+set -e
+
 Common::noOp () {
 	printf ''
 }
@@ -295,7 +297,11 @@ Windows::writeManifest () {
 
 system_name="${1}"; shift
 bundle_dir="${1}"; shift
-exe_file="${1}"; shift
+
+if ! [ -z "${1}" ]
+then
+	exe_file="${1}"; shift
+fi
 
 bundle_dir="$(Common::getPath "${bundle_dir}")"
 registry_dir="${bundle_dir}/registry"

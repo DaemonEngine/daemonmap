@@ -1,0 +1,103 @@
+#! /usr/bin/env bash
+
+# This script is meant to be kept small and simple
+# If you think about adding features, it's probably a bad idea
+
+set -e # exit if a command fails
+set -o pipefail # Will return the exit status of make if it fails
+
+project_source_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+job_count='4'
+if command -v nproc >/dev/null
+then
+	job_count="$(nproc)"
+fi
+
+build_dir="${project_source_dir}/build${SUBDIR:+/${SUBDIR}}"
+install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
+
+build_type='Release'
+
+cmake_user_opts=''
+while [ ! -z ${1} ]
+do
+    case "${1}" in
+    '-j'*)
+        job_count="${1:2}"
+        shift
+        ;;
+    '--debug')
+        build_type='Debug'
+        shift
+        ;;
+    *)
+	cmake_user_opts+=" ${1}"
+	shift
+        ;;
+    esac
+done
+
+cmake_opts=''
+case "$(uname -s)" in
+	'Linux')
+		# no tweak required
+		;;
+	'FreeBSD')
+		if [ -f "$(ls '/usr/local/bin/g++'* | sort | tail -n1)" ]
+		then
+			gcc_version="$(ls '/usr/local/bin/g++'* | sort | tail -n1 | sed -e 's/.*[^0-9]\([0-9][0-9]*\)$/\1/')"
+			cmake_opts+=" -DCMAKE_C_COMPILER=/usr/local/bin/gcc${gcc_version}"
+			cmake_opts+=" -DCMAKE_CXX_COMPILER=/usr/local/bin/g++${gcc_version}"
+		else
+			printf "WARNING: GCC is recommended: if build fails, install GCC and retry\n" >&2
+		fi
+		;;
+	'Darwin')
+		if [ -f "$(ls '/usr/local/bin/g++-'* | sort | tail -n1)" ]
+		then
+			gcc_version="$(ls '/usr/local/bin/g++-'* | sort | tail -n1 | sed -e 's/.*[^0-9]\([0-9][0-9]*\)$/\1/')"
+			cmake_opts+=" -DCMAKE_C_COMPILER=/usr/local/bin/gcc-${gcc_version}"
+			cmake_opts+=" -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-${gcc_version}"
+		else
+			printf "WARNING: GCC is recommended: if build fails, install GCC and retry\n" >&2
+		fi
+		;;
+	'MSYS_NT-'*)
+		# no tweak required
+		;;
+	'CYGWIN_NT-'*|'MINGW'*'_NT-'*)
+		printf "WARNING: system is not tested: if build fails, use MSYS2 instead\n" >&2
+		;;
+	*)
+		printf "WARNING: system is not tested\n" >&2
+		;;
+esac
+
+fetch_submodules_cmd=''
+if ! [ -f "${project_source_dir}/libs/crunch/inc/crn_decomp.h" ]
+then
+	fetch_submodules_cmd='git submodule update --init --recursive'
+fi
+
+set -x
+
+cd "${project_source_dir}"
+
+${fetch_submodules_cmd}
+
+cmake \
+	-G'Unix Makefiles' \
+	-H'.' \
+	-B"${build_dir}" \
+	-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
+	-D'CMAKE_BUILD_TYPE'="${build_type}" \
+	${cmake_opts} \
+	${cmake_user_opts} \
+	${@}
+
+cmake \
+	--build "${build_dir}" \
+	-- \
+	-j"${job_count}" \
+	install
