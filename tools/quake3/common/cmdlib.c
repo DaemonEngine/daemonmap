@@ -675,8 +675,7 @@ int    LoadFileBlock( const char *filename, void **bufferptr ){
 	if ( nBlock > 0 ) {
 		nAllocSize += MEM_BLOCKSIZE - nBlock;
 	}
-	buffer = safe_malloc( nAllocSize + 1 );
-	memset( buffer, 0, nAllocSize + 1 );
+	buffer = safe_malloc0( nAllocSize + 1 );
 	SafeRead( f, buffer, length );
 	fclose( f );
 
