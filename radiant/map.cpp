@@ -1581,11 +1581,7 @@ tryDecompile:
 		StringBuffer output;
 		output.push_string( AppPath_get() );
 		output.push_string( "q3map2" );
-
-		#if GDEF_OS_WINDOWS
-		output.push_string( "." );
-		output.push_string( RADIANT_EXECUTABLE );
-		#endif // GDEF_OS_WINDOWS
+		output.push_string( GDEF_OS_EXE_EXT );
 
 		output.push_string( " -v -game " );
 		output.push_string( ( type && *type ) ? type : "quake3" );

@@ -76,8 +76,7 @@ void setString( const char* string ){
 	m_string = string;
 }
 void evaluate( StringBuffer& output ){
-	#if !(GDEF_OS_WINDOWS)
-	// strip .[ExecutableType] entirely (including preceding dot) on Mac and Linux
+	// replace ".[ExecutableType]" with "[ExecutableExt]"
 	{
 		StringBuffer output;
 		const char *pattern = ".[ExecutableType]";
@@ -85,7 +84,7 @@ void evaluate( StringBuffer& output ){
 		{
 			if ( strncmp( pattern, i, sizeof( pattern ) ) == 0 )
 			{
-				output.push_string("");
+				output.push_string("[ExecutableExt]");
 				i += strlen( pattern ) - 1;
 			}
 			else
@@ -95,7 +94,6 @@ void evaluate( StringBuffer& output ){
 		}
 		setString(output.c_str());
 	}
-	#endif // !(GDEF_OS_WINDOWS)
 
 	StringBuffer variable;
 	bool in_variable = false;

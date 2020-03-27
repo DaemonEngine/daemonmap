@@ -173,15 +173,18 @@ bool ConfirmModified( const char* title ){
 }
 
 void bsp_init(){
+	// this is expected to not be used since
+	// ".[ExecutableType]" is replaced by "[ExecutableExt]"
+	const char *exe_ext = GDEF_OS_EXE_EXT;
+	build_set_variable( "ExecutableType", exe_ext[0] == '\0' ? exe_ext : exe_ext + 1 );
+	
+	build_set_variable( "ExecutableExt", GDEF_OS_EXE_EXT );
 	build_set_variable( "RadiantPath", AppPath_get() );
-
-	#if GDEF_OS_WINDOWS
-	build_set_variable( "ExecutableType", RADIANT_EXECUTABLE );
-	#endif // GDEF_OS_WINDOWS
-
 	build_set_variable( "EnginePath", EnginePath_get() );
 	build_set_variable( "UserEnginePath", g_qeglobals.m_userEnginePath.c_str() );
+
 	build_set_variable( "MonitorAddress", ( g_WatchBSP_Enabled ) ? "127.0.0.1:39000" : "" );
+
 	build_set_variable( "GameName", gamename_get() );
 
 	StringBuffer ExtraQ3map2Args;

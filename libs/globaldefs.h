@@ -107,6 +107,14 @@
 #define GDEF_OS_XDG 0
 #endif
 
+// EXECUTABLE EXTENSION
+
+#if GDEF_OS_WINDOWS
+#define GDEF_OS_EXE_EXT ".exe"
+#else
+#define GDEF_OS_EXE_EXT ""
+#endif
+
 // COMPILER
 
 #if defined(_MSC_VER)

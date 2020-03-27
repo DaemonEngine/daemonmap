@@ -282,10 +282,6 @@ endif ()
 #-----------------------------------------------------------------------
 
 if (BUILD_BINARIES)
-    if (CMAKE_EXECUTABLE_SUFFIX)
-        string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
-    endif ()
-
     macro (radiant_tool name)
         add_dependencies(binaries ${name})
 
@@ -305,9 +301,6 @@ if (BUILD_BINARIES)
 
     if (BUILD_RADIANT)
         add_subdirectory(radiant)
-        set_target_properties(${RADIANT_BASENAME} PROPERTIES
-        COMPILE_DEFINITIONS RADIANT_EXECUTABLE="${RADIANT_EXECUTABLE}"
-    )
     endif ()
 endif ()
 
