@@ -80,43 +80,17 @@ void evaluate( StringBuffer& output ){
 	// strip .[ExecutableType] entirely (including preceding dot) on Mac and Linux
 	{
 		StringBuffer output;
-		StringBuffer variable;
-		bool found_dot = false;
-		bool in_variable = false;
-		for (const char *i = m_string.c_str(); *i != '\0'; ++i) {
-			if (!found_dot && !in_variable) {
-				switch (*i) {
-					case '.':
-						found_dot = true;
-						break;
-					default:
-						output.push_back(*i);
-						break;
-				}
-			} else if (found_dot && !in_variable) {
-				switch (*i) {
-					case '[':
-						in_variable = true;
-						break;
-					default:
-						found_dot = false;
-						output.push_back(*i);
-						break;
-				}
-			} else {
-				switch (*i) {
-					case ']':
-						found_dot = false;
-						in_variable = false;
-						if ( strncmp("ExecutableType", variable.c_str(), sizeof(variable.c_str())) == 0 ) {
-							output.push_string("");
-							variable.clear();
-						}
-						break;
-					default:
-						variable.push_back(*i);
-						break;
-				}
+		const char *pattern = ".[ExecutableType]";
+		for ( const char *i = m_string.c_str(); *i != '\0'; ++i )
+		{
+			if ( strcmp( pattern, i ) == 0 )
+			{
+				output.push_string("");
+				i += strlen( pattern );
+			}
+			else
+			{
+				output.push_back(*i);
 			}
 		}
 		setString(output.c_str());
