@@ -3,7 +3,7 @@
 set -e
 
 Common::noOp () {
-	printf ''
+	true
 }
 
 Common::getPath () {
@@ -110,7 +110,7 @@ Multi::getRootPrefix () {
 			;;
 		'windows')
 			basename "${lib_file}" \
-			| xargs -n1 -P 1 which \
+			| xargs -n1 -P1 which \
 			| cut -f2 -d'/'
 			;;
 	esac
