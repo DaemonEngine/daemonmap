@@ -83,10 +83,10 @@ void evaluate( StringBuffer& output ){
 		const char *pattern = ".[ExecutableType]";
 		for ( const char *i = m_string.c_str(); *i != '\0'; ++i )
 		{
-			if ( strcmp( pattern, i ) == 0 )
+			if ( strncmp( pattern, i, sizeof( pattern ) ) == 0 )
 			{
 				output.push_string("");
-				i += strlen( pattern );
+				i += strlen( pattern ) - 1;
 			}
 			else
 			{
