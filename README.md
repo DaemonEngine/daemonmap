@@ -106,7 +106,7 @@ If you have standard needs and use well-known platform and operating system, you
 ./easy-builder
 ```
 
-If anything goes right, you'll find your netradiant build in `install/` subdirectory.
+If everything went right, you'll find your netradiant build in `install/` subdirectory.
 
 If you need to build a debug build (to get help from a developer, for example), you can do it that way:
 
