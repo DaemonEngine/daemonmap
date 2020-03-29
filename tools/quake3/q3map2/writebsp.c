@@ -561,6 +561,7 @@ void EndBSPFile( qboolean do_write, const char *BSPFilePath, const char *surface
 			char basename[ 1024 ];	
 			char filename[ 1024 ];
 			strncpy( basename, BSPFilePath, sizeof(basename) );
+			StripExtension( basename );
 			sprintf( filename, "%s.tex", basename );
 
 			/* only create tex file if it is the first compile */
