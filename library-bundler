@@ -1,7 +1,9 @@
 #! /usr/bin/env bash
 
+set -e
+
 Common::noOp () {
-	printf ''
+	true
 }
 
 Common::getPath () {
@@ -108,7 +110,7 @@ Multi::getRootPrefix () {
 			;;
 		'windows')
 			basename "${lib_file}" \
-			| xargs -n1 -P 1 which \
+			| xargs -n1 -P1 which \
 			| cut -f2 -d'/'
 			;;
 	esac
@@ -295,7 +297,11 @@ Windows::writeManifest () {
 
 system_name="${1}"; shift
 bundle_dir="${1}"; shift
-exe_file="${1}"; shift
+
+if ! [ -z "${1}" ]
+then
+	exe_file="${1}"; shift
+fi
 
 bundle_dir="$(Common::getPath "${bundle_dir}")"
 registry_dir="${bundle_dir}/registry"

@@ -15,12 +15,12 @@ endif ()
 # Paths
 #-----------------------------------------------------------------------
 
-set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
-add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
-
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
+
+set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
+add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
 
 set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
 set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
@@ -39,16 +39,20 @@ set(RADIANT_VERSION_MAJOR 1)
 set(RADIANT_VERSION_MINOR 5)
 set(RADIANT_VERSION_PATCH 0)
 set(RADIANT_VERSION "${RADIANT_VERSION_MAJOR}.${RADIANT_VERSION_MINOR}.${RADIANT_VERSION_PATCH}")
+
 set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
 
 find_package(Git REQUIRED)
+
 execute_process(
      COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
      OUTPUT_VARIABLE GIT_VERSION
      OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
 set(RADIANT_VERSION_STRING "${RADIANT_VERSION}n")
+
 if (GIT_VERSION)
     set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
 endif ()
@@ -82,7 +86,6 @@ endif ()
 #-----------------------------------------------------------------------
 # Flags
 #-----------------------------------------------------------------------
-
 
 if (BUILD_BINARIES)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
@@ -187,18 +190,8 @@ if (BUILD_BINARIES)
                 COMMAND "${PROJECT_SOURCE_DIR}/library-bundler"
                 "register" "${PROJECT_BINARY_DIR}" "$<TARGET_FILE:${target}>"
                 VERBATIM
-        )
-        endif ()
-    endmacro ()
-
-    macro (bundle_stuff target)
-        if (BUNDLE_LIBRARIES AND WIN32)
-        file(GLOB DLL_FILES ${PROJECT_BINARY_DIR}/*.dll)
-
-        install(FILES
-            ${DLL_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}
-        )
+            )
+            add_dependencies(bundle ${target})
         endif ()
     endmacro ()
 endif ()
@@ -216,10 +209,6 @@ endif ()
 #-----------------------------------------------------------------------
 
 if (BUILD_BINARIES)
-    if (CMAKE_EXECUTABLE_SUFFIX)
-        string(REGEX REPLACE "^[.]" "" RADIANT_EXECUTABLE ${CMAKE_EXECUTABLE_SUFFIX})
-    endif ()
-
     macro (radiant_tool name)
         add_dependencies(binaries ${name})
 
@@ -231,13 +220,11 @@ if (BUILD_BINARIES)
 
         copy_dlls(${name})
 
-		bundle_stuff(${name})
-
         install(
             TARGETS ${name}
             RUNTIME DESTINATION ${RADIANT_BIN_DIR}
         )
-    endmacro()
+    endmacro ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -246,6 +233,14 @@ endif ()
 
 if (BUILD_TOOLS)
     add_subdirectory(tools)
+
+    file(GLOB DATA_FILES "${PROJECT_SOURCE_DIR}/setup/data/tools/*")
+
+    if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
+        # Copy data files from sources to the build directory
+        message(STATUS "Copying data files")
+        file(COPY ${DATA_FILES} DESTINATION "${PROJECT_BINARY_DIR}")
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -255,6 +250,6 @@ endif ()
 install(
         FILES
         DESTINATION .
-)
+    )
 
 include(cmake/scripts/package.cmake)

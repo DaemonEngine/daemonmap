@@ -62,13 +62,10 @@
 #define MEM_BLOCKSIZE 4096
 
 
-#define SAFE_MALLOC
-#ifdef SAFE_MALLOC
 void *safe_malloc( size_t size );
 void *safe_malloc_info( size_t size, char* info );
-#else
-#define safe_malloc( a ) malloc( a )
-#endif /* SAFE_MALLOC */
+void *safe_malloc0( size_t size );
+void *safe_malloc0_info( size_t size, char* info );
 
 // set these before calling CheckParm
 extern int myargc;
