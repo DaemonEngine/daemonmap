@@ -344,8 +344,7 @@ void AddLump( FILE *file, bspHeader_t *header, int lumpNum, const void *data, in
 	SafeWrite( file, data, length );
 
 	/* write padding zeros */
-	char zeros[3] = { 0, 0, 0 };
-	SafeWrite( file, zeros, ( ( length + 3 ) & ~3 ) - length );
+	SafeWrite( file, (const byte[3]){ 0, 0, 0 }, ( ( length + 3 ) & ~3 ) - length );
 }
 
 
