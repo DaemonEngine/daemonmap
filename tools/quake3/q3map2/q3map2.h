@@ -40,10 +40,10 @@ extern "C"
 #endif
 
 /* version */
-#ifndef Q3MAP_VERSION
-#error no Q3MAP_VERSION defined
+#ifndef DAEMONMAP_VERSION
+#error no DAEMONMAP_VERSION defined
 #endif
-#define Q3MAP_MOTD      "Your map saw the pretty lights from daemonmap's lucifer cannon"
+#define Q3MAP_MOTD "Your map saw the pretty lights from daemonmap's lucifer cannon"
 
 
 /* -------------------------------------------------------------------------------

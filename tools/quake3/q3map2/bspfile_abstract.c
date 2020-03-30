@@ -616,7 +616,7 @@ void InjectCommandLine( char **argv, int beginArgs, int endArgs ){
 
 	*outpos = 0;
 	SetKeyValue( &entities[0], "_q3map2_cmdline", newCommandLine );
-	SetKeyValue( &entities[0], "_q3map2_version", Q3MAP_VERSION );
+	SetKeyValue( &entities[0], "_q3map2_version", DAEMONMAP_VERSION );
 }
 
 

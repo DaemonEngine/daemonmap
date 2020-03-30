@@ -1,4 +1,5 @@
-add_subdirectory(fastlz)
+# Already defined by NetRadiant, when built as submodule
+if (NOT TARGET libs)
 add_subdirectory(filematch)
 add_subdirectory(l_net)
 add_subdirectory(mathlib)
@@ -11,6 +12,9 @@ add_library(libs
 
 target_include_directories(libs PRIVATE ${GLIB_INCLUDE_DIRS})
 target_link_libraries(libs PRIVATE ${GLIB_LIBRARIES})
+endif()
+
+add_subdirectory(fastlz)
 
 add_library(cm
         cm/cm_patch.cpp

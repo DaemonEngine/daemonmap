@@ -1,6 +1,6 @@
 include_directories(BEFORE common)
 
-set(Q3MAP_VERSION 2.5.17n)
+set(DAEMONMAP_VERSION 2.5.17n)
 find_package(Git REQUIRED)
 execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
@@ -9,9 +9,9 @@ execute_process(
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 if (GIT_VERSION)
-    set(Q3MAP_VERSION "${Q3MAP_VERSION}-git-${GIT_VERSION}")
+    set(DAEMONMAP_VERSION "${DAEMONMAP_VERSION}-git-${GIT_VERSION}")
 endif ()
-add_definitions(-DQ3MAP_VERSION="${Q3MAP_VERSION}")
+add_definitions(-DDAEMONMAP_VERSION="${DAEMONMAP_VERSION}")
 
 find_package(GLIB REQUIRED)
 include_directories(${GLIB_INCLUDE_DIRS})
@@ -31,7 +31,7 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
-set(q3map2_games
+set(daemonmap_games
         q3map2/game_quake3.h
         q3map2/game_unvanquished.h
         q3map2/game_smokinguns.h
@@ -54,7 +54,7 @@ radiant_tool(daemonmap
         q3map2/brush.c
         q3map2/bspfile_abstract.c
         q3map2/bspfile_ibsp.c
-        ${q3map2_games} q3map2/game__null.h
+        ${daemonlmap_games} q3map2/game__null.h
         q3map2/help.c
         q3map2/main.c
         q3map2/mesh.c
@@ -88,8 +88,11 @@ target_link_libraries(daemonmap
         recast
         )
 
-add_custom_target(quake3)
-add_dependencies(quake3 daemonmap)
+add_dependencies(unvanquished daemonmap)
+
+if (TARGET quake3)
+    add_dependencies(unvanquished quake3)
+endif ()
 
 if (UNIX)
     target_link_libraries(daemonmap pthread m)

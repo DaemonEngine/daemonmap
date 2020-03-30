@@ -548,7 +548,7 @@ void WriteIBSPFile( const char *filename ){
 	time( &t );
 
 	/* asctime adds an implicit trailing \n */
-	sprintf( marker, "I LOVE MY Q3MAP2 %s on %s", Q3MAP_VERSION, asctime( localtime( &t ) ) );
+	sprintf( marker, "I LOVE MY DAEMONMAP %s on %s", DAEMONMAP_VERSION, asctime( localtime( &t ) ) );
 	AddLump( file, (bspHeader_t*) header, 0, marker, strlen( marker ) + 1 );
 
 	/* add lumps */

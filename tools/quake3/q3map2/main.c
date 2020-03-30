@@ -124,7 +124,7 @@ int main( int argc, char **argv ){
 	start = I_FloatTime();
 
 	/* this was changed to emit version number over the network */
-	printf( Q3MAP_VERSION "\n" );
+	printf( DAEMONMAP_VERSION "\n" );
 
 	/* set exit call */
 	atexit( ExitQ3Map );
@@ -208,7 +208,7 @@ int main( int argc, char **argv ){
 
 	Sys_Printf( "Q3Map         - v1.0r (c) 1999 Id Software Inc.\n" );
 	Sys_Printf( "Q3Map (ydnar) - v2.5\n" );
-	Sys_Printf( "DaemonMap     - v" Q3MAP_VERSION "\n" );
+	Sys_Printf( "DaemonMap     - v" DAEMONMAP_VERSION "\n" );
 	Sys_Printf( "%s\n", Q3MAP_MOTD );
 
 	/* ydnar: new path initialization */
