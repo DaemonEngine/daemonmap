@@ -696,7 +696,7 @@ static void rcFilterGaps( rcContext *ctx, int walkableRadius, int walkableClimb,
 
 	//add the new spans
 	//we cant do this in the loop, because the loop would then iterate over those added spans
-	for ( int i = 0; i < spanData.size(); i += 3 ) {
+	for ( std::vector<int>::size_type i = 0; i < spanData.size(); i += 3 ) {
 		rcAddSpan( ctx, solid, spanData[i], spanData[i + 1], spanData[i + 2] - 1, spanData[i + 2], RC_WALKABLE_AREA, walkableClimb );
 	}
 }
