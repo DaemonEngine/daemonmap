@@ -11,6 +11,7 @@ project_source_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd
 build_dir="${project_source_dir}/build${SUBDIR:+/${SUBDIR}}"
 install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
 
+install_target='install/strip'
 build_type='Release'
 
 declare -a cmake_opts
@@ -67,20 +68,21 @@ job_count="${job_count:-4}"
 declare -a cmake_user_opts
 while [ ! -z "${1}" ]
 do
-    case "${1}" in
-    '-j'*)
-        job_count="${1:2}"
-        shift
-        ;;
-    '--debug')
-        build_type='Debug'
-        shift
-        ;;
-    *)
+	case "${1}" in
+	'-j'*)
+		job_count="${1:2}"
+		shift
+		;;
+	'--debug')
+		install_target='install'
+		build_type='Debug'
+		shift
+		;;
+	*)
 	cmake_user_opts[${#cmake_user_opts[@]}]="${1}"
 	shift
-        ;;
-    esac
+		;;
+	esac
 done
 
 declare -a fetch_submodules_cmd
@@ -100,10 +102,11 @@ cmake \
 	-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
 	-D'CMAKE_BUILD_TYPE'="${build_type}" \
 	"${cmake_opts[@]}" \
-	"${cmake_user_opts[@]}"
+	"${cmake_user_opts[@]}" \
+	"${project_source_dir}"
 
 cmake \
 	--build "${build_dir}" \
 	-- \
 	-j"${job_count}" \
-	install
+	"${install_target}"
