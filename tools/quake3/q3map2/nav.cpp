@@ -72,6 +72,7 @@ static void WriteNavMeshFile( const char* agentname, const dtTileCache *tileCach
 	int numTiles = 0;
 	FILE *file = NULL;
 	char filename[ 1024 ];
+	char filenameWithoutExt[ 1024 ];
 	NavMeshSetHeader header;
 	const int maxTiles = tileCache->getTileCount();
 
@@ -92,9 +93,9 @@ static void WriteNavMeshFile( const char* agentname, const dtTileCache *tileCach
 
 	SwapNavMeshSetHeader( header );
 
-	strcpy( filename, source );
-	StripExtension( filename );
-	sprintf( filename, "%s-%s", filename, agentname );
+	strcpy( filenameWithoutExt, source );
+	StripExtension( filenameWithoutExt );
+	sprintf( filename, "%s-%s", filenameWithoutExt, agentname );
 	DefaultExtension( filename, ".navMesh" );
 	file = fopen( filename, "wb" );
 
