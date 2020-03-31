@@ -127,7 +127,7 @@ This project uses the usual CMake workflow:
 #### Debug build
 
 ```sh
-cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Debug
+cmake -G "Unix Makefiles" -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug
 cmake --build build -- -j$(nproc)
 ```
 
@@ -135,7 +135,7 @@ cmake --build build -- -j$(nproc)
 #### Release build
 
 ```sh
-cmake -G "Unix Makefiles" -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake -G "Unix Makefiles" -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -- -j$(nproc)
 ```
 
