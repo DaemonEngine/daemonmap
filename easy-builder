@@ -86,10 +86,13 @@ do
 done
 
 declare -a fetch_submodules_cmd
-if ! [ -f "${project_source_dir}/libs/crunch/inc/crn_decomp.h" ]
-then
-	fetch_submodules_cmd=(git -C "${project_source_dir}" submodule update --init --recursive)
-fi
+for submodule_file in 'libs/crunch/inc/crn_decomp.h'
+do
+	if ! [ -f "${project_source_dir}/${submodule_file}" ]
+	then
+		fetch_submodules_cmd=(git -C "${project_source_dir}" submodule update --init --recursive)
+	fi
+done
 
 set -x
 
