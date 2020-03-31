@@ -52,15 +52,6 @@ char *surfaceTypes[ NUM_SURFACE_TYPES ] =
 	"SURFACE_SHADER"
 };
 
-/*
-   Random()
-   returns a pseudorandom number between 0 and 1
- */
-
-vec_t Random( void ){
-	return (vec_t) rand() / RAND_MAX;
-}
-
 
 char *Q_strncpyz( char *dst, const char *src, size_t len ) {
 	if ( len == 0 ) {
@@ -169,19 +160,6 @@ int main( int argc, char **argv ){
 			argv[ i ] = NULL;
 		}
 
-		/* patch subdivisions */
-		else if ( !strcmp( argv[ i ], "-subdivisions" ) ) {
-			if ( ++i >= argc || !argv[ i ] ) {
-				Error( "Out of arguments: No value specified after %s", argv[ i - 1 ] );
-			}
-			argv[ i - 1 ] = NULL;
-			patchSubdivisions = atoi( argv[ i ] );
-			argv[ i ] = NULL;
-			if ( patchSubdivisions <= 0 ) {
-				patchSubdivisions = 1;
-			}
-		}
-
 		/* threads */
 		else if ( !strcmp( argv[ i ], "-threads" ) ) {
 			if ( ++i >= argc || !argv[ i ] ) {
@@ -213,11 +191,6 @@ int main( int argc, char **argv ){
 
 	/* ydnar: new path initialization */
 	InitPaths( &argc, argv );
-
-	/* set game options */
-	if ( !patchSubdivisions ) {
-		patchSubdivisions = game->patchSubdivisions;
-	}
 
 	/* check if we have enough options left to attempt something */
 	if ( argc < 2 ) {

@@ -1024,7 +1024,6 @@ tree_t;
    ------------------------------------------------------------------------------- */
 
 /* main.c */
-vec_t                       Random( void );
 char                        *Q_strncpyz( char *dst, const char *src, size_t len );
 char                        *Q_strcat( char *dst, size_t dlen, const char *src );
 char                        *Q_strncat( char *dst, size_t dlen, const char *src, size_t slen );
@@ -1097,7 +1096,6 @@ int                         GetLumpElements( bspHeader_t *header, int lump, int 
 void                        *GetLump( bspHeader_t *header, int lump );
 int                         CopyLump( bspHeader_t *header, int lump, void *dest, int size );
 int                         CopyLump_Allocate( bspHeader_t *header, int lump, void **dest, int size, int *allocationVariable );
-void                        AddLump( FILE *file, bspHeader_t *header, int lumpNum, const void *data, int length );
 
 void                        LoadBSPFile( const char *filename );
 void                        WriteBSPFile( const char *filename );
@@ -1203,8 +1201,6 @@ Q_EXTERN qboolean skyFixHack Q_ASSIGN( qfalse );                    /* ydnar */
 Q_EXTERN qboolean bspAlternateSplitWeights Q_ASSIGN( qfalse );      /* 27 */
 Q_EXTERN qboolean deepBSP Q_ASSIGN( qfalse );                       /* div0 */
 Q_EXTERN qboolean maxAreaFaceSurface Q_ASSIGN( qfalse );                    /* divVerent */
-
-Q_EXTERN int patchSubdivisions Q_ASSIGN( 8 );                       /* ydnar: -patchmeta subdivisions */
 
 Q_EXTERN int maxLMSurfaceVerts Q_ASSIGN( 64 );                      /* ydnar */
 Q_EXTERN int maxSurfaceVerts Q_ASSIGN( 999 );                       /* ydnar */

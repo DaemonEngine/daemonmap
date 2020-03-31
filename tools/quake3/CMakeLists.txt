@@ -57,7 +57,6 @@ radiant_tool(daemonmap
         ${daemonlmap_games} q3map2/game__null.h
         q3map2/help.c
         q3map2/main.c
-        q3map2/mesh.c
         q3map2/nav.cpp
         q3map2/path_init.c
         q3map2/q3map2.h

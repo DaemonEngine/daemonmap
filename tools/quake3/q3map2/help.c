@@ -113,7 +113,6 @@ void HelpCommon()
 		{"-fs_nohomepath", "Do not load home path in VFS"},
 		{"-fs_pakpath <path>", "Specify a package directory (can be used more than once to look in multiple paths)"},
 		{"-game <gamename>", "Load settings for the given game (default: unvanquished)"},
-		{"-subdivisions <F>", "multiplier for patch subdivisions quality"},
 		{"-threads <N>", "number of threads to use"},
 		{"-v", "Verbose mode"},
 		{"-werror", "Make all warnings into errors"}
