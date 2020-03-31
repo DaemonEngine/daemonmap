@@ -99,6 +99,6 @@ void init( const float *v, int nv, const int *tris, int ntris ){
 const float           *getMins(){ return mins; }
 const float           *getMaxs() { return maxs; }
 const float           *getVerts() { return verts; }
-const int              getNumVerts() { return nverts; }
+int                    getNumVerts() { return nverts; }
 const rcChunkyTriMesh *getChunkyMesh() { return &mesh; }
 };
