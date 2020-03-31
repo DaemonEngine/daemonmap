@@ -95,7 +95,12 @@ static void WriteNavMeshFile( const char* agentname, const dtTileCache *tileCach
 
 	strcpy( filenameWithoutExt, source );
 	StripExtension( filenameWithoutExt );
-	sprintf( filename, "%s-%s", filenameWithoutExt, agentname );
+
+	if ( snprintf( filename, sizeof( filename ), "%s-%s", filenameWithoutExt, agentname ) < 0 )
+	{
+		Error( "Filename too long for agent: %s\n", agentname );
+	}
+
 	DefaultExtension( filename, ".navMesh" );
 	file = fopen( filename, "wb" );
 
