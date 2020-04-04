@@ -31,35 +31,6 @@ if (FHS_INSTALL AND NOT BUNDLE_LIBRARIES)
 endif ()
 
 #-----------------------------------------------------------------------
-# Version
-#-----------------------------------------------------------------------
-
-# CMake 3.0+ would allow this in project()
-set(RADIANT_VERSION_MAJOR 1)
-set(RADIANT_VERSION_MINOR 5)
-set(RADIANT_VERSION_PATCH 0)
-set(RADIANT_VERSION "${RADIANT_VERSION_MAJOR}.${RADIANT_VERSION_MINOR}.${RADIANT_VERSION_PATCH}")
-
-set(RADIANT_ABOUTMSG "Custom build" CACHE STRING "About message")
-
-find_package(Git REQUIRED)
-
-execute_process(
-     COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-     OUTPUT_VARIABLE GIT_VERSION
-     OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-set(RADIANT_VERSION_STRING "${RADIANT_VERSION}n")
-
-if (GIT_VERSION)
-    set(RADIANT_VERSION_STRING "${RADIANT_VERSION_STRING}-git-${GIT_VERSION}")
-endif ()
-
-message(STATUS "Building ${PROJECT_NAME} ${RADIANT_VERSION_STRING} ${RADIANT_ABOUTMSG}")
-
-#-----------------------------------------------------------------------
 # Language standard
 #-----------------------------------------------------------------------
 
