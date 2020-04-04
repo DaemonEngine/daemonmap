@@ -39,7 +39,6 @@
 
 #define CMD_ABOUT "About..."
 
-void about_plugin_window();
 void MapCoordinator();
 
 #if !GDEF_OS_WINDOWS
@@ -212,7 +211,18 @@ const char* getCommandTitleList(){
 }
 void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush ){ // message processing
 	if ( string_equal( command, CMD_ABOUT ) ) {
-		about_plugin_window();
+		char const *label_text = 
+			PLUGIN_NAME " " PLUGIN_VERSION " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"Written by Topsun\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+			__DATE__;
+
+		GlobalRadiant().m_pfnMessageBox( main_window, label_text,
+										"About " PLUGIN_NAME,
+										eMB_OK,
+										eMB_ICONDEFAULT );
 	}
 	if ( string_equal( command, "ET-MapCoordinator" ) ) {
 		MapCoordinator();
@@ -253,41 +263,6 @@ extern "C" void RADIANT_DLLEXPORT Radiant_RegisterModules( ModuleServer& server 
 //  ************
 // ** my stuff **
 //  ************
-
-// About dialog
-void about_plugin_window(){
-	auto window = ui::Window( ui::window_type::TOP ); // create a window
-	gtk_window_set_transient_for( window, SunPlug::main_window ); // make the window to stay in front of the main window
-	window.connect( "delete_event", G_CALLBACK( delete_event ), NULL ); // connect the delete event
-	window.connect( "destroy", G_CALLBACK( destroy ), NULL ); // connect the destroy event for the window
-	gtk_window_set_title( window, "About " PLUGIN_NAME ); // set the title of the window for the window
-	gtk_window_set_resizable( window, FALSE ); // don't let the user resize the window
-	gtk_window_set_modal( window, TRUE ); // force the user not to do something with the other windows
-	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 ); // set the border of the window
-
-	auto vbox = ui::VBox( FALSE, 10 ); // create a box to arrange new objects vertically
-	window.add(vbox);
-
-	char const *label_text = 
-	PLUGIN_NAME " " PLUGIN_VERSION " for "
-	RADIANT_NAME " " RADIANT_VERSION "\n\n"
-	"Written by Topsun\n\n"
-	"Built against "
-	RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
-	__DATE__;
-
-	auto label = ui::Label( label_text ); // create a label
-	gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_LEFT ); // text align left
-	vbox.pack_start( label, FALSE, FALSE, 2 ); // insert the label in the box
-
-	auto button = ui::Button( "OK" ); // create a button with text
-	g_signal_connect_swapped( G_OBJECT( button ), "clicked", G_CALLBACK( gtk_widget_destroy ), (void *) window ); // connect the click event to close the window
-	vbox.pack_start( button, FALSE, FALSE, 2 ); // insert the button in the box
-
-	gtk_window_set_position( window, GTK_WIN_POS_CENTER ); // center the window on screen
-
-	gtk_widget_show_all( window ); // show the window and all subelements
-}
 
 // get the current bounding box and return the optimal coordinates
 void GetOptimalCoordinates( AABB *levelBoundingBox ){
