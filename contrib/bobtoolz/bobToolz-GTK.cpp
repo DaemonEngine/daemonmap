@@ -64,15 +64,6 @@ static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,V
 // globals
 ui::Window g_pRadiantWnd{ui::null};
 
-static const char *PLUGIN_ABOUT =
-			PLUGIN_NAME " for "
-			RADIANT_NAME " " RADIANT_VERSION "\n\n"
-			"by digibob <digibob@splashdamage.com> (http://www.splashdamage.com)\n\n"
-			"Additional Contributors: MarsMattel, RR2DO2\n\n"
-			"Built against "
-			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
-			__DATE__;
-
 extern "C" const char* QERPlug_Init( void* hApp, void* pMainWidget ) {
 	g_pRadiantWnd = ui::Window::from(pMainWidget);
 
@@ -148,7 +139,19 @@ extern "C" void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool 
 		DoPathPlotter();
 	}
 	else if ( string_equal_nocase( p, "about..." ) ) {
-		DoMessageBox( PLUGIN_ABOUT, "About", eMB_OK );
+		static const char *label_text =
+			PLUGIN_NAME " for "
+			RADIANT_NAME " " RADIANT_VERSION "\n\n"
+			"by digibob <digibob@splashdamage.com> (http://www.splashdamage.com)\n\n"
+			"Additional Contributors: MarsMattel, RR2DO2\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+			__DATE__;
+
+		GlobalRadiant().m_pfnMessageBox( g_pRadiantWnd, label_text,
+										"About " PLUGIN_NAME,
+										eMB_OK,
+										eMB_ICONDEFAULT );
 	}
 }
 

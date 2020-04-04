@@ -39,16 +39,6 @@ static const char *PLUGIN_COMMANDS = ABOUT_CMD ",Colour Changer...,Swap Light Co
 // globals
 GtkWidget *g_pRadiantWnd = NULL;
 
-static const char *PLUGIN_ABOUT =
-			PLUGIN_NAME for " RADIANT_NAME "\n\n"
-			"Written by djbob\n\n"
-//			20190605 dead link
-//			"http://www.planetquake.com/toolz\n\n"
-//			http://web.archive.org/web/20140109083123/http://planetquake.gamespy.com/toolz
-			"Built against "
-			RADIANT_NAME " " RADIANT_VERSION "\n"
-			__DATE__;
-
 extern "C" LPVOID WINAPI QERPlug_GetFuncTable(){
 	return &g_FuncTable;
 }
@@ -86,7 +76,19 @@ extern "C" void WINAPI QERPlug_Dispatch( LPCSTR p, vec3_t vMin, vec3_t vMax, boo
 	}
 
 	if ( !strcmp( p, CMD_ABOUT ) ) {
-		DoMessageBox( PLUGIN_ABOUT, "About", IDOK );
+		const char *label_text =
+			PLUGIN_NAME for " RADIANT_NAME "\n\n"
+			"Written by djbob\n\n"
+//			20190605 dead link
+//			"http://www.planetquake.com/toolz\n\n"
+			"Built against "
+			RADIANT_NAME " " RADIANT_VERSION "\n"
+			__DATE__;
+
+		GlobalRadiant().m_pfnMessageBox( g_pRadiantWnd, label_text,
+										"About " PLUGIN_NAME,
+										eMB_OK,
+										eMB_ICONDEFAULT );
 	}
 	else if ( !strcmp( p, "Colour Changer..." ) ) {
 		DoCTFColourChanger();
