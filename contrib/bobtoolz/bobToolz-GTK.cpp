@@ -62,10 +62,10 @@ void BobToolz_destroy(){
 static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,Vis Viewer,Brush Cleanup,Polygon Builder,Caulk Selection,-,Tree Planter,Drop Entity,Plot Splines,-,Merge Patches,Split patches,Split patches cols,Split patches rows,Turn edge";
 
 // globals
-static ui::Window g_pRadiantWnd{ui::null};
+static ui::Window main_window{ui::null};
 
 extern "C" const char* QERPlug_Init( void* hApp, void* pMainWidget ) {
-	g_pRadiantWnd = ui::Window::from(pMainWidget);
+	main_window = ui::Window::from(pMainWidget);
 
 	return PLUGIN_NAME " for " RADIANT_NAME;
 }
@@ -148,7 +148,7 @@ extern "C" void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool 
 			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;
 
-		GlobalRadiant().m_pfnMessageBox( g_pRadiantWnd, label_text,
+		GlobalRadiant().m_pfnMessageBox( main_window, label_text,
 										"About " PLUGIN_NAME,
 										eMB_OK,
 										eMB_ICONDEFAULT );

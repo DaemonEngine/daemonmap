@@ -1044,8 +1044,6 @@ EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs, ui::Window main_window ){
 
 	gtk_widget_realize( window );
 
-
-
 	auto vbox = ui::VBox( FALSE, 10 );
 	window.add(vbox);
 	vbox.show();

@@ -37,14 +37,14 @@ BOOL g_bBSPInitDone                 = FALSE;
 static const char *PLUGIN_COMMANDS = ABOUT_CMD ",Colour Changer...,Swap Light Colours,Change Angles 180,Swap Spawn Points";
 
 // globals
-GtkWidget *g_pRadiantWnd = NULL;
+GtkWidget *main_window = NULL;
 
 extern "C" LPVOID WINAPI QERPlug_GetFuncTable(){
 	return &g_FuncTable;
 }
 
 extern "C" LPCSTR WINAPI QERPlug_Init( HMODULE hApp, GtkWidget* pMainWidget ){
-	g_pRadiantWnd = pMainWidget;
+	main_window = pMainWidget;
 	memset( &g_FuncTable, 0, sizeof( _QERFuncTable_1 ) );
 	g_FuncTable.m_fVersion = QER_PLUG_VERSION;
 	g_FuncTable.m_nSize = sizeof( _QERFuncTable_1 );
@@ -85,7 +85,7 @@ extern "C" void WINAPI QERPlug_Dispatch( LPCSTR p, vec3_t vMin, vec3_t vMax, boo
 			RADIANT_NAME " " RADIANT_VERSION "\n"
 			__DATE__;
 
-		GlobalRadiant().m_pfnMessageBox( g_pRadiantWnd, label_text,
+		GlobalRadiant().m_pfnMessageBox( main_window, label_text,
 										"About " PLUGIN_NAME,
 										eMB_OK,
 										eMB_ICONDEFAULT );
