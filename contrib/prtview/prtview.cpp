@@ -65,7 +65,7 @@ const char *TRANS_3D = "Transparency";
 const char *CLIP_RANGE = "ClipRange";
 const char *CLIP = "Clip";
 
-ui::Window main_window{ui::null};
+static ui::Window main_window{ui::null};
 
 void PrtView_construct(){
 	StringOutputStream tmp( 64 );
@@ -282,7 +282,7 @@ void QERPlug_Dispatch( const char* p, float* vMin, float* vMax, bool bSingleBrus
 		}
 	}
 	else if ( !strcmp( p,Q3R_CMD_OPTIONS ) ) {
-		DoConfigDialog();
+		DoConfigDialog( main_window );
 		SaveConfig();
 
 		SceneChangeNotify();

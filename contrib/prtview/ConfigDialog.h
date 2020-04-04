@@ -20,6 +20,8 @@
 #if !defined( INCLUDED_CONFIGDIALOG_H )
 #define INCLUDED_CONFIGDIALOG_H
 
-void DoConfigDialog();
+#include <uilib/uilib.h>
+
+void DoConfigDialog( ui::Window main_window );
 
 #endif
