@@ -4,6 +4,7 @@
 #include "debugging/debugging.h"
 #include "callbacks.h"
 #include "support.h"
+#include "gtkutil/dialog.h"
 
 #define GLADE_HOOKUP_OBJECT( component,widget,name ) \
 	g_object_set_data_full( G_OBJECT( component ), name, \
@@ -13,13 +14,12 @@
 	g_object_set_data( G_OBJECT( component ), name, (void *) widget )
 
 // created by glade
-ui::Widget create_w_plugplug2( void ){
+ui::Widget create_w_plugplug2( ui::Window main_window ){
 	GSList *r_collapse_group = NULL;
+	ModalDialog dialog;
 
-	auto w_plugplug2 = ui::Window( ui::window_type::TOP );
+	auto w_plugplug2 = main_window.create_dialog_window( "BrushExport", G_CALLBACK( dialog_delete_callback ), &dialog );
 	gtk_widget_set_name( w_plugplug2, "w_plugplug2" );
-	gtk_window_set_title( w_plugplug2, "BrushExport-Plugin 3.0 by namespace" );
-	gtk_window_set_position( w_plugplug2, GTK_WIN_POS_CENTER );
 	gtk_window_set_destroy_with_parent( w_plugplug2, TRUE );
 
 	auto vbox1 = ui::VBox( FALSE, 0 );
@@ -180,10 +180,10 @@ ui::Widget create_w_plugplug2( void ){
 ui::Widget g_brushexp_window{ui::null};
 
 // spawn plugin window (and make sure it got destroyed first or never created)
-void CreateWindow( void ){
+void CreateWindow( ui::Window main_window ){
 	ASSERT_TRUE( !g_brushexp_window );
 
-	ui::Widget wnd = create_w_plugplug2();
+	ui::Widget wnd = create_w_plugplug2( main_window );
 
 	// column & renderer
     auto col = ui::TreeViewColumn::from(gtk_tree_view_column_new());

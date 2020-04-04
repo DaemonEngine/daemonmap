@@ -45,7 +45,7 @@
 
 #define CMD_ABOUT "About..."
 
-void CreateWindow( void );
+void CreateWindow( ui::Window main_window );
 void DestroyWindow( void );
 bool IsWindowOpen( void );
 
@@ -87,7 +87,7 @@ void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush 
 		if ( IsWindowOpen() ) {
 			DestroyWindow();
 		}
-		CreateWindow();
+		CreateWindow( g_mainwnd );
 	}
 }
 }
