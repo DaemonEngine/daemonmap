@@ -59,7 +59,7 @@ ShaderPlugPluginDependencies() :
 
 namespace Shaderplug
 {
-ui::Window g_window{ui::null};
+ui::Window main_window{ui::null};
 
 std::vector<const char*> archives;
 std::set<std::string> shaders;
@@ -69,7 +69,7 @@ XmlTagBuilder TagBuilder;
 void CreateTagFile();
 
 const char* init( void* hApp, void* pMainWidget ){
-	g_window = ui::Window::from(pMainWidget);
+	main_window = ui::Window::from(pMainWidget);
 	return "";
 }
 
@@ -95,7 +95,7 @@ void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush 
 			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;
 
-		GlobalRadiant().m_pfnMessageBox( g_window, label_text,
+		GlobalRadiant().m_pfnMessageBox( main_window, label_text,
 										 "About " PLUGIN_NAME,
 										 eMB_OK,
 										 eMB_ICONDEFAULT );
@@ -189,23 +189,23 @@ void CreateTagFile(){
 		strcat( message, "\nPlease restart " RADIANT_NAME " now.\n" );
 
 		if ( file_exists( tagFile ) ) {
-			EMessageBoxReturn result = GlobalRadiant().m_pfnMessageBox( g_window ,
+			EMessageBoxReturn result = GlobalRadiant().m_pfnMessageBox( main_window ,
 																		"WARNING! A tag file already exists! Overwrite it?", "Overwrite tag file?",
 																		eMB_NOYES,
 																		eMB_ICONWARNING );
 
 			if ( result == eIDYES ) {
 				TagBuilder.SaveXmlDoc( tagFile );
-				GlobalRadiant().m_pfnMessageBox( g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
+				GlobalRadiant().m_pfnMessageBox( main_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
 			}
 		}
 		else {
 			TagBuilder.SaveXmlDoc( tagFile );
-			GlobalRadiant().m_pfnMessageBox( g_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
+			GlobalRadiant().m_pfnMessageBox( main_window, message, "INFO", eMB_OK, eMB_ICONASTERISK );
 		}
 	}
 	else {
-		GlobalRadiant().m_pfnMessageBox( g_window,
+		GlobalRadiant().m_pfnMessageBox( main_window,
 										 "No shaders or textures found. No XML tag file created!\n"
 										 "",
 										 "ERROR",
