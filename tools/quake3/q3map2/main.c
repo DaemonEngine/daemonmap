@@ -187,7 +187,7 @@ int main( int argc, char **argv ){
 	Sys_Printf( "Q3Map         - v1.0r (c) 1999 Id Software Inc.\n" );
 	Sys_Printf( "Q3Map (ydnar) - v2.5\n" );
 	Sys_Printf( "DaemonMap     - v" DAEMONMAP_VERSION "\n" );
-	Sys_Printf( "%s\n", Q3MAP_MOTD );
+	Sys_Printf( "%s\n", DAEMONMAP_MOTD );
 
 	/* ydnar: new path initialization */
 	InitPaths( &argc, argv );

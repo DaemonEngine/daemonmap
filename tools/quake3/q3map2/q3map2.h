@@ -43,7 +43,7 @@ extern "C"
 #ifndef DAEMONMAP_VERSION
 #error no DAEMONMAP_VERSION defined
 #endif
-#define Q3MAP_MOTD "Your map saw the pretty lights from daemonmap's lucifer cannon"
+#define DAEMONMAP_MOTD "Your map saw the pretty lights from daemonmap's lucifer cannon"
 
 
 /* -------------------------------------------------------------------------------
