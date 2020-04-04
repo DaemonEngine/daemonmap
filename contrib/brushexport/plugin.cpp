@@ -73,7 +73,9 @@ void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush 
 		const char *label_text =
 			PLUGIN_NAME " " PLUGIN_VERSION " for "
 			RADIANT_NAME " " RADIANT_VERSION "\n\n"
-			"Written by namespace <spam@codecreator.net> (www.codecreator.net)\n\n"
+			"Written by namespace <spam@codecreator.net>\n\n"
+//			20200404 dead link
+//			"http://www.codecreator.net"
 			"Built against "
 			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;

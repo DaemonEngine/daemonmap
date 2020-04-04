@@ -80,7 +80,7 @@ void dispatch( const char* command, float* vMin, float* vMax, bool bSingleBrush 
 			PLUGIN_NAME " " PLUGIN_VERSION " for "
 			RADIANT_NAME " " RADIANT_VERSION "\n\n"
 			"Written by Martin Gerhardy (tlh2000/mattn)\n"
-			"for the UFO:AI project (http://ufoai.sf.net)\n\n"
+			"for the UFO:AI project (http://ufoai.org)\n\n"
 			"Built against "
 			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;

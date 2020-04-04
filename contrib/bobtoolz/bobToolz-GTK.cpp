@@ -142,8 +142,11 @@ extern "C" void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool 
 		static const char *label_text =
 			PLUGIN_NAME " for "
 			RADIANT_NAME " " RADIANT_VERSION "\n\n"
-			"by digibob <digibob@splashdamage.com> (http://www.splashdamage.com)\n\n"
-			"Additional Contributors: MarsMattel, RR2DO2\n\n"
+			"by digibob <digibob@splashdamage.com>\n"
+			"https://www.splashdamage.com\n\n"
+			"Additional Contributors:\n"
+			"Arnout van Meer <rr2do2@splashdamage.com>\n"
+			"Mars Mattel\n\n"
 			"Built against "
 			RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
 			__DATE__;
