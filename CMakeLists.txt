@@ -354,6 +354,11 @@ if (BUILD_BINARIES)
         docs
         DESTINATION ${RADIANT_DATA_DIR}
     )
+
+    install(FILES
+        setup/data/tools/global.xlink
+        DESTINATION ${RADIANT_DATA_DIR}
+    )
 endif ()
 
 if (DOWNLOAD_GAMEPACKS)
