@@ -24,6 +24,7 @@
 #include <list>
 #include <gtk/gtk.h>
 #include "gtkutil/pointer.h"
+#include "gtkutil/dialog.h"
 
 #include "../lists.h"
 #include "../misc.h"
@@ -90,7 +91,7 @@ static void dialog_button_callback( ui::Widget widget, gpointer data ){
 	*ret = (EMessageBoxReturn)gpointer_to_int( data );
 }
 
-static gint dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
+static gint custom_dialog_delete_callback( ui::Widget widget, GdkEvent* event, gpointer data ){
 	widget.hide();
 	int *loop = (int *) g_object_get_data(G_OBJECT(widget), "loop");
 	*loop = 0;
@@ -210,7 +211,7 @@ EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMess
 	int loop = 1;
 
 	auto window = ui::Window( ui::window_type::TOP );
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 	gtk_window_set_title( window, lpCaption );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
@@ -312,7 +313,7 @@ EMessageBoxReturn DoIntersectBox( IntersectRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Intersect" );
@@ -405,7 +406,7 @@ EMessageBoxReturn DoPolygonBox( PolygonRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Polygon Builder" );
@@ -573,7 +574,7 @@ EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Stair Builder" );
@@ -823,7 +824,7 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Door Builder" );
@@ -1025,18 +1026,17 @@ EMessageBoxReturn DoDoorsBox( DoorRS* rs ){
 //-djbob
 }
 
-EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs ){
+EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs, ui::Window main_window ){
 	ui::Widget w{ui::null};
+	ModalDialog dialog;
 
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	auto window = ui::Window( ui::window_type::TOP );
+	auto window = main_window.create_dialog_window( "Path Plotter", G_CALLBACK( custom_dialog_delete_callback ), &dialog );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( window, "Texture Reset" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1204,7 +1204,7 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "CTF Colour Changer" );
@@ -1265,20 +1265,19 @@ EMessageBoxReturn DoCTFColourChangeBox(){
 	return ret;
 }
 
-EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
+EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs, ui::Window main_window ){
 	Str texSelected;
 
 	ui::Widget w{ui::null};
+	ModalDialog dialog;
 
 	EMessageBoxReturn ret;
 	int loop = 1;
 
-	auto window = ui::Window( ui::window_type::TOP );
+	auto window = main_window.create_dialog_window( "Texture Reset", G_CALLBACK( custom_dialog_delete_callback ), &dialog );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
-	gtk_window_set_title( window, "Texture Reset" );
 	gtk_container_set_border_width( GTK_CONTAINER( window ), 10 );
 
 	g_object_set_data( G_OBJECT( window ), "loop", &loop );
@@ -1491,7 +1490,6 @@ EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs ){
 
 	// ---- /vbox ----
 
-	gtk_window_set_position( window, GTK_WIN_POS_CENTER );
 	window.show();
 	gtk_grab_add( window );
 
@@ -1571,7 +1569,7 @@ EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Train Thing" );
@@ -1806,7 +1804,7 @@ EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs ){
 
 	auto window = ui::Window( ui::window_type::TOP );
 
-	window.connect( "delete_event", G_CALLBACK( dialog_delete_callback ), NULL );
+	window.connect( "delete_event", G_CALLBACK( custom_dialog_delete_callback ), NULL );
 	window.connect( "destroy", G_CALLBACK( gtk_widget_destroy ), NULL );
 
 	gtk_window_set_title( window, "Make Chain" );

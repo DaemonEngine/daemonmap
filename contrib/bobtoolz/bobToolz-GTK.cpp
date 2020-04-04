@@ -62,7 +62,7 @@ void BobToolz_destroy(){
 static const char* PLUGIN_COMMANDS = "About...,-,Reset Textures...,PitOMatic,-,Vis Viewer,Brush Cleanup,Polygon Builder,Caulk Selection,-,Tree Planter,Drop Entity,Plot Splines,-,Merge Patches,Split patches,Split patches cols,Split patches rows,Turn edge";
 
 // globals
-ui::Window g_pRadiantWnd{ui::null};
+static ui::Window g_pRadiantWnd{ui::null};
 
 extern "C" const char* QERPlug_Init( void* hApp, void* pMainWidget ) {
 	g_pRadiantWnd = ui::Window::from(pMainWidget);
@@ -115,7 +115,7 @@ extern "C" void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool 
 		DoFlipTerrain();
 	}
 	else if ( string_equal_nocase( p, "reset textures..." ) ) {
-		DoResetTextures();
+		DoResetTextures( main_window );
 	}
 	else if ( string_equal_nocase( p, "pitomatic" ) ) {
 		DoPitBuilder();
@@ -136,7 +136,7 @@ extern "C" void QERPlug_Dispatch( const char *p, vec3_t vMin, vec3_t vMax, bool 
 		DoMakeChain();
 	}
 	else if ( string_equal_nocase( p, "path plotter..." ) ) {
-		DoPathPlotter();
+		DoPathPlotter( main_window );
 	}
 	else if ( string_equal_nocase( p, "about..." ) ) {
 		static const char *label_text =

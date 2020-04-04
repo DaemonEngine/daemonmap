@@ -202,7 +202,7 @@ void DoFixBrushes(){
 	globalOutputStream() << "bobToolz FixBrushes: " << count << " invalid/duplicate planes removed.\n";
 }
 
-void DoResetTextures(){
+void DoResetTextures( ui::Window main_window ){
 	UndoableCommand undo( "bobToolz.resetTextures" );
 	static ResetTextureRS rs;
 
@@ -217,7 +217,7 @@ void DoResetTextures(){
 	}
 
 	EMessageBoxReturn ret;
-	if ( ( ret = DoResetTextureBox( &rs ) ) == eIDCANCEL ) {
+	if ( ( ret = DoResetTextureBox( &rs, main_window ) ) == eIDCANCEL ) {
 		return;
 	}
 
@@ -362,10 +362,10 @@ void DoBuildDoors(){
 	}
 }
 
-void DoPathPlotter(){
+void DoPathPlotter( ui::Window main_window ){
 	UndoableCommand undo( "bobToolz.pathPlotter" );
 	PathPlotterRS rs;
-	EMessageBoxReturn ret = DoPathPlotterBox( &rs );
+	EMessageBoxReturn ret = DoPathPlotterBox( &rs, main_window );
 	if ( ret == eIDCANCEL ) {
 		return;
 	}

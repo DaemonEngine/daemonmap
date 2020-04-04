@@ -17,6 +17,8 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "uilib/uilib.h"
+
 class DBobView;
 class DVisDrawer;
 class DTrainDrawer;
@@ -54,10 +56,10 @@ void DoIntersect();
 void DoPolygonsTB();
 void DoPolygons();
 void DoFixBrushes();
-void DoResetTextures();
+void DoResetTextures( ui::Window main_window );
 void DoBuildStairs();
 void DoBuildDoors();
-void DoPathPlotter();
+void DoPathPlotter( ui::Window main_window );
 void DoPitBuilder();
 void DoCTFColourChanger();
 void DoMergePatches();

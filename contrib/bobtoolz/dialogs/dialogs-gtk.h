@@ -98,10 +98,10 @@ struct TwinWidget {
 EMessageBoxReturn DoMessageBox( const char* lpText, const char* lpCaption, EMessageBoxType type );
 EMessageBoxReturn DoIntersectBox( IntersectRS* rs );
 EMessageBoxReturn DoPolygonBox( PolygonRS* rs );
-EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs );
+EMessageBoxReturn DoResetTextureBox( ResetTextureRS* rs, ui::Window main_window );
 EMessageBoxReturn DoBuildStairsBox( BuildStairsRS* rs );
 EMessageBoxReturn DoDoorsBox( DoorRS* rs );
-EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs );
+EMessageBoxReturn DoPathPlotterBox( PathPlotterRS* rs, ui::Window main_window );
 EMessageBoxReturn DoCTFColourChangeBox();
 EMessageBoxReturn DoTrainThingBox( TrainThingRS* rs );
 EMessageBoxReturn DoMakeChainBox( MakeChainRS* rs );
