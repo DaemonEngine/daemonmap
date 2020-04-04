@@ -60,6 +60,8 @@ EMessageBoxReturn gtk_MessageBox( ui::Window parentWindow, const char* text, con
 
 	ui::Window window = create_fixedsize_modal_dialog_window( parentWindow, title, dialog, 400, 100 );
 
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER_ON_PARENT );
+
 	if ( parentWindow ) {
 		//window.connect( "delete_event", G_CALLBACK(floating_window_delete_present), parent);
 		gtk_window_deiconify( parentWindow );
