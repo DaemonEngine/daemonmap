@@ -436,7 +436,7 @@ void DoAbout(){
 
 			{
                 auto vbox2 = create_dialog_vbox( 4 );
-				hbox.pack_start( vbox2, TRUE, FALSE, 0 );
+				hbox.pack_start( vbox2, FALSE, FALSE, 5 );
 				{
 					auto frame = create_dialog_frame( 0, ui::Shadow::IN );
 					vbox2.pack_start( frame, FALSE, FALSE, 0 );
@@ -468,14 +468,14 @@ void DoAbout(){
 				gtk_label_set_use_markup( GTK_LABEL( label ), true );
 
 				label.show();
-				hbox.pack_start( label, FALSE, FALSE, 0 );
-				gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
+				hbox.pack_start( label, TRUE, TRUE, 0 );
+				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
 				gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
 			}
 
 			{
                 auto vbox2 = create_dialog_vbox( 4 );
-				hbox.pack_start( vbox2, FALSE, TRUE, 0 );
+				hbox.pack_start( vbox2, TRUE, TRUE, 0 );
 				{
                     auto button = create_modal_dialog_button( "OK", ok_button );
 					vbox2.pack_start( button, FALSE, FALSE, 0 );
