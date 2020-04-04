@@ -842,6 +842,10 @@ gboolean commands_key_press( ui::TreeView widget, GdkEventKey* event, ui::ListSt
 ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Build Menu", G_CALLBACK(dialog_delete_callback ), &modal, -1, 400 );
 
+	// FIXME: GTK_WIN_POS_CENTER_ON_PARENT must be used instead but does not work
+	// for unknown reason.
+	// It's possible MaingFrame_getWindow() does not return the main window.
+	// It's known the preferences window has same issue when using MaingFrame_getWindow().
 	gtk_window_set_position( window, GTK_WIN_POS_CENTER_ALWAYS );
 
 	{
