@@ -705,7 +705,12 @@ ui::Window PrefsDlg::BuildDialog(){
 	PreferencesDialog_addInterfacePreferences( makeCallbackF(Interface_constructPreferences) );
 	Mouse_registerPreferencesPage();
 
+	ui::Window main_window = MainFrame_getWindow();
+
 	ui::Window dialog = ui::Window(create_floating_window( RADIANT_NAME " Preferences", m_parent ));
+
+	gtk_window_set_transient_for( dialog, m_parent );
+	gtk_window_set_position( dialog, GTK_WIN_POS_CENTER_ON_PARENT );
 
 	{
 		auto mainvbox = ui::VBox( FALSE, 5 );
