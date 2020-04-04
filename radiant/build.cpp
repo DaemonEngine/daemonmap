@@ -842,6 +842,8 @@ gboolean commands_key_press( ui::TreeView widget, GdkEventKey* event, ui::ListSt
 ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectList ){
 	ui::Window window = MainFrame_getWindow().create_dialog_window("Build Menu", G_CALLBACK(dialog_delete_callback ), &modal, -1, 400 );
 
+	gtk_window_set_position( window, GTK_WIN_POS_CENTER_ALWAYS );
+
 	{
 		auto table1 = create_dialog_table( 2, 2, 4, 4, 4 );
 		window.add(table1);
