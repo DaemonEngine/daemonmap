@@ -1487,14 +1487,19 @@ void XYWnd::XY_DisableBackground( void ){
 
 void WXY_BackgroundSelect( void ){
 	bool brushesSelected = Scene_countSelectedBrushes( GlobalSceneGraph() ) != 0;
+
+	ui::Window main_window = MainFrame_getWindow();
+
 	if ( !brushesSelected ) {
-		ui::alert( ui::root, "You have to select some brushes to get the bounding box for.\n",
+		ui::alert( main_window, "You have to select some brushes to get the bounding box for.\n",
 						"No selection", ui::alert_type::OK, ui::alert_icon::Error );
 		return;
 	}
 
-	const char *filename = MainFrame_getWindow().file_dialog( TRUE, "Background Image", NULL, NULL );
+	const char *filename = main_window.file_dialog( TRUE, "Background Image", NULL, NULL );
+
 	g_pParentWnd->ActiveXY()->XY_DisableBackground();
+
 	if ( filename ) {
 		g_pParentWnd->ActiveXY()->XY_LoadBackgroundImage( filename );
 	}
