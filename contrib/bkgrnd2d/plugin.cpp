@@ -292,8 +292,6 @@ bool CSynapseClientBkgrnd2d::RequestAPI( APIDescriptor_t *pAPI ){
 	return false;
 }
 
-#include "version.h"
-
 const char* CSynapseClientBkgrnd2d::GetInfo(){
 	return "2d Background plugin built " __DATE__ " " RADIANT_VERSION;
 }

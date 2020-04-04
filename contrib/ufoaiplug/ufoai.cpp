@@ -25,8 +25,6 @@
 
 #include "iplugin.h"
 
-#include "version.h"
-
 #include "string/string.h"
 #include "modulesystem/singletonmodule.h"
 

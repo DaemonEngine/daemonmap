@@ -892,8 +892,6 @@ bool CSynapseClientTexTool::RequestAPI( APIDescriptor_t *pAPI ){
 	return false;
 }
 
-#include "version.h"
-
 const char* CSynapseClientTexTool::GetInfo(){
 	return "Texture Tools plugin built " __DATE__ " " RADIANT_VERSION;
 }

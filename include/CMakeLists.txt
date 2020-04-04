@@ -42,7 +42,6 @@ add_library(includes
         renderable.h
         selectable.h
         stream_version.h
-        version.h
         warnings.h
         windowobserver.h
         )

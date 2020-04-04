@@ -226,8 +226,6 @@ bool CameraSynapseClient::RequestAPI( APIDescriptor_t *pAPI ){
 	return false;
 }
 
-#include "version.h"
-
 const char* CameraSynapseClient::GetInfo(){
 	return "Camera plugin v1.0 - Arnout van Meer - built " __DATE__ " " RADIANT_VERSION;
 }

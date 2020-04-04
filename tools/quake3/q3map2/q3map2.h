@@ -60,8 +60,6 @@
 
 
 /* general */
-#include "version.h"            /* ttimo: might want to guard that if built outside of the GtkRadiant tree */
-
 #include "cmdlib.h"
 #include "mathlib.h"
 #include "md5lib.h"

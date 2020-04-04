@@ -20,7 +20,6 @@
  */
 
 #include "plugin.h"
-#include "version.h"
 
 /*! \file plugin.cpp
     \brief HydraToolz!

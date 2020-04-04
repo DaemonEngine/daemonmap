@@ -197,8 +197,6 @@ bool GenSurfSynapseClient::RequestAPI( APIDescriptor_t *pAPI ){
 	return false;
 }
 
-#include "version.h"
-
 const char* GenSurfSynapseClient::GetInfo(){
 	return "GtkGenSurf - built " __DATE__ " " RADIANT_VERSION;
 }

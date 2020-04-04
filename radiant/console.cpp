@@ -33,7 +33,6 @@
 #include "stream/stringstream.h"
 #include "convert.h"
 
-#include "version.h"
 #include "aboutmsg.h"
 #include "gtkmisc.h"
 #include "mainframe.h"

@@ -200,8 +200,6 @@ bool CSynapseClientModel::RequestAPI( APIDescriptor_t *pAPI ){
 	return false;
 }
 
-#include "version.h"
-
 const char* CSynapseClientModel::GetInfo(){
 	return "Sprite Model module built " __DATE__ " " RADIANT_VERSION;
 }
