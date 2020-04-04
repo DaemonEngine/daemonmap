@@ -456,9 +456,12 @@ void DoAbout(){
 										"licensed under the GNU GPL.\n\n"
 										RADIANT_NAME " is unsupported, however\n"
 										"you may report your problems at\n"
-										"https://gitlab.com/xonotic/netradiant/issues";
+										"<a href='https://gitlab.com/xonotic/netradiant/issues'>"
+											"gitlab.com/xonotic/netradiant/issues"
+										"</a>";
 
 				auto label = ui::Label( label_text );
+				gtk_label_set_use_markup( GTK_LABEL( label ), true );
 
 				label.show();
 				hbox.pack_start( label, FALSE, FALSE, 0 );
