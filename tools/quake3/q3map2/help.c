@@ -68,6 +68,7 @@ void HelpOptions(const char* group_name, int indentation, int width, struct Help
 			putchar('\n');
 			printed = indentation+26;
 		}
+
 		if ( j == 0 )
 		{
 			printf("%s\n",options[i].description+j);
@@ -143,6 +144,7 @@ void HelpBsp()
 		{"-tmpout", "Write the BSP file to /tmp"},
 		{"-verboseentities", "Enable `-v` only for map entities, not for the world"},
 	};
+
 	HelpOptions("BSP Stage", 0, 80, bsp, sizeof(bsp)/sizeof(struct HelpOption));
 }
 
@@ -163,6 +165,7 @@ void HelpVis()
 		{"-tmpout", "Use /tmp folder for output"},
 		{"-v -v", "Extra verbose mode for cluster debug"}, // q3map2 common takes first -v
 	};
+
 	HelpOptions("VIS Stage", 0, 80, vis, sizeof(vis)/sizeof(struct HelpOption));
 }
 
@@ -301,6 +304,7 @@ void HelpScale()
 		{"-tex", "Scale without texture lock"},
 		{"-spawn_ref <F>", "Vertical offset for info_player_* entities (adds spawn_ref, scales, subtracts spawn_ref)"},
 	};
+
 	HelpOptions("Scaling", 0, 80, scale, sizeof(scale)/sizeof(struct HelpOption));
 }
 
@@ -416,7 +420,6 @@ void HelpCommon()
 	};
 
 	HelpOptions("Common Options", 0, 80, common, sizeof(common)/sizeof(struct HelpOption));
-
 }
 
 void HelpMain(const char* arg)
@@ -440,6 +443,7 @@ void HelpMain(const char* arg)
 		{"-import", "Importing lightmaps"},
 		{"-minimap", "MiniMap"},
 	};
+
 	void(*help_funcs[])() = {
 		HelpBsp,
 		HelpVis,
