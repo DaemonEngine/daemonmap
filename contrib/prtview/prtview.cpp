@@ -31,7 +31,6 @@
 #include "stream/stringstream.h"
 
 #include "portals.h"
-#include "AboutDialog.h"
 #include "ConfigDialog.h"
 #include "LoadPortalFileDialog.h"
 
@@ -66,6 +65,7 @@ const char *TRANS_3D = "Transparency";
 const char *CLIP_RANGE = "ClipRange";
 const char *CLIP = "Clip";
 
+ui::Window main_window{ui::null};
 
 void PrtView_construct(){
 	StringOutputStream tmp( 64 );
@@ -200,6 +200,9 @@ static const char *PLUGIN_COMMANDS =
 
 
 const char* QERPlug_Init( void *hApp, void* pMainWidget ){
+	main_window = ui::Window::from(pMainWidget);
+	ASSERT_TRUE( main_window );
+
 	return PLUGIN_NAME " for " RADIANT_NAME;
 }
 
@@ -221,7 +224,19 @@ void QERPlug_Dispatch( const char* p, float* vMin, float* vMax, bool bSingleBrus
 	globalOutputStream() << MSG_PREFIX "Command \"" << p << "\"\n";
 
 	if ( !strcmp( p,Q3R_CMD_ABOUT ) ) {
-		DoAboutDlg();
+		const char *label_text =
+				PLUGIN_NAME " " PLUGIN_VERSION " for "
+				RADIANT_NAME " " RADIANT_VERSION "\n\n"
+				"Gtk port by Leonardo Zide <leo@lokigames.com>\n"
+				"Written by Geoffrey DeWan <gdewan@prairienet.org>\n\n"
+				"Built against "
+				RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
+				__DATE__;
+
+		GlobalRadiant().m_pfnMessageBox( main_window, label_text,
+										"About " PLUGIN_NAME,
+										eMB_OK,
+										eMB_ICONDEFAULT );
 	}
 	else if ( !strcmp( p,Q3R_CMD_LOAD ) ) {
 		if ( DoLoadPortalFileDialog() == IDOK ) {
