@@ -449,20 +449,17 @@ void DoAbout(){
 			}
 
 			{
-				char const *label_text = RADIANT_NAME " " RADIANT_VERSION_STRING "\n"
-										__DATE__ "\n\n"
+				char const *label_text = RADIANT_NAME " " RADIANT_VERSION_STRING " (" __DATE__ ")\n"
 										RADIANT_ABOUTMSG "\n\n"
-										"This program is free software\n"
-										"licensed under the GNU GPL.\n\n"
 										"Get news and updates on "
 										"<a href='https://netradiant.gitlab.io/'>"
 											"netradiant.gitlab.io"
-										"</a>\n\n"
-										RADIANT_NAME " is unsupported, however\n"
-										"you may report your problems at\n"
+										"</a>\n"
+										"Please report your issues on "
 										"<a href='https://gitlab.com/xonotic/netradiant/issues'>"
 											"gitlab.com/xonotic/netradiant/issues"
-										"</a>";
+										"</a>\n\n"
+										"This program is free software licensed under the GNU GPL.";
 
 				auto label = ui::Label( label_text );
 				gtk_label_set_use_markup( GTK_LABEL( label ), true );
