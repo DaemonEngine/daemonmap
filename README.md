@@ -80,7 +80,7 @@ Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix instead of `ming
 ### macOS:
 
 ```sh
-brew install cmake gtkglext pkgconfig minizip webp coreutils gnu-sed
+brew install cmake gtkglext pkgconfig minizip webp coreutils gnu-sed wget
 brew link --force gettext
 ```
 
@@ -212,7 +212,7 @@ Run `./gamepacks-manager -h` to know about available licenses and other availabl
 Options:
 
 * `BUNDLE_LIBRARIES=ON`  
-  Bundle libraries, only MSYS2 is supported at this time (default: `OFF`);
+  Bundle libraries, only MSYS2 and Linux are supported at this time (default: `OFF`);
 * `FHS_INSTALL=ON` (available on POSIX systems)  
   Install files following the Filesystem Hierarchy Standard (`bin`, `lib`, `share`, etc.)  
   Also setup XDG mime and application support on Linux-like systems (default: `OFF`, install like in 1999);
