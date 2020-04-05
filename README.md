@@ -8,13 +8,13 @@ The open source, cross platform level editor for id Tech-derivated games (has li
 
 ## Compatibility matrix
 
-|System   |Build    |Bundle    |Run      |Build requirements                   |
-|---------|---------|----------|---------|-------------------------------------|
-|Linux    |**Yes**  |**Yes**   |**Yes**  |_GCC or Clang_                       |
-|FreeBSD  |**Yes**  |_not yet_ |**Yes**  |_GCC_                                |
-|Windows  |**Yes**  |**Yes**   |**Yes**  |_MSYS2/Mingw64 or Mingw32_           |
-|Wine     |-        |-         |**Yes**  |-                                    |
-|macOS    |**Yes**  |_not yet_ |_mostly_ |_Homebrew, GCC and patched GtkGLExt_ |
+|System   |Build    |Bundle    |Run      |Build requirements                            |
+|---------|---------|----------|---------|----------------------------------------------|
+|Linux    |**Yes**  |**Yes**   |**Yes**  |_GCC or Clang_                                |
+|FreeBSD  |**Yes**  |_not yet_ |**Yes**  |_GCC or Clang_                                |
+|Windows  |**Yes**  |**Yes**   |**Yes**  |_MSYS2/Mingw64 or Mingw32_                    |
+|Wine     |-        |-         |**Yes**  |-                                             |
+|macOS    |**Yes**  |_not yet_ |_mostly_ |_Homebrew, GCC or Clang and patched GtkGLExt_ |
 
 NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2. NetRadiant is known to build on macOS using Homebrew, but can't display things properly without a modified GtkGLExt which is yet to be upstreamed, and issues are known. Windows build is known to work well on wine, which can be used as a fallback on macOS.
 
@@ -80,7 +80,7 @@ Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix instead of `ming
 ### macOS:
 
 ```sh
-brew install gcc cmake gtkglext pkgconfig minizip webp coreutils gnu-sed
+brew install cmake gtkglext pkgconfig minizip webp coreutils gnu-sed
 brew link --force gettext
 ```
 
@@ -138,19 +138,6 @@ cmake --build build -- -j$(nproc)
 cmake -G "Unix Makefiles" -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -- -j$(nproc)
 ```
-
-On macOS you have to add this to the first cmake call:
-
-```sh
--DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
-```
-
-On FreeBSD you have to add this to the first cmake call:
-
-```sh
--DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8
-```
-
 
 ### Subsequent builds
 
