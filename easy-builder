@@ -81,10 +81,11 @@ set -x
 
 "${fetch_submodules_cmd[@]}"
 
+mkdir -pv "${build_dir}"
+cd "${build_dir}"
+
 cmake \
 	-G'Unix Makefiles' \
-	-S"${project_source_dir}" \
-	-B"${build_dir}" \
 	-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
 	-D'CMAKE_BUILD_TYPE'="${build_type}" \
 	"${cmake_user_opts[@]}" \
