@@ -23,9 +23,6 @@ include_directories(${WEBP_INCLUDE_DIR})
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIRS})
-
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
@@ -139,7 +136,6 @@ target_link_libraries(q3map2
         ${WEBP_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
-        ${ZLIB_LIBRARIES}
         ${OPTIONAL_IMAGE_LIBRARIES}
         ddslib
         etclib
@@ -178,7 +174,6 @@ target_link_libraries(q3data
         ${GLIB_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
-        ${ZLIB_LIBRARIES}
         filematch
         etclib
         l_net
