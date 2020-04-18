@@ -132,6 +132,13 @@ void ColorToBytes( const float *color, byte *colorBytes, float scale ){
 	colorBytes[ 2 ] = sample[ 2 ];
 }
 
+void ColorToBytesNonZero( const float *color, byte *colorBytes, float scale) {
+	int i;
+	ColorToBytes(color, colorBytes, scale);
+	for (i = 0; i < 3; ++i)
+		if (colorBytes[i] == 0)
+			colorBytes[i] = 1;
+}
 
 
 /* -------------------------------------------------------------------------------

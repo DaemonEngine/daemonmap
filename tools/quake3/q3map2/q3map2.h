@@ -1816,6 +1816,7 @@ void                        RadFreeLights();
 
 /* light_ydnar.c */
 void                        ColorToBytes( const float *color, byte *colorBytes, float scale );
+void                        ColorToBytesNonZero( const float *color, byte *colorBytes, float scale );
 void                        SmoothNormals( void );
 
 void                        MapRawLightmap( int num );

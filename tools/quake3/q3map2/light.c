@@ -1771,7 +1771,17 @@ void TraceGrid( int num ){
 			}
 
 		/* vortex: apply gridscale and gridambientscale here */
-		ColorToBytes( color, bgp->ambient[ i ], gridScale * gridAmbientScale );
+		if (gp->directed[0] || gp->directed[1] || gp->directed[2]) {
+			/*
+			 * HACK: if there's a non-zero directed component, this
+			 * lightgrid cell is useful. However, ioq3 skips grid
+			 * cells with zero ambient. So let's force ambient to be
+			 * nonzero unless directed is zero too.
+			 */
+			ColorToBytesNonZero(color, bgp->ambient[i], gridScale * gridAmbientScale);
+		} else {
+			ColorToBytes(color, bgp->ambient[i], gridScale * gridAmbientScale);
+		}
 		ColorToBytes( gp->directed[ i ], bgp->directed[ i ], gridScale );
 	}
 
