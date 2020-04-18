@@ -70,7 +70,6 @@ target_link_libraries(daemonmap
         ${GLIB_LIBRARIES}
         ${LIBXML2_LIBRARIES}
         ${Minizip_LIBRARIES}
-        ${ZLIB_LIBRARIES}
         cm
         detour
         fastlz
