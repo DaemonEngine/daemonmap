@@ -18,9 +18,6 @@ add_definitions(-DDAEMONMAP_VERSION="${DAEMONMAP_VERSION}")
 find_package(GLIB REQUIRED)
 include_directories(${GLIB_INCLUDE_DIRS})
 
-find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIR})
-
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
