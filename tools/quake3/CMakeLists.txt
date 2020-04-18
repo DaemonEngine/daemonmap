@@ -21,9 +21,6 @@ include_directories(${GLIB_INCLUDE_DIRS})
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIRS})
-
 find_package(Minizip REQUIRED)
 include_directories(${Minizip_INCLUDE_DIRS})
 
