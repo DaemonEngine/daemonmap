@@ -132,6 +132,12 @@ void ColorToBytes( const float *color, byte *colorBytes, float scale ){
 	colorBytes[ 2 ] = sample[ 2 ];
 }
 
+/*
+ * Same as ColorToBytes, but if the output color will never contain zero
+ * components. Used to avoid returning 0 0 0 due to an ioq3 issue. Reason
+ * to also map 0 0 1 to 1 1 1 is to ensure monotonicity in the color mapping
+ * to prevent banding-like artifacts on lightmaps.
+ */
 void ColorToBytesNonZero( const float *color, byte *colorBytes, float scale) {
 	int i;
 	ColorToBytes(color, colorBytes, scale);

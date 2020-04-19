@@ -1771,7 +1771,7 @@ void TraceGrid( int num ){
 			}
 
 		/* vortex: apply gridscale and gridambientscale here */
-		if (gp->directed[0] || gp->directed[1] || gp->directed[2]) {
+		if (gp->directed[i][0] || gp->directed[i][1] || gp->directed[i][2]) {
 			/*
 			 * HACK: if there's a non-zero directed component, this
 			 * lightgrid cell is useful. However, ioq3 skips grid
