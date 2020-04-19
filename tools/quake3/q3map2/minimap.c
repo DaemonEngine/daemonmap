@@ -282,10 +282,9 @@ static void MiniMapBrightnessContrast( int y ){
 	}
 }
 
-void MiniMapMakeMinsMaxs( vec3_t mins_in, vec3_t maxs_in, float border, qboolean keepaspect ){
-	vec3_t mins, maxs, extend;
-	VectorCopy( mins_in, mins );
-	VectorCopy( maxs_in, maxs );
+// modify maxs and mins in place, copy them before calling this!
+void MiniMapMakeMinsMaxs( vec3_t mins, vec3_t maxs, float border, qboolean keepaspect ){
+	vec3_t extend;
 
 	// line compatible to nexuiz mapinfo
 	Sys_Printf( "size %f %f %f %f %f %f\n", mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2] );
@@ -601,7 +600,10 @@ int MiniMapBSPMain( int argc, char **argv ){
 		}
 	}
 
-	MiniMapMakeMinsMaxs( mins, maxs, border, keepaspect );
+	vec3_t mins_out, maxs_out;
+	VectorCopy( mins, mins_out );
+	VectorCopy( maxs, maxs_out );
+	MiniMapMakeMinsMaxs( mins_out, maxs_out, border, keepaspect );
 
 	if ( !*minimapFilename ) {
 		ExtractFileBase( source, basename );
@@ -772,6 +774,55 @@ int MiniMapBSPMain( int argc, char **argv ){
 	}
 
 	Sys_Printf( " done.\n" );
+
+	switch ( game->miniMapSidecarFormat )
+	{
+		case MINIMAP_SIDECAR_UNVANQUISHED:
+		{
+			char minimapPathWithoutExt[ 1024 ];
+			char minimapSidecarFilename[ 1024 ];
+			char *minimapSidecarExtension = ".minimap";
+			char *minimapSidecarFormat = ""
+				"{\n"
+				"\tbackgroundColor 0.0 0.0 0.0 0.333\n"
+				"\tzone {\n"
+				"\t\tbounds 0 0 0 0 0 0\n"
+				"\t\timage \"minimaps/%s\" %f %f %f %f\n"
+				"\t}\n"
+				"}\n";
+
+			strcpy( minimapPathWithoutExt, minimapFilename );
+			StripExtension( minimapPathWithoutExt );
+			snprintf( minimapSidecarFilename,
+				1024 - strlen(minimapSidecarExtension),
+				"%s%s",
+				minimapPathWithoutExt,
+				minimapSidecarExtension );
+
+			Sys_Printf( "Writing minimap sidecar to %s...", minimapSidecarFilename );
+
+			FILE *file = fopen( minimapSidecarFilename, "w" );
+			if ( file == NULL ) {
+				Sys_FPrintf( SYS_WRN, "WARNING: Unable to open minimap sidecarr file %s for writing\n", minimapSidecarFilename );
+				break;
+			}
+
+			fprintf( file,
+				minimapSidecarFormat,
+				basename,
+				mins_out[0], mins_out[1],
+				maxs_out[0], maxs_out[1] );
+
+			fflush( file );
+			fclose( file );
+
+			Sys_Printf( " done.\n" );
+
+			break;
+		}
+		case MINIMAP_SIDECAR_NONE:
+			break;
+	}
 
 	/* return to sender */
 	return 0;

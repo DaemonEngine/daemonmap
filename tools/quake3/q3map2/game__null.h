@@ -84,6 +84,7 @@
 	qfalse,         /* minimap keep aspect */
 	MINIMAP_MODE_GRAY,  /* minimap mode */
 	NULL,           /* minimap name format */
+	MINIMAP_SIDECAR_NONE, /* minimap sidecar format */
 	NULL,           /* bsp file prefix */
 	0,              /* bsp file version */
 	qfalse,         /* cod-style lump len/ofs order */

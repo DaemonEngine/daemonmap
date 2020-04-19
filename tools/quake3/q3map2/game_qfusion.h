@@ -136,6 +136,7 @@
 	qtrue,              /* minimap keep aspect */
 	MINIMAP_MODE_GRAY,  /* minimap mode */
 	"../minimaps/%s.tga", /* minimap name format */
+	MINIMAP_SIDECAR_NONE, /* minimap sidecar format */
 	"FBSP",             /* bsp file prefix */
 	1,                  /* bsp file version */
 	qfalse,             /* cod-style lump len/ofs order */

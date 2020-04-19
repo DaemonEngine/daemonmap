@@ -160,6 +160,7 @@
 	qtrue,              /* minimap keep aspect */
 	MINIMAP_MODE_GRAY,  /* minimap mode */
 	"%s.tga",           /* minimap name format */
+	MINIMAP_SIDECAR_NONE, /* minimap sidecar format */
 	"RBSP",                 /* bsp file prefix */
 	1,                      /* bsp file version */
 	qfalse,                 /* cod-style lump len/ofs order */
