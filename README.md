@@ -1,9 +1,16 @@
 NetRadiant
 ==========
 
-![NetRadiant logo](setup/data/tools/bitmaps/splash.png)
+[![NetRadiant logo](setup/data/tools/bitmaps/splash.png)](https://netradiant.gitlab.io)
 
-The open source, cross platform level editor for id Tech-derivated games (has lineage to GtkRadiant).
+The open source, cross platform level editor for id Tech-derivated games, heir of GtkRadiant.
+
+Learn more on NetRadiant website: [netradiant.gitlab.io](https://netradiant.gitlab.io).
+
+
+## Download NetRadiant
+
+Prebuilt binaries can be found on the [Download page](https://netradiant.gitlab.io/page/download/).
 
 
 ## Compatibility matrix
@@ -23,11 +30,11 @@ At this time library bundling is only supported on Windows/MSYS2 and Linux. Sinc
 
 ## Getting the sources
 
-Source browser, issues and more can be found on the gitlab project: https://gitlab.com/xonotic/netradiant/
+Source browser, issues and more can be found on the gitlab project: [gitlab.com/xonotic/netradiant](https://gitlab.com/xonotic/netradiant)
 
 The latest source is available from the git repository: `https://gitlab.com/xonotic/netradiant.git`
 
-The `git` client can be obtained from your distribution repository or from the Git website: http://git-scm.org
+The `git` client can be obtained from your distribution repository or from the Git website: [git-scm.org](http://git-scm.org)
 
 A copy of the source tree can be obtained using the command line `git` client this way:
 
@@ -41,7 +48,7 @@ cd netradiant
 
 * OpenGL, LibXml2, GTK2, GtkGLExt, LibJpeg, LibPng, LibWebp, Minizip, ZLib.
 
-To fetch default game packages you'll need Git, Subversion and `unzip`.
+To fetch default game packages you'll need Git, Subversion, Wget and `unzip`.
 
 
 ### Ubuntu:
@@ -64,7 +71,7 @@ Under MSYS2, the mingw shell must be used.
 If you use MSYS2 over SSH, add `mingw64` to the path this way (given you compile for 64 bit Windows, replace with `mingw32` if you target 32 bit Windows instead): 
 
 ```sh
-export PATH="/mingw64/bin:${PATH}"`
+export PATH="/mingw64/bin:${PATH}"
 ```
 
 Install the dependencies this way:
@@ -98,9 +105,11 @@ git submodule update --init --recursive
 
 ## Simple compilation
 
+It is required to first download the sources using `git` (do not use tarballs) and to have dependencies installed, see [Getting the sources](#getting-the-sources) and [Dependencies](#dependencies) above.
+
 ### Easy builder assistant
 
-If you have standard needs and use well-known platform and operating system, you may try the provided `easy-builder` script which may be enough for you:
+If you have standard needs and use well-known platform and operating system, you may try the provided `easy-builder` script which may be enough for you, you can run it this way:
 
 ```sh
 ./easy-builder
@@ -108,7 +117,7 @@ If you have standard needs and use well-known platform and operating system, you
 
 If everything went right, you'll find your netradiant build in `install/` subdirectory.
 
-If you need to build a debug build (to get help from a developer, for example), you can do it that way:
+If you need to build a debug build (to get help from a developer, for example), you can do it this way:
 
 ```sh
 ./easy-builder --debug
@@ -224,7 +233,7 @@ Target:
 * `install` Install files.
 
 
-## Additonnal notes
+## Additonnal information
 
 ### About Crunch
 
