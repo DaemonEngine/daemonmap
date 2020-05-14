@@ -95,6 +95,15 @@
 	#define Q_strncasecmp       strncasecmp
 #endif
 
+// hack to declare and define in the same file
+#ifdef MAIN_C
+	#define Q_EXTERN
+	#define Q_ASSIGN( a )   = a
+#else
+	#define Q_EXTERN extern
+	#define Q_ASSIGN( a )
+#endif
+
 /* macro version */
 #define VectorMA( a, s, b, c )  ( ( c )[ 0 ] = ( a )[ 0 ] + ( s ) * ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( s ) * ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( s ) * ( b )[ 2 ] )
 
@@ -1012,7 +1021,7 @@ typedef enum
 }
 surfaceType_t;
 
-char            *surfaceTypes[ NUM_SURFACE_TYPES ]
+Q_EXTERN char *surfaceTypes[ NUM_SURFACE_TYPES ]
 #ifndef MAIN_C
 ;
 #else
@@ -1958,14 +1967,6 @@ void                        WriteRBSPFile( const char *filename );
    bsp/general global variables
 
    ------------------------------------------------------------------------------- */
-
-#ifdef MAIN_C
-	#define Q_EXTERN
-	#define Q_ASSIGN( a )   = a
-#else
-	#define Q_EXTERN extern
-	#define Q_ASSIGN( a )
-#endif
 
 /* game support */
 Q_EXTERN game_t games[]
