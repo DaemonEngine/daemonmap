@@ -27,13 +27,6 @@
 dsprite_t sprite;
 dsprframe_t frames[MAX_SPRFRAMES];
 
-byte            *byteimage, *lbmpalette;
-int byteimagewidth, byteimageheight;
-
-qboolean TrueColorImage;
-unsigned        *longimage;
-int longimagewidth, longimageheight;
-
 char spritename[1024];
 
 
