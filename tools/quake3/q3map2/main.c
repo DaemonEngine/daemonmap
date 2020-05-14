@@ -37,21 +37,6 @@
 #include "q3map2.h"
 #include <glib.h>
 
-char *surfaceTypes[ NUM_SURFACE_TYPES ] =
-{
-	"SURFACE_BAD",
-	"SURFACE_FACE",
-	"SURFACE_PATCH",
-	"SURFACE_TRIANGLES",
-	"SURFACE_FLARE",
-	"SURFACE_FOLIAGE",
-	"SURFACE_FORCED_META",
-	"SURFACE_META",
-	"SURFACE_FOGHULL",
-	"SURFACE_DECAL",
-	"SURFACE_SHADER"
-};
-
 
 char *Q_strncpyz( char *dst, const char *src, size_t len ) {
 	if ( len == 0 ) {

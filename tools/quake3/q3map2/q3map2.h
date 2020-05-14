@@ -102,6 +102,15 @@ extern "C"
 	#define Q_strncasecmp       strncasecmp
 #endif
 
+// hack to declare and define in the same file
+#ifdef MAIN_C
+	#define Q_EXTERN
+	#define Q_ASSIGN( a )   = a
+#else
+	#define Q_EXTERN extern
+	#define Q_ASSIGN( a )
+#endif
+
 /* macro version */
 #define VectorMA( a, s, b, c )  ( ( c )[ 0 ] = ( a )[ 0 ] + ( s ) * ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( s ) * ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( s ) * ( b )[ 2 ] )
 
@@ -873,7 +882,25 @@ typedef enum
 }
 surfaceType_t;
 
-extern char      *surfaceTypes[ NUM_SURFACE_TYPES ];
+Q_EXTERN char *surfaceTypes[ NUM_SURFACE_TYPES ]
+#ifndef MAIN_C
+;
+#else
+	=
+	{
+	"SURFACE_BAD",
+	"SURFACE_FACE",
+	"SURFACE_PATCH",
+	"SURFACE_TRIANGLES",
+	"SURFACE_FLARE",
+	"SURFACE_FOLIAGE",
+	"SURFACE_FORCED_META",
+	"SURFACE_META",
+	"SURFACE_FOGHULL",
+	"SURFACE_DECAL",
+	"SURFACE_SHADER"
+	};
+#endif
 
 /* ydnar: this struct needs an overhaul (again, heh) */
 typedef struct mapDrawSurface_s
@@ -1131,14 +1158,6 @@ void                        WriteIBSPFile( const char *filename );
 
    ------------------------------------------------------------------------------- */
 
-#ifdef MAIN_C
-	#define Q_EXTERN
-	#define Q_ASSIGN( a )   = a
-#else
-	#define Q_EXTERN extern
-	#define Q_ASSIGN( a )
-#endif
-
 /* game support */
 Q_EXTERN game_t games[]
 #ifndef MAIN_C
@@ -1177,7 +1196,6 @@ Q_EXTERN float jitters[ MAX_JITTERS ];
 
 
 /* commandline arguments */
-Q_EXTERN qboolean verbose;
 Q_EXTERN qboolean verboseEntities Q_ASSIGN( qfalse );
 Q_EXTERN qboolean force Q_ASSIGN( qfalse );
 Q_EXTERN qboolean infoMode Q_ASSIGN( qfalse );
