@@ -34,7 +34,6 @@ void FinishSprite( void );
 void Cmd_Spritename( void );
 
 char spr_prefix[1024];
-char pic_prefix[1024];
 
 extern char        *g_outputDir;
 
