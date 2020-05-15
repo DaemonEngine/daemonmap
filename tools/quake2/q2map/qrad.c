@@ -582,7 +582,6 @@ void RadWorld( void ){
 	RunThreadsOnIndividual( numfaces, true, FinalLightFace );
 }
 
-
 /*
    ========
    main
@@ -602,6 +601,8 @@ int RAD_Main(){
 	}
 
 	start = I_FloatTime();
+
+	void ( *CalcTextureReflectivity )( void );
 
 	if ( !strcmp( game, "heretic2" ) ) {
 		CalcTextureReflectivity = &CalcTextureReflectivity_Heretic2;
