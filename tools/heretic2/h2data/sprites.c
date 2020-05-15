@@ -25,7 +25,7 @@
 #define MAX_SPRFRAMES           MAX_MD2SKINS
 
 dsprite_t sprite;
-dsprframe_t frames[MAX_SPRFRAMES];
+static dsprframe_t frames[MAX_SPRFRAMES];
 
 char spritename[1024];
 
