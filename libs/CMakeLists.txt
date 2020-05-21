@@ -16,12 +16,12 @@ endif()
 
 add_subdirectory(fastlz)
 
-add_library(cm
+add_library(cm STATIC
         cm/cm_patch.cpp
         cm/cm_patch.h
         )
 
-add_library(detour
+add_library(detour STATIC
         recastnavigation/DebugUtils/Source/DebugDraw.cpp
         recastnavigation/DebugUtils/Include/DebugDraw.h
 
@@ -57,7 +57,7 @@ include_directories(detour PRIVATE
         recastnavigation/DetourTileCache/Include
         )
 
-add_library(recast
+add_library(recast STATIC
         recastnavigation/Recast/Source/RecastAlloc.cpp
         recastnavigation/Recast/Include/RecastAlloc.h
         recastnavigation/Recast/Source/RecastArea.cpp

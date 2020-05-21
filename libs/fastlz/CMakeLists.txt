@@ -1,3 +1,3 @@
-add_library(fastlz
+add_library(fastlz STATIC
         fastlz.c fastlz.h
         )
