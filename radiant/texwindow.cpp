@@ -569,7 +569,15 @@ bool Texture_IsShown( IShader* shader, bool show_shaders, bool hideUnused ){
 		}
 	}
 	else {
-		if ( !shader_equal_prefix( shader_get_textureName( shader->getName() ), g_TextureBrowser_currentDirectory.c_str() ) ) {
+		if ( TextureBrowser_showWads() )
+		{
+			if ( g_TextureBrowser_currentDirectory != ""
+				&& !string_equal( shader->getWadName(), g_TextureBrowser_currentDirectory.c_str() ) )
+			{
+				return false;
+			}
+		}
+		else if ( !shader_equal_prefix( shader_get_textureName( shader->getName() ), g_TextureBrowser_currentDirectory.c_str() ) ) {
 			return false;
 		}
 	}
@@ -764,6 +772,7 @@ public:
 void visit( const char* name ){
 	IShader* shader = QERApp_Shader_ForName( CopiedString( StringRange( name, path_get_filename_base_end( name ) ) ).c_str() );
 	shader->DecRef();
+	shader->setWadName( g_TextureBrowser_currentDirectory.c_str() );
 }
 };
 
@@ -840,6 +849,9 @@ void visit( const char* minor, const _QERPlugImageTable& table ) const {
 
 void TextureBrowser_ShowDirectory( TextureBrowser& textureBrowser, const char* directory ){
 	if ( TextureBrowser_showWads() ) {
+		g_TextureBrowser_currentDirectory = directory;
+		TextureBrowser_heightChanged( textureBrowser );
+
 		Archive* archive = GlobalFileSystem().getArchive( directory );
 		if ( archive != nullptr )
 		{
