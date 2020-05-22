@@ -100,13 +100,8 @@ bool string_equal_start( const char* string, StringRange start ){
 typedef std::set<CopiedString> TextureGroups;
 
 void TextureGroups_addWad( TextureGroups& groups, const char* archive ){
-	if ( extension_equal_i( path_get_extension( archive ), "wad" ) ) {
-#if 1
+	if ( extension_equal( path_get_extension( archive ), "wad" ) ) {
 		groups.insert( archive );
-#else
-		CopiedString archiveBaseName( path_get_filename_start( archive ), path_get_filename_base_end( archive ) );
-		groups.insert( archiveBaseName );
-#endif
 	}
 }
 
@@ -846,9 +841,15 @@ void visit( const char* minor, const _QERPlugImageTable& table ) const {
 void TextureBrowser_ShowDirectory( TextureBrowser& textureBrowser, const char* directory ){
 	if ( TextureBrowser_showWads() ) {
 		Archive* archive = GlobalFileSystem().getArchive( directory );
-		ASSERT_NOTNULL( archive );
-		LoadShaderVisitor visitor;
-		archive->forEachFile( Archive::VisitorFunc( visitor, Archive::eFiles, 0 ), "textures/" );
+		if ( archive != nullptr )
+		{
+			LoadShaderVisitor visitor;
+			archive->forEachFile( Archive::VisitorFunc( visitor, Archive::eFiles, 0 ), "textures/" );
+		}
+		else if ( extension_equal_i( path_get_extension( directory ), "wad" ) )
+		{
+			globalErrorStream() << "Failed to load " << directory << "\n";
+		}
 	}
 	else
 	{
@@ -1527,6 +1528,17 @@ void TextureBrowser_ToggleHideUnused(){
 	}
 }
 
+const char* TextureGroups_transformDirName( const char* dirName, StringOutputStream *archiveName )
+{
+	if ( TextureBrowser_showWads() ) {
+		archiveName->clear();
+		*archiveName << StringRange( path_get_filename_start( dirName ), path_get_filename_base_end( dirName ) ) \
+			<< "." << path_get_extension( dirName );
+		return archiveName->c_str();
+	}
+	return dirName;
+}
+
 void TextureGroups_constructTreeModel( TextureGroups groups, ui::TreeStore store ){
 	// put the information from the old textures menu into a treeview
 	GtkTreeIter iter, child;
@@ -1534,23 +1546,27 @@ void TextureGroups_constructTreeModel( TextureGroups groups, ui::TreeStore store
 	TextureGroups::const_iterator i = groups.begin();
 	while ( i != groups.end() )
 	{
-		const char* dirName = ( *i ).c_str();
+		StringOutputStream archiveName;
+		StringOutputStream nextArchiveName;
+		const char* dirName = TextureGroups_transformDirName( ( *i ).c_str(), &archiveName );
+
 		const char* firstUnderscore = strchr( dirName, '_' );
 		StringRange dirRoot( dirName, ( firstUnderscore == 0 ) ? dirName : firstUnderscore + 1 );
 
 		TextureGroups::const_iterator next = i;
 		++next;
+
 		if ( firstUnderscore != 0
 			 && next != groups.end()
-			 && string_equal_start( ( *next ).c_str(), dirRoot ) ) {
+			 && string_equal_start( TextureGroups_transformDirName( ( *next ).c_str(), &nextArchiveName ), dirRoot ) ) {
 			gtk_tree_store_append( store, &iter, NULL );
 			gtk_tree_store_set( store, &iter, 0, CopiedString( StringRange( dirName, firstUnderscore ) ).c_str(), -1 );
 
 			// keep going...
-			while ( i != groups.end() && string_equal_start( ( *i ).c_str(), dirRoot ) )
+			while ( i != groups.end() && string_equal_start( TextureGroups_transformDirName( ( *i ).c_str(), &nextArchiveName ), dirRoot ) )
 			{
 				gtk_tree_store_append( store, &child, &iter );
-				gtk_tree_store_set( store, &child, 0, ( *i ).c_str(), -1 );
+				gtk_tree_store_set( store, &child, 0, TextureGroups_transformDirName( ( *i ).c_str(), &nextArchiveName ), -1 );
 				++i;
 			}
 		}

@@ -934,6 +934,9 @@ Archive* getArchive( const char* archiveName, bool pakonly ){
 		if ( path_equal( ( *i ).name.c_str(), archiveName ) ) {
 			return ( *i ).archive;
 		}
+		else if ( path_equal( path_get_filename_start( ( *i ).name.c_str() ), archiveName ) ) {
+			return ( *i ).archive;
+		}
 	}
 	return 0;
 }
