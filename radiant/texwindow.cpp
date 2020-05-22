@@ -1746,7 +1746,7 @@ ui::MenuItem TextureBrowser_constructViewMenu( ui::Menu menu ){
 	create_menu_item_with_mnemonic( menu, "Show All", "ShowAllTextures" );
 
 	// we always want to show shaders but don't want a "Show Shaders" menu for doom3 and .wad file games
-	if ( g_pGameDescription->mGameType == "doom3" || !string_empty( g_pGameDescription->getKeyValue( "show_wads" ) ) ) {
+	if ( g_pGameDescription->mGameType == "doom3" || TextureBrowser_showWads() ) {
 		g_TextureBrowser.m_showShaders = true;
 	}
 	else
