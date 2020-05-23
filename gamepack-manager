@@ -55,6 +55,7 @@ cat <<\EOF
 # Usable packs                                        #
 #######################################################
 
+AlienArena      GPL          svn     https://svn.code.sf.net/p/alienarena-cc/code/trunk/tools/netradiant_gamepack/AlienArenaPack
 DarkPlaces      GPL          svn     svn://svn.icculus.org/gtkradiant-gamepacks/DarkPlacesPack/branches/1.5/
 Doom3           proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/Doom3Pack/branches/1.5/
 ET              proprietary  svn     svn://svn.icculus.org/gtkradiant-gamepacks/ETPack/branches/1.5/
