@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(NetRadiant C CXX)
 
@@ -159,6 +160,27 @@ if (BUILD_RADIANT)
             add_definitions(-DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1)
         endif ()
     endif ()
+endif ()
+
+option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
+if (BUILTIN_GTKGLEXT)
+    include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+
+    execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
+        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(GTKGLEXT_LDFLAGS "-lm ${GTKGLEXT_LDFLAGS}")
+
+    ExternalProject_Add(gtkglext
+        GIT_REPOSITORY https://gitlab.gnome.org/illwieckz/gtkglext.git
+        GIT_TAG fixes
+        BUILD_IN_SOURCE ON
+        CONFIGURE_COMMAND NOCONFIGURE=1 ./autogen.sh
+        CONFIGURE_COMMAND && ./configure --prefix "${CMAKE_BINARY_DIR}/external"
+        BUILD_COMMAND $(MAKE) LDFLAGS=${GTKGLEXT_LDFLAGS}
+        INSTALL_COMMAND $(MAKE) install
+    )
 endif ()
 
 #-----------------------------------------------------------------------
