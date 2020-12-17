@@ -2,6 +2,9 @@
 
 set -e
 
+export LANG='C.UTF-8'
+export LANGUAGE="${LANG}"
+
 Common::noOp () {
 	true
 }
@@ -53,7 +56,7 @@ Multi::excludeLdd () {
 			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
 			;;
 		'windows')
-			egrep -i '\.dll => [A-Z]:\\msys64\\' \
+			egrep -i '\.dll => [A-Z]:\\msys64\\'
 			;;
 	esac
 }
@@ -182,11 +185,18 @@ Multi::bundleGtkDepsFromFile () {
 
 Multi::bundleLibFromFile () {
 	local exe_file="${1}"
+	local lib_file
 
 	Multi::printLdd "${exe_file}" \
 	| Multi::filterLib \
 	| while read lib_file
 	do
+		if [ "${lib_file}" = 'not found' ]
+		then
+			printf 'ERROR: library not found while bundling %s (but link worked)\n' "${exe_file}" >&2
+			Multi::printLdd "${exe_file}" | grep 'not found'
+			exit 1
+		fi
 		lib_basename="$(basename "${lib_file}")"
 
 		if [ -f "${lib_dir}/${lib_basename}" ]
