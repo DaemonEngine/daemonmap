@@ -8,7 +8,9 @@ else ()
 endif ()
 
 add_custom_target(bundle ALL
-    COMMAND "${PROJECT_SOURCE_DIR}/library-bundler"
+    COMMAND
+    export LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH} &&
+    "${PROJECT_SOURCE_DIR}/library-bundler"
     "${BUNDLE_OS_NAME}" "${PROJECT_BINARY_DIR}"
     VERBATIM
     COMMENT "Bundling libraries"

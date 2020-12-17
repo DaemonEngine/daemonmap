@@ -44,6 +44,7 @@ Common::stripLdd () {
 Multi::excludeLdd () {
 	case "${system_name}" in
 		'linux')
+			# - always bundle built-in libraries
 			# - always rely on up-to-date x11 and gl libraries, bundling them will break on future distros
 			# - gtk is not easily bundlable on linux because it looks for harcoded system path to optional
 			#   shared libraries like image codecs, theme engines, sound notification system, etc.
@@ -52,8 +53,24 @@ Multi::excludeLdd () {
 			#   which is likely to pull gtk itself, x11 and gl dependencies
 			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
 			# - if gtk and fontconfig is installed, pango and freetype are
-			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.' \
-			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+			local ldd_line
+			while read ldd_line
+			do
+				if echo "${ldd_line}" | egrep '/builtins/'
+				then
+					echo "${ldd_line}"
+				elif echo "${ldd_line}" \
+					| egrep -q '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.'
+				then
+					Common::noOp
+				elif echo "${ldd_line}" \
+					| egrep -q '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+				then
+					Common::noOp
+				else
+					echo "${ldd_line}"
+				fi
+			done
 			;;
 		'windows')
 			egrep -i '\.dll => [A-Z]:\\msys64\\'

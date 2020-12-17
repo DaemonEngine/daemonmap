@@ -1,7 +1,45 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(NetRadiant C CXX)
+
+#-----------------------------------------------------------------------
+# Builtins: configuration
+#-----------------------------------------------------------------------
+
+set(BUILTINS_INSTALL_DIR "${CMAKE_BINARY_DIR}/builtins")
+set(BUILTINS_INCLUDE_DIR "${BUILTINS_INSTALL_DIR}/include")
+set(BUILTINS_LIB_DIR "${BUILTINS_INSTALL_DIR}/lib")
+set(BUILTINS_PKGCONFIG_DIR "${BUILTINS_INSTALL_DIR}/lib/pkgconfig")
+
+option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
+
+set(BUILTIN_GTKGLEXT_BUILT OFF CACHE INTERNAL "...")
+if (EXISTS "${BUILTINS_INSTALL_DIR}/lib/pkgconfig/gtkglext-1.0.pc")
+    set(BUILTIN_GTKGLEXT_BUILT ON)
+endif ()
+
+if (EXISTS "${BUILTINS_INCLUDE_DIR}")
+    include_directories("${BUILTINS_INCLUDE_DIR}")
+endif ()
+
+if (EXISTS "${BUILTINS_LIB_DIR}")
+    set(ENV{LD_LIBRARY_PATH} "$ENV{LD_LIBRARY_PATH}:${BUILTINS_LIB_DIR}")
+    link_directories("${BUILTINS_LIB_DIR}")
+endif ()
+
+if (EXISTS "${BUILTINS_PKGCONFIG_DIR}")
+    set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${BUILTINS_PKGCONFIG_DIR}")
+endif ()
+
+#-----------------------------------------------------------------------
+# CMake modules
+#-----------------------------------------------------------------------
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+#-----------------------------------------------------------------------
+# Submodules
+#-----------------------------------------------------------------------
 
 if (EXISTS "${PROJECT_SOURCE_DIR}/libs/crunch/inc/crn_decomp.h")
     set(DEFAULT_BUILD_CRUNCH ON CACHE INTERNAL "...")
@@ -14,6 +52,10 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/tools/unvanquished/daemonmap/tools/quake3/q3ma
 else ()
     set(DEFAULT_BUILD_DAEMONMAP OFF CACHE INTERNAL "...")
 endif ()
+
+#-----------------------------------------------------------------------
+# Build options
+#-----------------------------------------------------------------------
 
 option(BUILD_RADIANT "Build the GUI" ON)
 option(BUILD_TOOLS "Build the tools" ON)
@@ -162,27 +204,6 @@ if (BUILD_RADIANT)
     endif ()
 endif ()
 
-option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
-if (BUILTIN_GTKGLEXT)
-    include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
-
-    execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
-        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    set(GTKGLEXT_LDFLAGS "-lm ${GTKGLEXT_LDFLAGS}")
-
-    ExternalProject_Add(gtkglext
-        GIT_REPOSITORY https://gitlab.gnome.org/illwieckz/gtkglext.git
-        GIT_TAG fixes
-        BUILD_IN_SOURCE ON
-        CONFIGURE_COMMAND NOCONFIGURE=1 ./autogen.sh
-        CONFIGURE_COMMAND && ./configure --prefix "${CMAKE_BINARY_DIR}/external"
-        BUILD_COMMAND $(MAKE) LDFLAGS=${GTKGLEXT_LDFLAGS}
-        INSTALL_COMMAND $(MAKE) install
-    )
-endif ()
-
 #-----------------------------------------------------------------------
 # Defs
 #-----------------------------------------------------------------------
@@ -277,6 +298,50 @@ if (BUILD_BINARIES)
         endif ()
     endmacro ()
 endif ()
+
+#-----------------------------------------------------------------------
+# Builtins: targets
+#-----------------------------------------------------------------------
+
+add_custom_target(builtins)
+
+if (BUILTIN_GTKGLEXT)
+    include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+
+    execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
+        OUTPUT_VARIABLE GTKGLEXT_DEPS_LDFLAGS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(GTKGLEXT_DEPS_LDFLAGS "-lm ${GTKGLEXT_DEPS_LDFLAGS}")
+
+    ExternalProject_Add(gtkglext
+        GIT_REPOSITORY https://gitlab.gnome.org/illwieckz/gtkglext.git
+        GIT_TAG fixes
+        BUILD_IN_SOURCE ON
+        CONFIGURE_COMMAND NOCONFIGURE=1 ./autogen.sh
+        CONFIGURE_COMMAND && ./configure --prefix "${BUILTINS_INSTALL_DIR}" --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf
+        BUILD_COMMAND $(MAKE) LDFLAGS=${GTKGLEXT_DEPS_LDFLAGS}
+        INSTALL_COMMAND $(MAKE) install
+    )
+
+#    set(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${BUILTINS_INSTALL_DIR}lib/pkgconfig/)
+#    execute_process(COMMAND pkg-config --libs gtkglext-1.0
+#        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
+#        OUTPUT_STRIP_TRAILING_WHITESPACE
+#    )
+#    set(CMAKE_EXE_LINKER_FLAGS ${GTKGLEXT_LDFLAGS})
+
+#    list(APPEND CMAKE_PREFIX_PATH "${BUILTINS_INSTALL_DIR}")
+    include_directories("${BUILTINS_INSTALL_DIR}/lib/gtkglext-1.0/include")
+    include_directories("${BUILTINS_INSTALL_DIR}/include/gtkglext-1.0")
+
+    add_dependencies(builtins gtkglext)
+    set_target_properties(gtkglext PROPERTIES EXCLUDE_FROM_ALL ON)
+endif ()
+
+if (BUNDLE_LIBRARIES AND EXISTS ${BUILTINS_LIB_DIR})
+    set(CMAKE_SKIP_BUILD_RPATH ON)
+endif()
 
 #-----------------------------------------------------------------------
 # Libraries
