@@ -309,29 +309,36 @@ if (BUILTIN_GTKGLEXT)
     include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
 
     execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
-        OUTPUT_VARIABLE GTKGLEXT_DEPS_LDFLAGS
+        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    set(GTKGLEXT_DEPS_LDFLAGS "-lm ${GTKGLEXT_DEPS_LDFLAGS}")
+    set(GTKGLEXT_LDFLAGS "$ENV{LDFLAGS} -lm ${GTKGLEXT_LDFLAGS}")
+
+    if (NOT CMAKE_BUILD_TYPE MATCHES Release)
+		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS} -g")
+	else ()
+		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS}")
+	endif()
+
+    set(CONFIGURE_OPTIONS --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf)
+
+    if (APPLE)
+        set(GTKGLEXT_GIT_TAG macos)
+    else ()
+        set(GTKGLEXT_GIT_TAG fixes)
+    endif ()
 
     ExternalProject_Add(gtkglext
         GIT_REPOSITORY https://gitlab.gnome.org/illwieckz/gtkglext.git
-        GIT_TAG fixes
+        GIT_TAG ${GTKGLEXT_GIT_TAG}
         BUILD_IN_SOURCE ON
-        CONFIGURE_COMMAND NOCONFIGURE=1 ./autogen.sh
-        CONFIGURE_COMMAND && ./configure --prefix "${BUILTINS_INSTALL_DIR}" --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf
-        BUILD_COMMAND $(MAKE) LDFLAGS=${GTKGLEXT_DEPS_LDFLAGS}
+        CONFIGURE_COMMAND export LDFLAGS=${GTKGLEXT_LDFLAGS}
+        CONFIGURE_COMMAND && NOCONFIGURE=1 ./autogen.sh
+        CONFIGURE_COMMAND && ./configure --prefix "${BUILTINS_INSTALL_DIR}" ${CONFIGURE_OPTIONS}
+        BUILD_COMMAND $(MAKE) CFLAGS=${GTKGLEXT_CFLAGS} LDFLAGS=${GTKGLEXT_LDFLAGS}
         INSTALL_COMMAND $(MAKE) install
     )
 
-#    set(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${BUILTINS_INSTALL_DIR}lib/pkgconfig/)
-#    execute_process(COMMAND pkg-config --libs gtkglext-1.0
-#        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
-#        OUTPUT_STRIP_TRAILING_WHITESPACE
-#    )
-#    set(CMAKE_EXE_LINKER_FLAGS ${GTKGLEXT_LDFLAGS})
-
-#    list(APPEND CMAKE_PREFIX_PATH "${BUILTINS_INSTALL_DIR}")
     include_directories("${BUILTINS_INSTALL_DIR}/lib/gtkglext-1.0/include")
     include_directories("${BUILTINS_INSTALL_DIR}/include/gtkglext-1.0")
 
