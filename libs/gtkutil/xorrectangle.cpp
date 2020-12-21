@@ -35,7 +35,9 @@ XORRectangle::XORRectangle(ui::GLArea widget) : m_widget(widget), cr(0)
 XORRectangle::~XORRectangle()
 {
     if (initialised()) {
+#ifndef WORKAROUND_MACOS_GTK2_DESTROY
         cairo_destroy(cr);
+#endif
     }
 }
 

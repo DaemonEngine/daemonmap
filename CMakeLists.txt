@@ -202,6 +202,12 @@ if (BUILD_RADIANT)
             add_definitions(-DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1)
         endif ()
     endif ()
+
+    if (APPLE)
+        if (GTK_TARGET EQUAL 2)
+            add_definitions(-DWORKAROUND_MACOS_GTK2_DESTROY=1)
+        endif ()
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------
