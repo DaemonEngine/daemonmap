@@ -493,15 +493,15 @@ endif ()
 
 if (BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.png
+        icons/netradiant.png
         DESTINATION ${RADIANT_SHARE_DIR}/pixmaps
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
+        icons/netradiant.desktop
         DESTINATION ${RADIANT_SHARE_DIR}/applications
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
+        icons/mime/map.xml
         DESTINATION ${RADIANT_SHARE_DIR}/mime/model
     )
 endif ()
