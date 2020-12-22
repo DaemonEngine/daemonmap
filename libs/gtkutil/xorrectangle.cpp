@@ -16,6 +16,7 @@ void XORRectangle::lazy_init()
 
 void XORRectangle::draw() const
 {
+#ifndef WORKAROUND_MACOS_GTK2_DESTROY
     const int x = float_to_integer(m_rectangle.x);
     const int y = float_to_integer(m_rectangle.y);
     const int w = float_to_integer(m_rectangle.w);
@@ -26,6 +27,7 @@ void XORRectangle::draw() const
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
     cairo_stroke(cr);
+#endif
 }
 
 XORRectangle::XORRectangle(ui::GLArea widget) : m_widget(widget), cr(0)
