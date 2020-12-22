@@ -273,7 +273,7 @@ if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
 
-    if (WIN32 OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
         set(BUNDLING_SUPPORTED ON)
     endif()
 
