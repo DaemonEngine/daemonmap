@@ -2775,10 +2775,14 @@ MainFrame::~MainFrame(){
 
 	for ( std::vector<ui::Widget>::iterator i = g_floating_windows.begin(); i != g_floating_windows.end(); ++i )
 	{
+#ifndef WORKAROUND_MACOS_GTK2_DESTROY
 		i->destroy();
+#endif
 	}
 
+#ifndef WORKAROUND_MACOS_GTK2_DESTROY
 	m_window.destroy();
+#endif
 }
 
 void MainFrame::SetActiveXY( XYWnd* p ){

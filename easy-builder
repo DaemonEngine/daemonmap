@@ -77,6 +77,12 @@ do
 	fi
 done
 
+case "$(uname -s)" in
+	'Darwin')
+		cmake_user_opts[${#cmake_user_opts[@]}]='-DBUILTIN_GTKGLEXT=ON'
+		;;
+esac
+
 set -x
 
 "${fetch_submodules_cmd[@]}"
@@ -90,6 +96,12 @@ cmake \
 	-D'CMAKE_BUILD_TYPE'="${build_type}" \
 	"${cmake_user_opts[@]}" \
 	"${project_source_dir}"
+
+cmake \
+	--build "${build_dir}" \
+	-- \
+	-j"${job_count}" \
+	'builtins'
 
 cmake \
 	--build "${build_dir}" \

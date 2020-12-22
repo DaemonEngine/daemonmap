@@ -1,6 +1,45 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+
 project(NetRadiant C CXX)
+
+#-----------------------------------------------------------------------
+# Builtins: configuration
+#-----------------------------------------------------------------------
+
+set(BUILTINS_INSTALL_DIR "${CMAKE_BINARY_DIR}/builtins")
+set(BUILTINS_INCLUDE_DIR "${BUILTINS_INSTALL_DIR}/include")
+set(BUILTINS_LIB_DIR "${BUILTINS_INSTALL_DIR}/lib")
+set(BUILTINS_PKGCONFIG_DIR "${BUILTINS_INSTALL_DIR}/lib/pkgconfig")
+
+option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
+
+set(BUILTIN_GTKGLEXT_BUILT OFF CACHE INTERNAL "...")
+if (EXISTS "${BUILTINS_INSTALL_DIR}/lib/pkgconfig/gtkglext-1.0.pc")
+    set(BUILTIN_GTKGLEXT_BUILT ON)
+endif ()
+
+if (EXISTS "${BUILTINS_INCLUDE_DIR}")
+    include_directories("${BUILTINS_INCLUDE_DIR}")
+endif ()
+
+if (EXISTS "${BUILTINS_LIB_DIR}")
+    set(ENV{LD_LIBRARY_PATH} "$ENV{LD_LIBRARY_PATH}:${BUILTINS_LIB_DIR}")
+    link_directories("${BUILTINS_LIB_DIR}")
+endif ()
+
+if (EXISTS "${BUILTINS_PKGCONFIG_DIR}")
+    set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${BUILTINS_PKGCONFIG_DIR}")
+endif ()
+
+#-----------------------------------------------------------------------
+# CMake modules
+#-----------------------------------------------------------------------
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+#-----------------------------------------------------------------------
+# Submodules
+#-----------------------------------------------------------------------
 
 if (EXISTS "${PROJECT_SOURCE_DIR}/libs/crunch/inc/crn_decomp.h")
     set(DEFAULT_BUILD_CRUNCH ON CACHE INTERNAL "...")
@@ -13,6 +52,10 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/tools/unvanquished/daemonmap/tools/quake3/q3ma
 else ()
     set(DEFAULT_BUILD_DAEMONMAP OFF CACHE INTERNAL "...")
 endif ()
+
+#-----------------------------------------------------------------------
+# Build options
+#-----------------------------------------------------------------------
 
 option(BUILD_RADIANT "Build the GUI" ON)
 option(BUILD_TOOLS "Build the tools" ON)
@@ -27,6 +70,26 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
     set(BUILD_BINARIES ON)
 endif ()
 
+if (BUILD_BINARIES)
+    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        set(BUNDLING_SUPPORTED ON)
+    endif()
+
+    if (BUNDLING_SUPPORTED)
+        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+            set(BUNDLE_LIBRARIES_DEFAULT ON)
+        else ()
+            set(BUNDLE_LIBRARIES_DEFAULT OFF)
+        endif ()
+
+        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
+    endif ()
+
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
+    endif ()
+endif ()
+
 #-----------------------------------------------------------------------
 # Paths
 #-----------------------------------------------------------------------
@@ -35,19 +98,32 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
 
+if (APPLE)
+	set(APPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/NetRadiant.app)
+	set(FINAL_INSTALL_PREFIX ${APPLE_INSTALL_PREFIX}/Contents/Prefix)
+else ()
+	set(FINAL_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+endif ()
+
 set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
 set(RADIANT_BASENAME "netradiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
-set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
-set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
-set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib CACHE INTERNAL "...")
+set(RADIANT_ADDONS_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_ETC_DIR ${FINAL_INSTALL_PREFIX}/etc CACHE INTERNAL "...")
+set(RADIANT_SHARE_DIR ${FINAL_INSTALL_PREFIX}/share CACHE INTERNAL "...")
+set(RADIANT_DATA_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL AND NOT BUNDLE_LIBRARIES)
-    set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
-    set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX}/bin)
+    set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib)
+    set(RADIANT_ADDONS_DIR ${RADIANT_LIB_DIR}/${RADIANT_BASENAME})
+    set(RADIANT_ETC_DIR ${FINAL_INSTALL_PREFIX}/etc)
+    set(RADIANT_SHARE_DIR ${FINAL_INSTALL_PREFIX}/share)
+    set(RADIANT_DATA_DIR ${RADIANT_SHARE_DIR}/${RADIANT_BASENAME})
 endif ()
 
 set(GAMEPACKS_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download CACHE PATH "Where to store downloaded game packs")
@@ -159,6 +235,12 @@ if (BUILD_RADIANT)
             add_definitions(-DWORKAROUND_WINDOWS_GTK2_GLWIDGET=1)
         endif ()
     endif ()
+
+    if (APPLE)
+        if (GTK_TARGET EQUAL 2)
+            add_definitions(-DWORKAROUND_MACOS_GTK2_DESTROY=1)
+        endif ()
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -224,26 +306,6 @@ if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
 
-    if (WIN32 OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-        set(BUNDLING_SUPPORTED ON)
-    endif()
-
-    if (BUNDLING_SUPPORTED)
-        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
-            set(BUNDLE_LIBRARIES_DEFAULT ON)
-        else ()
-            set(BUNDLE_LIBRARIES_DEFAULT OFF)
-        endif ()
-
-        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
-    endif ()
-
-    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
-        add_subdirectory(bundle)
-
-        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
-    endif ()
-
     macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
             add_custom_command(TARGET ${target} POST_BUILD
@@ -255,6 +317,67 @@ if (BUILD_BINARIES)
         endif ()
     endmacro ()
 endif ()
+
+#-----------------------------------------------------------------------
+# Bundle
+#-----------------------------------------------------------------------
+
+if (BUILD_BINARIES)
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        add_subdirectory(bundle)
+    endif ()
+endif ()
+
+#-----------------------------------------------------------------------
+# Builtins: targets
+#-----------------------------------------------------------------------
+
+add_custom_target(builtins)
+
+if (BUILTIN_GTKGLEXT)
+    include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+
+    execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
+        OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(GTKGLEXT_LDFLAGS "$ENV{LDFLAGS} -lm ${GTKGLEXT_LDFLAGS}")
+
+    if (NOT CMAKE_BUILD_TYPE MATCHES Release)
+		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS} -g")
+	else ()
+		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS}")
+	endif()
+
+    set(CONFIGURE_OPTIONS --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf)
+
+    if (APPLE)
+        set(GTKGLEXT_GIT_TAG macos)
+    else ()
+        set(GTKGLEXT_GIT_TAG fixes)
+    endif ()
+
+    ExternalProject_Add(gtkglext
+        GIT_REPOSITORY https://gitlab.gnome.org/illwieckz/gtkglext.git
+        GIT_TAG ${GTKGLEXT_GIT_TAG}
+        BUILD_IN_SOURCE ON
+        CONFIGURE_COMMAND export LDFLAGS=${GTKGLEXT_LDFLAGS}
+        CONFIGURE_COMMAND && NOCONFIGURE=1 ./autogen.sh
+        CONFIGURE_COMMAND && ./configure --prefix "${BUILTINS_INSTALL_DIR}" ${CONFIGURE_OPTIONS}
+        BUILD_COMMAND $(MAKE) CFLAGS=${GTKGLEXT_CFLAGS} LDFLAGS=${GTKGLEXT_LDFLAGS}
+        INSTALL_COMMAND $(MAKE) install
+    )
+
+    include_directories("${BUILTINS_INSTALL_DIR}/lib/gtkglext-1.0/include")
+    include_directories("${BUILTINS_INSTALL_DIR}/include/gtkglext-1.0")
+
+    add_dependencies(builtins gtkglext)
+    set_target_properties(gtkglext PROPERTIES EXCLUDE_FROM_ALL ON)
+endif ()
+
+if (BUNDLE_LIBRARIES AND EXISTS ${BUILTINS_LIB_DIR})
+    set(CMAKE_SKIP_BUILD_RPATH ON)
+endif()
 
 #-----------------------------------------------------------------------
 # Libraries
@@ -362,30 +485,35 @@ if (BUILD_BINARIES)
 endif ()
 
 if (DOWNLOAD_GAMEPACKS)
-    if (FHS_INSTALL)
-       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share/netradiant")
-    else ()
-       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-    endif ()
-
     install(DIRECTORY
         ${PROJECT_BINARY_DIR}/gamepacks
         DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
 
-if(BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
+if (BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.png
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
+        icons/netradiant.png
+        DESTINATION ${RADIANT_SHARE_DIR}/pixmaps
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+        icons/netradiant.desktop
+        DESTINATION ${RADIANT_SHARE_DIR}/applications
     )
     install(FILES
-        ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
+        icons/mime/map.xml
+        DESTINATION ${RADIANT_SHARE_DIR}/mime/model
+    )
+endif ()
+
+if (APPLE)
+    install(DIRECTORY
+        setup/apple/Contents
+        DESTINATION ${APPLE_INSTALL_PREFIX}
+    )
+    install(PROGRAMS
+        setup/apple/netradiant
+        DESTINATION ${APPLE_INSTALL_PREFIX}/Contents/MacOS
     )
 endif ()
 

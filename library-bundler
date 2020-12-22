@@ -2,6 +2,31 @@
 
 set -e
 
+export LANG='C.UTF-8'
+export LANGUAGE="${LANG}"
+
+_sed () {
+	case "${system_name}" in
+		'macos')
+			gsed "${@}"
+			;;
+		*)
+			sed "${@}"
+			;;
+	esac
+}
+
+_cpr () {
+	case "${system_name}" in
+		'macos')
+			cp -R ${@}
+			;;
+		*)
+			cp -R --preserve=timestamps ${@}
+			;;
+	esac
+}
+
 Common::noOp () {
 	true
 }
@@ -27,20 +52,35 @@ Common::getPath () {
 			printf '%s\n' "${file_path}"
 		fi
 	fi \
-	| sed -e 's|/*$||'
+	| _sed -e 's|/*$||'
 }
 
 Common::grepLdd () {
-	egrep ' => '
+	case "${system_name}" in
+		'macos')
+			egrep '^\t/'
+			;;
+		*)
+			egrep ' => '
+			;;
+	esac
 }
 
 Common::stripLdd () {
-	sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //'
+	case "${system_name}" in
+		'macos')
+			_sed -e 's/^\t\(.*\) (compatibility version .*/\1/'
+			;;
+		*)
+			_sed -e 's/ (0x[0-9a-f]*)$//;s/^.* => //'
+			;;
+	esac
 }
 
 Multi::excludeLdd () {
 	case "${system_name}" in
 		'linux')
+			# - always bundle built-in libraries
 			# - always rely on up-to-date x11 and gl libraries, bundling them will break on future distros
 			# - gtk is not easily bundlable on linux because it looks for harcoded system path to optional
 			#   shared libraries like image codecs, theme engines, sound notification system, etc.
@@ -49,11 +89,30 @@ Multi::excludeLdd () {
 			#   which is likely to pull gtk itself, x11 and gl dependencies
 			# - old fontconfig does not work correctly if newer fontconfig configuration is installed
 			# - if gtk and fontconfig is installed, pango and freetype are
-			egrep -v '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.' \
-			| egrep -v '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+			local ldd_line
+			while read ldd_line
+			do
+				if echo "${ldd_line}" | egrep '/builtins/'
+				then
+					echo "${ldd_line}"
+				elif echo "${ldd_line}" \
+					| egrep -q '/libc\.|/libstdc\+\+\.|/libdl\.|/libm\.|/libX|/libxcb|/libGL|/libICE\.|/libSM\.|/libpthread\.'
+				then
+					Common::noOp
+				elif echo "${ldd_line}" \
+					| egrep -q '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+				then
+					Common::noOp
+				else
+					echo "${ldd_line}"
+				fi
+			done
 			;;
 		'windows')
-			egrep -i '\.dll => [A-Z]:\\msys64\\' \
+			egrep -i '\.dll => [A-Z]:\\msys64\\'
+			;;
+		'macos')
+			egrep -v '^\t/System/|^\t/usr/lib/'
 			;;
 	esac
 }
@@ -75,6 +134,8 @@ Multi::printLdd () {
 		'windows')
 			ntldd --recursive "${exe_file}"
 			;;
+		'macos')
+			otool -L "${exe_file}"
 	esac
 }
 
@@ -86,6 +147,9 @@ Multi::getGtkThemeName () {
 		'windows')
 			echo 'MS-Windows'
 			;;
+		*)
+			echo 'Raleigh'
+			;;
 	esac
 }
 
@@ -96,6 +160,9 @@ Multi::getGtkLibName () {
 			;;
 		'windows')
 			echo 'libgtk-win32-2.0-0.dll'
+			;;
+		'macos')
+			echo 'libgtk-quartz-2.0.0.dylib'
 			;;
 	esac
 }
@@ -113,6 +180,8 @@ Multi::getRootPrefix () {
 			| xargs -n1 -P1 which \
 			| cut -f2 -d'/'
 			;;
+		'macos')
+			echo 'usr/local'
 	esac
 }
 
@@ -127,6 +196,9 @@ Multi::getLibPrefix () {
 		'windows')
 			echo 'lib'
 			;;
+		'macos')
+			echo 'lib'
+			;;
 	esac
 }
 
@@ -134,12 +206,27 @@ Multi::getGtkDeps () {
 	local lib_prefix="${1}"
 	local gtk_theme_name="${2}"
 
-	cat <<-EOF
-	share/themes/${gtk_theme_name}/gtk-2.0
-	share/icons/hicolor
-	${lib_prefix}/gdk-pixbuf-2.0
-	${lib_prefix}/gtk-2.0
-	EOF
+	case "${system_name}" in
+		'linux'|'windows')
+			cat <<-EOF
+			share/themes/${gtk_theme_name}/gtk-2.0
+			share/icons/hicolor
+			${lib_prefix}/gdk-pixbuf-2.0
+			${lib_prefix}/gtk-2.0
+			EOF
+			;;
+		'macos')
+			cat <<-EOF
+			etc/fonts
+			share/themes/${gtk_theme_name}/gtk-2.0
+			share/fontconfig
+			share/icons/hicolor
+			share/locale
+			${lib_prefix}/gdk-pixbuf-2.0
+			${lib_prefix}/gtk-2.0
+			EOF
+			;;
+	esac
 
 	case "${system_name}" in
 		'linux')
@@ -153,8 +240,29 @@ Multi::getGtkDeps () {
 	esac
 }
 
+Multi::rewriteLoadersCache () {
+	local bundle_component_path="${1}"
+	local cache_file
+
+	find "${bundle_component_path}" \
+		-type f \
+		\( \
+		-name 'loaders.cache' \
+		-o -name 'immodules.cache' \
+		\) \
+	| while read cache_file
+	do
+		_sed \
+			-e 's|^"/[^"]*/lib/|"lib/|;s| "/[^"]*/share/| "share/|;/^# ModulesPath = /d;/^# Created by /d;/^#$/d' \
+			-i "${cache_file}"
+	done
+}
+
 Multi::bundleGtkDepsFromFile () {
 	local lib_file="${1}"
+	local component_dir
+	local real_component_dir
+	local bundle_component_dir
 
 	lib_basename="$(basename "${lib_file}")"
 
@@ -167,14 +275,22 @@ Multi::bundleGtkDepsFromFile () {
 
 		for component_dir in $(Multi::getGtkDeps "${lib_prefix}" "${gtk_theme_name}")
 		do
-			bundle_component_dir="$(echo "${component_dir}" | sed -e 's|^'"${lib_prefix}"'|lib|')"
+			bundle_component_dir="$(echo "${component_dir}" | _sed -e 's|^'"${lib_prefix}"'|lib|')"
 			if ! [ -e "${bundle_dir}/${bundle_component_dir}" ]
 			then
-				mkdir --parents "${bundle_dir}/$(dirname "${bundle_component_dir}")"
+				real_component_dir="$(realpath "/${root_prefix}/${component_dir}")"
 
-				cp -H -r --preserve=timestamps \
-					"/${root_prefix}/${component_dir}" \
+				mkdir -p "${bundle_dir}/$(dirname "${bundle_component_dir}")"
+
+				_cpr -H -L \
+					"${real_component_dir}" \
 					"${bundle_dir}/${bundle_component_dir}"
+
+				touch -r \
+					"/${real_component_dir}" \
+					"${bundle_dir}/${bundle_component_dir}"
+
+				Multi::rewriteLoadersCache "${bundle_dir}/${bundle_component_dir}"
 			fi
 		done
 	fi
@@ -182,11 +298,18 @@ Multi::bundleGtkDepsFromFile () {
 
 Multi::bundleLibFromFile () {
 	local exe_file="${1}"
+	local lib_file
 
 	Multi::printLdd "${exe_file}" \
 	| Multi::filterLib \
 	| while read lib_file
 	do
+		if [ "${lib_file}" = 'not found' ]
+		then
+			printf 'ERROR: library not found while bundling %s (but link worked)\n' "${exe_file}" >&2
+			Multi::printLdd "${exe_file}" | grep 'not found'
+			exit 1
+		fi
 		lib_basename="$(basename "${lib_file}")"
 
 		if [ -f "${lib_dir}/${lib_basename}" ]
@@ -194,11 +317,21 @@ Multi::bundleLibFromFile () {
 			continue
 		fi
 
-		cp --preserve=timestamps \
+		cp -H \
+			"${lib_file}" \
+			"${lib_dir}/${lib_basename}"
+
+		touch -r \
 			"${lib_file}" \
 			"${lib_dir}/${lib_basename}"
 
 		Multi::bundleGtkDepsFromFile "${lib_file}"
+
+		case "${system_name}" in
+			'macos')
+				Multi::bundleLibFromFile "${lib_file}"
+				;;
+		esac
 	done
 }
 
@@ -206,17 +339,18 @@ Multi::cleanUp () {
 	find "${bundle_dir}/lib" \
 		-type f \
 		-name '*.a' \
-		-exec rm {} \;
+		-exec rm -f {} \;
 
 	find "${bundle_dir}/lib" \
 		-type f \
 		-name '*.h' \
-		-exec rm {} \;
+		-exec rm -f {} \;
 
 	find "${bundle_dir}/lib" \
 		-depth \
 		-type d \
-		-exec rmdir --ignore-fail-on-non-empty {} \;
+		-exec rmdir {} \; \
+	|| true
 }
 
 Linux::getRpath () {
@@ -226,7 +360,7 @@ Linux::getRpath () {
 	local path_start="$(printf '%s' "${bundle_dir}" | wc -c)"
 	path_start="$((${path_start} + 1))"
 
-	local exe_subdir="$(echo "${exe_dir}" | cut -c "${path_start}-" | sed -e 's|//*|/|;s|^/||')"
+	local exe_subdir="$(echo "${exe_dir}" | cut -c "${path_start}-" | _sed -e 's|//*|/|;s|^/||')"
 
 	local rpath_origin='$ORIGIN'
 
@@ -268,6 +402,38 @@ Linux::patchLib () {
 	| while read exe_file
 	do
 		Linux::patchExe "${exe_file}"
+	done
+}
+
+Darwin::patchExe () {
+	local exe_file="${1}"
+
+	Multi::printLdd "${exe_file}" \
+	| Multi::filterLib \
+	| while read lib_file
+	do
+		new_path="$(echo "${lib_file}" | _sed -e 's|^/.*/lib/|@executable_path/lib/|')"
+		id_name="$(echo "${lib_file}" | _sed -e 's|.*/||g')"
+		chmod u+w,go-w "${exe_file}"
+		install_name_tool -change "${lib_file}" "${new_path}" "${exe_file}"
+		install_name_tool -id "${id_name}" "${exe_file}"
+	done
+}
+
+Darwin::patchLib () {
+	local lib_dir="${1}"
+	local exe_file
+
+	find "${lib_dir}" \
+		-type f \
+		\( \
+		-name '*.dylib' \
+		-o -name '*.so' \
+		\) \
+	| while read exe_file
+	do
+		Darwin::patchExe "${exe_file}"
+		chmod ugo-x "${exe_file}"
 	done
 }
 
@@ -314,7 +480,7 @@ lib_action='Common::noOp'
 
 case "${system_name}" in
 	'register')
-		mkdir --parents "${registry_dir}"
+		mkdir -p "${registry_dir}"
 		Common::getPath "${exe_file}" > "${registry_dir}/$(uuidgen)"
 		exit
 		;;
@@ -325,13 +491,17 @@ case "${system_name}" in
 	'windows')
 		lib_action='Windows::writeManifest'
 		;;
+	'macos')
+		exe_action='Darwin::patchExe'
+		lib_action='Darwin::patchLib'
+		;;
 	*)
 		printf 'ERROR: unsupported system: %s\n' "${system_name}" >&2
 		exit 1
 		;;
 esac
 
-mkdir --parents "${lib_dir}"
+mkdir -p "${lib_dir}"
 
 if [ -d "${registry_dir}" ]
 then

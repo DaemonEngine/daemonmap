@@ -7,9 +7,9 @@
         <key>CFBundleDisplayName</key>
         <string>NetRadiant</string>
         <key>CFBundleExecutable</key>
-        <string>radiant</string>
+        <string>netradiant</string>
         <key>CFBundleIconFile</key>
-        <string>radiant.icns</string>
+        <string>netradiant.icns</string>
         <key>CFBundleIdentifier</key>
         <string>org.xonotic.netradiant</string>
         <key>CFBundleName</key>

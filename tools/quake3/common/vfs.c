@@ -50,7 +50,7 @@
 #include "mathlib.h"
 #include "inout.h"
 #include "vfs.h"
-#include <minizip/unzip.h>
+#include <unzip.h>
 #include <glib.h>
 
 typedef struct
