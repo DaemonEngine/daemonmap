@@ -70,6 +70,26 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
     set(BUILD_BINARIES ON)
 endif ()
 
+if (BUILD_BINARIES)
+    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        set(BUNDLING_SUPPORTED ON)
+    endif()
+
+    if (BUNDLING_SUPPORTED)
+        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+            set(BUNDLE_LIBRARIES_DEFAULT ON)
+        else ()
+            set(BUNDLE_LIBRARIES_DEFAULT OFF)
+        endif ()
+
+        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
+    endif ()
+
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
+    endif ()
+endif ()
+
 #-----------------------------------------------------------------------
 # Paths
 #-----------------------------------------------------------------------
@@ -78,19 +98,32 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
 
+if (APPLE)
+	set(APPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/NetRadiant.app)
+	set(FINAL_INSTALL_PREFIX ${APPLE_INSTALL_PREFIX}/Contents/Prefix)
+else ()
+	set(FINAL_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+endif ()
+
 set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
 set(RADIANT_BASENAME "netradiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_BASENAME="${RADIANT_BASENAME}")
 
-set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
-set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
-set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib CACHE INTERNAL "...")
+set(RADIANT_ADDONS_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_ETC_DIR ${FINAL_INSTALL_PREFIX}/etc CACHE INTERNAL "...")
+set(RADIANT_SHARE_DIR ${FINAL_INSTALL_PREFIX}/share CACHE INTERNAL "...")
+set(RADIANT_DATA_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
 
 if (FHS_INSTALL AND NOT BUNDLE_LIBRARIES)
-    set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
-    set(RADIANT_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/${RADIANT_BASENAME})
+    set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX}/bin)
+    set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib)
+    set(RADIANT_ADDONS_DIR ${RADIANT_LIB_DIR}/${RADIANT_BASENAME})
+    set(RADIANT_ETC_DIR ${FINAL_INSTALL_PREFIX}/etc)
+    set(RADIANT_SHARE_DIR ${FINAL_INSTALL_PREFIX}/share)
+    set(RADIANT_DATA_DIR ${RADIANT_SHARE_DIR}/${RADIANT_BASENAME})
 endif ()
 
 set(GAMEPACKS_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download CACHE PATH "Where to store downloaded game packs")
@@ -273,26 +306,6 @@ if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
 
-    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-        set(BUNDLING_SUPPORTED ON)
-    endif()
-
-    if (BUNDLING_SUPPORTED)
-        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
-            set(BUNDLE_LIBRARIES_DEFAULT ON)
-        else ()
-            set(BUNDLE_LIBRARIES_DEFAULT OFF)
-        endif ()
-
-        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
-    endif ()
-
-    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
-        add_subdirectory(bundle)
-
-        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
-    endif ()
-
     macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
             add_custom_command(TARGET ${target} POST_BUILD
@@ -303,6 +316,16 @@ if (BUILD_BINARIES)
             add_dependencies(bundle ${target})
         endif ()
     endmacro ()
+endif ()
+
+#-----------------------------------------------------------------------
+# Bundle
+#-----------------------------------------------------------------------
+
+if (BUILD_BINARIES)
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        add_subdirectory(bundle)
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------
@@ -462,30 +485,35 @@ if (BUILD_BINARIES)
 endif ()
 
 if (DOWNLOAD_GAMEPACKS)
-    if (FHS_INSTALL)
-       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share/netradiant")
-    else ()
-       set(GAME_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-    endif ()
-
     install(DIRECTORY
         ${PROJECT_BINARY_DIR}/gamepacks
         DESTINATION ${RADIANT_DATA_DIR}
     )
 endif ()
 
-if(BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
+if (BUILD_BINARIES AND FHS_INSTALL AND NOT WIN32 AND NOT APPLE)
     install(FILES
         ${PROJECT_SOURCE_DIR}/icons/netradiant.png
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps
+        DESTINATION ${RADIANT_SHARE_DIR}/pixmaps
     )
     install(FILES
         ${PROJECT_SOURCE_DIR}/icons/netradiant.desktop
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications
+        DESTINATION ${RADIANT_SHARE_DIR}/applications
     )
     install(FILES
         ${PROJECT_SOURCE_DIR}/icons/mime/map.xml
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/model
+        DESTINATION ${RADIANT_SHARE_DIR}/mime/model
+    )
+endif ()
+
+if (APPLE)
+    install(DIRECTORY
+        setup/apple/Contents
+        DESTINATION ${APPLE_INSTALL_PREFIX}
+    )
+    install(PROGRAMS
+        setup/apple/netradiant
+        DESTINATION ${APPLE_INSTALL_PREFIX}/Contents/MacOS
     )
 endif ()
 

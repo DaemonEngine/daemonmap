@@ -148,7 +148,7 @@ Multi::getGtkThemeName () {
 			echo 'MS-Windows'
 			;;
 		*)
-			echo 'Default'
+			echo 'Raleigh'
 			;;
 	esac
 }
@@ -217,6 +217,9 @@ Multi::getGtkDeps () {
 			;;
 		'macos')
 			cat <<-EOF
+			etc/fonts
+			share/themes/${gtk_theme_name}/gtk-2.0
+			share/fontconfig
 			share/icons/hicolor
 			share/locale
 			${lib_prefix}/gdk-pixbuf-2.0
