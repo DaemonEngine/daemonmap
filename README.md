@@ -21,11 +21,11 @@ Prebuilt binaries can be found on the [Download page](https://netradiant.gitlab.
 |FreeBSD  |**Yes**  |_not yet_ |**Yes**  |_GCC or Clang_                                |
 |Windows  |**Yes**  |**Yes**   |**Yes**  |_MSYS2/Mingw64 or Mingw32_                    |
 |Wine     |-        |-         |**Yes**  |-                                             |
-|macOS    |**Yes**  |_not yet_ |_mostly_ |_Homebrew, GCC or Clang and patched GtkGLExt_ |
+|macOS    |**Yes**  |**Yes**   |**Yes**  |_Homebrew, GCC or Clang and builtin GtkGLExt_ |
 
-NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2. NetRadiant is known to build on macOS using Homebrew, but can't display things properly without a modified GtkGLExt which is yet to be upstreamed, and issues are known. Windows build is known to work well on wine, which can be used as a fallback on macOS.
+NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2, and build on macOS with Homebrew (some bugs are known though). Windows build is known to work well on wine, which can be used as a fallback on some system.
 
-At this time library bundling is only supported on Windows/MSYS2 and Linux. Since bundling copies things from the host, a clean build environment has to be used in order to get a clean bundle. Linux bundle does not ship GTK (users are expected to have a working GTK environment with GtkGlExt installed).
+At this time library bundling is only supported on Linux, Windows/MSYS2, and macOS/Homebrew. Since bundling copies things from the host, a clean build environment has to be used in order to get a clean bundle. Linux bundle does not ship GTK (users are expected to have a working GTK environment with GtkGlExt installed).
 
 
 ## Getting the sources
@@ -87,7 +87,7 @@ Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix instead of `ming
 ### macOS:
 
 ```sh
-brew install cmake gtkglext pkgconfig minizip webp coreutils gnu-sed wget
+brew install cmake glib gtk+ pkgconfig minizip webp coreutils gnu-sed wget
 brew link --force gettext
 ```
 
@@ -107,6 +107,7 @@ git submodule update --init --recursive
 
 It is required to first download the sources using `git` (do not use tarballs) and to have dependencies installed, see [Getting the sources](#getting-the-sources) and [Dependencies](#dependencies) above.
 
+
 ### Easy builder assistant
 
 If you have standard needs and use well-known platform and operating system, you may try the provided `easy-builder` script which may be enough for you, you can run it this way:
@@ -124,6 +125,14 @@ If you need to build a debug build (to get help from a developer, for example), 
 ```
 
 By default, build tools and compilers are using the `build/` directory as workspace.
+
+For supported system, bundling dependencies can be done this way:
+
+```sh
+./easy-builder -DBUNDLE_LIBRARIES=ON
+```
+
+Note: always do bundling on clean system without unrelated software installed.
 
 
 ## Advanced compilation
@@ -147,6 +156,16 @@ cmake --build build -- -j$(nproc)
 cmake -G "Unix Makefiles" -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -- -j$(nproc)
 ```
+
+Note: macOS users need to build built-in GtkGLExt before building NetRadiant:
+
+```sh
+cmake -G "Unix Makefiles" -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -- -j$(nproc) builtins
+cmake -G "Unix Makefiles" -S. -Bbuild
+cmake --build build -- -j$(nproc)
+```
+
 
 ### Subsequent builds
 
