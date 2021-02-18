@@ -461,6 +461,16 @@ image_t *ImageLoad( const char *filename ){
 	StripExtension( name );
 	strcat( name, ".dds" );
 	size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+
+	/* also look for .dds image in dds/ prefix like Doom3 or DarkPlaces */
+	if ( size <= 0 ) {
+		strcpy( name, "dds/" );
+		strcat( name, image->name );
+		StripExtension( name );
+		strcat( name, ".dds" );
+		size = vfsLoadFile( (const char*) name, (void**) &buffer, 0 );
+	}
+
 	if ( size > 0 ) {
 		LoadDDSBuffer( buffer, size, &image->pixels, &image->width, &image->height );
 		goto image_load_success;
@@ -496,6 +506,9 @@ image_t *ImageLoad( const char *filename ){
 	}
 
 	image_load_success:
+
+	/* tell user which image file is found for the given texture path */
+	Sys_FPrintf( SYS_VRB, "Loaded image: \"%s\"\n", name );
 
 	/* free file buffer */
 	free( buffer );
