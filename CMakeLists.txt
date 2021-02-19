@@ -12,6 +12,12 @@ set(BUILTINS_LIB_DIR "${BUILTINS_INSTALL_DIR}/lib")
 set(BUILTINS_PKGCONFIG_DIR "${BUILTINS_INSTALL_DIR}/lib/pkgconfig")
 
 option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
+option(BUILTIN_GTKTHEME_MOJAVE "Builtin Mojave GTK theme" OFF)
+
+if (APPLE)
+	set(BUILTIN_GTKGLEXT ON)
+	set(BUILTIN_GTKTHEME_MOJAVE ON)
+endif ()
 
 set(BUILTIN_GTKGLEXT_BUILT OFF CACHE INTERNAL "...")
 if (EXISTS "${BUILTINS_INSTALL_DIR}/lib/pkgconfig/gtkglext-1.0.pc")
@@ -334,9 +340,11 @@ endif ()
 
 add_custom_target(builtins)
 
-if (BUILTIN_GTKGLEXT)
+if (BUILTIN_GTKGLEXT OR BUILTIN_GTKTHEME_MOJAVE)
     include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+endif ()
 
+if (BUILTIN_GTKGLEXT)
     execute_process(COMMAND pkg-config --libs gdk-2.0 gtk+-2.0 glib-2.0 gl
         OUTPUT_VARIABLE GTKGLEXT_LDFLAGS
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -378,6 +386,19 @@ endif ()
 if (BUNDLE_LIBRARIES AND EXISTS ${BUILTINS_LIB_DIR})
     set(CMAKE_SKIP_BUILD_RPATH ON)
 endif()
+
+if (BUILTIN_GTKTHEME_MOJAVE)
+	ExternalProject_Add(gtktheme-mojave
+        GIT_REPOSITORY https://github.com/vinceliuice/Mojave-gtk-theme.git
+        GIT_TAG master
+        BUILD_IN_SOURCE ON
+        CONFIGURE_COMMAND echo
+        BUILD_COMMAND echo
+        INSTALL_COMMAND ./install.sh -o standard -a standard -s standard -i standard -d "${PROJECT_BINARY_DIR}/themes"
+    )
+    add_dependencies(builtins gtktheme-mojave)
+    set_target_properties(gtktheme-mojave PROPERTIES EXCLUDE_FROM_ALL ON)
+endif ()
 
 #-----------------------------------------------------------------------
 # Libraries
@@ -510,6 +531,10 @@ if (APPLE)
     install(DIRECTORY
         setup/apple/Contents
         DESTINATION ${APPLE_INSTALL_PREFIX}
+    )
+    install(DIRECTORY
+    ${PROJECT_BINARY_DIR}/themes
+        DESTINATION ${APPLE_INSTALL_PREFIX}/Contents/Prefix/share
     )
     install(PROGRAMS
         setup/apple/netradiant

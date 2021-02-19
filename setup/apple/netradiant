@@ -35,4 +35,18 @@ then
 	export GTK_PATH="${bundle_dir}"
 fi
 
+if [ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = 'Dark' ]
+then
+	color='dark'
+else
+	color='light'
+fi
+
+gtkrc_file="${bundle_dir}/share/themes/Mojave-${color}/gtk-2.0/gtkrc"
+
+if [ -f "${gtkrc_file}" ]
+then
+	export GTK2_RC_FILES="${gtkrc_file}"
+fi
+
 ./netradiant &

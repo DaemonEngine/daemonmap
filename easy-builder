@@ -83,7 +83,7 @@ done
 
 case "$(uname -s)" in
 	'Darwin')
-		cmake_user_opts[${#cmake_user_opts[@]}]='-DBUILTIN_GTKGLEXT=ON'
+		cmake_user_opts[${#cmake_user_opts[@]}]='-DBUILTIN_GTKGLEXT=ON -DBUILTIN_GTKTHEME_MOJAVE=ON'
 		;;
 esac
 
