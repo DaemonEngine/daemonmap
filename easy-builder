@@ -25,8 +25,12 @@ _nproc () {
 			'Linux')
 				egrep "^processor" /proc/cpuinfo | wc -l
 				;;
-			'FreeBSD'|'Darwin')
+			'FreeBSD')
 				sysctl -n hw.ncpu
+				;;
+			'Darwin')
+				sysctl -n hw.logicalcpu \
+				|| sysctl -n hw.ncpu
 				;;
 			'MSYS_NT-'*|'CYGWIN_NT-'*|'MINGW'*'_NT-'*)
 				if command -v 'wmic' >/dev/null
