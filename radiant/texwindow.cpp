@@ -266,6 +266,14 @@ int m_nTotalHeight;
 CopiedString shader;
 
 ui::Window m_parent{ui::null};
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+ui::VBox m_vframe{ui::null};
+ui::VBox m_vfiller{ui::null};
+ui::HBox m_hframe{ui::null};
+ui::HBox m_hfiller{ui::null};
+#else // !WORKAROUND_MACOS_GTK2_GLWIDGET
+ui::VBox m_frame{ui::null};
+#endif // !WORKAROUND_MACOS_GTK2_GLWIDGET
 ui::GLArea m_gl_widget{ui::null};
 ui::Widget m_texture_scroll{ui::null};
 ui::TreeView m_treeViewTree{ui::New};
@@ -1143,6 +1151,7 @@ void Texture_Draw( TextureBrowser& textureBrowser ){
 				  textureBrowser.color_textureback[1],
 				  textureBrowser.color_textureback[2],
 				  0 );
+
 	glViewport( 0, 0, textureBrowser.width, textureBrowser.height );
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -1518,7 +1527,6 @@ gboolean TextureBrowser_expose( ui::Widget widget, GdkEventExpose* event, Textur
 	}
 	return FALSE;
 }
-
 
 TextureBrowser g_TextureBrowser;
 
@@ -2056,10 +2064,40 @@ void TextureBrowser_SetNotex(){
 	IShader* shadernotex = QERApp_Shader_ForName( DEFAULT_SHADERNOTEX_NAME );
 
 	g_notex = notex->getTexture()->name;
+
 	g_shadernotex = shadernotex->getTexture()->name;
 
 	notex->DecRef();
 	shadernotex->DecRef();
+}
+
+static bool isGLWidgetConstructed = false;
+static bool isWindowConstructed = false;
+
+void TextureBrowser_constructGLWidget(){
+	g_TextureBrowser.m_gl_widget = glwidget_new( FALSE );
+	g_object_ref( g_TextureBrowser.m_gl_widget._handle );
+
+	gtk_widget_set_events( g_TextureBrowser.m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
+	gtk_widget_set_can_focus( g_TextureBrowser.m_gl_widget, true );
+
+	g_TextureBrowser.m_sizeHandler = g_TextureBrowser.m_gl_widget.connect( "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
+	g_TextureBrowser.m_exposeHandler = g_TextureBrowser.m_gl_widget.on_render( G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
+
+	g_TextureBrowser.m_gl_widget.connect( "button_press_event", G_CALLBACK( TextureBrowser_button_press ), &g_TextureBrowser );
+	g_TextureBrowser.m_gl_widget.connect( "button_release_event", G_CALLBACK( TextureBrowser_button_release ), &g_TextureBrowser );
+	g_TextureBrowser.m_gl_widget.connect( "motion_notify_event", G_CALLBACK( TextureBrowser_motion ), &g_TextureBrowser );
+	g_TextureBrowser.m_gl_widget.connect( "scroll_event", G_CALLBACK( TextureBrowser_scroll ), &g_TextureBrowser );
+
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+	g_TextureBrowser.m_hframe.pack_start( g_TextureBrowser.m_gl_widget, TRUE, TRUE, 0 );
+#else // !WORKAROUND_MACOS_GTK2_GLWIDGET
+	g_TextureBrowser.m_frame.pack_start( g_TextureBrowser.m_gl_widget, TRUE, TRUE, 0 );
+#endif // !WORKAROUND_MACOS_GTK2_GLWIDGET
+
+	g_TextureBrowser.m_gl_widget.show();
+
+	isGLWidgetConstructed = true;
 }
 
 ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
@@ -2123,22 +2161,30 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 		g_TextureBrowser.m_texture_scroll.visible(g_TextureBrowser.m_showTextureScrollbar);
 	}
 	{ // gl_widget
-		g_TextureBrowser.m_gl_widget = glwidget_new( FALSE );
-		g_object_ref( g_TextureBrowser.m_gl_widget._handle );
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+		g_TextureBrowser.m_vframe = ui::VBox( FALSE, 0 );
+		table.attach(g_TextureBrowser.m_vframe, {1, 2, 1, 2});
 
-		gtk_widget_set_events( g_TextureBrowser.m_gl_widget, GDK_DESTROY | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_SCROLL_MASK );
-		gtk_widget_set_can_focus( g_TextureBrowser.m_gl_widget, true );
+		g_TextureBrowser.m_vfiller = ui::VBox( FALSE, 0 );
+		g_TextureBrowser.m_vframe.pack_start( g_TextureBrowser.m_vfiller, FALSE, FALSE, 0 );
 
-		table.attach(g_TextureBrowser.m_gl_widget, {1, 2, 1, 2});
-		g_TextureBrowser.m_gl_widget.show();
+		g_TextureBrowser.m_hframe = ui::HBox( FALSE, 0 );
+		g_TextureBrowser.m_vframe.pack_start( g_TextureBrowser.m_hframe, TRUE, TRUE, 0 );
 
-		g_TextureBrowser.m_sizeHandler = g_TextureBrowser.m_gl_widget.connect( "size_allocate", G_CALLBACK( TextureBrowser_size_allocate ), &g_TextureBrowser );
-		g_TextureBrowser.m_exposeHandler = g_TextureBrowser.m_gl_widget.on_render( G_CALLBACK( TextureBrowser_expose ), &g_TextureBrowser );
+		g_TextureBrowser.m_hfiller = ui::HBox( FALSE, 0 );
+		g_TextureBrowser.m_hframe.pack_start( g_TextureBrowser.m_hfiller, FALSE, FALSE, 0 );
 
-		g_TextureBrowser.m_gl_widget.connect( "button_press_event", G_CALLBACK( TextureBrowser_button_press ), &g_TextureBrowser );
-		g_TextureBrowser.m_gl_widget.connect( "button_release_event", G_CALLBACK( TextureBrowser_button_release ), &g_TextureBrowser );
-		g_TextureBrowser.m_gl_widget.connect( "motion_notify_event", G_CALLBACK( TextureBrowser_motion ), &g_TextureBrowser );
-		g_TextureBrowser.m_gl_widget.connect( "scroll_event", G_CALLBACK( TextureBrowser_scroll ), &g_TextureBrowser );
+		g_TextureBrowser.m_vframe.show();
+		g_TextureBrowser.m_vfiller.show();
+		g_TextureBrowser.m_hframe.show(),
+		g_TextureBrowser.m_hfiller.show();
+#else // !WORKAROUND_MACOS_GTK2_GLWIDGET
+		g_TextureBrowser.m_frame = ui::VBox( FALSE, 0 );
+		table.attach(g_TextureBrowser.m_frame, {1, 2, 1, 2});
+		g_TextureBrowser.m_frame.show();
+#endif // !WORKAROUND_MACOS_GTK2_GLWIDGET
+
+		TextureBrowser_constructGLWidget();
 	}
 
 	// tag stuff
@@ -2291,17 +2337,65 @@ ui::Widget TextureBrowser_constructWindow( ui::Window toplevel ){
 	// TODO do we need this?
 	//gtk_container_set_focus_chain(GTK_CONTAINER(hbox_table), NULL);
 
+	isWindowConstructed = true;
+
 	return table;
+}
+
+void TextureBrowser_destroyGLWidget(){
+	if ( isGLWidgetConstructed )
+	{
+		g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_sizeHandler );
+		g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_exposeHandler );
+
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+		g_TextureBrowser.m_hframe.remove( g_TextureBrowser.m_gl_widget );
+#else // !WORKAROUND_MACOS_GTK2_GLWIDGET
+		g_TextureBrowser.m_frame.remove( g_TextureBrowser.m_gl_widget );
+#endif // !WORKAROUND_MACOS_GTK2_GLWIDGET
+
+		g_TextureBrowser.m_gl_widget.unref();
+
+		isGLWidgetConstructed = false;
+	}
 }
 
 void TextureBrowser_destroyWindow(){
 	GlobalShaderSystem().setActiveShadersChangedNotify( Callback<void()>() );
 
-	g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_sizeHandler );
-	g_signal_handler_disconnect( G_OBJECT( g_TextureBrowser.m_gl_widget ), g_TextureBrowser.m_exposeHandler );
-
-	g_TextureBrowser.m_gl_widget.unref();
+	TextureBrowser_destroyGLWidget();
 }
+
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+/* workaround for gtkglext on gtk 2 issue: OpenGL texture viewport being drawn over the other pages */
+/* this is very ugly: force the resizing of the viewport to a single bottom line by forcing the
+ * resizing of the gl widget by expanding some empty boxes, so the widget area size is reduced
+ * while covered by another page, so the texture viewport is still rendered over the other page
+ * but does not annoy the user that much because it's just a line on the bottom that may even
+ * be printed over existing bottom frame or very close to it. */
+void TextureBrowser_showGLWidget(){
+	if ( isWindowConstructed && isGLWidgetConstructed )
+	{
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_vfiller, FALSE, FALSE, 0, ui::Packing::START );
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_hframe, TRUE, TRUE, 0, ui::Packing::START );
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_hfiller, FALSE, FALSE, 0, ui::Packing::START );
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_gl_widget, TRUE, TRUE, 0, ui::Packing::START );
+		GlobalTextureBrowser().m_gl_widget.show();
+	}
+}
+
+void TextureBrowser_hideGLWidget(){
+	if ( isWindowConstructed && isGLWidgetConstructed )
+	{
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_vfiller, TRUE, TRUE, 0, ui::Packing::START);
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_hframe, FALSE, FALSE, 0, ui::Packing::END );
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_hfiller, TRUE, TRUE, 0, ui::Packing::START);
+		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_gl_widget, FALSE, FALSE, 0, ui::Packing::END );
+		GdkEventExpose event = {};
+		TextureBrowser_expose( GlobalTextureBrowser().m_gl_widget, &event, &GlobalTextureBrowser() );
+	}
+}
+#endif // WORKAROUND_MACOS_GTK2_GLWIDGET
 
 const Vector3& TextureBrowser_getBackgroundColour( TextureBrowser& textureBrowser ){
 	return textureBrowser.color_textureback;

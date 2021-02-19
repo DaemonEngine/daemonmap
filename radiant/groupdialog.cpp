@@ -41,9 +41,11 @@
 #include "multimon.h"
 #include "console.h"
 #include "commands.h"
-
-
 #include "gtkutil/window.h"
+
+#if defined(WORKAROUND_WINDOWS_GTK2_GLWIDGET) || defined(WORKAROUND_MACOS_GTK2_GLWIDGET)
+#include "texwindow.h"
+#endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET || WORKAROUND_MACOS_GTK2_GLWIDGET
 
 class GroupDlg
 {
@@ -74,16 +76,30 @@ std::size_t g_current_page;
 std::vector<Callback<void(const Callback<void(const char *)> &)>> g_pages;
 }
 
+static void workaround_macos_show_hide(){
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+	if ( g_current_page == 2 )
+	{
+		TextureBrowser_showGLWidget();
+	}
+	else
+	{
+		TextureBrowser_hideGLWidget();
+	}
+#endif // WORKAROUND_MACOS_GTK2_GLWIDGET
+}
+
 void GroupDialog_updatePageTitle( ui::Window window, std::size_t pageIndex ){
 	if ( pageIndex < g_pages.size() ) {
 		g_pages[pageIndex]( PointerCaller<GtkWindow, void(const char*), gtk_window_set_title>( window ) );
 	}
+
+	workaround_macos_show_hide();
 }
 
 static gboolean switch_page( GtkNotebook *notebook, gpointer page, guint page_num, gpointer data ){
-	GroupDialog_updatePageTitle( ui::Window::from(data), page_num );
 	g_current_page = page_num;
-
+	GroupDialog_updatePageTitle( ui::Window::from(data), page_num );
 	return FALSE;
 }
 
@@ -122,7 +138,6 @@ void GroupDlg::Create( ui::Window parent ){
 	}
 }
 
-
 ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const Callback<void(const Callback<void(const char *)> &)>& title ){
 	ui::Widget w = ui::Label( tabLabel );
 	w.show();
@@ -131,7 +146,6 @@ ui::Widget GroupDialog_addPage( const char* tabLabel, ui::Widget widget, const C
 
 	return page;
 }
-
 
 bool GroupDialog_isShown(){
 	return g_GroupDlg.m_window.visible();
@@ -152,7 +166,6 @@ void GroupDialog_destroyWindow(){
 	g_GroupDlg.m_window = ui::Window{ui::null};
 }
 
-
 ui::Window GroupDialog_getWindow(){
 	return ui::Window(g_GroupDlg.m_window);
 }
@@ -161,12 +174,14 @@ void GroupDialog_show(){
 }
 
 ui::Widget GroupDialog_getPage(){
-	return ui::Widget::from(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) ));
+	return ui::Widget::from(gtk_notebook_get_nth_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) ) );
 }
 
 void GroupDialog_setPage( ui::Widget page ){
 	g_current_page = gtk_notebook_page_num( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), page );
 	gtk_notebook_set_current_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) );
+
+	workaround_macos_show_hide();
 }
 
 #ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
@@ -174,6 +189,7 @@ void GroupDialog_cycle();
 #endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
 
 void GroupDialog_showPage( ui::Widget page ){
+
 	if ( GroupDialog_getPage() == page ) {
 		GroupDialog_ToggleShow();
 
@@ -193,6 +209,8 @@ void GroupDialog_showPage( ui::Widget page ){
 		g_GroupDlg.m_window.show();
 		GroupDialog_setPage( page );
 	}
+
+	workaround_macos_show_hide();
 }
 
 void GroupDialog_cycle(){
@@ -205,7 +223,6 @@ void GroupDialog_updatePageTitle( ui::Widget page ){
 		GroupDialog_updatePageTitle( g_GroupDlg.m_window, g_current_page );
 	}
 }
-
 
 #include "preferencesystem.h"
 

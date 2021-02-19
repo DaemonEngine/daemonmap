@@ -270,6 +270,11 @@ namespace ui {
         gtk_box_pack_end(this, child, expand, fill, padding);
     }
 
+    void IBox::set_child_packing(ui::Widget child, bool expand, bool fill, unsigned int padding, ui::Packing packing)
+    {
+        gtk_box_set_child_packing(this, child, expand, fill, padding, (GtkPackType) packing);
+    }
+
     IMPL(VBox, GTK_VBOX);
 
     VBox::VBox(bool homogenous, int spacing) : VBox(GTK_VBOX(gtk_vbox_new(homogenous, spacing)))

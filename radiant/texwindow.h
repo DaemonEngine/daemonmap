@@ -60,4 +60,9 @@ void TextureBrowser_RefreshShaders();
 ui::GLArea TextureBrowser_getGLWidget();
 #endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
 
+#ifdef WORKAROUND_MACOS_GTK2_GLWIDGET
+void TextureBrowser_showGLWidget();
+void TextureBrowser_hideGLWidget();
+#endif // WORKAROUND_MACOS_GTK2_GLWIDGET
+
 #endif

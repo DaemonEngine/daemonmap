@@ -103,6 +103,11 @@ namespace ui {
         NEVER
     };
 
+	enum class Packing {
+		START,
+		END
+	};
+
     namespace details {
 
         enum class Convert {
@@ -376,6 +381,7 @@ namespace ui {
     ,
          void pack_start(ui::Widget child, bool expand, bool fill, unsigned int padding);
          void pack_end(ui::Widget child, bool expand, bool fill, unsigned int padding);
+         void set_child_packing(ui::Widget child, bool expand, bool fill, unsigned int padding, ui::Packing packing);
     );
 
     WRAP(VBox, Box, _GtkVBox, (),
