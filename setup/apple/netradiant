@@ -49,4 +49,4 @@ then
 	export GTK2_RC_FILES="${gtkrc_file}"
 fi
 
-./netradiant &
+./netradiant
