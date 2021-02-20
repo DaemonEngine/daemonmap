@@ -8,8 +8,6 @@ bundle_dir="$(cd "${script_dir}/../Prefix"; pwd)"
 
 echo "Starting NetRadiant in ${bundle_dir}"
 
-set -x
-
 cd "${bundle_dir}"
 
 export FC_DEBUG=1024
@@ -49,4 +47,4 @@ then
 	export GTK2_RC_FILES="${gtkrc_file}"
 fi
 
-./netradiant
+exec ./netradiant "${@}"
