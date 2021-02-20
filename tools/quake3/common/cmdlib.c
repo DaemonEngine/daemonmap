@@ -499,23 +499,6 @@ int Q_stricmp( const char *s1, const char *s2 ){
 	return Q_strncasecmp( s1, s2, 99999 );
 }
 
-// NOTE TTimo when switching to Multithread DLL (Release/Debug) in the config
-//   started getting warnings about that function, prolly a duplicate with the runtime function
-//   maybe we still need to have it in linux builds
-/*
-   char *strupr (char *start)
-   {
-    char	*in;
-    in = start;
-    while (*in)
-    {
-   *in = toupper(*in);
-        in++;
-    }
-    return start;
-   }
- */
-
 char *strlower( char *start ){
 	char    *in;
 	in = start;
