@@ -185,7 +185,10 @@ void GroupDialog_setPage( ui::Widget page ){
 }
 
 #ifdef WORKAROUND_WINDOWS_GTK2_GLWIDGET
-void GroupDialog_cycle();
+void GroupDialog_cycle(){
+	g_current_page = ( g_current_page + 1 ) % g_pages.size();
+	gtk_notebook_set_current_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) );
+}
 #endif // WORKAROUND_WINDOWS_GTK2_GLWIDGET
 
 void GroupDialog_showPage( ui::Widget page ){
@@ -211,11 +214,6 @@ void GroupDialog_showPage( ui::Widget page ){
 	}
 
 	workaround_macos_show_hide();
-}
-
-void GroupDialog_cycle(){
-	g_current_page = ( g_current_page + 1 ) % g_pages.size();
-	gtk_notebook_set_current_page( GTK_NOTEBOOK( g_GroupDlg.m_pNotebook ), gint( g_current_page ) );
 }
 
 void GroupDialog_updatePageTitle( ui::Widget page ){
