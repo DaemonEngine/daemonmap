@@ -16,13 +16,13 @@ _sed () {
 	esac
 }
 
-_cpr () {
+_cp () {
 	case "${system_name}" in
 		'macos')
-			cp -R ${@}
+			gcp -a --preserve=timestamps -H -L "${@}"
 			;;
 		*)
-			cp -R --preserve=timestamps ${@}
+			cp -a --preserve=timestamps -H -L "${@}"
 			;;
 	esac
 }
@@ -282,11 +282,7 @@ Multi::bundleGtkDepsFromFile () {
 
 				mkdir -p "${bundle_dir}/$(dirname "${bundle_component_dir}")"
 
-				_cpr -H -L \
-					"${real_component_dir}" \
-					"${bundle_dir}/${bundle_component_dir}"
-
-				touch -r \
+				_cp \
 					"${real_component_dir}" \
 					"${bundle_dir}/${bundle_component_dir}"
 
@@ -317,11 +313,7 @@ Multi::bundleLibFromFile () {
 			continue
 		fi
 
-		cp -H \
-			"${lib_file}" \
-			"${lib_dir}/${lib_basename}"
-
-		touch -r \
+		_cp \
 			"${lib_file}" \
 			"${lib_dir}/${lib_basename}"
 
