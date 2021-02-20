@@ -148,20 +148,6 @@ void GetOneGroup( trigroup_t *tris, int grp, triangle_t* triangles );
 void ScaleTris( vec3_t min, vec3_t max, int Width, int Height, float* u, float* v, int verts );
 void NewDrawLine( int x1, int y1, int x2, int y2, unsigned char* picture, int width, int height );
 
-#if !GDEF_OS_WINDOWS
-char *strupr (char *start)
-{
-	char *in;
-	in = start;
-	while (*in)
-	{
-		*in = toupper(*in);
-		in++;
-	}
-	return start;
-}
-#endif
-
 //==============================================================
 
 /*

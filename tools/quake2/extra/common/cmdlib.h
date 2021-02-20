@@ -56,8 +56,12 @@ typedef unsigned char byte;
 extern int myargc;
 extern char **myargv;
 
-char *strupr (char *in);
-char *strlower (char *in);
+// May be already defined with some compilers on Windows
+#ifndef strupr
+char *strupr (char *start);
+#endif
+
+char *strlower (char *start);
 int Q_strncasecmp (char *s1, char *s2, int n);
 int Q_strcasecmp (char *s1, char *s2);
 void Q_getwd (char *out);

@@ -77,6 +77,11 @@ void *safe_malloc_info( size_t size, char* info );
 extern int myargc;
 extern char **myargv;
 
+// May be already defined with some compilers on Windows
+#ifndef strupr
+char *strupr (char *start);
+#endif
+
 char *strlower( char *in );
 int Q_strncasecmp( const char *s1, const char *s2, int n );
 int Q_strcasecmp( const char *s1, const char *s2 );

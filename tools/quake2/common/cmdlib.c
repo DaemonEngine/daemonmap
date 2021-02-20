@@ -490,7 +490,8 @@ int Q_strcasecmp( const char *s1, const char *s2 ){
 	return Q_strncasecmp( s1, s2, 99999 );
 }
 
-#if !GDEF_OS_WINDOWS
+// May be already defined with some compilers on Windows
+#ifndef strupr
 char *strupr (char *start)
 {
 	char *in;
