@@ -19,10 +19,10 @@ _sed () {
 _cp () {
 	case "${system_name}" in
 		'macos')
-			gcp -a --preserve=timestamps -H -L "${@}"
+			gcp -R --preserve=timestamps -H -L "${@}"
 			;;
 		*)
-			cp -a --preserve=timestamps -H -L "${@}"
+			cp -R --preserve=timestamps -H -L "${@}"
 			;;
 	esac
 }
