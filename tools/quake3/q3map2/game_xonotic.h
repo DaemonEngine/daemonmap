@@ -84,6 +84,7 @@
 	qtrue, /* minimap keep aspect */
 	MINIMAP_MODE_GRAY, /* minimap mode */
 	"../gfx/%s_mini.tga", /* minimap name format */
+	MINIMAP_SIDECAR_NONE, /* minimap sidecar format */
 	"IBSP", /* bsp file prefix */
 	46, /* bsp file version */
 	qfalse, /* cod-style lump len/ofs order */

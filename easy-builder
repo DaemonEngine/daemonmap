@@ -14,56 +14,42 @@ install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
 install_target='install/strip'
 build_type='Release'
 
-declare -a cmake_opts
-case "$(uname -s)" in
-	'Linux')
-		nproc='egrep "^processor" /proc/cpuinfo | wc -l'
-		;;
-	'FreeBSD')
-		nproc='sysctl -n hw.ncpu'
+_job_count=4
 
-		if [ -f "$(ls '/usr/local/bin/g++'* | sort | tail -n1)" ]
-		then
-			gcc_version="$(ls '/usr/local/bin/g++'* | sort | tail -n1 | sed -e 's/.*[^0-9]\([0-9][0-9]*\)$/\1/')"
-			cmake_opts[${#cmake_opts[@]}]="-DCMAKE_C_COMPILER=/usr/local/bin/gcc${gcc_version}"
-			cmake_opts[${#cmake_opts[@]}]="-DCMAKE_CXX_COMPILER=/usr/local/bin/g++${gcc_version}"
-		else
-			printf "WARNING: GCC is recommended: if build fails, install GCC and retry\n" >&2
-		fi
-		;;
-	'Darwin')
-		nproc='sysctl -n hw.ncpu'
+_nproc () {
+	if command -v 'nproc' >/dev/null
+	then
+		nproc
+	else
+		case "$(uname -s)" in
+			'Linux')
+				egrep "^processor" /proc/cpuinfo | wc -l
+				;;
+			'FreeBSD')
+				sysctl -n hw.ncpu
+				;;
+			'Darwin')
+				sysctl -n hw.logicalcpu \
+				|| sysctl -n hw.ncpu
+				;;
+			'MSYS_NT-'*|'CYGWIN_NT-'*|'MINGW'*'_NT-'*)
+				if command -v 'wmic' >/dev/null
+				then
+					wmic cpu get NumberOfLogicalProcessors/Format:List \
+						| grep -m1 '=' | cut -f2 -d'='
+				else
+					echo "${NUMBER_OF_PROCESSORS:-${_job_count}}"
+				fi
+				;;
+			*)
+				echo "${_job_count}"
+				;;
+		esac
+	fi
+}
 
-		if [ -f "$(ls '/usr/local/bin/g++-'* | sort | tail -n1)" ]
-		then
-			gcc_version="$(ls '/usr/local/bin/g++-'* | sort | tail -n1 | sed -e 's/.*[^0-9]\([0-9][0-9]*\)$/\1/')"
-			cmake_opts[${#cmake_opts[@]}]="-DCMAKE_C_COMPILER=/usr/local/bin/gcc-${gcc_version}"
-			cmake_opts[${#cmake_opts[@]}]="-DCMAKE_CXX_COMPILER=/usr/local/bin/g++-${gcc_version}"
-		else
-			printf "WARNING: GCC is recommended: if build fails, install GCC and retry\n" >&2
-		fi
-		;;
-	'MSYS_NT-'*)
-		nproc='echo "${NUMBER_OF_PROCESSORS}"'
-		;;
-	'CYGWIN_NT-'*|'MINGW'*'_NT-'*)
-		nproc='echo "${NUMBER_OF_PROCESSORS}"'
-		printf "WARNING: system is not tested: if build fails, use MSYS2 instead\n" >&2
-		;;
-	*)
-		nproc='true'
-		printf "WARNING: system is not tested\n" >&2
-		;;
-esac
-
-if command -v 'nproc' >/dev/null
-then
-	job_count="$(nproc)"
-else
-	job_count="$(sh -c "${nproc}")"
-fi
-
-job_count="${job_count:-4}"
+job_count="$(_nproc)" 2>/dev/null
+job_count="${job_count:-${_job_count}}"
 
 declare -a cmake_user_opts
 while [ ! -z "${1}" ]
@@ -98,13 +84,13 @@ set -x
 
 "${fetch_submodules_cmd[@]}"
 
+mkdir -pv "${build_dir}"
+cd "${build_dir}"
+
 cmake \
 	-G'Unix Makefiles' \
-	-S"${project_source_dir}" \
-	-B"${build_dir}" \
 	-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
 	-D'CMAKE_BUILD_TYPE'="${build_type}" \
-	"${cmake_opts[@]}" \
 	"${cmake_user_opts[@]}" \
 	"${project_source_dir}"
 

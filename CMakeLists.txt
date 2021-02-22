@@ -1,6 +1,16 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+
 project(DaemonMap C CXX)
+
+#-----------------------------------------------------------------------
+# CMake modules
+#-----------------------------------------------------------------------
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+#-----------------------------------------------------------------------
+# Build options
+#-----------------------------------------------------------------------
 
 option(BUILD_TOOLS "Build the tools" ON)
 option(USE_WERROR "Build with -Werror -pedantic-errors" OFF)
@@ -11,6 +21,26 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
     set(BUILD_BINARIES ON)
 endif ()
 
+if (BUILD_BINARIES)
+    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        set(BUNDLING_SUPPORTED ON)
+    endif()
+
+    if (BUNDLING_SUPPORTED)
+        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+            set(BUNDLE_LIBRARIES_DEFAULT ON)
+        else ()
+            set(BUNDLE_LIBRARIES_DEFAULT OFF)
+        endif ()
+
+        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
+    endif ()
+
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
+    endif ()
+endif ()
+
 #-----------------------------------------------------------------------
 # Paths
 #-----------------------------------------------------------------------
@@ -19,15 +49,18 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install" CACHE PATH "..." FORCE)
 endif ()
 
+set(FINAL_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+
 set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
 add_definitions(-DRADIANT_NAME="${RADIANT_NAME}")
 
-set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
-set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "...")
+
+set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX} CACHE INTERNAL "...")
+set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib CACHE INTERNAL "...")
 
 if (FHS_INSTALL AND NOT BUNDLE_LIBRARIES)
-    set(RADIANT_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/${RADIANT_BASENAME})
-    set(RADIANT_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+    set(RADIANT_BIN_DIR ${FINAL_INSTALL_PREFIX}/bin)
+    set(RADIANT_LIB_DIR ${FINAL_INSTALL_PREFIX}/lib)
 endif ()
 
 #-----------------------------------------------------------------------
@@ -135,26 +168,6 @@ if (BUILD_BINARIES)
     include_directories("${PROJECT_SOURCE_DIR}/include")
     include_directories("${PROJECT_SOURCE_DIR}/libs")
 
-    if (WIN32 OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-        set(BUNDLING_SUPPORTED ON)
-    endif()
-
-    if (BUNDLING_SUPPORTED)
-        if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
-            set(BUNDLE_LIBRARIES_DEFAULT ON)
-        else ()
-            set(BUNDLE_LIBRARIES_DEFAULT OFF)
-        endif ()
-
-        option(BUNDLE_LIBRARIES "Bundle libraries" ${BUNDLE_LIBRARIES_DEFAULT})
-    endif ()
-
-    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
-        add_subdirectory(bundle)
-
-        set(FHS_INSTALL OFF CACHE PATH "Disabled because of BUNDLE_LIBRARIES" FORCE)
-    endif ()
-
     macro (copy_dlls target)
         if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
             add_custom_command(TARGET ${target} POST_BUILD
@@ -165,6 +178,16 @@ if (BUILD_BINARIES)
             add_dependencies(bundle ${target})
         endif ()
     endmacro ()
+endif ()
+
+#-----------------------------------------------------------------------
+# Bundle
+#-----------------------------------------------------------------------
+
+if (BUILD_BINARIES)
+    if (BUNDLE_LIBRARIES AND BUNDLING_SUPPORTED)
+        add_subdirectory(bundle)
+    endif ()
 endif ()
 
 #-----------------------------------------------------------------------

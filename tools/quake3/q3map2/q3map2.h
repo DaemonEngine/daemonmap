@@ -441,6 +441,13 @@ typedef enum
 }
 miniMapMode_t;
 
+typedef enum
+{
+	MINIMAP_SIDECAR_NONE,
+	MINIMAP_SIDECAR_UNVANQUISHED
+}
+miniMapSidecarFormat_t;
+
 typedef struct game_s
 {
 	char                *arg;                           /* -game matches this */
@@ -477,6 +484,7 @@ typedef struct game_s
 	qboolean miniMapKeepAspect;                         /* minimap keep aspect ratio by letterboxing */
 	miniMapMode_t miniMapMode;                          /* minimap mode */
 	char                *miniMapNameFormat;             /* minimap name format */
+	miniMapSidecarFormat_t miniMapSidecarFormat;        /* minimap sidecar format */
 	char                *bspIdent;                      /* 4-letter bsp file prefix */
 	int bspVersion;                                     /* bsp version to use */
 	qboolean lumpSwap;                                  /* cod-style len/ofs order */
