@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleName</key>
+	<string>NetRadiant</string>
+	<key>CFBundleDisplayName</key>
+	<string>NetRadiant</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.xonotic.netradiant</string>
+	<key>CFBundleExecutable</key>
+	<string>NetRadiant</string>
+	<key>CFBundleIconFile</key>
+	<string>netradiant.icns</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.5.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.5.0</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleTypeExtensions</key>
+	<array>
+		<string>map</string>
+	</array>
+	<key>NSHighResolutionCapable</key>
+	<false/>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.7</string>
+</dict>
+</plist>

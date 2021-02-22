@@ -530,7 +530,7 @@ endif ()
 
 if (APPLE)
     install(DIRECTORY
-        setup/apple/Contents
+        setup/macos/Contents
         DESTINATION ${APPLE_INSTALL_PREFIX}
     )
     install(DIRECTORY
@@ -538,7 +538,7 @@ if (APPLE)
         DESTINATION ${APPLE_INSTALL_PREFIX}/Contents/Prefix/share
     )
     install(PROGRAMS
-        setup/apple/netradiant
+        setup/macos/NetRadiant
         DESTINATION ${APPLE_INSTALL_PREFIX}/Contents/MacOS
     )
 endif ()
