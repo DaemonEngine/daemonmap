@@ -15,8 +15,8 @@ option(BUILTIN_GTKGLEXT "Builtin GtkGLExt" OFF)
 option(BUILTIN_GTKTHEME_MOJAVE "Builtin Mojave GTK theme" OFF)
 
 if (APPLE)
-	set(BUILTIN_GTKGLEXT ON)
-	set(BUILTIN_GTKTHEME_MOJAVE ON)
+    set(BUILTIN_GTKGLEXT ON)
+    set(BUILTIN_GTKTHEME_MOJAVE ON)
 endif ()
 
 set(BUILTIN_GTKGLEXT_BUILT OFF CACHE INTERNAL "...")
@@ -105,10 +105,10 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif ()
 
 if (APPLE)
-	set(APPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/NetRadiant.app)
-	set(FINAL_INSTALL_PREFIX ${APPLE_INSTALL_PREFIX}/Contents/Prefix)
+    set(APPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/NetRadiant.app)
+    set(FINAL_INSTALL_PREFIX ${APPLE_INSTALL_PREFIX}/Contents/Prefix)
 else ()
-	set(FINAL_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+    set(FINAL_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 endif ()
 
 set(RADIANT_NAME "NetRadiant" CACHE INTERNAL "...")
@@ -353,10 +353,10 @@ if (BUILTIN_GTKGLEXT)
     set(GTKGLEXT_LDFLAGS "$ENV{LDFLAGS} -lm ${GTKGLEXT_LDFLAGS}")
 
     if (NOT CMAKE_BUILD_TYPE MATCHES Release)
-		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS} -g")
-	else ()
-		set(GTKGLEXT_CFLAGS "$ENV{CFLAGS}")
-	endif()
+        set(GTKGLEXT_CFLAGS "$ENV{CFLAGS} -g")
+    else ()
+        set(GTKGLEXT_CFLAGS "$ENV{CFLAGS}")
+    endif()
 
     set(CONFIGURE_OPTIONS --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf)
 
@@ -390,7 +390,7 @@ if (BUNDLE_LIBRARIES AND EXISTS ${BUILTINS_LIB_DIR})
 endif()
 
 if (BUILTIN_GTKTHEME_MOJAVE)
-	ExternalProject_Add(gtktheme-mojave
+    ExternalProject_Add(gtktheme-mojave
         GIT_REPOSITORY https://github.com/vinceliuice/Mojave-gtk-theme.git
         GIT_TAG master
         BUILD_IN_SOURCE ON
