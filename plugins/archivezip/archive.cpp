@@ -50,12 +50,15 @@ DeflatedArchiveFile( const char* name, const char* archiveName, position_type po
 void release(){
 	delete this;
 }
+
 size_type size() const {
 	return m_size;
 }
+
 const char* getName() const {
 	return m_name.c_str();
 }
+
 InputStream& getInputStream(){
 	return m_zipstream;
 }
@@ -68,6 +71,7 @@ FileInputStream m_istream;
 SubFileInputStream m_substream;
 DeflatedInputStream m_zipstream;
 BinaryToTextInputStream<DeflatedInputStream> m_textStream;
+
 public:
 typedef FileInputStream::size_type size_type;
 typedef FileInputStream::position_type position_type;
@@ -79,6 +83,7 @@ DeflatedArchiveTextFile( const char* name, const char* archiveName, position_typ
 void release(){
 	delete this;
 }
+
 TextInputStream& getInputStream(){
 	return m_textStream;
 }
@@ -90,7 +95,6 @@ TextInputStream& getInputStream(){
 #include "string/string.h"
 #include "fs_filesystem.h"
 
-
 class ZipArchive : public Archive
 {
 class ZipRecord
@@ -101,9 +105,11 @@ enum ECompressionMode
 	eStored,
 	eDeflated,
 };
+
 ZipRecord( unsigned int position, unsigned int compressed_size, unsigned int uncompressed_size, ECompressionMode mode )
 	: m_position( position ), m_stream_size( compressed_size ), m_file_size( uncompressed_size ), m_mode( mode ){
 }
+
 unsigned int m_position;
 unsigned int m_stream_size;
 unsigned int m_file_size;
@@ -193,15 +199,17 @@ bool read_pkzip(){
 	}
 	return false;
 }
+
 public:
 ZipArchive( const char* name )
 	: m_name( name ), m_istream( name ){
 	if ( !m_istream.failed() ) {
 		if ( !read_pkzip() ) {
-			globalErrorStream() << "ERROR: invalid zip-file " << makeQuoted( name ) << '\n';
+			globalErrorStream() << "ERROR: invalid zip file " << makeQuoted( name ) << '\n';
 		}
 	}
 }
+
 ~ZipArchive(){
 	for ( ZipFileSystem::iterator i = m_filesystem.begin(); i != m_filesystem.end(); ++i )
 	{
@@ -265,10 +273,12 @@ ArchiveTextFile* openTextFile( const char* name ){
 bool containsFile( const char* name ){
 	ZipFileSystem::iterator i = m_filesystem.find( name );
 	return i != m_filesystem.end() && !i->second.is_directory();
+
 }
 void forEachFile( VisitorFunc visitor, const char* root ){
 	m_filesystem.traverse( visitor, root );
 }
+
 };
 
 Archive* OpenArchive( const char* name ){
