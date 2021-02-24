@@ -27,10 +27,12 @@
 #include "iarchive.h"
 
 #include <algorithm>
+#include <glib.h>
 #include "stream/filestream.h"
 #include "container/array.h"
 #include "archivelib.h"
 #include "zlibstream.h"
+#include "imagelib.h"
 
 class DeflatedArchiveFile : public ArchiveFile
 {
@@ -106,20 +108,35 @@ enum ECompressionMode
 	eDeflated,
 };
 
-ZipRecord( unsigned int position, unsigned int compressed_size, unsigned int uncompressed_size, ECompressionMode mode )
-	: m_position( position ), m_stream_size( compressed_size ), m_file_size( uncompressed_size ), m_mode( mode ){
+ZipRecord( unsigned int position, unsigned int compressed_size, unsigned int uncompressed_size, ECompressionMode mode, bool is_symlink )
+	: m_position( position ), m_stream_size( compressed_size ), m_file_size( uncompressed_size ), m_mode( mode ), m_is_symlink( is_symlink ){
 }
 
 unsigned int m_position;
 unsigned int m_stream_size;
 unsigned int m_file_size;
 ECompressionMode m_mode;
+bool m_is_symlink;
+// Do not resolve more than 5 recursive symbolic links to
+// prevent circular symbolic links.
+int m_max_symlink_depth = 5;
 };
 
 typedef GenericFileSystem<ZipRecord> ZipFileSystem;
 ZipFileSystem m_filesystem;
 CopiedString m_name;
 FileInputStream m_istream;
+
+bool is_file_symlink( unsigned int filemode ){
+	// see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/stat.h
+	// redefine so it works outside of Unices
+	constexpr int RADIANT_S_IFMT = 00170000;
+	constexpr int RADIANT_S_IFLNK = 0120000;
+	// see https://trac.edgewall.org/attachment/ticket/8919/ZipDownload.patch
+	constexpr int PKZIP_EXTERNAL_ATTR_FILE_TYPE_SHIFT = 16;
+	unsigned long attr = filemode >> PKZIP_EXTERNAL_ATTR_FILE_TYPE_SHIFT;
+	return (attr & RADIANT_S_IFMT) == RADIANT_S_IFLNK;
+}
 
 bool read_record(){
 	zip_magic magic;
@@ -150,13 +167,18 @@ bool read_record(){
 	istream_read_int16_le( m_istream );
 	//unsigned short filetype =
 	istream_read_int16_le( m_istream );
-	//unsigned int filemode =
-	istream_read_int32_le( m_istream );
+	unsigned int filemode = istream_read_int32_le( m_istream );
 	unsigned int position = istream_read_int32_le( m_istream );
 
 	Array<char> filename( namelength + 1 );
 	m_istream.read( reinterpret_cast<FileInputStream::byte_type*>( filename.data() ), namelength );
 	filename[namelength] = '\0';
+
+	bool is_symlink = is_file_symlink( filemode );
+
+//	if ( is_symlink ) {
+//		globalOutputStream() << "Warning: zip archive " << makeQuoted( m_name.c_str() ) << " contains symlink file: " << makeQuoted( filename.data() ) << "\n";
+//	}
 
 	m_istream.seek( extras + comment, FileInputStream::cur );
 
@@ -171,7 +193,7 @@ bool read_record(){
 		}
 		else
 		{
-			file = new ZipRecord( position, compressed_size, uncompressed_size, ( compression_mode == Z_DEFLATED ) ? ZipRecord::eDeflated : ZipRecord::eStored );
+			file = new ZipRecord( position, compressed_size, uncompressed_size, ( compression_mode == Z_DEFLATED ) ? ZipRecord::eDeflated : ZipRecord::eStored, is_symlink );
 		}
 	}
 
@@ -224,52 +246,147 @@ bool failed(){
 void release(){
 	delete this;
 }
-ArchiveFile* openFile( const char* name ){
-	ZipFileSystem::iterator i = m_filesystem.find( name );
-	if ( i != m_filesystem.end() && !i->second.is_directory() ) {
-		ZipRecord* file = i->second.file();
 
-		m_istream.seek( file->m_position );
-		zip_file_header file_header;
-		istream_read_zip_file_header( m_istream, file_header );
-		if ( file_header.z_magic != zip_file_header_magic ) {
-			globalErrorStream() << "error reading zip file " << makeQuoted( m_name.c_str() );
-			return 0;
+// The zip format has a maximum filename size of 64K
+static const int MAX_FILENAME_BUF = 65537;
+
+/* The symlink implementation is ported from Dæmon engine implementation by slipher which was a complete rewrite of one illwieckz did on Dæmon by taking inspiration from Darkplaces engine.
+
+See:
+
+- https://github.com/DaemonEngine/Daemon/blob/master/src/common/FileSystem.cpp
+- https://gitlab.com/xonotic/darkplaces/-/blob/div0-stable/fs.c
+
+Some words by slipher:
+
+> Symlinks are a bad feature which you should not use. Therefore, the implementation is as
+> slow as possible with a full iteration of the archive performed for each symlink.
+
+> The symlink path `relative` must be relative to the symlink's location.
+> Only supports paths consisting of "../" 0 or more times, followed by non-magical path components.
+*/
+
+static void resolveSymlinkPath( const char* base, const char* relative, char* resolved ){
+
+	base = g_path_get_dirname( base );
+
+	while( g_str_has_prefix( relative, "../" ) )
+	{
+		if ( base[0] == '\0' )
+		{
+			globalErrorStream() << "Error while reading symbolic link " << makeQuoted( base ) << ": no such directory\n";
+			resolved[0] = '\0';
+			return;
 		}
 
-		switch ( file->m_mode )
-		{
+		base = g_path_get_dirname( base );
+		relative += 3;
+	}
+
+	snprintf( resolved, MAX_FILENAME_BUF, "%s/%s", base, relative);
+}
+
+ArchiveFile* readFile( const char* name, ZipRecord* file ){
+	switch ( file->m_mode )
+	{
 		case ZipRecord::eStored:
 			return StoredArchiveFile::create( name, m_name.c_str(), m_istream.tell(), file->m_stream_size, file->m_file_size );
 		case ZipRecord::eDeflated:
+		default: // silence warning about function not returning
 			return new DeflatedArchiveFile( name, m_name.c_str(), m_istream.tell(), file->m_stream_size, file->m_file_size );
-		}
 	}
-	return 0;
 }
-ArchiveTextFile* openTextFile( const char* name ){
+
+void readSymlink( const char* name, ZipRecord* file, char* resolved ){
+		globalOutputStream() << "Found symbolic link: " << makeQuoted( name ) << "\n";
+
+		if ( file->m_max_symlink_depth == 0 ) {
+		globalErrorStream() << "Maximum symbolic link depth reached\n";
+			return;
+		}
+
+		file->m_max_symlink_depth--;
+
+		ArchiveFile* symlink_file = readFile( name, file );
+		ScopedArchiveBuffer buffer( *symlink_file );
+		const char* relative = (const char*) buffer.buffer;
+
+		resolveSymlinkPath( name, relative, resolved );
+		globalOutputStream() << "Resolved symbolic link: " << makeQuoted( resolved ) << "\n";
+}
+
+ArchiveFile* openFile( const char* name ){
 	ZipFileSystem::iterator i = m_filesystem.find( name );
+
 	if ( i != m_filesystem.end() && !i->second.is_directory() ) {
 		ZipRecord* file = i->second.file();
 
 		m_istream.seek( file->m_position );
 		zip_file_header file_header;
 		istream_read_zip_file_header( m_istream, file_header );
+
 		if ( file_header.z_magic != zip_file_header_magic ) {
 			globalErrorStream() << "error reading zip file " << makeQuoted( m_name.c_str() );
 			return 0;
 		}
 
-		switch ( file->m_mode )
-		{
+		if ( file->m_is_symlink ) {
+			char resolved[MAX_FILENAME_BUF];
+
+			readSymlink( name, file, resolved );
+
+			// slow as possible full iteration of the archive
+			return openFile( resolved );
+		}
+
+		return readFile( name, file );
+	}
+
+	return 0;
+}
+
+ArchiveTextFile* readTextFile( const char* name, ZipRecord* file ){
+	switch ( file->m_mode )
+	{
 		case ZipRecord::eStored:
 			return StoredArchiveTextFile::create( name, m_name.c_str(), m_istream.tell(), file->m_stream_size );
 		case ZipRecord::eDeflated:
+		default: // silence warning about function not returning
 			return new DeflatedArchiveTextFile( name, m_name.c_str(), m_istream.tell(), file->m_stream_size );
-		}
 	}
-	return 0;
 }
+
+ArchiveTextFile* openTextFile( const char* name ){
+	ZipFileSystem::iterator i = m_filesystem.find( name );
+
+	if ( i != m_filesystem.end() && !i->second.is_directory() ) {
+		ZipRecord* file = i->second.file();
+
+		m_istream.seek( file->m_position );
+		zip_file_header file_header;
+		istream_read_zip_file_header( m_istream, file_header );
+
+		if ( file_header.z_magic != zip_file_header_magic ) {
+			globalErrorStream() << "error reading zip file " << makeQuoted( m_name.c_str() );
+			return 0;
+		}
+
+		if ( file->m_is_symlink ) {
+			char resolved[MAX_FILENAME_BUF];
+
+			readSymlink( name, file, resolved );
+
+			// slow as possible full iteration of the archive
+			return openTextFile( resolved );
+		}
+
+		return readTextFile( name, file );
+	}
+
+	return 0;
+
+}
+
 bool containsFile( const char* name ){
 	ZipFileSystem::iterator i = m_filesystem.find( name );
 	return i != m_filesystem.end() && !i->second.is_directory();
