@@ -412,6 +412,7 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 			i = unzReadCurrentFile( file->zipfile, *bufferptr, file->size );
 			unzCloseCurrentFile( file->zipfile );
 			if ( i < 0 ) {
+				g_free( lower );
 				return -1;
 			}
 			else{
