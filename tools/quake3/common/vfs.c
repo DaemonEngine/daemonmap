@@ -344,7 +344,7 @@ int vfsLoadFile( const char *filename, void **bufferptr, int index ){
 	}
 
 	*bufferptr = NULL;
-	strcpy( fixed, filename );
+	strncpy( fixed, filename, sizeof( fixed ) );
 	vfsFixDOSName( fixed );
 	lower = g_ascii_strdown( fixed, -1 );
 
