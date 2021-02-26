@@ -710,7 +710,6 @@ int BSPMain( int argc, char **argv ){
 	surfaceFilePath[0] = 0;
 
 	if ( argc >= 2 && !strcmp( argv[ 1 ], "-bsp" ) ) {
-		Sys_Printf( "-bsp argument unnecessary\n" );
 		argv++;
 		argc--;
 	}
