@@ -29,7 +29,7 @@
 		<string>map</string>
 	</array>
 	<key>NSHighResolutionCapable</key>
-	<false/>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.7</string>
 </dict>
