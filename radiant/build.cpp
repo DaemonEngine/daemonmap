@@ -899,7 +899,7 @@ ui::Window BuildMenuDialog_construct( ModalDialog& modal, ProjectList& projectLi
 			}
 		}
 		{
-			auto frame = create_dialog_frame( "Commandline" );
+			auto frame = create_dialog_frame( "Command line" );
             table1.attach(frame, {0, 1, 1, 2});
 			{
 				auto scr = create_scrolled_window( ui::Policy::NEVER, ui::Policy::AUTOMATIC, 4 );
