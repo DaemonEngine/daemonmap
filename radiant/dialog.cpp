@@ -446,6 +446,23 @@ EMessageBoxReturn Dialog::DoModal(){
 	return m_modal.ret;
 }
 
+ui::VBox Dialog::addSpacer( ui::VBox vbox, int dimension ){
+	auto spacer = ui::VBox( FALSE, 0 );
+	gtk_widget_set_size_request( GTK_WIDGET( spacer ), dimension, dimension );
+	spacer.show();
+
+	DialogVBox_packRow( vbox, spacer );
+	return spacer;
+}
+
+ui::Label Dialog::addLabel( ui::VBox vbox, const char* name, const char* text ){
+	auto label = ui::Label( text );
+	gtk_misc_set_alignment( GTK_MISC( label ), 0.0, 0.5 );
+	label.show();
+
+	DialogVBox_packRow( vbox, ui::Widget(DialogRow_new( name, label ) ));
+	return label;
+}
 
 ui::CheckButton Dialog::addCheckBox( ui::VBox vbox, const char* name, const char* flag, Property<bool> const &cb ){
 	auto check = ui::CheckButton( flag );

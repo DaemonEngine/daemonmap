@@ -71,6 +71,12 @@ void appendRadioIcons( const char* name, StringArrayRange icons, Property<int> c
 void appendRadioIcons( const char* name, int& data, StringArrayRange icons ){
 	m_dialog.addRadioIcons( m_vbox, name, data, icons );
 }
+ui::Widget appendSpacer( int dimension ){
+	return m_dialog.addSpacer( m_vbox, dimension );
+}
+ui::Widget appendLabel( const char* name, const char* text ){
+	return m_dialog.addLabel( m_vbox, name, text );
+}
 ui::Widget appendEntry( const char* name, Property<int> const &cb ){
 	return m_dialog.addIntEntry( m_vbox, name, cb );
 }

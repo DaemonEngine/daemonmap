@@ -90,6 +90,10 @@ public:
 		return m_window;
 	}
 
+	ui::VBox addSpacer(ui::VBox vbox, int size);
+
+	ui::Label addLabel(ui::VBox vbox, const char *name, const char *text);
+
 	ui::CheckButton addCheckBox(ui::VBox vbox, const char *name, const char *flag, Property<bool> const &cb);
 
 	ui::CheckButton addCheckBox(ui::VBox vbox, const char *name, const char *flag, bool &data);

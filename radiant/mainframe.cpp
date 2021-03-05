@@ -574,39 +574,28 @@ struct PakPath4 {
 bool g_disableEnginePath = false;
 bool g_disableHomePath = false;
 
-void Paths_constructPreferences( PreferencesPage& page ){
+void Paths_constructBasicPreferences(  PreferencesPage& page ) {
 	page.appendPathEntry( "Engine Path", true, make_property<EnginePath>(g_strEnginePath) );
+}
 
-	page.appendCheckBox(
-		"", "Do not use Engine Path",
-		g_disableEnginePath
-		);
+void Paths_constructPreferences( PreferencesPage& page ){
+	Paths_constructBasicPreferences( page );
 
-	page.appendCheckBox(
-		"", "Do not use Home Path",
-		g_disableHomePath
-		);
+	page.appendSpacer( 4 );
+	page.appendLabel( "", "Advanced options" );
+	page.appendCheckBox( "", "Do not use Engine Path", g_disableEnginePath );
+	page.appendCheckBox( "", "Do not use Home Path", g_disableHomePath );
 
-	for ( int i = 0; i < g_pakPathCount; i++ ) {
-		std::string label = "Pak Path " + std::to_string(i);
-		switch (i) {
-			case 0:
-			page.appendPathEntry( label.c_str(), true, make_property<PakPath0>( g_strPakPath[i] ) );
-			break;
-			case 1:
-			page.appendPathEntry( label.c_str(), true, make_property<PakPath1>( g_strPakPath[i] ) );
-			break;
-			case 2:
-			page.appendPathEntry( label.c_str(), true, make_property<PakPath2>( g_strPakPath[i] ) );
-			break;
-			case 3:
-			page.appendPathEntry( label.c_str(), true, make_property<PakPath3>( g_strPakPath[i] ) );
-			break;
-			case 4:
-			page.appendPathEntry( label.c_str(), true, make_property<PakPath4>( g_strPakPath[i] ) );
-			break;
-		}
-	}
+	page.appendSpacer( 4 );
+	page.appendLabel( "", "Only a very few games support Pak Paths," );
+	page.appendLabel( "", "if you don't know what it is, leave this blank." );
+
+	const char *label = "Pak Path ";
+	page.appendPathEntry( label, true, make_property<PakPath0>( g_strPakPath[0] ) );
+	page.appendPathEntry( label, true, make_property<PakPath1>( g_strPakPath[1] ) );
+	page.appendPathEntry( label, true, make_property<PakPath2>( g_strPakPath[2] ) );
+	page.appendPathEntry( label, true, make_property<PakPath3>( g_strPakPath[3] ) );
+	page.appendPathEntry( label, true, make_property<PakPath4>( g_strPakPath[4] ) );
 }
 
 void Paths_constructPage( PreferenceGroup& group ){
@@ -623,14 +612,14 @@ class PathsDialog : public Dialog
 {
 public:
 ui::Window BuildDialog(){
-	auto frame = create_dialog_frame( "Path settings", ui::Shadow::ETCHED_IN );
+	auto frame = create_dialog_frame( "Path Settings", ui::Shadow::ETCHED_IN );
 
 	auto vbox2 = create_dialog_vbox( 0, 4 );
 	frame.add(vbox2);
 
 	{
-		PreferencesPage preferencesPage( *this, vbox2 );
-		Paths_constructPreferences( preferencesPage );
+		PreferencesPage page( *this, vbox2 );
+		Paths_constructBasicPreferences( page );
 	}
 
 	return ui::Window(create_simple_modal_dialog_window( "Engine Path Not Found", m_modal, frame ));
