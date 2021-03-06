@@ -471,10 +471,6 @@ void DoAbout(){
 					RADIANT_NAME " " RADIANT_VERSION_STRING " (" __DATE__ ")\n"
 					RADIANT_ABOUTMSG );
 				AddParagraph( about_vbox,
-					RADIANT_NAME " is a community project maintained by Xonotic\n"
-					"and developed with help from other game projects and\n"
-					"individuals." );
-				AddParagraph( about_vbox,
 					"Get news and latest build at "
 					"<a href='https://netradiant.gitlab.io/'>"
 						"netradiant.gitlab.io"
@@ -482,10 +478,17 @@ void DoAbout(){
 					"Please report your issues at "
 					"<a href='https://gitlab.com/xonotic/netradiant/issues'>"
 						"gitlab.com/xonotic/netradiant/issues"
-					"</a>", true );
+					"</a>\n"
+					"The team cannot provide support for custom builds.", true );
 				AddParagraph( about_vbox,
-					"The team cannot provide support"
-					" for custom builds." );
+					RADIANT_NAME " is a community project maintained by "
+					"<a href='https://xonotic.org'>"
+						"Xonotic"
+					"</a>\n"
+					"and developed with help from "
+					"<a href='https://netradiant.gitlab.io/page/about/'>"
+						"other game projects"
+					"</a> and individuals. ", true );
 				AddParagraph( about_vbox,
 					"This program is free software licensed under the GNU GPL." );
 			}
