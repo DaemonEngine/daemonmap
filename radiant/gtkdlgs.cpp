@@ -420,6 +420,19 @@ void about_button_issues( ui::Widget widget, gpointer data ){
 	OpenURL( cred.c_str() );
 }
 
+static void AddParagraph( ui::VBox vbox, const char* text, bool use_markup ){
+	auto label = ui::Label( text );
+	gtk_label_set_use_markup( GTK_LABEL( label ), use_markup );
+	gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
+	gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
+	label.show();
+	vbox.pack_start( label, TRUE, TRUE, 0 );
+}
+
+static void AddParagraph( ui::VBox vbox, const char* text ){
+	AddParagraph( vbox, text, false );
+}
+
 void DoAbout(){
 	ModalDialog dialog;
 	ModalDialogButton ok_button( dialog, eIDOK );
@@ -432,7 +445,7 @@ void DoAbout(){
 
 		{
             auto hbox = create_dialog_hbox( 4 );
-			vbox.pack_start( hbox, FALSE, TRUE, 0 );
+			vbox.pack_start( hbox, FALSE, FALSE, 0 );
 
 			{
                 auto vbox2 = create_dialog_vbox( 4 );
@@ -449,32 +462,32 @@ void DoAbout(){
 			}
 
 			{
-				char const *label_text = RADIANT_NAME " " RADIANT_VERSION_STRING " (" __DATE__ ")\n"
-										RADIANT_ABOUTMSG "\n\n"
-										RADIANT_NAME " is a community project "
-										"maintained by Xonotic\n"
-										"and developed with help from"
-										" other game projects and\n"
-										"individuals.\n\n"
-										"Get news and latest build at "
-										"<a href='https://netradiant.gitlab.io/'>"
-											"netradiant.gitlab.io"
-										"</a>\n"
-										"Please report your issues at "
-										"<a href='https://gitlab.com/xonotic/netradiant/issues'>"
-											"gitlab.com/xonotic/netradiant/issues"
-										"</a>\n\n"
-										"The team cannot provide support"
-										" for custom builds.\n\n"
-										"This program is free software licensed under the GNU GPL.";
+				// HACK: that may not be related to font size
+				auto about_vbox = ui::VBox( FALSE, 5 );
+				about_vbox.show();
+				hbox.pack_start( about_vbox, FALSE, FALSE, 0 );
 
-				auto label = ui::Label( label_text );
-				gtk_label_set_use_markup( GTK_LABEL( label ), true );
-
-				label.show();
-				hbox.pack_start( label, TRUE, TRUE, 0 );
-				gtk_misc_set_alignment( GTK_MISC( label ), 0, 0 );
-				gtk_label_set_justify( label, GTK_JUSTIFY_LEFT );
+				AddParagraph( about_vbox,
+					RADIANT_NAME " " RADIANT_VERSION_STRING " (" __DATE__ ")\n"
+					RADIANT_ABOUTMSG );
+				AddParagraph( about_vbox,
+					RADIANT_NAME " is a community project maintained by Xonotic\n"
+					"and developed with help from other game projects and\n"
+					"individuals." );
+				AddParagraph( about_vbox,
+					"Get news and latest build at "
+					"<a href='https://netradiant.gitlab.io/'>"
+						"netradiant.gitlab.io"
+					"</a>\n"
+					"Please report your issues at "
+					"<a href='https://gitlab.com/xonotic/netradiant/issues'>"
+						"gitlab.com/xonotic/netradiant/issues"
+					"</a>", true );
+				AddParagraph( about_vbox,
+					"The team cannot provide support"
+					" for custom builds." );
+				AddParagraph( about_vbox,
+					"This program is free software licensed under the GNU GPL." );
 			}
 
 			{
