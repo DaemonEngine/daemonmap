@@ -77,7 +77,9 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
 endif ()
 
 if (BUILD_BINARIES)
-    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    if (WIN32 OR APPLE
+        OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux"
+        OR "${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD" )
         set(BUNDLING_SUPPORTED ON)
     endif()
 
@@ -385,8 +387,12 @@ if (BUILTIN_GTKGLEXT)
     set_target_properties(gtkglext PROPERTIES EXCLUDE_FROM_ALL ON)
 endif ()
 
-if (BUNDLE_LIBRARIES AND EXISTS ${BUILTINS_LIB_DIR})
-    set(CMAKE_SKIP_BUILD_RPATH ON)
+if (BUNDLE_LIBRARIES)
+    # It was required to tell cmake to not patch rpath on macos builtins.
+    # It was also required to tell cmake to not patch rpath on freebsd binaries.
+    # Patching rpath is done in library_bundler instead so we can skip this
+    # step entirely when bundling.
+    set(CMAKE_SKIP_RPATH ON)
 endif()
 
 if (BUILTIN_GTKTHEME_MOJAVE)
