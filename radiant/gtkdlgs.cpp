@@ -499,6 +499,7 @@ void DoAbout(){
 				{
                     auto button = create_modal_dialog_button( "OK", ok_button );
 					vbox2.pack_start( button, FALSE, FALSE, 0 );
+					gtk_widget_grab_focus( GTK_WIDGET( button ) );
 				}
 				{
                     auto button = create_dialog_button( "Credits", G_CALLBACK( about_button_credits ), 0 );
