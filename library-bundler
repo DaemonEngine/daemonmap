@@ -103,6 +103,11 @@ Multi::excludeLdd () {
 					| egrep -q '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
 				then
 					Common::noOp
+				# FreeBSD specific
+				elif echo "${ldd_line}" \
+					| egrep -q '/libc++|/libgxxrt'
+				then
+					Common::noOp
 				else
 					echo "${ldd_line}"
 				fi
