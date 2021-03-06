@@ -2393,6 +2393,7 @@ void TextureBrowser_hideGLWidget(){
 		GlobalTextureBrowser().m_vframe.set_child_packing( GlobalTextureBrowser().m_gl_widget, FALSE, FALSE, 0, ui::Packing::END );
 		GdkEventExpose event = {};
 		TextureBrowser_expose( GlobalTextureBrowser().m_gl_widget, &event, &GlobalTextureBrowser() );
+		GlobalTextureBrowser().m_gl_widget.hide();
 	}
 }
 #endif // WORKAROUND_MACOS_GTK2_GLWIDGET
