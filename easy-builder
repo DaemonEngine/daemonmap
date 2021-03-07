@@ -115,6 +115,8 @@ set -x
 
 task_enter_build_dir
 
+task_fetch_submodules
+
 task_configure
 
 task_build_builtins
