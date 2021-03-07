@@ -132,4 +132,15 @@ if (X11_LIBRARIES)
     target_link_libraries(${RADIANT_BASENAME} ${X11_LIBRARIES})
 endif ()
 
+# PIE executables were wrongly recognized as shared libraries on Linux
+# because of a mistake in the mime-type library.
+# Because of that it was not possible to launch such executables from
+# the file browser.
+# While the problem is fixed upstream, most distributions still ship
+# with a faulty mime-type library and may do for a long time.
+# See: https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/11
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    target_link_libraries(${RADIANT_BASENAME} -no-pie)
+endif()
+
 copy_dlls(${RADIANT_BASENAME})
