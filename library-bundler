@@ -333,6 +333,9 @@ Multi::bundleLibFromFile () {
 }
 
 Multi::cleanUp () {
+	# Remove from bundle things that useless to be distributed,
+	# like headers or static libraries, also remove
+	# empty directories.
 	find "${bundle_dir}/lib" \
 		-type f \
 		-name '*.a' \
@@ -346,8 +349,8 @@ Multi::cleanUp () {
 	find "${bundle_dir}/lib" \
 		-depth \
 		-type d \
-		-exec rmdir {} \; \
-	|| true
+		-empty \
+		-exec rmdir {} \;
 }
 
 Linux::getRpath () {
