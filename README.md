@@ -18,14 +18,14 @@ Prebuilt binaries can be found on the [Download page](https://netradiant.gitlab.
 |System   |Build    |Bundle    |Run      |Build requirements                            |
 |---------|---------|----------|---------|----------------------------------------------|
 |Linux    |**Yes**  |**Yes**   |**Yes**  |_GCC or Clang_                                |
-|FreeBSD  |**Yes**  |_not yet_ |**Yes**  |_GCC or Clang_                                |
+|FreeBSD  |**Yes**  |**Yes**   |**Yes**  |_GCC or Clang_                                |
 |Windows  |**Yes**  |**Yes**   |**Yes**  |_MSYS2/Mingw64 or Mingw32_                    |
 |Wine     |-        |-         |**Yes**  |-                                             |
 |macOS    |**Yes**  |**Yes**   |**Yes**  |_Homebrew, GCC or Clang and builtin GtkGLExt_ |
 
 NetRadiant is known to build and run properly on Linux, FreeBSD and Windows using MSYS2, and build on macOS with Homebrew (some bugs are known though). Windows build is known to work well on wine, which can be used as a fallback on some system.
 
-At this time library bundling is only supported on Linux, Windows/MSYS2, and macOS/Homebrew. Since bundling copies things from the host, a clean build environment has to be used in order to get a clean bundle. Linux bundle does not ship GTK (users are expected to have a working GTK environment with GtkGlExt installed).
+At this time library bundling is supported on Linux, FreeBSD, Windows/MSYS2, and macOS/Homebrew. Since bundling copies things from the host, a clean build environment has to be used in order to get a clean bundle. Linux and FreeBSD bundles do not ship GTK: users are expected to have a working GTK environment with GtkGLExt installed, usually installing GtkGLExt is enough to pull everything that is required.
 
 
 ## Getting the sources
@@ -36,7 +36,7 @@ The latest source is available from the git repository: `https://gitlab.com/xono
 
 The `git` client can be obtained from your distribution repository or from the Git website: [git-scm.org](http://git-scm.org)
 
-A copy of the source tree can be obtained using the command line `git` client this way:
+A copy of the source tree can be obtained by using the `git` command line client this way:
 
 ```sh
 git clone --recursive https://gitlab.com/xonotic/netradiant.git
@@ -82,6 +82,15 @@ pacman -S --needed base-devel git \
 ```
 
 Explicitely use `mingw-w64-x86_64-` or `mingw-w64-i686-` prefix instead of `mingw-w64-$(uname -m)` if you need to target a non-default architecture.
+
+
+### FreeBSD:
+
+```sh
+pkg install cmake gtkglext pkgconf minizip webp coreutils gsed git subversion wget unzip
+```
+
+If you plan to build a bundle, you also need to install `patchelf`
 
 
 ### macOS:
@@ -132,7 +141,7 @@ For supported system, bundling dependencies can be done this way:
 ./easy-builder -DBUNDLE_LIBRARIES=ON
 ```
 
-Note: always do bundling on clean system without unrelated software installed.
+Note: always do bundling on a clean system without unrelated software installed.
 
 
 ## Advanced compilation
@@ -240,7 +249,7 @@ Run `./gamepacks-manager -h` to know about available licenses and other availabl
 Options:
 
 * `BUNDLE_LIBRARIES=ON`  
-  Bundle libraries, only MSYS2 and Linux are supported at this time (default: `OFF`);
+  Bundle libraries, only Linux, FreeBSD, macOS and MSYS2 are supported at this time (default: `OFF`);
 * `FHS_INSTALL=ON` (available on POSIX systems)  
   Install files following the Filesystem Hierarchy Standard (`bin`, `lib`, `share`, etc.)  
   Also setup XDG mime and application support on Linux-like systems (default: `OFF`, install like in 1999);
