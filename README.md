@@ -220,7 +220,7 @@ Targets:
      * `quake3`         Compile all the Quake 3 tools:
          - `q3map2`     Compile the Quake 3 map compiler;
          - `q3data`     Compile the q3data tool;
-     * `unvanquished`   Compile all the Unvanquished tool: `daemonmap`, `q3map3`, `q4data`;
+     * `unvanquished`   Compile all the Unvanquished tools: `daemonmap`, `q3map3`, `q4data`;
          - `daemonmap`  Compile the daemonmap navigation mesh generator.
 
 Type `make help` to get an exhaustive list of targets.
@@ -231,9 +231,9 @@ Type `make help` to get an exhaustive list of targets.
 Options:
 
 * `DOWNLOAD_GAMEPACKS=OFF`  
-  Do not automatically download the gamepack data on each compilation and do not install game packs already downloaded (default: `ON`);
+  Do not automatically download the gamepack data on each compilation and do not install already downloaded game packs (default: `ON`);
 * `GAMEPACKS_LICENSE_LIST=all`  
-  Download all gamepacks whatever the license (default: `free`, download free gamepacks, can be set to `none` to only filter by name);
+  Download all gamepacks whatever their license (default: `free`, download free gamepacks, can be set to `none` to only filter by name);
 * `GAMEPACKS_NAME_LIST="Xonotic Unvanquished"`  
   Download gamepacks for the given games (default: `none`, do not select more gamepacks to download).
 
