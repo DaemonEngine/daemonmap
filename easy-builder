@@ -14,6 +14,11 @@ install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
 install_target='install/strip'
 build_type='Release'
 
+if [ "$(uname -s)" = 'FreeBSD' ]
+then
+	install_target='install'
+fi
+
 _job_count=4
 
 _nproc () {
@@ -80,22 +85,38 @@ do
 	fi
 done
 
+task_enter_build_dir () {
+	mkdir -pv "${build_dir}"
+	cd "${build_dir}"
+}
+
+task_fetch_submodules () {
+	"${fetch_submodules_cmd[@]}"
+}
+
+task_configure () {
+	cmake \
+		-G'Unix Makefiles' \
+		-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
+		-D'CMAKE_BUILD_TYPE'="${build_type}" \
+		"${cmake_user_opts[@]}" \
+		"${project_source_dir}"
+}
+
+task_build () {
+	cmake \
+		--build "${build_dir}" \
+		-- \
+		-j"${job_count}" \
+		"${install_target}"
+}
+
 set -x
 
-"${fetch_submodules_cmd[@]}"
+task_enter_build_dir
 
-mkdir -pv "${build_dir}"
-cd "${build_dir}"
+task_configure
 
-cmake \
-	-G'Unix Makefiles' \
-	-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
-	-D'CMAKE_BUILD_TYPE'="${build_type}" \
-	"${cmake_user_opts[@]}" \
-	"${project_source_dir}"
+task_build_builtins
 
-cmake \
-	--build "${build_dir}" \
-	-- \
-	-j"${job_count}" \
-	"${install_target}"
+task_build

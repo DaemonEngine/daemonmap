@@ -22,7 +22,9 @@ if (BUILD_RADIANT OR BUILD_TOOLS)
 endif ()
 
 if (BUILD_BINARIES)
-    if (WIN32 OR APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    if (WIN32 OR APPLE
+        OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux"
+        OR "${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD" )
         set(BUNDLING_SUPPORTED ON)
     endif()
 
@@ -126,6 +128,10 @@ if (BUILD_BINARIES)
     addflags("-Wno-unused-function")
     addflags("-Wno-unused-variable")
     addflags("-Wno-unused-parameter")
+
+    if (APPLE)
+        add_definitions(-DGL_SILENCE_DEPRECATION=1)
+    endif()
 
     set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 endif ()

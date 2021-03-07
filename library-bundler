@@ -7,7 +7,7 @@ export LANGUAGE="${LANG}"
 
 _sed () {
 	case "${system_name}" in
-		'macos')
+		'macos'|'freebsd')
 			gsed "${@}"
 			;;
 		*)
@@ -18,11 +18,11 @@ _sed () {
 
 _cp () {
 	case "${system_name}" in
-		'macos')
-			gcp -R --preserve=timestamps -H -L "${@}"
+		'macos'|'freebsd')
+			gcp -R --preserve=timestamps -H -L "${1}" "${2}"
 			;;
 		*)
-			cp -R --preserve=timestamps -H -L "${@}"
+			cp -R --preserve=timestamps -H -L "${1}" "${2}"
 			;;
 	esac
 }
@@ -79,7 +79,7 @@ Common::stripLdd () {
 
 Multi::excludeLdd () {
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			# - always bundle built-in libraries
 			# - always rely on up-to-date x11 and gl libraries, bundling them will break on future distros
 			# - gtk is not easily bundlable on linux because it looks for harcoded system path to optional
@@ -101,6 +101,11 @@ Multi::excludeLdd () {
 					Common::noOp
 				elif echo "${ldd_line}" \
 					| egrep -q '/libatk|/libgdk|/libgtk|/libgio|/libglib|/libgmodule|/libgobject|/libcairo|/libpango|/libfontconfig|/libfreetype'
+				then
+					Common::noOp
+				# FreeBSD specific
+				elif echo "${ldd_line}" \
+					| egrep -q '/libc++|/libgxxrt'
 				then
 					Common::noOp
 				else
@@ -128,7 +133,7 @@ Multi::printLdd () {
 	local exe_file="${1}"
 
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			ldd "${exe_file}"
 			;;
 		'windows')
@@ -141,7 +146,7 @@ Multi::printLdd () {
 
 Multi::getGtkThemeName () {
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			echo 'Adwaita'
 			;;
 		'windows')
@@ -155,7 +160,7 @@ Multi::getGtkThemeName () {
 
 Multi::getGtkLibName () {
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			echo 'libgtk-x11-2.0.so.0'
 			;;
 		'windows')
@@ -171,7 +176,7 @@ Multi::getRootPrefix () {
 	local lib_file="${1}"
 
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			echo "${lib_file}" \
 			| cut -f2 -d'/'
 			;;
@@ -189,7 +194,7 @@ Multi::getLibPrefix () {
 	local lib_file="${1}"
 
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			dirname "${lib_file}" \
 			| cut -f3- -d'/'
 			;;
@@ -207,7 +212,7 @@ Multi::getGtkDeps () {
 	local gtk_theme_name="${2}"
 
 	case "${system_name}" in
-		'linux'|'windows')
+		'linux'|'freebsd'|'windows')
 			cat <<-EOF
 			share/themes/${gtk_theme_name}/gtk-2.0
 			share/icons/hicolor
@@ -229,7 +234,7 @@ Multi::getGtkDeps () {
 	esac
 
 	case "${system_name}" in
-		'linux')
+		'linux'|'freebsd')
 			cat <<-EOF
 			${lib_prefix}/libatk-bridge-2.0.so.0
 			${lib_prefix}/libcanberra-0.30
@@ -328,6 +333,9 @@ Multi::bundleLibFromFile () {
 }
 
 Multi::cleanUp () {
+	# Remove from bundle things that useless to be distributed,
+	# like headers or static libraries, also remove
+	# empty directories.
 	find "${bundle_dir}/lib" \
 		-type f \
 		-name '*.a' \
@@ -341,8 +349,8 @@ Multi::cleanUp () {
 	find "${bundle_dir}/lib" \
 		-depth \
 		-type d \
-		-exec rmdir {} \; \
-	|| true
+		-empty \
+		-exec rmdir {} \;
 }
 
 Linux::getRpath () {
@@ -381,6 +389,7 @@ Linux::patchExe () {
 	local exe_file="${1}"
 
 	local linux_rpath_string=$"$(Linux::getRpath "${exe_file}")"
+	chmod u+w,go-w "${exe_file}"
 	patchelf --set-rpath "${linux_rpath_string}" "${exe_file}"
 }
 
@@ -394,6 +403,7 @@ Linux::patchLib () {
 	| while read exe_file
 	do
 		Linux::patchExe "${exe_file}"
+		chmod ugo-x "${exe_file}"
 	done
 }
 
@@ -476,7 +486,7 @@ case "${system_name}" in
 		Common::getPath "${exe_file}" > "${registry_dir}/$(uuidgen)"
 		exit
 		;;
-	'linux')
+	'linux'|'freebsd')
 		exe_action='Linux::patchExe'
 		lib_action='Linux::patchLib'
 		;;
