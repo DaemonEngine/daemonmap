@@ -229,6 +229,10 @@ if (BUILD_BINARIES)
     addflags("-Wno-unused-variable")
     addflags("-Wno-unused-parameter")
 
+    if (APPLE)
+        add_definitions(-DGL_SILENCE_DEPRECATION=1)
+    endif()
+
     set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 endif ()
 
