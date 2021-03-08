@@ -93,15 +93,18 @@ case "$(uname -s)" in
 esac
 
 task_enter_build_dir () {
+	sync
 	mkdir -pv "${build_dir}"
 	cd "${build_dir}"
 }
 
 task_fetch_submodules () {
+	sync
 	"${fetch_submodules_cmd[@]}"
 }
 
 task_configure () {
+	sync
 	cmake \
 		-G'Unix Makefiles' \
 		-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
@@ -111,14 +114,17 @@ task_configure () {
 }
 
 task_build_builtins () {
+	sync
 	make -j"${job_count}" builtins
 }
 
 task_build () {
+	sync
 	make -j"${job_count}"
 }
 
 task_install () {
+	sync
 	make "${install_target}"
 }
 
