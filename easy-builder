@@ -14,10 +14,22 @@ install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
 install_target='install/strip'
 build_type='Release'
 
-if [ "$(uname -s)" = 'FreeBSD' ]
-then
-	install_target='install'
-fi
+case "$(uname -s)" in
+	# Stripping is known to make non-PIE Linux netradiant binary unusable.
+	# Maybe that's related to the way we patch rpath?
+	# Building NetRadiant as non-PIE is required because of
+	# a mistake in the mimetype-library that prevents users
+	# to run the application from file managers on Linux.
+	# See: https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/11
+	'Linux')
+		install_target='install'
+		;;
+	# Stripping is known to make FreeBSD binaries unusable.
+	# Maybe that's related to the way we patch rpath?
+	'FreeBSD')
+		install_target='install'
+		;;
+esac
 
 _job_count=4
 
