@@ -111,19 +111,15 @@ task_configure () {
 }
 
 task_build_builtins () {
-	cmake \
-		--build "${build_dir}" \
-		-- \
-		-j"${job_count}" \
-		'builtins'
+	make -j"${job_count}" builtins
 }
 
 task_build () {
-	cmake \
-		--build "${build_dir}" \
-		-- \
-		-j"${job_count}" \
-		"${install_target}"
+	make -j"${job_count}"
+}
+
+task_install () {
+	make "${install_target}"
 }
 
 set -x
@@ -140,3 +136,5 @@ task_build_builtins
 #   ld: symbol(s) not found for architecture x86_64
 # and restarting the build process just work.
 task_build || task_build
+
+task_install
