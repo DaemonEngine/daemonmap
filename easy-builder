@@ -14,10 +14,13 @@ install_dir="${project_source_dir}/install${SUBDIR:+/${SUBDIR}}"
 install_target='install/strip'
 build_type='Release'
 
-if [ "$(uname -s)" = 'FreeBSD' ]
-then
-	install_target='install'
-fi
+case "$(uname -s)" in
+	# Stripping is known to make FreeBSD binaries unusable.
+	# Maybe that's related to the way we patch rpath?
+	'FreeBSD')
+		install_target='install'
+		;;
+esac
 
 _job_count=4
 
@@ -86,15 +89,18 @@ do
 done
 
 task_enter_build_dir () {
+	sync
 	mkdir -pv "${build_dir}"
 	cd "${build_dir}"
 }
 
 task_fetch_submodules () {
+	sync
 	"${fetch_submodules_cmd[@]}"
 }
 
 task_configure () {
+	sync
 	cmake \
 		-G'Unix Makefiles' \
 		-D'CMAKE_INSTALL_PREFIX'="${install_dir}" \
@@ -104,11 +110,13 @@ task_configure () {
 }
 
 task_build () {
-	cmake \
-		--build "${build_dir}" \
-		-- \
-		-j"${job_count}" \
-		"${install_target}"
+	sync
+	make -j"${job_count}"
+}
+
+task_install () {
+	sync
+	make "${install_target}"
 }
 
 set -x
@@ -119,6 +127,6 @@ task_fetch_submodules
 
 task_configure
 
-task_build_builtins
-
 task_build
+
+task_install
