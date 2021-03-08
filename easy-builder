@@ -132,9 +132,6 @@ task_configure
 
 task_build_builtins
 
-# Sometime linking fails on macOS with this message:
-#   ld: symbol(s) not found for architecture x86_64
-# and restarting the build process just work.
-task_build || task_build
+task_build
 
 task_install
