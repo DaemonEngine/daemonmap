@@ -136,10 +136,18 @@ endif ()
 # because of a mistake in the mime-type library.
 # Because of that it was not possible to launch such executables from
 # the file browser.
+#
 # While the problem is fixed upstream, most distributions still ship
 # with a faulty mime-type library and may do for a long time.
+#
 # See: https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/11
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+#
+# It may produce such warning though at strip time:
+#   warning: allocated section `.dynstr' not in segment
+# and produce an unusable binary, better not strip when using this hack.
+#
+# This hack is only wanted when NetRadiant is not installed system-wide.
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux"	AND NOT FHS_INSTALL)
     target_link_libraries(${RADIANT_BASENAME} -no-pie)
 endif()
 
