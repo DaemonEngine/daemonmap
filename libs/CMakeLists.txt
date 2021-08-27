@@ -27,6 +27,7 @@ add_library(detour STATIC
 
         recastnavigation/Detour/Source/DetourAlloc.cpp
         recastnavigation/Detour/Include/DetourAlloc.h
+        recastnavigation/Detour/Source/DetourAssert.cpp
         recastnavigation/Detour/Include/DetourAssert.h
         recastnavigation/Detour/Source/DetourCommon.cpp
         recastnavigation/Detour/Include/DetourCommon.h
@@ -61,6 +62,7 @@ add_library(recast STATIC
         recastnavigation/Recast/Source/RecastAlloc.cpp
         recastnavigation/Recast/Include/RecastAlloc.h
         recastnavigation/Recast/Source/RecastArea.cpp
+        recastnavigation/Recast/Source/RecastAssert.cpp
         recastnavigation/Recast/Include/RecastAssert.h
         recastnavigation/Recast/Source/RecastContour.cpp
         recastnavigation/Recast/Source/Recast.cpp
