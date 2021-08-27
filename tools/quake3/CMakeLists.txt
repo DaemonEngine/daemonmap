@@ -59,11 +59,11 @@ radiant_tool(daemonmap
 target_include_directories(daemonmap PRIVATE
         ../../libs/cm
         ../../libs/daemon/src/common/
-        ../../libs/daemon/src/engine/botlib
         ../../libs/recastnavigation/Recast/Include
         ../../libs/recastnavigation/RecastDemo/Include
         ../../libs/recastnavigation/Detour/Include
         ../../libs/recastnavigation/DetourTileCache/Include
+        ../../libs/unvanquished/src/sgame/botlib
         )
 
 target_link_libraries(daemonmap
