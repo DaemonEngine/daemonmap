@@ -27,6 +27,7 @@
 #include <queue>
 #include "cm_patch.h"
 #include "navgen.h"
+#include <assert.h>
 
 Geometry geo;
 
@@ -406,7 +407,7 @@ static void LoadGeometry(){
 
 // Modified version of Recast's rcErodeWalkableArea that uses an AABB instead of a cylindrical radius
 static bool rcErodeWalkableAreaByBox( rcContext* ctx, int boxRadius, rcCompactHeightfield& chf ){
-	rcAssert( ctx );
+	assert( ctx );
 
 	const int w = chf.width;
 	const int h = chf.height;
