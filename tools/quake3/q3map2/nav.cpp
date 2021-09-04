@@ -44,10 +44,10 @@ struct Character
 static const Character characterArray[] = {
 	{ "builder",     20, 40 },
 //	{ "builderupg",  20, 40 },
-	{ "human_naked", 15, 56 },
+	{ "human_naked", 15, 40 },
 //	{ "human_light", 15, 56 },
 //	{ "human_medium",15, 56 },
-	{ "human_bsuit", 15, 76 },
+	{ "human_bsuit", 15, 66 },
 	{ "level0",      15, 30 },
 //	{ "level0upg",   15, 30 },
 	{ "level1",      18, 36 },

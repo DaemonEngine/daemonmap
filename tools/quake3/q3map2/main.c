@@ -92,7 +92,6 @@ int main( int argc, char **argv ){
 	double start, end;
 	extern qboolean werror;
 
-
 	/* we want consistent 'randomness' */
 	srand( 0 );
 
