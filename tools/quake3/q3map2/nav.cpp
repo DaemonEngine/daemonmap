@@ -220,6 +220,7 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 	}
 
 	int solidFlags = defaultFlag | playerclipFlag;
+	int contentSkip = playerclipFlag;
 	int surfaceSkip = skyFlag;
 
 	/* get model, index 0 is worldspawn entity */
@@ -237,6 +238,10 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 		bspShader_t *brushShader = &bspShaders[bspBrushes[i].shaderNum];
 
 		if ( !( brushShader->contentFlags & solidFlags ) ) {
+			continue;
+		}
+
+		if ( ( brushShader->contentFlags & contentSkip ) ) {
 			continue;
 		}
 
