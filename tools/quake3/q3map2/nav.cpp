@@ -213,6 +213,18 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 	strcpy( surfaceparm, "playerclip" );
 	ApplySurfaceParm( surfaceparm, &playerclipFlag, NULL, NULL );
 
+	int nodropFlag = 0;
+	strcpy( surfaceparm, "nodrop" );
+	ApplySurfaceParm( surfaceparm, &nodropFlag, NULL, NULL );
+
+	int lavaFlag = 0;
+	strcpy( surfaceparm, "lava" );
+	ApplySurfaceParm( surfaceparm, &lavaFlag, NULL, NULL );
+
+	int slimeFlag = 0;
+	strcpy( surfaceparm, "slime" );
+	ApplySurfaceParm( surfaceparm, &slimeFlag, NULL, NULL );
+
 	int skyFlag = 0;
 	if ( excludeSky ) {
 		strcpy( surfaceparm, "sky" );
@@ -220,7 +232,7 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 	}
 
 	int solidFlags = defaultFlag | playerclipFlag;
-	int contentSkip = playerclipFlag;
+	int contentSkip = playerclipFlag | nodropFlag | lavaFlag | slimeFlag;
 	int surfaceSkip = skyFlag;
 
 	/* get model, index 0 is worldspawn entity */
