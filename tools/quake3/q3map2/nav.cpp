@@ -45,13 +45,13 @@ struct Character
 static const Character characterArray[] = {
 	{ "builder",     20, 40 },
 	{ "human_naked", 15, 40 },
-	{ "human_bsuit", 15, 66 },
+	{ "human_bsuit", 15, 57 },
 	{ "level0",      15, 30 },
-	{ "level1",      18, 36 },
+	{ "level1",      15, 30 },
 	{ "level2",      23, 36 },
 	{ "level2upg",   25, 40 },
 	{ "level3",      26, 55 },
-	{ "level3upg",   26, 66 },
+	{ "level3upg",   29, 66 },
 	{ "level4",      32, 92 }
 };
 
