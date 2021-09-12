@@ -269,6 +269,10 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 				continue;
 			}
 
+			if ( !Q_stricmp( shader->shader, "textures/common/outside" ) ) {
+				continue;
+			}
+
 			if ( excludeCaulk && !Q_stricmp( shader->shader, "textures/common/caulk" ) ) {
 				continue;
 			}
