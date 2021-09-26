@@ -3,14 +3,11 @@ DaemonMap
 
 The navmesh compiler for [Unvanquished](https://unvanquished.net/).
 
-DaemonMap is a q3map2 fork from [NetRadiant](https://netradiant.gitlab.io) tree, with navmesh computation
-code by Fuma using [recastnavigation](https://github.com/recastnavigation/recastnavigation).
+DaemonMap is a q3map2 fork from [NetRadiant](https://netradiant.gitlab.io) tree, with navmesh computation code by Fuma using [recastnavigation](https://github.com/recastnavigation/recastnavigation).
 
-Everything but navmesh code was removed but original file layout was
-kept, allowing code exchange with NetRadiant upstream if required.
+Everything but navmesh code was removed but original file layout was kept, allowing code exchange with NetRadiant upstream if required.
 
-Use [`q3map2` from Xonotic's NetRadiant tree](https://gitlab.com/xonotic/netradiant/) for every other task
-like bsp compilation, vis computation, light casting etc.
+Use [`q3map2` from Xonotic's NetRadiant tree](https://gitlab.com/xonotic/netradiant/) for every other task like bsp compilation, vis computation, light casting etc.
 
 The navmesh settings are currently hardcoded with Unvanquished models and sizes.
 
@@ -80,10 +77,8 @@ daemonmap --help nav
 ```
 
 
-## No future
+## Why this fork is not merged in NetRadiant upstream
 
-This tool is made to be deleted one day because the only way for a game
-to get proper navmeshes after having modified model size or added or
-removed models is to get the navmeshes produced by engine using game code
-settings. That's why there is no effort to merge this code into
-NetRadiant upstream since the existence of this tool is a temporary hack.
+The precious navmesh code is meant to be moved from this tool to the game itself one day because the only way for a game to get proper navmeshes after having modified model size or added or removed models is to get the navmeshes produced by the engine or the game itself using game settings. This tool hosting the navmesh code is meant to be left over once such migration would is done. That's why there is no effort to merge this tool into NetRadiant upstream since the existence of this tool is a temporary hack.
+
+The navmesh code itself it meant to live and get a bright future, hopefully in a more convenient place, please contribute fixes and improvements to the navmesh code. That code needs your care and attention wherever it lives: living there today or somewhere else in the future.
