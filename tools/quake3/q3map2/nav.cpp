@@ -753,6 +753,7 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 	memcpy( &cfg, &mcfg, sizeof( cfg ) );
 
 	// find tile bounds
+	// easy optimisation here: avoid recalculating things Y * X times
 	cfg.bmin[ 0 ] = mcfg.bmin[ 0 ] + tx * tcs;
 	cfg.bmin[ 1 ] = mcfg.bmin[ 1 ];
 	cfg.bmin[ 2 ] = mcfg.bmin[ 2 ] + ty * tcs;
@@ -762,6 +763,8 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 	cfg.bmax[ 2 ] = mcfg.bmin[ 2 ] + ( ty + 1 ) * tcs;
 
 	// expand bounds by border size
+	// easy optimisation here: borderSize and cs (cs: The xz-plane cell size to use for fields)
+	// are constants (coming directly from mcfg, previously named cfg, you follow?).
 	cfg.bmin[ 0 ] -= cfg.borderSize * cfg.cs;
 	cfg.bmin[ 2 ] -= cfg.borderSize * cfg.cs;
 
@@ -774,11 +777,14 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 		Error( "Failed to create heightfield for navigation mesh.\n" );
 	}
 
+	//I understand that using std::vector prevents NiH's proudness.
 	const float *verts = geo.getVerts();
 	const int nverts = geo.getNumVerts();
 	const rcChunkyTriMesh *chunkyMesh = geo.getChunkyMesh();
 
 	rc.triareas = new unsigned char[ chunkyMesh->maxTrisPerChunk ];
+	//you know what? This will never be reached, because new throws exceptions, by default.
+	//really, should just use STL or C, not raw C++ with C's bugs.
 	if ( !rc.triareas ) {
 		Error( "Out of memory rc.triareas\n" );
 	}
@@ -792,6 +798,9 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 
 	int *cid = new int[ chunkyMesh->nnodes ];
 
+	//do not search for this in libraries, you won't find it. It's in RecastDemo's code.
+	//It " Creates partitioned triangle mesh (AABB tree), where each node contains at max trisPerChunk triangles."
+	//why? No idea.
 	const int ncid = rcGetChunksOverlappingRect( chunkyMesh, tbmin, tbmax, cid, chunkyMesh->nnodes );
 	if ( !ncid ) {
 		delete[] cid;
@@ -812,13 +821,18 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 
 	delete[] cid;
 
+	//makes them walkable (unlike the other filters, would probably kill some people to write meaningful code)
 	rcFilterLowHangingWalkableObstacles( &context, cfg.walkableClimb, *rc.solid );
 
 	//dont filter ledge spans since characters CAN walk on ledges due to using a bbox for movement collision
+	//makes them un-walkable
 	//rcFilterLedgeSpans (&context, cfg.walkableHeight, cfg.walkableClimb, *rc.solid);
 
+	//makes them un-walkable
 	rcFilterWalkableLowHeightSpans( &context, cfg.walkableHeight, *rc.solid );
 
+	//by default, make gaps walkable (because using a BBox system makes agents cubes). In theory a great idea, but
+	//it does not work correctly.
 	if ( filterGaps ) {
 		rcFilterGaps( &context, cfg.walkableRadius, cfg.walkableClimb, cfg.walkableHeight, *rc.solid );
 	}
@@ -966,6 +980,7 @@ static void BuildNavMesh( int characterNum ){
 	UnvContext context;
 	context.enableLog( true );
 
+	//iterate over all tiles (number is determined by rcCalcGridSize)
 	for ( int y = 0; y < th; y++ )
 	{
 		for ( int x = 0; x < tw; x++ )
