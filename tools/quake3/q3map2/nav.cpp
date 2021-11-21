@@ -28,6 +28,51 @@
 #include "cm_patch.h"
 #include "navgen.h"
 
+class UnvContext : public rcContext
+{
+	/// Clears all log entries.
+	void doResetLog() override
+	{
+	}
+
+	/// Logs a message.
+	///  @param[in]   category  The category of the message.
+	///  @param[in]   msg     The formatted message.
+	///  @param[in]   len     The length of the formatted message.
+	void doLog(const rcLogCategory /*category*/, const char* msg, const int /*len*/) override
+	{
+		if( m_logEnabled )
+		{
+			fprintf( stderr, "\n%s\n", msg );
+		}
+	}
+
+	/// Clears all timers. (Resets all to unused.)
+	void doResetTimers() override
+	{
+	}
+
+	/// Starts the specified performance timer.
+	///  @param[in]   label The category of timer.
+	void doStartTimer(const rcTimerLabel /*label*/) override
+	{
+	}
+
+	/// Stops the specified performance timer.
+	///  @param[in]   label The category of the timer.
+	void doStopTimer(const rcTimerLabel /*label*/) override
+	{
+	}
+
+	/// Returns the total accumulated time of the specified performance timer.
+	///  @param[in]   label The category of the timer.
+	///  @return The accumulated time of the timer, or -1 if timers are disabled or the timer has never been started.
+	int doGetAccumulatedTime(const rcTimerLabel /*label*/) const override
+	{
+		return -1;
+	}
+};
+
 Geometry geo;
 
 float cellHeight = 2.0f;
@@ -922,7 +967,8 @@ static void BuildNavMesh( int characterNum ){
 		}
 	}
 
-	rcContext context( false );
+	UnvContext context;
+	context.enableLog( true );
 
 	for ( int y = 0; y < th; y++ )
 	{
