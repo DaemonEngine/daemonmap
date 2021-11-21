@@ -76,27 +76,34 @@ class UnvContext : public rcContext
 Geometry geo;
 
 float cellHeight = 2.0f;
-float stepSize = STEPSIZE;
 int tileSize = 64;
 
 struct Character
 {
+	constexpr static float gravity = 800;
 	const char *name;   //appended to filename
 	float radius; //radius of agents (BBox maxs[0] or BBox maxs[1])
 	float height; //height of agents (BBox maxs[2] - BBox mins[2])
+	float stepsize;
+	float jumpMagnitude;
+
+	float jumpHeight( void ) const
+	{
+		return stepsize + ( jumpMagnitude * jumpMagnitude ) / ( gravity * 2 );
+	}
 };
 
 static const Character characterArray[] = {
-	{ "builder",     20, 40 },
-	{ "human_naked", 15, 56 },
-	{ "human_bsuit", 15, 76 },
-	{ "level0",      15, 30 },
-	{ "level1",      15, 30 },
-	{ "level2",      23, 36 },
-	{ "level2upg",   25, 40 },
-	{ "level3",      26, 55 },
-	{ "level3upg",   29, 66 },
-	{ "level4",      32, 92 }
+	{ "builder",     20, 40, 16, 195 },
+	{ "human_naked", 15, 40, 16, 220 },
+	{ "human_bsuit", 15, 57, 16, 220 },
+	{ "level0",      15, 30, 16, 250 },
+	{ "level1",      15, 30, 16, 310 },
+	{ "level2",      23, 36, 16, 340 },
+	{ "level2upg",   25, 40, 16, 340 },
+	{ "level3",      26, 55, 16, 270 },
+	{ "level3upg",   29, 66, 16, 270 },
+	{ "level4",      32, 92, 16, 170 },
 };
 
 //flag for excluding caulk surfaces
@@ -904,6 +911,28 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 static void BuildNavMesh( int characterNum ){
 	const Character &agent = characterArray[ characterNum ];
 
+	float height = rcAbs( geo.getMaxs()[1] ) + rcAbs( geo.getMins()[1] );
+	if ( height / cellHeight > RC_SPAN_MAX_HEIGHT ) {
+		Sys_Printf( "WARNING: Map geometry is too tall for specified cell height. Increasing cell height to compensate. This may cause a less accurate navmesh.\n" );
+		float prevCellHeight = cellHeight;
+		float minCellHeight = height / RC_SPAN_MAX_HEIGHT;
+
+		int divisor = agent.jumpHeight();
+
+		while ( divisor && cellHeight < minCellHeight )
+		{
+			cellHeight = agent.jumpHeight() / divisor;
+			divisor--;
+		}
+
+		if ( !divisor ) {
+			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
+		}
+
+		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
+		Sys_Printf( "New cell height: %f\n", cellHeight );
+	}
+
 	dtTileCache *tileCache;
 	const float *bmin = geo.getMins();
 	const float *bmax = geo.getMaxs();
@@ -923,7 +952,7 @@ static void BuildNavMesh( int characterNum ){
 	cfg.ch = cellHeight;
 	cfg.walkableSlopeAngle = RAD2DEG( acosf( MIN_WALK_NORMAL ) );
 	cfg.walkableHeight = ( int ) ceilf( agent.height / cfg.ch );
-	cfg.walkableClimb = ( int ) floorf( stepSize / cfg.ch );
+	cfg.walkableClimb = ( int ) floorf( agent.jumpHeight() / cfg.ch );
 	cfg.walkableRadius = ( int ) ceilf( agent.radius / cfg.cs );
 	cfg.maxEdgeLen = 0;
 	cfg.maxSimplificationError = 1.3f;
@@ -949,7 +978,7 @@ static void BuildNavMesh( int characterNum ){
 	tcparams.height = ts;
 	tcparams.walkableHeight = agent.height;
 	tcparams.walkableRadius = agent.radius;
-	tcparams.walkableClimb = stepSize;
+	tcparams.walkableClimb = agent.jumpHeight();
 	tcparams.maxSimplificationError = 1.3;
 	tcparams.maxTiles = tw * th * EXPECTED_LAYERS_PER_TILE;
 	tcparams.maxObstacles = 256;
@@ -1027,7 +1056,7 @@ extern "C" int NavMain( int argc, char **argv ){
 	int i;
 
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <filename.bsp>\n" );
+		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-includecaulk] [-includesky] [-nogapfilter] <filename.bsp>\n" );
 		return 0;
 	}
 
@@ -1043,15 +1072,6 @@ extern "C" int NavMain( int argc, char **argv ){
 				temp = atof( argv[i] );
 				if ( temp > 0 ) {
 					cellHeight = temp;
-				}
-			}
-		}
-		else if ( !Q_stricmp( argv[i], "-stepsize" ) ) {
-			i++;
-			if ( i < ( argc - 1 ) ) {
-				temp = atof( argv[i] );
-				if ( temp > 0 ) {
-					stepSize = temp;
 				}
 			}
 		}
@@ -1082,28 +1102,6 @@ extern "C" int NavMain( int argc, char **argv ){
 	ParseEntities();
 
 	LoadGeometry();
-
-	float height = rcAbs( geo.getMaxs()[1] ) + rcAbs( geo.getMins()[1] );
-	if ( height / cellHeight > RC_SPAN_MAX_HEIGHT ) {
-		Sys_Printf( "WARNING: Map geometry is too tall for specified cell height. Increasing cell height to compensate. This may cause a less accurate navmesh.\n" );
-		float prevCellHeight = cellHeight;
-		float minCellHeight = height / RC_SPAN_MAX_HEIGHT;
-
-		int divisor = ( int ) stepSize;
-
-		while ( divisor && cellHeight < minCellHeight )
-		{
-			cellHeight = stepSize / divisor;
-			divisor--;
-		}
-
-		if ( !divisor ) {
-			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
-		}
-
-		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
-		Sys_Printf( "New cell height: %f\n", cellHeight );
-	}
 
 	RunThreadsOnIndividual( sizeof( characterArray ) / sizeof( characterArray[ 0 ] ), qtrue, BuildNavMesh );
 
