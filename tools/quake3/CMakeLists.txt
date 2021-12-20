@@ -54,6 +54,7 @@ radiant_tool(daemonmap
         q3map2/path_init.c
         q3map2/q3map2.h
         q3map2/shaders.c
+        q3map2/confloader.cpp
         )
 
 target_include_directories(daemonmap PRIVATE
