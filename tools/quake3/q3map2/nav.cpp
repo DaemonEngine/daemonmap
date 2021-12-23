@@ -28,6 +28,10 @@
 #include "cm_patch.h"
 #include "navgen.h"
 
+#include "confloader.h"
+#include <algorithm>
+#include <stdlib.h>
+
 class UnvContext : public rcContext
 {
 	/// Clears all log entries.
@@ -76,28 +80,50 @@ class UnvContext : public rcContext
 Geometry geo;
 
 float cellHeight = 2.0f;
-float stepSize = STEPSIZE;
 int tileSize = 64;
 
 struct Character
 {
-	const char *name;   //appended to filename
+	constexpr static float gravity = 800;
+	std::string name;   //appended to filename
 	float radius; //radius of agents (BBox maxs[0] or BBox maxs[1])
 	float height; //height of agents (BBox maxs[2] - BBox mins[2])
+	float stepsize;
+	float jumpMagnitude;
+
+	float jumpHeight( void ) const
+	{
+		return stepsize + ( jumpMagnitude * jumpMagnitude ) / ( gravity * 2 );
+	}
 };
 
-static const Character characterArray[] = {
-	{ "builder",     20, 40 },
-	{ "human_naked", 15, 56 },
-	{ "human_bsuit", 15, 76 },
-	{ "level0",      15, 30 },
-	{ "level1",      15, 30 },
-	{ "level2",      23, 36 },
-	{ "level2upg",   25, 40 },
-	{ "level3",      26, 55 },
-	{ "level3upg",   29, 66 },
-	{ "level4",      32, 92 }
+struct char_key_t
+{
+	bool required;
+	char const* name;
+	size_t index;
+	bool found;
+
+	char_key_t( bool req, char const* name_ )
+	:required( req ), name( name_ ), found( false )
+	{
+	}
+
+	void locate( std::vector<std::string> const& keys )
+	{
+		auto start = keys.begin();
+		auto end   = keys.end();
+		auto it = std::find( start, end, name );
+		if ( it != end )
+		{
+			index = it - start;
+		}
+	}
 };
+
+bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch );
+
+static std::vector<Character> characterArray;
 
 //flag for excluding caulk surfaces
 static qboolean excludeCaulk = qtrue;
@@ -904,6 +930,28 @@ static int rasterizeTileLayers( rcContext &context, int tx, int ty, const rcConf
 static void BuildNavMesh( int characterNum ){
 	const Character &agent = characterArray[ characterNum ];
 
+	float height = rcAbs( geo.getMaxs()[1] ) + rcAbs( geo.getMins()[1] );
+	if ( height / cellHeight > RC_SPAN_MAX_HEIGHT ) {
+		Sys_Printf( "WARNING: Map geometry is too tall for specified cell height. Increasing cell height to compensate. This may cause a less accurate navmesh.\n" );
+		float prevCellHeight = cellHeight;
+		float minCellHeight = height / RC_SPAN_MAX_HEIGHT;
+
+		int divisor = agent.jumpHeight();
+
+		while ( divisor && cellHeight < minCellHeight )
+		{
+			cellHeight = agent.jumpHeight() / divisor;
+			divisor--;
+		}
+
+		if ( !divisor ) {
+			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
+		}
+
+		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
+		Sys_Printf( "New cell height: %f\n", cellHeight );
+	}
+
 	dtTileCache *tileCache;
 	const float *bmin = geo.getMins();
 	const float *bmax = geo.getMaxs();
@@ -923,7 +971,7 @@ static void BuildNavMesh( int characterNum ){
 	cfg.ch = cellHeight;
 	cfg.walkableSlopeAngle = RAD2DEG( acosf( MIN_WALK_NORMAL ) );
 	cfg.walkableHeight = ( int ) ceilf( agent.height / cfg.ch );
-	cfg.walkableClimb = ( int ) floorf( stepSize / cfg.ch );
+	cfg.walkableClimb = ( int ) floorf( agent.jumpHeight() / cfg.ch );
 	cfg.walkableRadius = ( int ) ceilf( agent.radius / cfg.cs );
 	cfg.maxEdgeLen = 0;
 	cfg.maxSimplificationError = 1.3f;
@@ -949,7 +997,7 @@ static void BuildNavMesh( int characterNum ){
 	tcparams.height = ts;
 	tcparams.walkableHeight = agent.height;
 	tcparams.walkableRadius = agent.radius;
-	tcparams.walkableClimb = stepSize;
+	tcparams.walkableClimb = agent.jumpHeight();
 	tcparams.maxSimplificationError = 1.3;
 	tcparams.maxTiles = tw * th * EXPECTED_LAYERS_PER_TILE;
 	tcparams.maxObstacles = 256;
@@ -1013,7 +1061,7 @@ static void BuildNavMesh( int characterNum ){
 	params.maxTiles = 1 << tileBits;
 	params.maxPolys = 1 << polyBits;
 
-	WriteNavMeshFile( agent.name, tileCache, &params );
+	WriteNavMeshFile( agent.name.c_str(), tileCache, &params );
 	dtFreeTileCache( tileCache );
 }
 
@@ -1023,11 +1071,12 @@ static void BuildNavMesh( int characterNum ){
    ===========
  */
 extern "C" int NavMain( int argc, char **argv ){
+	char* agentsFile = nullptr;
 	float temp;
 	int i;
 
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-stepsize f] [-includecaulk] [-includesky] [-nogapfilter] <filename.bsp>\n" );
+		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-includecaulk] [-includesky] [-nogapfilter] -agents file <filename.bsp>\n" );
 		return 0;
 	}
 
@@ -1046,15 +1095,6 @@ extern "C" int NavMain( int argc, char **argv ){
 				}
 			}
 		}
-		else if ( !Q_stricmp( argv[i], "-stepsize" ) ) {
-			i++;
-			if ( i < ( argc - 1 ) ) {
-				temp = atof( argv[i] );
-				if ( temp > 0 ) {
-					stepSize = temp;
-				}
-			}
-		}
 		else if ( !Q_stricmp( argv[i], "-includecaulk" ) ) {
 			excludeCaulk = qfalse;
 		}
@@ -1064,9 +1104,109 @@ extern "C" int NavMain( int argc, char **argv ){
 		else if ( !Q_stricmp( argv[i], "-nogapfilter" ) ) {
 			filterGaps = qfalse;
 		}
+		if ( !Q_stricmp( argv[i],"-agents" ) ) {
+			i++;
+			if ( i < ( argc - 1 ) ) {
+				agentsFile = argv[i];
+			}
+		}
 		else {
 			Sys_Printf( "WARNING: Unknown option \"%s\"\n", argv[i] );
 		}
+	}
+
+	if ( !agentsFile )
+	{
+		fputs( "-agents option is mandatory\n", stderr );
+		return EXIT_FAILURE;
+	}
+
+	auto data = slurp( agentsFile );
+	if ( data.empty() )
+	{
+		fprintf( stderr, "Unable to load data from file \"%s\" in memory\n", agentsFile );
+		return EXIT_FAILURE;
+	}
+
+	std::deque<reccord_t> reccords;
+	std::vector<std::string> keys;
+	if ( !parse( data, reccords, keys ) )
+	{
+		fputs( "Errors were found while parsing.\n", stderr );
+		return EXIT_FAILURE;
+	}
+
+	const size_t NUM_KNOWN_KEYS = 5;
+	char_key_t key_list[NUM_KNOWN_KEYS] =
+	{
+		char_key_t( true, "name" ),
+		char_key_t( true, "halfwidth" ),
+		char_key_t( true, "height" ),
+		char_key_t( true, "stepsize" ),
+		char_key_t( true, "jump" ),
+	};
+
+	for ( char_key_t& key : key_list )
+	{
+		key.locate( keys );
+	}
+
+	size_t current_rc = 0;
+	Character current_ch;
+	std::deque<reccord_t>::const_iterator rc;
+	for ( rc = reccords.begin(); rc != reccords.end(); ++rc )
+	{
+		if ( !save_reccord( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+		{
+			//TODO
+		}
+
+		//find which char_key_t matches current reccord's key index
+		//if a match is found, initialise current_ch according field
+		//The Character field is identified by "iterator_found - begin"
+		auto start_it = std::begin( key_list );
+		auto end_it = std::end( key_list );
+		auto it = std::find_if( start_it, end_it,
+				[&]( char_key_t const& k ){ return k.index == rc->key_id; } );
+		if ( it != end_it )
+		{
+			char* endptr;
+			ssize_t index = it - start_it;
+			switch( index )
+			{
+				case 0:
+					current_ch.name = rc->value;
+					it->found = true;
+					break;
+				case 1:
+					current_ch.radius = strtof( rc->value.c_str(), &endptr );
+					it->found = *endptr == '\0';
+					break;
+				case 2:
+					current_ch.height = strtof( rc->value.c_str(), &endptr );
+					it->found = *endptr == '\0';
+					break;
+				case 3:
+					current_ch.stepsize = strtof( rc->value.c_str(), &endptr );
+					it->found = *endptr == '\0';
+					break;
+				case 4:
+					current_ch.jumpMagnitude = strtof( rc->value.c_str(), &endptr );
+					it->found = *endptr == '\0';
+					break;
+			}
+		}
+	}
+
+	if ( !save_reccord( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+	{
+		//TODO
+	}
+
+	for ( auto const& ch : characterArray )
+	{
+		fprintf( stdout, "class: %s, radius: %f, height: %f, stepsize: %f, jumpMag: %f, jumpHeight: %f\n",
+				ch.name.c_str(), ch.radius, ch.height, ch.stepsize, ch.jumpMagnitude, ch.jumpHeight() );
 	}
 
 	/* load the bsp */
@@ -1083,29 +1223,38 @@ extern "C" int NavMain( int argc, char **argv ){
 
 	LoadGeometry();
 
-	float height = rcAbs( geo.getMaxs()[1] ) + rcAbs( geo.getMins()[1] );
-	if ( height / cellHeight > RC_SPAN_MAX_HEIGHT ) {
-		Sys_Printf( "WARNING: Map geometry is too tall for specified cell height. Increasing cell height to compensate. This may cause a less accurate navmesh.\n" );
-		float prevCellHeight = cellHeight;
-		float minCellHeight = height / RC_SPAN_MAX_HEIGHT;
-
-		int divisor = ( int ) stepSize;
-
-		while ( divisor && cellHeight < minCellHeight )
-		{
-			cellHeight = stepSize / divisor;
-			divisor--;
-		}
-
-		if ( !divisor ) {
-			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
-		}
-
-		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
-		Sys_Printf( "New cell height: %f\n", cellHeight );
-	}
-
-	RunThreadsOnIndividual( sizeof( characterArray ) / sizeof( characterArray[ 0 ] ), qtrue, BuildNavMesh );
+	RunThreadsOnIndividual( characterArray.size(), qtrue, BuildNavMesh );
 
 	return 0;
+}
+
+
+// if a new reccord is found, clears current_ch and updates
+// current_rc (reccord).
+// If the reccord is complete, pushes it into characterArray.
+// return false if the previous reccord does not conforms.
+bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch )
+{
+	if ( rc.reccord_id == current_rc )
+	{
+		return true;
+	}
+
+	bool allfound = true;
+	for ( size_t i = 0; i < keylist_sz; ++i )
+	{
+		if ( keylist[i].found == false && keylist[i].required )
+		{
+			allfound = false;
+			fprintf( stderr, "missing or bad mandatory key \"%s\" found in reccord %zu\n", keylist[i].name, i );
+		}
+		keylist[i].found = false;
+	}
+	if ( allfound )
+	{
+		characterArray.push_back( current_ch );
+	}
+	current_ch = Character();
+	current_rc = rc.reccord_id;
+	return allfound;
 }

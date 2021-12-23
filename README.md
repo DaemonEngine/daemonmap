@@ -65,7 +65,7 @@ cmake --build build -- -j$(nproc) install
 ## Usage
 
 ```sh
-daemonmap -game unvanquished -nav /path/to/maps/mapname.bsp
+daemonmap -game unvanquished -nav -agents /path/to/agents/config /path/to/maps/mapname.bsp
 ```
 
 
