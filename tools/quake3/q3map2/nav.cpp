@@ -1076,7 +1076,7 @@ extern "C" int NavMain( int argc, char **argv ){
 	int i;
 
 	if ( argc < 2 ) {
-		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-includecaulk] [-includesky] [-nogapfilter] -agents file <filename.bsp>\n" );
+		Sys_Printf( "Usage: daemonmap -nav [-cellheight f] [-includecaulk] [-includesky] [-nogapfilter] [-agents file] <filename.bsp>\n" );
 		return 0;
 	}
 
@@ -1115,16 +1115,10 @@ extern "C" int NavMain( int argc, char **argv ){
 		}
 	}
 
-	if ( !agentsFile )
-	{
-		fputs( "-agents option is mandatory\n", stderr );
-		return EXIT_FAILURE;
-	}
-
-	auto data = slurp( agentsFile );
+	auto data = slurp( agentsFile ? agentsFile: "agents.cfg" );
 	if ( data.empty() )
 	{
-		fprintf( stderr, "Unable to load data from file \"%s\" in memory\n", agentsFile );
+		fprintf( stderr, "Unable to load data from file \"%s\" in memory\n", agentsFile ? agentsFile: "agents.cfg" );
 		return EXIT_FAILURE;
 	}
 
