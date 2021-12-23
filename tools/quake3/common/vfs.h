@@ -58,6 +58,16 @@
 void vfsInitDirectory( const char *path );
 void vfsShutdown();
 int vfsGetFileCount( const char *filename );
+
+// allocate a buffer and fill it with a file's content.
+// filename: path+name of the target
+// buffer: pointer to the destination buffer
+// index: good question.
+//   -1: full path
+// returns -1 on error or the number of bytes in the file
+//
+// Note that the buffer gets an additional \0 appended,
+// probably to support using files content directly as C strings.
 int vfsLoadFile( const char *filename, void **buffer, int index );
 
 extern char g_strForbiddenDirs[VFS_MAXDIRS][PATH_MAX + 1];
