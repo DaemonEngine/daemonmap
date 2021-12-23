@@ -89,47 +89,6 @@ public:
 	}
 };
 
-std::vector<char> slurp( char const* filename )
-{
-	std::vector<char> ret;
-	FILE* src = fopen( filename, "r" );
-	if ( !src )
-	{
-		fprintf( stderr, "failed to open file \"%s\": %s\n",
-				filename, strerror( errno ) );
-		return ret;
-	}
-
-	if ( -1 == fseek( src, 0, SEEK_END ) )
-	{
-		fprintf( stderr, "failed to seek EOF: %s\n",
-				strerror( errno ) );
-		fclose( src );
-		return ret;
-	}
-
-	long file_sz = 0;
-	if ( -1 == ( file_sz = ftell( src ) ) )
-	{
-		fprintf( stderr, "failed to get position: %s\n",
-				strerror( errno ) );
-		fclose( src );
-		return ret;
-	}
-
-	rewind( src );
-	assert( file_sz >= 0 );
-	size_t file_size = static_cast<size_t>( file_sz );
-	ret.resize( file_size );
-	if ( 1 != fread( ret.data(), file_size, 1, src ) )
-	{
-		fprintf( stderr, "failed to read data: %s\n",
-				strerror( errno ) );
-	}
-	fclose( src );
-	return ret;
-}
-
 bool parse(
 		std::vector<char> const& data,
 		std::deque<reccord_t> &reccords,
