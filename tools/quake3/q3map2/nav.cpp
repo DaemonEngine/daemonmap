@@ -122,7 +122,7 @@ struct char_key_t
 	}
 };
 
-bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch );
+bool save_record( record_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch );
 
 static std::vector<Character> characterArray;
 
@@ -1125,9 +1125,9 @@ extern "C" int NavMain( int argc, char **argv ){
 	}
 	std::vector<char> data( static_cast<char*>( buffer ), static_cast<char*>( buffer ) + sz );
 
-	std::deque<reccord_t> reccords;
+	std::deque<record_t> records;
 	std::vector<std::string> keys;
-	if ( !parse( data, reccords, keys ) )
+	if ( !parse( data, records, keys ) )
 	{
 		fputs( "Errors were found while parsing.\n", stderr );
 		return EXIT_FAILURE;
@@ -1150,15 +1150,15 @@ extern "C" int NavMain( int argc, char **argv ){
 
 	size_t current_rc = 0;
 	Character current_ch;
-	std::deque<reccord_t>::const_iterator rc;
-	for ( rc = reccords.begin(); rc != reccords.end(); ++rc )
+	std::deque<record_t>::const_iterator rc;
+	for ( rc = records.begin(); rc != records.end(); ++rc )
 	{
-		if ( !save_reccord( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+		if ( !save_record( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
 		{
 			//TODO
 		}
 
-		//find which char_key_t matches current reccord's key index
+		//find which char_key_t matches current record's key index
 		//if a match is found, initialise current_ch according field
 		//The Character field is identified by "iterator_found - begin"
 		auto start_it = std::begin( key_list );
@@ -1195,7 +1195,7 @@ extern "C" int NavMain( int argc, char **argv ){
 		}
 	}
 
-	if ( !save_reccord( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+	if ( !save_record( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
 	{
 		//TODO
 	}
@@ -1226,13 +1226,13 @@ extern "C" int NavMain( int argc, char **argv ){
 }
 
 
-// if a new reccord is found, clears current_ch and updates
-// current_rc (reccord).
-// If the reccord is complete, pushes it into characterArray.
-// return false if the previous reccord does not conforms.
-bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch )
+// if a new record is found, clears current_ch and updates
+// current_rc (record).
+// If the record is complete, pushes it into characterArray.
+// return false if the previous record does not conforms.
+bool save_record( record_t const& rc, char_key_t* keylist, size_t keylist_sz, size_t &current_rc, Character &current_ch )
 {
-	if ( rc.reccord_id == current_rc )
+	if ( rc.record_id == current_rc )
 	{
 		return true;
 	}
@@ -1243,7 +1243,7 @@ bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, 
 		if ( keylist[i].found == false && keylist[i].required )
 		{
 			allfound = false;
-			fprintf( stderr, "missing or bad mandatory key \"%s\" found in reccord %zu\n", keylist[i].name, i );
+			fprintf( stderr, "missing or bad mandatory key \"%s\" found in record %zu\n", keylist[i].name, i );
 		}
 		keylist[i].found = false;
 	}
@@ -1252,6 +1252,6 @@ bool save_reccord( reccord_t const& rc, char_key_t* keylist, size_t keylist_sz, 
 		characterArray.push_back( current_ch );
 	}
 	current_ch = Character();
-	current_rc = rc.reccord_id;
+	current_rc = rc.record_id;
 	return allfound;
 }

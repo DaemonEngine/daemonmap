@@ -91,11 +91,11 @@ public:
 
 bool parse(
 		std::vector<char> const& data,
-		std::deque<reccord_t> &reccords,
+		std::deque<record_t> &records,
 		std::vector<std::string> &keys )
 {
 	size_t key = SIZE_MAX;
-	size_t reccord = 0;
+	size_t record = 0;
 	status_t status( data );
 	do
 	{
@@ -128,22 +128,22 @@ bool parse(
 				{
 					if ( val.empty() )
 					{
-						++reccord;
+						++record;
 					}
 					else
 					{
-						assert( !reccords.empty() );
-						reccords.back().value += '\n';
+						assert( !records.empty() );
+						records.back().value += '\n';
 						if ( val != " ." )
 						{
-							reccords.back().value += val;
+							records.back().value += val;
 						}
 					}
 				}
 				else
 				{
-					reccord_t rc( { key, reccord, std::move( val ) } );
-					reccords.push_back( std::move( rc ) );
+					record_t rc( { key, record, std::move( val ) } );
+					records.push_back( std::move( rc ) );
 				}
 		}
 	} while( !status.next() );

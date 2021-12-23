@@ -5,16 +5,16 @@
 #include <deque>
 #include <string>
 
-struct reccord_t
+struct record_t
 {
 	size_t key_id;
-	size_t reccord_id;
+	size_t record_id;
 	std::string value;
 };
 
 bool parse(
 		std::vector<char> const &data,
-		std::deque<reccord_t> &reccords,
+		std::deque<record_t> &records,
 		std::vector<std::string> &keys
 );
 
