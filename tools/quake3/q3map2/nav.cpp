@@ -1086,23 +1086,17 @@ extern "C" int NavMain( int argc, char **argv ){
 	float height = rcAbs( geo.getMaxs()[1] ) + rcAbs( geo.getMins()[1] );
 	if ( height / cellHeight > RC_SPAN_MAX_HEIGHT ) {
 		Sys_Printf( "WARNING: Map geometry is too tall for specified cell height. Increasing cell height to compensate. This may cause a less accurate navmesh.\n" );
-		float prevCellHeight = cellHeight;
-		float minCellHeight = height / RC_SPAN_MAX_HEIGHT;
+		Sys_Printf( "Previous cell height: %f\n", cellHeight );
 
-		int divisor = ( int ) stepSize;
+		cellHeight = height / RC_SPAN_MAX_HEIGHT;
+	}
 
-		while ( divisor && cellHeight < minCellHeight )
-		{
-			cellHeight = stepSize / divisor;
-			divisor--;
-		}
+	Sys_Printf( "cell height: %f\n", cellHeight );
+	Sys_Printf( "step size: %f\n", stepSize );
 
-		if ( !divisor ) {
-			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
-		}
-
-		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
-		Sys_Printf( "New cell height: %f\n", cellHeight );
+	if ( cellHeight > stepSize )
+	{
+		Error( "ERROR: Map is too tall to generate a navigation mesh, cell height can't be greater than step size\n" );
 	}
 
 	RunThreadsOnIndividual( sizeof( characterArray ) / sizeof( characterArray[ 0 ] ), qtrue, BuildNavMesh );
