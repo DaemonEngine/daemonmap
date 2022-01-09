@@ -12,6 +12,8 @@ struct record_t
 	std::string value;
 };
 
+std::vector<char> slurp( char const* filename );
+
 bool parse(
 		std::vector<char> const &data,
 		std::deque<record_t> &records,

@@ -28,7 +28,6 @@
 #include "cm_patch.h"
 #include "navgen.h"
 
-#include "vfs.h"
 #include "confloader.h"
 #include <algorithm>
 #include <stdlib.h>
@@ -1117,14 +1116,12 @@ extern "C" int NavMain( int argc, char **argv ){
 		}
 	}
 
-	void* buffer;
-	int sz = vfsLoadFile( agentsFile ? agentsFile: "agents.cfg", &buffer, 0 );
-	if ( -1 == sz )
+	auto data = slurp( agentsFile ? agentsFile: "agents.cfg" );
+	if ( data.empty() )
 	{
 		fprintf( stderr, "Unable to load data from file \"%s\" in memory\n", agentsFile ? agentsFile: "agents.cfg" );
 		return EXIT_FAILURE;
 	}
-	std::vector<char> data( static_cast<char*>( buffer ), static_cast<char*>( buffer ) + sz );
 
 	std::deque<record_t> records;
 	std::vector<std::string> keys;
