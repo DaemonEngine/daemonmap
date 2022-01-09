@@ -40,7 +40,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 #include "bot_convert.h"
 
 // should be the same as in rest of engine
-#define STEPSIZE 18
 #define MIN_WALK_NORMAL 0.7f
 
 static const int NAVMESHSET_MAGIC = 'M'<<24 | 'S'<<16 | 'E'<<8 | 'T'; //'MSET';

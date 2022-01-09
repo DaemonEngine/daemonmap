@@ -949,6 +949,7 @@ static void BuildNavMesh( int characterNum ){
 			Error( "ERROR: Map is too tall to generate a navigation mesh\n" );
 		}
 
+		Sys_Printf( "Divisor: %f\n", divisor );
 		Sys_Printf( "Previous cell height: %f\n", prevCellHeight );
 		Sys_Printf( "New cell height: %f\n", cellHeight );
 	}
@@ -1133,8 +1134,16 @@ extern "C" int NavMain( int argc, char **argv ){
 		return EXIT_FAILURE;
 	}
 
-	const size_t NUM_KNOWN_KEYS = 5;
-	char_key_t key_list[NUM_KNOWN_KEYS] =
+	enum cfg_keys_t
+	{
+		NAME,
+		HALFWIDTH,
+		HEIGHT,
+		STEPSIZE,
+		JUMP,
+		NUM_CFG_KEYS
+	};
+	char_key_t key_list[NUM_CFG_KEYS] =
 	{
 		char_key_t( true, "name" ),
 		char_key_t( true, "halfwidth" ),
@@ -1153,7 +1162,7 @@ extern "C" int NavMain( int argc, char **argv ){
 	std::deque<record_t>::const_iterator rc;
 	for ( rc = records.begin(); rc != records.end(); ++rc )
 	{
-		if ( !save_record( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+		if ( !save_record( *rc, key_list, NUM_CFG_KEYS, current_rc, current_ch ) )
 		{
 			//TODO
 		}
@@ -1168,34 +1177,35 @@ extern "C" int NavMain( int argc, char **argv ){
 		if ( it != end_it )
 		{
 			char* endptr;
-			ssize_t index = it - start_it;
-			switch( index )
+			switch( static_cast<cfg_keys_t>( it - start_it ) )
 			{
-				case 0:
+				case NAME:
 					current_ch.name = rc->value;
 					it->found = true;
 					break;
-				case 1:
+				case HALFWIDTH:
 					current_ch.radius = strtof( rc->value.c_str(), &endptr );
 					it->found = *endptr == '\0';
 					break;
-				case 2:
+				case HEIGHT:
 					current_ch.height = strtof( rc->value.c_str(), &endptr );
 					it->found = *endptr == '\0';
 					break;
-				case 3:
+				case STEPSIZE:
 					current_ch.stepsize = strtof( rc->value.c_str(), &endptr );
 					it->found = *endptr == '\0';
 					break;
-				case 4:
+				case JUMP:
 					current_ch.jumpMagnitude = strtof( rc->value.c_str(), &endptr );
 					it->found = *endptr == '\0';
 					break;
+				case NUM_CFG_KEYS:
+					assert( false && "unreachable" );
 			}
 		}
 	}
 
-	if ( !save_record( *rc, key_list, NUM_KNOWN_KEYS, current_rc, current_ch ) )
+	if ( !save_record( *rc, key_list, NUM_CFG_KEYS, current_rc, current_ch ) )
 	{
 		//TODO
 	}
