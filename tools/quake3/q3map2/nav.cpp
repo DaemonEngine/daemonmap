@@ -1207,10 +1207,21 @@ extern "C" int NavMain( int argc, char **argv ){
 		//TODO
 	}
 
-	for ( auto const& ch : characterArray )
+	for ( auto & ch : characterArray )
 	{
-		fprintf( stdout, "class: %s, radius: %f, height: %f, stepsize: %f, jumpMag: %f, jumpHeight: %f\n",
+		fprintf( stdout, "class: %s, radius: %0.1f, height: %0.1f, stepsize: %0.1f, jumpMag: %0.1f, jumpHeight: %0.1f\n",
 				ch.name.c_str(), ch.radius, ch.height, ch.stepsize, ch.jumpMagnitude, ch.jumpHeight() );
+
+		if ( ch.jumpHeight() > ch.height - 1 )
+		{
+			float oldVal = ch.jumpHeight();
+			while( ch.jumpHeight() > ch.height - 1 )
+			{
+				--ch.jumpMagnitude;
+			}
+
+			fprintf( stderr, "Agent have too much jump height (%0.1f), caping to %0.1f with a magnitude of %0.1f\n", oldVal, ch.jumpHeight(), ch.jumpMagnitude );
+		}
 	}
 
 	/* load the bsp */
