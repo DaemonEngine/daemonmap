@@ -1,15 +1,43 @@
 DaemonMap
 =========
 
-The navmesh compiler for [Unvanquished](https://unvanquished.net/).
+## Deprecated
+
+⚠️ This tool is deprecated since 2023-01-29 and the release of [Unvanquished 0.54.0](https://unvanquished.net/unvanquished-0-54-armed-and-dangerous/).
+
+⚠️ Navigation mesh generation is now implemented in game.
+
+⚠️ Files produced with this tool are expected to be incompatibles with the game.
+
+This repository and this tool are only of interest for historical purpose.
+
+The maintained navigation mesh generation code can now be found in Unvanquished repository:
+
+- https://github.com/Unvanquished/Unvanquished
+
+## No future
+
+The precious navmesh code was meant to be moved from this tool to the game itself because the only way for a game to get proper navmeshes after having modified model size or added or removed models is to get the navmeshes produced by the engine or the game itself using game settings.
+
+The navmesh code itself is meant to live and get a bright future, in a more convenient place which is the game iself.
+
+This tool hosting the navmesh code was meant to be left over once such migration would have been done. Which is now done.
+
+## Not merged in NetRadiant upstream
+
+This tool was a temporary hack. There was no effort to merge this tool into NetRadiant upstream and there will be be no effort done on that purpose in the future. The only project having used this tool stopped using it after having imported the navigation mesh generation code elsewhere.
+
+## What was daemonmap
+
+Daemonmap was an external navigation mesh (navmesh) compiler for [Unvanquished](https://unvanquished.net/).
 
 DaemonMap is a q3map2 fork from [NetRadiant](https://netradiant.gitlab.io) tree, with navmesh computation code by Fuma using [recastnavigation](https://github.com/recastnavigation/recastnavigation).
 
 Everything but navmesh code was removed but original file layout was kept, allowing code exchange with NetRadiant upstream if required.
 
-Use [`q3map2` from Xonotic's NetRadiant tree](https://gitlab.com/xonotic/netradiant/) for every other task like bsp compilation, vis computation, light casting etc.
+The [`q3map2` tool from Xonotic's NetRadiant tree](https://gitlab.com/xonotic/netradiant/) should be used for every other task done on maps like BSP compilation, visibility computation, light casting, etc.
 
-The navmesh settings are currently hardcoded with Unvanquished models and sizes.
+The navmesh settings are hardcoded with Unvanquished models and sizes.
 
 
 ## Getting the sources
@@ -75,10 +103,3 @@ daemonmap -game unvanquished -nav /path/to/maps/mapname.bsp
 daemonmap --help
 daemonmap --help nav
 ```
-
-
-## Why this fork is not merged in NetRadiant upstream
-
-The precious navmesh code is meant to be moved from this tool to the game itself one day because the only way for a game to get proper navmeshes after having modified model size or added or removed models is to get the navmeshes produced by the engine or the game itself using game settings. This tool hosting the navmesh code is meant to be left over once such migration would is done. That's why there is no effort to merge this tool into NetRadiant upstream since the existence of this tool is a temporary hack.
-
-The navmesh code itself it meant to live and get a bright future, hopefully in a more convenient place, please contribute fixes and improvements to the navmesh code. That code needs your care and attention wherever it lives: living there today or somewhere else in the future.

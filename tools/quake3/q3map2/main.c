@@ -166,6 +166,11 @@ int main( int argc, char **argv ){
 		//%	Sys_Printf( "Jitter %4d: %f\n", i, jitters[ i ] );
 	}
 
+	/* Deprecation notice. */
+	Sys_FPrintf( SYS_WRN, "WARNING: This tool is deprecated since 2023-01-29 and the release of Unvanquished 0.54.0.\n" );
+	Sys_FPrintf( SYS_WRN, "WARNING: Navigation mesh generation is now implemented in game.\n" );
+	Sys_FPrintf( SYS_WRN, "WARNING: Files produced with this tool are expected to be incompatibles with the game.\n");
+
 	/* we print out two versions, q3map's main version (since it evolves a bit out of GtkRadiant)
 	   and we put the GtkRadiant version to make it easy to track with what version of Radiant it was built with */
 
