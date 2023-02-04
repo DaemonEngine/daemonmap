@@ -216,6 +216,10 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 	ApplySurfaceParm( surfaceparm, &temp, NULL, NULL );
 	solidFlags |= temp;
 
+	strcpy( surfaceparm, "botclip" );
+	ApplySurfaceParm( surfaceparm, &temp, NULL, NULL );
+	solidFlags |= temp;
+
 	if ( excludeSky ) {
 		strcpy( surfaceparm, "sky" );
 		ApplySurfaceParm( surfaceparm, NULL, &surfaceSkip, NULL );
