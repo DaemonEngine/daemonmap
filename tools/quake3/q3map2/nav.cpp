@@ -203,23 +203,37 @@ static void AddTri( std::vector<float> &verts, std::vector<int> &tris, vec3_t v1
 static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 	int j;
 
-	int solidFlags = 0;
-	int temp = 0;
-	int surfaceSkip = 0;
-
 	char surfaceparm[16];
 
+	int defaultFlag = 0;
 	strcpy( surfaceparm, "default" );
-	ApplySurfaceParm( surfaceparm, &solidFlags, NULL, NULL );
+	ApplySurfaceParm( surfaceparm, &defaultFlag, NULL, NULL );
 
+	int playerclipFlag = 0;
 	strcpy( surfaceparm, "playerclip" );
-	ApplySurfaceParm( surfaceparm, &temp, NULL, NULL );
-	solidFlags |= temp;
+	ApplySurfaceParm( surfaceparm, &playerclipFlag, NULL, NULL );
 
+	int nodropFlag = 0;
+	strcpy( surfaceparm, "nodrop" );
+	ApplySurfaceParm( surfaceparm, &nodropFlag, NULL, NULL );
+
+	int lavaFlag = 0;
+	strcpy( surfaceparm, "lava" );
+	ApplySurfaceParm( surfaceparm, &lavaFlag, NULL, NULL );
+
+	int slimeFlag = 0;
+	strcpy( surfaceparm, "slime" );
+	ApplySurfaceParm( surfaceparm, &slimeFlag, NULL, NULL );
+
+	int skyFlag = 0;
 	if ( excludeSky ) {
 		strcpy( surfaceparm, "sky" );
-		ApplySurfaceParm( surfaceparm, NULL, &surfaceSkip, NULL );
+		ApplySurfaceParm( surfaceparm, NULL, &skyFlag, NULL );
 	}
+
+	int solidFlags = defaultFlag | playerclipFlag;
+	int contentSkip = playerclipFlag | nodropFlag | lavaFlag | slimeFlag;
+	int surfaceSkip = skyFlag;
 
 	/* get model, index 0 is worldspawn entity */
 	bspModel_t *model = &bspModels[0];
@@ -238,6 +252,11 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 		if ( !( brushShader->contentFlags & solidFlags ) ) {
 			continue;
 		}
+
+		if ( ( brushShader->contentFlags & contentSkip ) ) {
+			continue;
+		}
+
 		/* walk the list of brush sides */
 		for ( int p = 0; p < numSides; p++ )
 		{
@@ -247,6 +266,10 @@ static void LoadBrushTris( std::vector<float> &verts, std::vector<int> &tris ) {
 			bspShader_t *shader = &bspShaders[side->shaderNum];
 
 			if ( shader->surfaceFlags & surfaceSkip ) {
+				continue;
+			}
+
+			if ( !Q_stricmp( shader->shader, "textures/common/outside" ) ) {
 				continue;
 			}
 
@@ -298,17 +321,18 @@ static qboolean BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec
 static void LoadPatchTris( std::vector<float> &verts, std::vector<int> &tris ) {
 
 	vec3_t mins, maxs;
-	int solidFlags = 0;
-	int temp = 0;
 
 	char surfaceparm[16];
 
+	int defaultFlag = 0;
 	strcpy( surfaceparm, "default" );
-	ApplySurfaceParm( surfaceparm, &solidFlags, NULL, NULL );
+	ApplySurfaceParm( surfaceparm, &defaultFlag, NULL, NULL );
 
+	int playerclipFlag = 0;
 	strcpy( surfaceparm, "playerclip" );
-	ApplySurfaceParm( surfaceparm, &temp, NULL, NULL );
-	solidFlags |= temp;
+	ApplySurfaceParm( surfaceparm, &playerclipFlag, NULL, NULL );
+
+	int solidFlags = defaultFlag | playerclipFlag;
 
 	/*
 	    Patches are not used during the bsp building process where
